@@ -4,25 +4,36 @@ import {
   ExecutableProperty
 } from './properties';
 
+import {
+  flatten
+} from 'min-dash';
+
 import Group from '../../../properties-panel/components/Group';
 
 function GeneralGroup(element) {
 
-  const entries = [];
+  const entries = [
+    {
+      id: 'name',
+      component: <NameProperty key="name" element={ element } />
+    },
+    {
+      id: 'id',
+      component: <IdProperty key="id" element={ element } />
+    },
+    {
+      id: 'executable',
+      component: <ExecutableProperty key="executable" element={ element } />
+    }
+  ];
 
-  entries.push(<NameProperty element={ element } />);
+  return {
+    id: 'group',
+    label: 'General',
+    entries,
+    component: Group
+  };
 
-  entries.push(<IdProperty element={ element } />);
-
-  entries.push(<ExecutableProperty element={ element } />);
-
-  return (
-    <Group label="General">
-      {
-        entries
-      }
-    </Group>
-  );
 }
 
 function getGroups(element) {
@@ -43,7 +54,7 @@ export default class BpmnPropertiesProvider {
   getGroups(element) {
     return (groups) => {
       groups.push(getGroups(element));
-      return groups;
+      return flatten(groups);
     };
   }
 

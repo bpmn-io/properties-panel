@@ -1,5 +1,18 @@
 import Header from './Header';
 
+function renderGroup(props) {
+  const {
+    id,
+    component: GroupComponent,
+    entries,
+    label
+  } = props;
+
+  return <GroupComponent id={ id } label={ label }>
+    { entries.map(e => e.component) }
+  </GroupComponent>;
+}
+
 
 export default function PropertiesPanel(props) {
   const {
@@ -15,7 +28,7 @@ export default function PropertiesPanel(props) {
     <Header element={ element } />
     <div class="bio-properties-panel-scroll-container">
       {
-        groups
+        groups.map(renderGroup)
       }
     </div>
   </div>;

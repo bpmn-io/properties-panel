@@ -29,9 +29,10 @@ export default function BpmnPropertiesPanel(props) {
   });
 
   const setSelectedElement = useCallback((element) => {
+
     setState({
       ...state,
-      selectedElement: element
+      selectedElement: element.type === 'label' ? element.labelTarget : element
     });
   }, [ state.selectedElement ]);
 

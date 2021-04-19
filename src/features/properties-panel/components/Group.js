@@ -7,6 +7,7 @@ import ChevronIcon from '../../../icons/Chevron.svg';
 
 export default function Group(props) {
   const {
+    id,
     children,
     label
   } = props;
@@ -15,7 +16,7 @@ export default function Group(props) {
 
   const toggleOpen = () => setOpen(!open);
 
-  return <div class="bio-properties-panel-group">
+  return <div class="bio-properties-panel-group" id={ 'group-' + id }>
     <div class="bio-properties-panel-group-header" onClick={ toggleOpen }>
       <div class="bio-properties-panel-group-header-title">
         { label }

@@ -8,7 +8,7 @@ export default function Header(props) {
     element
   } = props;
 
-  const label = typeToLabel(element.type); // todo: replace by readable name
+  const label = typeToLabel(element.type);
 
   return (<div class="bio-properties-panel-header">
     <div class="bio-properties-panel-header-icon">
