@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+* {
+  color: var(--color-text-base);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: var(--text-size-base);
+  line-height: var(--text-line-height);
+  font-weight: 400;
+}
+
+html, body, .modeler-container, .modeler-container > div {
+  height: 100%;
+  margin: 0;
+
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+.test-content-container {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.modeler-container {
+  width: 100%;
+}
+
+.modeler-container, .properties-container {
+  overflow-y: auto;
+}
+
+.properties-container {
+  width: 300px;
+  position: relative;
+  height: 100%;
+  border-left: solid 1px #cccccc;
+}

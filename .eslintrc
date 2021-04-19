@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "plugin:bpmn-io/es6",
+    "plugin:bpmn-io/jsx"
+  ],
+  "rules": {
+    "import/first": "error",
+    "import/no-amd": "error",
+    "import/no-webpack-loader-syntax": "error"
+  },
+  "plugins": [
+    "import"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true
+  }
+}
