@@ -10,6 +10,13 @@ import {
 
 import Group from '../../../properties-panel/components/Group';
 
+const NOOP_GROUP = {
+  id: '__empty',
+  label: 'Empty Group',
+  entries: [],
+  component: Group
+};
+
 function GeneralGroup(element) {
 
   const entries = [
@@ -39,7 +46,13 @@ function GeneralGroup(element) {
 function getGroups(element) {
 
   const groups = [
-    GeneralGroup(element)
+    GeneralGroup(element),
+
+    // todo: remove me
+    NOOP_GROUP,
+    NOOP_GROUP,
+    NOOP_GROUP,
+    NOOP_GROUP
   ];
 
   return groups;

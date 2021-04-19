@@ -1,3 +1,18 @@
+:root {
+  --silver-darken-80: #cdcdcd;
+
+  --color-cccccc: #cccccc;
+  --color-aaaaaa: #aaaaaa;
+  --color-white: white;
+
+  --color-background-light: #e8eaee;
+  --color-line-base: #d2d2d2;
+  --color-input-focus: #0391ef;
+  --color-input-focus-light: #f4faff;
+
+  --text-size-base: 14px;
+}
+
 .bio-properties-panel * {
   box-sizing: border-box;
 }
@@ -6,15 +21,17 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  font-size: 14px;
+  font-size: var(--text-size-base);
   padding: 10px;
-  background-color: rgb(218,219,221);
-  border-top: 1px solid #aaa;
-  border: 1px solid #cccccc;
+  margin: -1px;
+  margin-bottom: 1px;
+  background-color: var(--color-background-light);
+  border: 1px solid var(--color-cccccc);
+  border-top: 1px solid var(--color-aaaaaa);
+  overflow: hidden;
 }
 
 .bio-properties-panel-header-icon {
-  margin-right: 5px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -25,9 +42,15 @@
   font-weight: bold;
 }
 
+.bio-properties-panel-scroll-container {
+  margin: -1px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .bio-properties-panel-group {
-  background-color: white;
-  border: 1px solid #cccccc;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-cccccc);
   z-index: 1;
 }
 
@@ -36,17 +59,21 @@
   font-weight: 500;
 }
 
+.bio-properties-panel-group-header-title-no-content {
+  opacity: 0.6;
+}
+
 .bio-properties-panel-group-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: var(--text-size-base);
   padding: 10px;
 }
 
 .bio-properties-panel-group-entries {
-  border-bottom: solid 1px #cdcdcd;
+  border-bottom: solid 1px var(--color-silver-darken);
 }
 
 .bio-properties-panel-group:last-child .bio-properties-panel-group-entries {
@@ -86,9 +113,9 @@
 
 .bio-properties-panel-input {
   padding: 5px 6px 4px;
-  border: 1px solid rgb(210,210,210);
+  border: 1px solid var(--color-line-base);
   border-radius: 3px;
-  background-color: rgba(0,0,0,.05);
+  background-color: var(--color-background-light);
   font-size: 14px;
 }
 
@@ -101,8 +128,8 @@
 
 .bio-properties-panel-input:focus {
   outline: none;
-  background-color: rgb(244,250,255);
-  border: 1px solid rgb(3,145,239);
+  background-color: var(--color-input-focus-light);
+  border: 1px solid var(--color-input-focus);
 }
 
 .bio-properties-panel-input[type="checkbox"], .bio-properties-panel-input[type="radio"] {
@@ -122,7 +149,7 @@
 
 .bio-properties-panel-placeholder {
   padding: 10px;
-  color: #cdcdcd;
+  color: var(--color-silver-darken);
   font-size: 14px;
   text-align: center;
 }

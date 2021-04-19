@@ -12,13 +12,13 @@ export default function Group(props) {
     label
   } = props;
 
-  const [ open, setOpen ] = useState(true);
+  const [ open, setOpen ] = useState(false);
 
   const toggleOpen = () => setOpen(!open);
 
   return <div class="bio-properties-panel-group" id={ 'group-' + id }>
     <div class="bio-properties-panel-group-header" onClick={ toggleOpen }>
-      <div class="bio-properties-panel-group-header-title">
+      <div class={ 'bio-properties-panel-group-header-title' + (!children.length ? '-no-content' : '') }>
         { label }
       </div>
       <ChevronIcon width="16" height="16" class={ open ? 'bio-properties-panel-chevron-down' : 'bio-properties-panel-chevron-right' } />
