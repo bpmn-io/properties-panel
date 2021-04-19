@@ -1,25 +1,25 @@
-// todo: make dynamic
-import ServiceTaskIcon from '../../icons/ServiceTask.svg';
-
-
 export default function Header(props) {
 
   const {
-    element
+    element,
+    elementIcons,
+    getElementLabel
   } = props;
 
-  const label = typeToLabel(element.type);
+  const {
+    type
+  } = element;
+
+  const label = typeToLabel(type);
+
+  const ElementIcon = elementIcons[type] || elementIcons['default'];
 
   return (<div class="bio-properties-panel-header">
     <div class="bio-properties-panel-header-icon">
-      <ServiceTaskIcon width="36" height="36" viewBox="0 0 54 54" />
+      <ElementIcon width="36" height="36" viewBox="0 0 54 54" />
     </div>
     <div>
-      {
-
-        // todo: make dynamic
-        <div class="bio-properties-panel-header-label">{ element.businessObject.name || '<empty label>' }</div>
-      }
+      <div class="bio-properties-panel-header-label">{ getElementLabel(element) || '<empty label>' }</div>
       <span class="bio-properties-panel-header-type">{ label }</span>
     </div>
   </div>);
