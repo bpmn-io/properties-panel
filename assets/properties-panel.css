@@ -7,6 +7,8 @@
 
   --color-background-light: #e8eaee;
   --color-line-base: #d2d2d2;
+
+  --color-input-background: #f3f4f6;
   --color-input-focus: #0391ef;
   --color-input-focus-light: #f4faff;
 
@@ -89,6 +91,10 @@
   opacity: 0.3;
 }
 
+.bio-properties-panel-plus {
+  opacity: 0.3;
+}
+
 .bio-properties-panel-entry {
   margin: 2px 12px 4px;
 }
@@ -115,7 +121,7 @@
   padding: 5px 6px 4px;
   border: 1px solid var(--color-line-base);
   border-radius: 3px;
-  background-color: var(--color-background-light);
+  background-color: var(--color-input-background);
   font-size: 14px;
 }
 
