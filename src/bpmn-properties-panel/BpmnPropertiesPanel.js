@@ -17,9 +17,9 @@ import {
 
 // todo: collect somewhere else
 const ELEMENT_ICON_MAP = {
-  'bpmn:ServiceTask': require('../../icons/ServiceTask.svg').default,
-  'bpmn:StartEvent': require('../../icons/StartEvent.svg').default,
-  'default': require('../../icons/DefaultElement.svg').default
+  'bpmn:ServiceTask': require('../icons/ServiceTask.svg').default,
+  'bpmn:StartEvent': require('../icons/StartEvent.svg').default,
+  'default': require('../icons/DefaultElement.svg').default
 };
 
 

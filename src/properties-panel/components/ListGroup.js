@@ -2,10 +2,10 @@ import {
   useState
 } from 'preact/hooks';
 
-import ChevronIcon from '../../../icons/Chevron.svg';
+import PlusIcon from '../../icons/Plus.svg';
 
 
-export default function Group(props) {
+export default function ListGroup(props) {
   const {
     id,
     children,
@@ -21,7 +21,7 @@ export default function Group(props) {
       <div class={ 'bio-properties-panel-group-header-title' + (!children.length ? '-no-content' : '') }>
         { label }
       </div>
-      <ChevronIcon width="16" height="16" class={ open ? 'bio-properties-panel-chevron-down' : 'bio-properties-panel-chevron-right' } />
+      <PlusIcon width="16" height="16" class="bio-properties-panel-plus" />
     </div>
     {
       open

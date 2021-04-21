@@ -7,10 +7,10 @@ import {
 
 import Modeler from 'bpmn-js/lib/Modeler';
 
-import BpmnPropertiesPanel from 'src/features/bpmn-properties-panel';
+import BpmnPropertiesPanel from 'src/bpmn-properties-panel';
 
-import BpmnPropertiesProvider from 'src/features/bpmn-properties-panel/provider/bpmn';
-import ZeebePropertiesProvider from 'src/features/bpmn-properties-panel/provider/zeebe';
+import BpmnPropertiesProvider from 'src/bpmn-properties-panel/provider/bpmn';
+import ZeebePropertiesProvider from 'src/bpmn-properties-panel/provider/zeebe';
 
 
 import simpleXml from 'test/fixtures/diagram.bpmn';

@@ -2,13 +2,15 @@ import {
   flatten
 } from 'min-dash';
 
-import {
-  isAny
-} from 'bpmn-js/lib/features/modeling/util/ModelingUtil';
-
 import ListGroup from '../../../properties-panel/components/ListGroup';
 
+import {
+  areInputParametersSupported,
+  areOutputParametersSupported
+} from './utils/InputOutputUtil';
+
 const LOW_PRIORITY = 500;
+
 
 function InputsGroup(element) {
   const entries = [];
@@ -63,27 +65,3 @@ export default class ZeebePropertiesProvider {
 }
 
 ZeebePropertiesProvider.$inject = [ 'propertiesPanel' ];
-
-
-// helper ////////////////////
-
-// todo: move me to a helper
-function areInputParametersSupported(element) {
-  return isAny(element, [
-    'bpmn:ServiceTask',
-    'bpmn:UserTask',
-    'bpmn:SubProcess',
-    'bpmn:CallActivity'
-  ]);
-}
-
-function areOutputParametersSupported(element) {
-  return isAny(element, [
-    'bpmn:ServiceTask',
-    'bpmn:UserTask',
-    'bpmn:SubProcess',
-    'bpmn:ReceiveTask',
-    'bpmn:CallActivity',
-    'bpmn:Event'
-  ]);
-}
