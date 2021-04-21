@@ -84,6 +84,8 @@ export default function BpmnPropertiesPanel(props) {
 
     const updatedElement = findElement(elements, selectedElement);
 
+    console.log('[PropertiesPanel]: reload.', updatedElement);
+
     if (updatedElement) {
       setSelectedElement(updatedElement);
     }

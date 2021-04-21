@@ -10,24 +10,28 @@ import {
   getExtensionElements
 } from './ExtensionElementsUtil';
 
+import {
+  createElement
+} from './ElementUtil';
+
 function getElements(bo, type, prop) {
   const elems = getExtensionElements(bo, type);
   return !prop ? elems : (elems[0] || {})[prop] || [];
 }
 
 function getParameters(element, prop) {
-  const inputOutput = getInputOutput(element);
-  return (inputOutput && inputOutput.get(prop)) || [];
+  const ioMapping = getIoMapping(element);
+  return (ioMapping && ioMapping.get(prop)) || [];
 }
 
 /**
- * Get a inputOutput from the business object
+ * Get a ioMapping from the business object
  *
  * @param {djs.model.Base} element
  *
- * @return {ModdleElement} the inputOutput object
+ * @return {ModdleElement} the ioMapping object
  */
-export function getInputOutput(element) {
+export function getIoMapping(element) {
   const bo = getBusinessObject(element);
   return (getElements(bo, 'zeebe:IoMapping') || [])[0];
 }
@@ -75,4 +79,8 @@ export function areOutputParametersSupported(element) {
     'bpmn:CallActivity',
     'bpmn:Event'
   ]);
+}
+
+export function createIOMapping(properties, parent, bpmnFactory) {
+  return createElement('zeebe:IoMapping', properties, parent, bpmnFactory);
 }

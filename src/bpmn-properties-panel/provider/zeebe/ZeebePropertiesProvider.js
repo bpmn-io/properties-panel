@@ -5,6 +5,19 @@ import {
 import ListGroup from '../../../properties-panel/components/ListGroup';
 
 import {
+  InputsProperties,
+  OutputsProperties
+} from './properties';
+
+import {
+  addInputParameter
+} from './properties/Inputs';
+
+import {
+  addOutputParameter
+} from './properties/Outputs';
+
+import {
   areInputParametersSupported,
   areOutputParametersSupported
 } from './utils/InputOutputUtil';
@@ -13,23 +26,35 @@ const LOW_PRIORITY = 500;
 
 
 function InputsGroup(element) {
-  const entries = [];
+  const entries = [
+    {
+      id: 'inputs',
+      component: <InputsProperties key="inputs" element={ element } />
+    },
+  ];
 
   return {
     id: 'inputs',
     label: 'Input',
     entries,
+    add: addInputParameter,
     component: ListGroup
   };
 }
 
 function OutputsGroup(element) {
-  const entries = [];
+  const entries = [
+    {
+      id: 'inputs',
+      component: <OutputsProperties key="outputs" element={ element } />
+    },
+  ];
 
   return {
     id: 'outputs',
     label: 'Output',
     entries,
+    add: addOutputParameter,
     component: ListGroup
   };
 }

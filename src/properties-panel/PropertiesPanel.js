@@ -2,13 +2,11 @@ import Header from './Header';
 
 function renderGroup(props) {
   const {
-    id,
     component: GroupComponent,
-    entries,
-    label
+    entries
   } = props;
 
-  return <GroupComponent id={ id } label={ label }>
+  return <GroupComponent { ...props }>
     { entries.map(e => e.component) }
   </GroupComponent>;
 }

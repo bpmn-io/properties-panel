@@ -12,8 +12,8 @@ import BpmnPropertiesPanel from 'src/bpmn-properties-panel';
 import BpmnPropertiesProvider from 'src/bpmn-properties-panel/provider/bpmn';
 import ZeebePropertiesProvider from 'src/bpmn-properties-panel/provider/zeebe';
 
-
-import simpleXml from 'test/fixtures/diagram.bpmn';
+import ZeebeModdle from 'zeebe-bpmn-moddle/resources/zeebe';
+import ZeebeModdleExtension from 'zeebe-bpmn-moddle/lib';
 
 const singleStart = window.__env__ && window.__env__.SINGLE_START;
 
@@ -49,10 +49,14 @@ describe('<PropertiesPanel>', function() {
         bindTo: document
       },
       additionalModules: [
+        ZeebeModdleExtension,
         BpmnPropertiesPanel,
         BpmnPropertiesProvider,
-        ZeebePropertiesProvider
+        ZeebePropertiesProvider,
       ],
+      moddleExtensions: {
+        zeebe: ZeebeModdle
+      },
       propertiesPanel: {
         parent: propertiesContainer
       },
@@ -69,10 +73,26 @@ describe('<PropertiesPanel>', function() {
   }
 
   (singleStart ? it.only : it)('should import simple process', function() {
-    return createModeler(simpleXml).then(function(result) {
+    const diagramXml = require('test/fixtures/simple.bpmn').default;
+
+    return createModeler(diagramXml).then(function(result) {
 
       expect(result.error).not.to.exist;
     });
   });
+
+
+  it('should work with input + output', function() {
+    const diagramXml = require('test/fixtures/service-task.bpmn').default;
+
+    return createModeler(diagramXml).then(function(result) {
+
+      expect(result.error).not.to.exist;
+    });
+  });
+
+
+  // todo
+  it('should allow properties extension');
 
 });

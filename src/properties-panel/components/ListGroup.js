@@ -2,14 +2,12 @@ import {
   useState
 } from 'preact/hooks';
 
-import PlusIcon from '../../icons/Plus.svg';
-
-
 export default function ListGroup(props) {
   const {
     id,
     children,
-    label
+    label,
+    add: AddComponent
   } = props;
 
   const [ open, setOpen ] = useState(false);
@@ -21,7 +19,7 @@ export default function ListGroup(props) {
       <div class={ 'bio-properties-panel-group-header-title' + (!children.length ? '-no-content' : '') }>
         { label }
       </div>
-      <PlusIcon width="16" height="16" class="bio-properties-panel-plus" />
+      <AddComponent />
     </div>
     {
       open
