@@ -1,18 +1,25 @@
+import {
+  useCallback
+} from 'preact/hooks';
+
+
 export default function Header(props) {
 
   const {
     element,
-    elementIcons,
-    getElementLabel
+    headerProvider
   } = props;
 
   const {
     type
   } = element;
 
-  const label = typeToLabel(type);
+  const getElementLabel = useCallback(headerProvider.getElementLabel, [ headerProvider.getElementLabel]);
+  const getElementIcon = useCallback(headerProvider.getElementIcon, [ headerProvider.getElementIcon]);
 
-  const ElementIcon = elementIcons[type] || elementIcons['default'];
+  const typeLabel = typeToLabel(type);
+
+  const ElementIcon = getElementIcon(element);
 
   return (<div class="bio-properties-panel-header">
     <div class="bio-properties-panel-header-icon">
@@ -20,7 +27,7 @@ export default function Header(props) {
     </div>
     <div>
       <div class="bio-properties-panel-header-label">{ getElementLabel(element) || '<empty label>' }</div>
-      <span class="bio-properties-panel-header-type">{ label }</span>
+      <span class="bio-properties-panel-header-type">{ typeLabel }</span>
     </div>
   </div>);
 }

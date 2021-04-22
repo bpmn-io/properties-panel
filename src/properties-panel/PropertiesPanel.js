@@ -15,9 +15,8 @@ function renderGroup(props) {
 export default function PropertiesPanel(props) {
   const {
     element,
-    elementIcons,
+    headerProvider,
     groups,
-    getElementLabel
   } = props;
 
   if (!element) {
@@ -27,8 +26,7 @@ export default function PropertiesPanel(props) {
   return <div class="bio-properties-panel">
     <Header
       element={ element }
-      elementIcons={ elementIcons }
-      getElementLabel={ getElementLabel } />
+      headerProvider={ headerProvider } />
     <div class="bio-properties-panel-scroll-container">
       {
         groups.map(renderGroup)

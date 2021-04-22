@@ -15,12 +15,7 @@ import {
   PropertiesPanelContext
 } from './context';
 
-// todo: collect somewhere else
-const ELEMENT_ICON_MAP = {
-  'bpmn:ServiceTask': require('../icons/ServiceTask.svg').default,
-  'bpmn:StartEvent': require('../icons/StartEvent.svg').default,
-  'default': require('../icons/DefaultElement.svg').default
-};
+import PanelHeaderProvider from './PanelHeaderProvider';
 
 
 export default function BpmnPropertiesPanel(props) {
@@ -105,8 +100,7 @@ export default function BpmnPropertiesPanel(props) {
   return <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
     <PropertiesPanel
       element={ selectedElement }
-      elementIcons={ ELEMENT_ICON_MAP }
-      getElementLabel={ (element) => element.businessObject.name } // todo: do via context
+      headerProvider={ PanelHeaderProvider }
       groups={ groups } />
   </PropertiesPanelContext.Provider>;
 }

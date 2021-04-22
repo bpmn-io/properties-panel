@@ -10,6 +10,9 @@ export default function NameProperty(props) {
     element
   } = props;
 
+  // todo(pinussilvestrus): handle other cases as
+  // a) Text Annotations
+  // b) Groups
   const modeling = useService('modeling');
 
   const setValue = (value) => {
