@@ -1,0 +1,111 @@
+import {
+  useMemo,
+  useState,
+  useEffect
+} from 'preact/hooks';
+
+import classnames from 'classnames';
+
+import Header from './components/Header';
+
+import Group from './components/Group';
+
+import {
+  LayoutContext
+} from './context';
+
+const DEFAULT_LAYOUT = {
+  width: 250,
+  open: true
+};
+
+function renderGroup(props) {
+  const {
+    component: GroupComponent = Group,
+  } = props;
+
+  return <GroupComponent { ...props } />;
+}
+
+/**
+ * @typedef { { id: String, component: import('preact').ComponentChild } } EntryDefinition
+ * @typedef { { id: String, label: String, entries: Array<EntryDefinition> }} ListItemDefinition
+ * @typedef { { id: String, label: String, items: Array<ListItemDefinition>, add: import('preact').Component }, component: import('preact').Component }} ListGroupDefinition
+ * @typedef { { id: String, label: String, entries: Array<EntryDefinition>, component?: import('preact').Component } } GroupDefinition
+ */
+
+
+/**
+ * A basic properties panel component. Describes *how* content will be rendered, accepts
+ * data from implementor to describe *what* will be rendered.
+ *
+ * @param {Object} props
+ * @param {Object} props.element
+ * @param {import('./components/Header').HeaderProvider} props.headerProvider
+ * @param {Array<GroupDefinition|ListGroupDefinition>} props.groups
+ * @param {Object} [props.layoutConfig]
+ * @param {Function} [props.layoutChanged]
+ */
+export default function PropertiesPanel(props) {
+  const {
+    element,
+    headerProvider,
+    groups,
+    layoutConfig = {},
+    layoutChanged
+  } = props;
+
+  if (!element) {
+    return <div class="bio-properties-panel-placeholder">Select an element to edit its properties.</div>;
+  }
+
+  const [ layout, setLayout ] = useState(createLayoutContext(layoutConfig));
+
+  useEffect(() => {
+    if (typeof layoutChanged === 'function') {
+      layoutChanged(layout);
+    }
+  }, [ layout ]);
+
+  const setLayoutForKey = (key, config) => {
+    setLayout({
+      ...layout,
+      [key]: config
+    });
+  };
+
+  const layoutContext = useMemo(() => ({
+    layout,
+    setLayout,
+    setLayoutForKey
+  }), [ layout ]);
+
+
+  return <LayoutContext.Provider value={ layoutContext }>
+    <div
+      class={ classnames(
+        'bio-properties-panel',
+        layout.open ? 'open' : '')
+      }
+      style={ { width: layout.width } }>
+      <Header
+        element={ element }
+        headerProvider={ headerProvider } />
+      <div class="bio-properties-panel-scroll-container">
+        {
+          groups.map(renderGroup)
+        }
+      </div>
+    </div>
+  </LayoutContext.Provider>;
+}
+
+
+// helpers //////////////////
+
+function createLayoutContext(overrides) {
+  return {
+    ...DEFAULT_LAYOUT,
+    ...overrides
+  };
+}
