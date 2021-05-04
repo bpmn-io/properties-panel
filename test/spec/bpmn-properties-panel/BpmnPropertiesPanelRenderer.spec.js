@@ -93,6 +93,39 @@ describe('<BpmnPropertiesPanelRenderer>', function() {
   });
 
 
+  it('should render properties panel when root element was added', function() {
+
+    // given
+    const diagramXml = require('test/fixtures/simple.bpmn').default;
+
+    return createModeler(diagramXml).then(function() {
+
+      // then
+      expect(domQuery('.bio-properties-panel', propertiesContainer)).to.exist;
+
+    });
+  });
+
+
+  it('should remove properties panel when root element was deleted', function() {
+
+    // given
+    const diagramXml = require('test/fixtures/simple.bpmn').default;
+
+    return createModeler(diagramXml).then(function() {
+
+      const eventBus = modeler.get('eventBus');
+
+      // when
+      eventBus.fire('root.removed');
+
+      // then
+      expect(domQuery('.bio-properties-panel', propertiesContainer)).to.not.exist;
+
+    });
+  });
+
+
   it('should allow providing custom entries', function() {
 
     // given
