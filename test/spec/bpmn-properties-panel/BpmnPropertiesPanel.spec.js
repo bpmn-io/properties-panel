@@ -113,25 +113,6 @@ describe('<BpmnPropertiesPanel>', function() {
 
   describe('event emitting', function() {
 
-    it('should update when root element was added', function() {
-
-      // given
-      const updateSpy = sinon.spy();
-
-      const eventBus = new eventBusMock();
-
-      eventBus.on('propertiesPanel.updated', updateSpy);
-
-      createBpmnPropertiesPanel({ container, eventBus });
-
-      // when
-      eventBus.fire('root.added', { element: noopElement });
-
-      // then
-      expect(updateSpy).to.have.been.calledOnce;
-    });
-
-
     it('should update on selection changed', function() {
 
       // given
@@ -147,7 +128,9 @@ describe('<BpmnPropertiesPanel>', function() {
       eventBus.fire('selection.changed', { newSelection: [ noopElement ] });
 
       // then
-      expect(updateSpy).to.have.been.calledOnce;
+      expect(updateSpy).to.have.been.calledWith({
+        element: noopElement
+      });
     });
 
 
@@ -166,7 +149,9 @@ describe('<BpmnPropertiesPanel>', function() {
       eventBus.fire('elements.changed', { elements: [ noopElement ] });
 
       // then
-      expect(updateSpy).to.have.been.calledOnce;
+      expect(updateSpy).to.have.been.calledWith({
+        element: noopElement
+      });
     });
 
 

@@ -30,14 +30,24 @@ export default class BpmnPropertiesPanelRenderer {
 
     this._eventBus = eventBus;
 
-    render(
-      <BpmnPropertiesPanel
-        injector={ injector }
-        getProviders={ this._getProviders.bind(this) }
-        layoutConfig={ layoutConfig }
-      />,
-      parentNode
-    );
+    this._eventBus.on('root.added', (event) => {
+
+      const { element } = event;
+
+      render(
+        <BpmnPropertiesPanel
+          element={ element }
+          injector={ injector }
+          getProviders={ this._getProviders.bind(this) }
+          layoutConfig={ layoutConfig }
+        />,
+        parentNode
+      );
+    });
+
+    eventBus.on('root.removed', () => {
+      render(null, parentNode);
+    });
   }
 
   /**
