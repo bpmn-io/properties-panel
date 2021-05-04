@@ -2,16 +2,7 @@ import {
   getBusinessObject
 } from 'bpmn-js/lib/util/ModelUtil';
 
-import ServiceTaskIcon from '../icons/ServiceTask.svg';
-import StartEventIcon from '../icons/StartEvent.svg';
-import DefaultElementIcon from '../icons/DefaultElement.svg';
-
-// todo(pinussilvestrus): collect somewhere else + complete
-const ELEMENT_ICON_MAP = {
-  'bpmn:ServiceTask': ServiceTaskIcon,
-  'bpmn:StartEvent': StartEventIcon,
-  'default': DefaultElementIcon
-};
+import iconsByType from './icons';
 
 export default class PanelHeaderProvider {
 
@@ -29,7 +20,7 @@ export default class PanelHeaderProvider {
       type
     } = element;
 
-    return ELEMENT_ICON_MAP[ type ] || ELEMENT_ICON_MAP[ 'default' ];
+    return iconsByType[ type ] || iconsByType[ 'default' ];
   }
 
   static getTypeLabel(element) {
