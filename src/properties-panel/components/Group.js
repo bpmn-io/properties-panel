@@ -4,7 +4,7 @@ import {
 
 import classnames from 'classnames';
 
-import ChevronIcon from '../../icons/Chevron.svg';
+import { GroupArrowIcon } from './icons';
 
 /**
  * @param {import('../PropertiesPanel').GroupDefinition} props
@@ -25,7 +25,7 @@ export default function Group(props) {
       <div class="bio-properties-panel-group-header-title">
         { label }
       </div>
-      <ChevronIcon width="16" height="16" class={ open ? 'bio-properties-panel-chevron-down' : 'bio-properties-panel-chevron-right' } />
+      <GroupArrowIcon width="16" height="16" class={ open ? 'bio-properties-panel-chevron-down' : 'bio-properties-panel-chevron-right' } />
     </div>
     <div class={ classnames(
       'bio-properties-panel-group-entries',

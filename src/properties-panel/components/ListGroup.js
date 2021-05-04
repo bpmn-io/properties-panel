@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import ListItem from './ListItem';
 
-import PlusIcon from '../../icons/Plus.svg';
+import { CreateIcon } from './icons';
 
 
 /**
@@ -30,7 +30,7 @@ export default function ListGroup(props) {
         { label }
       </div>
       <AddContainer>
-        <PlusIcon width="16" height="16" class="bio-properties-panel-plus" />
+        <CreateIcon width="16" height="16" class="bio-properties-panel-plus" />
       </AddContainer>
     </div>
     <div class={ classnames(
