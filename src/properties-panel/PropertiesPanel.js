@@ -14,7 +14,6 @@ import {
 } from './context';
 
 const DEFAULT_LAYOUT = {
-  width: 250,
   open: true
 };
 
@@ -84,8 +83,7 @@ export default function PropertiesPanel(props) {
       class={ classnames(
         'bio-properties-panel',
         layout.open ? 'open' : '')
-      }
-      style={ { width: layout.width } }>
+      }>
       <Header
         element={ element }
         headerProvider={ headerProvider } />

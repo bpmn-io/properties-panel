@@ -30,5 +30,6 @@ html, body, .modeler-container, .modeler-container > div {
   position: relative;
   flex: none;
   height: 100%;
+  width: 250px;
   border-left: solid 1px #cccccc;
 }

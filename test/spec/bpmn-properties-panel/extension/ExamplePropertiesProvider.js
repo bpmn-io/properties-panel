@@ -164,20 +164,10 @@ function ChangeLayoutEntry(props) {
     });
   };
 
-  const increaseWidth = () => {
-    setLayout({
-      ...layout,
-      width: layout.width + 20
-    });
-  };
-
   return (
     <div>
       <div class="bio-properties-panel-entry">
         <button onClick={ hideEntry }>Hide properties panel</button>
-      </div>
-      <div class="bio-properties-panel-entry">
-        <button onClick={ increaseWidth }>Increase width</button>
       </div>
     </div>
   );
