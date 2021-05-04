@@ -216,7 +216,6 @@ describe('<PropertiesPanel>', function() {
 
       // given
       const layoutConfig = {
-        width: 300,
         open: true,
         foo: 'bar'
       };
