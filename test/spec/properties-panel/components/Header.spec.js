@@ -65,6 +65,44 @@ describe('<Header>', function() {
   });
 
 
+  it('should NOT render label - not given', function() {
+
+    // given
+    const provider = {
+      getElementLabel: () => null,
+      getTypeLabel: () => 'type',
+      getElementIcon: () => 'icon'
+    };
+
+    // when
+    const result = render(<Header headerProvider={ provider } />, container);
+
+    const labelNode = domQuery('.bio-properties-panel-header-label', result.container);
+
+    // then
+    expect(labelNode).to.not.exist;
+  });
+
+
+  it('should NOT render label - empty string', function() {
+
+    // given
+    const provider = {
+      getElementLabel: () => '',
+      getTypeLabel: () => 'type',
+      getElementIcon: () => 'icon'
+    };
+
+    // when
+    const result = render(<Header headerProvider={ provider } />, container);
+
+    const labelNode = domQuery('.bio-properties-panel-header-label', result.container);
+
+    // then
+    expect(labelNode).to.not.exist;
+  });
+
+
   it('should render type', function() {
 
     // given
