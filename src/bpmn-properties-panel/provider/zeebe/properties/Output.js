@@ -44,11 +44,11 @@ export default function OutputProperties(element) {
 
   return {
     items,
-    add: addOutputParameter
+    add: AddOutputParameter
   };
 }
 
-function addOutputParameter(props) {
+function AddOutputParameter(props) {
   const {
     children
   } = props;

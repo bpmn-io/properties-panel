@@ -14,11 +14,11 @@ export default function ExecutableProperty(props) {
     element
   } = props;
 
+  const modeling = useService('modeling');
+
   if (!is(element, 'bpmn:Process')) {
     return;
   }
-
-  const modeling = useService('modeling');
 
   const setValue = (value) => {
     modeling.updateProperties(element, {

@@ -1,12 +1,14 @@
 {
   "extends": [
     "plugin:bpmn-io/es6",
-    "plugin:bpmn-io/jsx"
+    "plugin:bpmn-io/jsx",
+    "plugin:react-hooks/recommended"
   ],
   "rules": {
     "import/first": "error",
     "import/no-amd": "error",
-    "import/no-webpack-loader-syntax": "error"
+    "import/no-webpack-loader-syntax": "error",
+    "react-hooks/exhaustive-deps": "off"
   },
   "plugins": [
     "import"
