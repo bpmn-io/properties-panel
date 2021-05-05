@@ -59,6 +59,10 @@
   align-items: center;
 }
 
+.bio-properties-panel-header-labels {
+  overflow: hidden;
+}
+
 .bio-properties-panel-header-type {
   font-size: 12px;
   font-weight: bold;
