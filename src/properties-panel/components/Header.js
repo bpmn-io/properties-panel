@@ -1,7 +1,3 @@
-import {
-  useCallback
-} from 'preact/hooks';
-
 /**
  * @typedef { { getElementLabel: Function, getTypeLabel: Function, getElementIcon: Function } } HeaderProvider
  */
@@ -18,9 +14,11 @@ export default function Header(props) {
     headerProvider
   } = props;
 
-  const getElementLabel = useCallback(headerProvider.getElementLabel, [ headerProvider.getElementLabel]);
-  const getTypeLabel = useCallback(headerProvider.getTypeLabel, [ headerProvider.getTypeLabel]);
-  const getElementIcon = useCallback(headerProvider.getElementIcon, [ headerProvider.getElementIcon]);
+  const {
+    getElementLabel,
+    getTypeLabel,
+    getElementIcon
+  } = headerProvider;
 
   const ElementIcon = getElementIcon(element);
 

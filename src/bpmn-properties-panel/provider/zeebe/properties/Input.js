@@ -44,11 +44,11 @@ export default function InputProperties(element) {
 
   return {
     items,
-    add: addInputParameter
+    add: AddInputParameter
   };
 }
 
-function addInputParameter(props) {
+function AddInputParameter(props) {
   const {
     children
   } = props;

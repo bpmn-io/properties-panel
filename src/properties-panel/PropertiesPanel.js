@@ -1,5 +1,4 @@
 import {
-  useMemo,
   useState,
   useEffect
 } from 'preact/hooks';
@@ -55,17 +54,13 @@ export default function PropertiesPanel(props) {
     layoutChanged
   } = props;
 
-  if (!element) {
-    return <div class="bio-properties-panel-placeholder">Select an element to edit its properties.</div>;
-  }
-
   const [ layout, setLayout ] = useState(createLayoutContext(layoutConfig));
 
   useEffect(() => {
     if (typeof layoutChanged === 'function') {
       layoutChanged(layout);
     }
-  }, [ layout ]);
+  }, [ layout, layoutChanged ]);
 
   const setLayoutForKey = (key, config) => {
     setLayout({
@@ -74,12 +69,15 @@ export default function PropertiesPanel(props) {
     });
   };
 
-  const layoutContext = useMemo(() => ({
+  const layoutContext = {
     layout,
     setLayout,
     setLayoutForKey
-  }), [ layout ]);
+  };
 
+  if (!element) {
+    return <div class="bio-properties-panel-placeholder">Select an element to edit its properties.</div>;
+  }
 
   return <LayoutContext.Provider value={ layoutContext }>
     <div

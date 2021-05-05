@@ -83,11 +83,11 @@ function SimpleInputEntry(props) {
     element
   } = props;
 
+  const modeling = useService('modeling');
+
   if (!is(element, 'bpmn:StartEvent')) {
     return;
   }
-
-  const modeling = useService('modeling');
 
   const setValue = (value) => {
     modeling.updateProperties(element, {
@@ -218,9 +218,7 @@ function OrderingEntry(props) {
     return `customOrdering-${element.id}`;
   }, [ element.id ]);
 
-  const ordering = useMemo(() => {
-    return layout[layoutKey] || [1, 2, 3, 4, 5];
-  }, [ layout[layoutKey] ]);
+  const ordering = layout[layoutKey] || [1, 2, 3, 4, 5];
 
   const setRandomOrdering = () =>{
     setLayoutForKey(layoutKey, shuffle(ordering));
