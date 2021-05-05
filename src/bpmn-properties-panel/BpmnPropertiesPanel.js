@@ -15,7 +15,7 @@ import {
   BpmnPropertiesPanelContext
 } from './context';
 
-import PanelHeaderProvider from './PanelHeaderProvider';
+import { PanelHeaderProvider } from './PanelHeaderProvider';
 
 /**
  * @param {Object} props
