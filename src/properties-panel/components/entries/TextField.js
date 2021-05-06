@@ -1,5 +1,5 @@
 import {
-  useCallback
+  useMemo
 } from 'preact/hooks';
 
 import {
@@ -9,14 +9,17 @@ import {
 function Textfield(props) {
 
   const {
+    debounce: shouldDebounce,
     id,
     label,
+    onInput,
     value = ''
   } = props;
 
-  const debouncedOnInput = useCallback(props.debounce ? debounce(props.onInput, 300) : props.onInput, [ props.onInput ]);
+  const debouncedOnInput = useMemo(() => shouldDebounce ? debounce(onInput, 300) : onInput,
+    [ onInput, shouldDebounce ]);
 
-  const onInput = ({ target }) => {
+  const handleInput = ({ target }) => {
     debouncedOnInput(target.value.length ? target.value : undefined);
   };
 
@@ -28,7 +31,7 @@ function Textfield(props) {
         type="text"
         spellCheck="false"
         class="bio-properties-panel-input"
-        onInput={ onInput }
+        onInput={ handleInput }
         onFocus={ props.onFocus }
         onBlur={ props.onBlur }
         value={ value || '' } />
