@@ -29,7 +29,9 @@ function Textfield(props) {
       <input
         id={ prefixId(id) }
         type="text"
+        name={ id }
         spellCheck="false"
+        autoComplete="off"
         class="bio-properties-panel-input"
         onInput={ handleInput }
         onFocus={ props.onFocus }
