@@ -29,25 +29,59 @@ export default class BpmnPropertiesPanelRenderer {
     }
 
     this._eventBus = eventBus;
+    this._injector = injector;
+    this._layoutConfig = layoutConfig;
+
+    this._parentNode = parentNode;
+
 
     this._eventBus.on('root.added', (event) => {
 
       const { element } = event;
 
-      render(
-        <BpmnPropertiesPanel
-          element={ element }
-          injector={ injector }
-          getProviders={ this._getProviders.bind(this) }
-          layoutConfig={ layoutConfig }
-        />,
-        parentNode
-      );
+      if (this._parentNode) {
+        this.attachTo(this._parentNode, element);
+      }
     });
 
     eventBus.on('root.removed', () => {
-      render(null, parentNode);
+      this.detach();
     });
+  }
+
+  attachTo(container, element) {
+    const canvas = this._injector.get('canvas');
+
+    if (!container) {
+      throw new Error('container required');
+    }
+
+    if (!element) {
+      element = canvas.getRootElement();
+    }
+
+    // (1) detach from old parent
+    this.detach();
+
+    // (2) save new parent
+    this._parentNode = container;
+
+    // (3) render properties panel to new parent
+    render(
+      <BpmnPropertiesPanel
+        element={ element }
+        injector={ this._injector }
+        getProviders={ this._getProviders.bind(this) }
+        layoutConfig={ this._layoutConfig }
+      />,
+      this._parentNode
+    );
+  }
+
+  detach() {
+    if (this._parentNode) {
+      render(null, this._parentNode);
+    }
   }
 
   /**
@@ -78,10 +112,6 @@ export default class BpmnPropertiesPanelRenderer {
 
     return event.providers;
   }
-
-  attach() {}
-
-  detach() {}
 }
 
 BpmnPropertiesPanelRenderer.$inject = ['config.propertiesPanel', 'injector', 'eventBus'];

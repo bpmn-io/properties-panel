@@ -8,7 +8,8 @@ import {
 } from 'test/TestHelper';
 
 import {
-  query as domQuery
+  query as domQuery,
+  domify
 } from 'min-dom';
 
 import Modeler from 'bpmn-js/lib/Modeler';
@@ -148,6 +149,63 @@ describe('<BpmnPropertiesPanelRenderer>', function() {
       expect(getGroup(propertiesContainer, 'foo-group')).to.exist;
     });
 
+  });
+
+
+  it('#attachTo', function() {
+
+    // given
+    const container = domify('<div></div>');
+
+    const modules = [
+      BpmnPropertiesPanel,
+      BpmnPropertiesProvider
+    ];
+
+    const diagramXml = require('test/fixtures/simple.bpmn').default;
+
+    createModeler(diagramXml, {
+      propertiesPanel: {},
+      additionalModules: modules
+    }).then(function() {
+      const propertiesPanel = modeler.get('propertiesPanel');
+
+      // when
+      propertiesPanel.attachTo(container);
+
+      // then
+      expect(domQuery('.bio-properties-panel'), container).to.exist;
+
+    });
+  });
+
+
+  it('#detach', function() {
+
+    // given
+    const container = domify('<div></div>');
+
+    const modules = [
+      BpmnPropertiesPanel,
+      BpmnPropertiesProvider
+    ];
+
+    const diagramXml = require('test/fixtures/simple.bpmn').default;
+
+    createModeler(diagramXml, {
+      propertiesPanel: {},
+      additionalModules: modules
+    }).then(function() {
+      const propertiesPanel = modeler.get('propertiesPanel');
+
+      propertiesPanel.attachTo(container);
+
+      // when
+      propertiesPanel.detach();
+
+      // then
+      expect(domQuery('.bio-properties-panel'), container).to.not.exist;
+    });
   });
 
 });
