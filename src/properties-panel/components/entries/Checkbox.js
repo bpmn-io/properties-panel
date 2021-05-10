@@ -12,7 +12,13 @@ function Checkbox(props) {
 
   return (
     <div class="bio-properties-panel-checkbox">
-      <input id={ prefixId(id) } type="checkbox" class="bio-properties-panel-input" onChange={ handleChange } checked={ value } />
+      <input
+        id={ prefixId(id) }
+        name={ id }
+        type="checkbox"
+        class="bio-properties-panel-input"
+        onChange={ handleChange }
+        checked={ value } />
       <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
     </div>
   );
