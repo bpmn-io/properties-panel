@@ -1,4 +1,5 @@
 const path = require('path');
+const { DefinePlugin } = require('webpack');
 
 const basePath = '.';
 
@@ -71,6 +72,13 @@ module.exports = function(karma) {
           }
         ]
       },
+      plugins: [
+        new DefinePlugin({
+
+          // @barmac: process.env has to be defined to make @testing-library/preact work
+          'process.env': {}
+        })
+      ],
       resolve: {
         mainFields: [
           'browser',
