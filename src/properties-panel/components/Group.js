@@ -22,10 +22,14 @@ export default function Group(props) {
 
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id }>
     <div class="bio-properties-panel-group-header" onClick={ toggleOpen }>
-      <div class="bio-properties-panel-group-header-title">
+      <div title={ label } class="bio-properties-panel-group-header-title">
         { label }
       </div>
-      <GroupArrowIcon width="16" height="16" class={ open ? 'bio-properties-panel-chevron-down' : 'bio-properties-panel-chevron-right' } />
+      <div class="bio-properties-panel-group-header-buttons">
+        <div class="bio-properties-panel-group-header-button">
+          <GroupArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
+        </div>
+      </div>
     </div>
     <div class={ classnames(
       'bio-properties-panel-group-entries',
