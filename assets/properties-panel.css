@@ -7,6 +7,10 @@
   --color-cccccc: #cccccc;
   --color-aaaaaa: #aaaaaa;
   --color-white: white;
+  --color-black: black;
+  --color-000000-opacity-20: rgba(0, 0, 0, 0.2);
+  --color-000000-opacity-25: rgba(0, 0, 0, 0.25);
+  --color-000000-opacity-40: rgba(0, 0, 0, 0.4);
 
   --color-background-light: #e8eaee;
   --color-line-base: #d2d2d2;
@@ -97,7 +101,7 @@
 }
 
 /**
- * Groups + entries
+ * Groups
  */
 .bio-properties-panel-group {
   background-color: var(--color-white);
@@ -135,15 +139,18 @@
   display: block;
 }
 
-.bio-properties-panel-chevron-down {
+.bio-properties-panel-arrow-down {
   transform: rotate(90deg);
   opacity: 0.3;
 }
 
-.bio-properties-panel-chevron-right {
+.bio-properties-panel-arrow-right {
   opacity: 0.3;
 }
 
+/**
+ * Lists
+ */ 
 .bio-properties-panel-list {
   display: none;
 }
@@ -165,7 +172,10 @@
   margin-left: 25px;
 }
 
-.bio-properties-panel-plus {
+/**
+ * Basic entries
+ */ 
+.bio-properties-panel-add-entry {
   opacity: 0.3;
 }
 
@@ -225,4 +235,69 @@
   position: relative;
   display: inline-block;
   padding: 0 0 0 4px;
+}
+
+
+/**
+ * Collapsible entries
+ */
+.bio-properties-panel-collapsible-entry-entries {
+  position: relative;
+  display: none;
+}
+
+.bio-properties-panel-collapsible-entry-entries .bio-properties-panel-entry:last-child {
+  padding-bottom: 0;
+}
+
+.bio-properties-panel-collapsible-entry-entries.open {
+  display: block;
+}
+
+.bio-properties-panel-collapsible-entry-entries  {
+  position: relative;
+  display: none;
+}
+
+.bio-properties-panel-collapsible-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-size-base);
+  padding: 0 10px 10px 10px;
+}
+
+.bio-properties-panel-collapsible-entry-header .bio-properties-panel-collapsible-entry-header-label {
+  margin-left: 10px;
+}
+
+.bio-properties-panel-collapsible-entry-header .bio-properties-panel-arrow-down {
+  opacity: 1;
+}
+
+.bio-properties-panel-collapsible-entry-header .bio-properties-panel-arrow-right {
+  opacity: 1;
+}
+
+.bio-properties-panel-remove-entry {
+  opacity: 0.3;
+  visibility: hidden;
+}
+
+.bio-properties-panel-collapsible-entry-header:hover .bio-properties-panel-remove-entry {
+  visibility: visible;
+}
+
+.bio-properties-panel-remove-entry:hover {
+  opacity: 1;
+}
+
+.bio-properties-panel-collapsible-entry-entries::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 12px;
+  width: 2px;
+  bottom: 0;
+  background-color: var(--color-000000-opacity-25);
 }
