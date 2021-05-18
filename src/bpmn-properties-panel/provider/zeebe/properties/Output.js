@@ -31,20 +31,88 @@ import {
 export default function OutputProperties(element) {
   const outputParameters = getOutputParameters(element) || [];
 
-  const items = outputParameters.map((parameter, idx) => {
+  const items = outputParameters.map((parameter, index) => {
+    const id = 'output-' + index;
+
     return {
-      id: 'output-' + idx,
+      id,
       label: parameter.get('target'),
       entries: InputOutputParameter({
+        idPrefix: id,
         element,
         parameter
-      })
+      }),
+      autoFocusEntry: id + '-target',
+      remove: RemoveContainer({ parameter })
     };
   });
 
   return {
     items,
     add: AddOutputParameter
+  };
+}
+
+function RemoveContainer(props) {
+  const {
+    parameter
+  } = props;
+
+  return function RemoveOutputParameter(props) {
+    const {
+      children
+    } = props;
+
+    const {
+      selectedElement: element
+    } = useContext(BpmnPropertiesPanelContext);
+
+    const commandStack = useService('commandStack');
+
+    const removeElement = (event) => {
+      event.stopPropagation();
+
+      let commands = [];
+
+      const ioMapping = getIoMapping(element);
+
+      if (!ioMapping) {
+        return;
+      }
+
+      commands.push({
+        cmd: 'properties-panel.update-businessobject-list',
+        context: {
+          element: element,
+          currentObject: ioMapping,
+          propertyName: 'outputParameters',
+          objectsToRemove: [ parameter ]
+        }
+      });
+
+      // remove ioMapping if there are no input/output parameters anymore
+      if (ioMapping.get('inputParameters').length + ioMapping.get('outputParameters').length === 1) {
+        commands.push({
+          cmd: 'properties-panel.update-businessobject-list',
+          context: {
+            element: element,
+            currentObject: getBusinessObject(element).get('extensionElements'),
+            propertyName: 'values',
+            objectsToRemove: [ ioMapping ]
+          }
+        });
+      }
+
+      commandStack.execute('properties-panel.multi-command-executor', commands);
+    };
+
+    return (
+      <div onClick={ removeElement }>
+        {
+          children
+        }
+      </div>
+    );
   };
 }
 
@@ -125,7 +193,7 @@ function AddOutputParameter(props) {
         element: element,
         currentObject: ioMapping,
         propertyName: 'outputParameters',
-        objectsToPrepend: [ newParameter ]
+        objectsToAdd: [ newParameter ]
       }
     });
 
