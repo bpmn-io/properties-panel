@@ -81,5 +81,8 @@ function createTextField(options = {}) {
       getValue={ getValue }
       setValue={ setValue }
       debounce={ debounce } />,
-    container);
+    {
+      container
+    }
+  );
 }

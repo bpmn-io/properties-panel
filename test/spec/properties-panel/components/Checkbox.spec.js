@@ -77,5 +77,8 @@ function createCheckbox(options = {}) {
       label={ label }
       getValue={ getValue }
       setValue={ setValue } />,
-    container);
+    {
+      container
+    }
+  );
 }

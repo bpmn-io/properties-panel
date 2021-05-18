@@ -69,5 +69,10 @@ function createGroup(options = {}) {
     container
   } = options;
 
-  return render(<Group id={ id } label={ label } entries={ entries } />, container);
+  return render(
+    <Group id={ id } label={ label } entries={ entries } />,
+    {
+      container
+    }
+  );
 }
