@@ -12,16 +12,17 @@ import {
 export default function InputOutputParameter(props) {
 
   const {
+    idPrefix,
     element,
     parameter
   } = props;
 
   const entries = [{
     id: 'target',
-    component: <TargetProperty element={ element } parameter={ parameter } />
+    component: <TargetProperty idPrefix={ idPrefix } element={ element } parameter={ parameter } />
   },{
     id: 'source',
-    component: <SourceProperty element={ element } parameter={ parameter } />
+    component: <SourceProperty idPrefix={ idPrefix } element={ element } parameter={ parameter } />
   }];
 
   return entries;
@@ -29,6 +30,7 @@ export default function InputOutputParameter(props) {
 
 function TargetProperty(props) {
   const {
+    idPrefix,
     element,
     parameter
   } = props;
@@ -53,7 +55,7 @@ function TargetProperty(props) {
 
   return TextField({
     element: parameter,
-    id: 'target',
+    id: idPrefix + '-target',
     label: translate((is(parameter, 'zeebe:Input') ? 'Local Variable Name' : 'Process Variable Name')),
     getValue,
     setValue,
@@ -63,6 +65,7 @@ function TargetProperty(props) {
 
 function SourceProperty(props) {
   const {
+    idPrefix,
     element,
     parameter
   } = props;
@@ -87,7 +90,7 @@ function SourceProperty(props) {
 
   return TextField({
     element: parameter,
-    id: 'source',
+    id: idPrefix + '-source',
     label: translate('Variable Assignment Value'),
     getValue,
     setValue,
