@@ -36,7 +36,7 @@ describe('<Header>', function() {
     };
 
     // when
-    const result = render(<Header headerProvider={ provider } />, container);
+    const result = render(<Header headerProvider={ provider } />, { container });
 
     const headerNode = domQuery('.bio-properties-panel-header', result.container);
 
@@ -55,7 +55,7 @@ describe('<Header>', function() {
     };
 
     // when
-    const result = render(<Header headerProvider={ provider } />, container);
+    const result = render(<Header headerProvider={ provider } />, { container });
 
     const labelNode = domQuery('.bio-properties-panel-header-label', result.container);
 
@@ -75,7 +75,7 @@ describe('<Header>', function() {
     };
 
     // when
-    const result = render(<Header headerProvider={ provider } />, container);
+    const result = render(<Header headerProvider={ provider } />, { container });
 
     const labelNode = domQuery('.bio-properties-panel-header-label', result.container);
 
@@ -94,7 +94,7 @@ describe('<Header>', function() {
     };
 
     // when
-    const result = render(<Header headerProvider={ provider } />, container);
+    const result = render(<Header headerProvider={ provider } />, { container });
 
     const labelNode = domQuery('.bio-properties-panel-header-label', result.container);
 
@@ -113,7 +113,7 @@ describe('<Header>', function() {
     };
 
     // when
-    const result = render(<Header headerProvider={ provider } />, container);
+    const result = render(<Header headerProvider={ provider } />, { container });
 
     const typeNode = domQuery('.bio-properties-panel-header-type', result.container);
 
@@ -133,7 +133,7 @@ describe('<Header>', function() {
     };
 
     // when
-    const result = render(<Header headerProvider={ provider } />, container);
+    const result = render(<Header headerProvider={ provider } />, { container });
 
     const iconNode = domQuery('.bio-properties-panel-header-icon', result.container);
 
