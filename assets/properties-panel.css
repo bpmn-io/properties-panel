@@ -113,18 +113,58 @@
   font-weight: bold;
 }
 
-.bio-properties-panel-group-header-title-no-content {
+.bio-properties-panel-group-header.empty .bio-properties-panel-group-header-title {
   opacity: 0.6;
+  font-weight: normal;
 }
 
 .bio-properties-panel-group-header {
+  position: relative;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   font-size: var(--text-size-base);
-  padding: 10px;
+  padding: 12px;
+  user-select: none;
 }
+
+.bio-properties-panel-group-header-buttons {
+  position: absolute;
+  right: 5px;
+}
+
+.bio-properties-panel-group-header-buttons .bio-properties-panel-group-header-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.bio-properties-panel-group-header-buttons .bio-properties-panel-group-header-button:last-child {
+  margin-right: 0;
+}
+
+.bio-properties-panel-group-header-buttons .bio-properties-panel-add-entry {
+  opacity: 0.3;
+}
+
+.bio-properties-panel-group-header-buttons .bio-properties-panel-add-entry:hover {
+  opacity: 1;
+}
+
+.bio-properties-panel-group-header:not(.empty) .bio-properties-panel-add-entry {
+  visibility: hidden;
+}
+
+.bio-properties-panel-group-header:not(.empty):hover .bio-properties-panel-add-entry {
+  visibility: visible;
+}
+
 
 .bio-properties-panel-group-entries {
   border-bottom: solid 1px var(--color-silver-darken);
@@ -159,17 +199,23 @@
   display: block;
 }
 
-.bio-properties-panel-list-item .bio-properties-panel-group-header-title {
-  padding: 2px 24px 2px 25px;
-  font-weight: normal;
+.bio-properties-panel-list-item .bio-properties-panel-collapsible-entry-entries {
+  padding-left: 15px;
+  margin-bottom: 10px;
 }
 
-.bio-properties-panel-list-item .bio-properties-panel-group {
-  border-bottom: none;
-}
-
-.bio-properties-panel-list-item .bio-properties-panel-group-entries {
-  margin-left: 25px;
+.bio-properties-panel-list-badge {
+  align-self: center;
+  color: var(--color-000000-opacity-40);
+  border: 2px solid var(--color-000000-opacity-20);
+  border-radius: 20px;
+  min-width: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  height: 22px;
+  padding: 2px 6px;
+  margin-left: 12px;
+  user-select: none;
 }
 
 /**

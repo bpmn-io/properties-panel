@@ -1,13 +1,27 @@
 import {
-  useState
+  useState,
+  useEffect
 } from 'preact/hooks';
 
 import classnames from 'classnames';
 
+import {
+  find,
+  sortBy
+} from 'min-dash';
+
+import {
+  usePrevious
+} from '../hooks';
+
 import ListItem from './ListItem';
 
-import { CreateIcon } from './icons';
+import {
+  CreateIcon,
+  GroupArrowIcon
+} from './icons';
 
+const noop = () => {};
 
 /**
  * @param {import('../PropertiesPanel').ListGroupDefinition} props
@@ -15,35 +29,167 @@ import { CreateIcon } from './icons';
 export default function ListGroup(props) {
   const {
     id,
-    items = [],
+    items,
     label,
     add: AddContainer
   } = props;
 
   const [ open, setOpen ] = useState(false);
+  const [ ordering, setOrdering ] = useState([]);
+  const [ newItemAdded, setNewItemAdded ] = useState(false);
+
+  const prevItems = usePrevious(items);
+
+
+  // keep ordering in sync to items and open changes
+
+  // (0) set initial ordering from given items
+  useEffect(() => {
+    if (!prevItems) {
+      setOrdering(createOrdering(items));
+    }
+  }, [ items ]);
+
+  // (1) items were added
+  useEffect(() => {
+    if (prevItems && items.length > prevItems.length) {
+
+      let add = [];
+
+      items.forEach(item => {
+        if (!ordering.includes(item.id)) {
+          add.push(item.id);
+        }
+      });
+
+      let newOrdering = ordering;
+
+      // sort + open if closed
+      if (!open) {
+        newOrdering = createOrdering(sortItems(items));
+        setOpen(true);
+      }
+
+      // add new items on top
+      newOrdering = removeDuplicates([
+        ...add,
+        ...newOrdering
+      ]);
+
+      setOrdering(newOrdering);
+      setNewItemAdded(true);
+    } else {
+      setNewItemAdded(false);
+    }
+  }, [ items, open ]);
+
+  // (2) sort items on open
+  useEffect(() => {
+
+    // we already sorted as items were added
+    if (open && !newItemAdded) {
+      setOrdering(createOrdering(sortItems(items)));
+    }
+  }, [ open ]);
+
+  // (3) items were deleted
+  useEffect(() => {
+    if (prevItems && items.length < prevItems.length) {
+      let keep = [];
+
+      ordering.forEach(o => {
+        if (getItem(items, o)) {
+          keep.push(o);
+        }
+      });
+
+      setOrdering(keep);
+    }
+  }, [ items ]);
 
   const toggleOpen = () => setOpen(!open);
 
+  const hasItems = !!items.length;
+
+
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id }>
-    <div class="bio-properties-panel-group-header" onClick={ toggleOpen }>
-      <div class="bio-properties-panel-group-header-title">
+    <div
+      class={ classnames(
+        'bio-properties-panel-group-header',
+        hasItems ? '' : 'empty'
+      ) }
+      onClick={ hasItems ? toggleOpen : noop }>
+      <div title={ label } class="bio-properties-panel-group-header-title">
         { label }
       </div>
-      <AddContainer>
-        <CreateIcon width="16" height="16" class="bio-properties-panel-plus" />
-      </AddContainer>
+      {
+        hasItems
+          ? (
+            <div class="bio-properties-panel-list-badge">
+              { items.length }
+            </div>
+          )
+          : null
+      }
+      <div class="bio-properties-panel-group-header-buttons">
+        <div class="bio-properties-panel-group-header-button">
+          <AddContainer>
+            <CreateIcon class="bio-properties-panel-add-entry" />
+          </AddContainer>
+        </div>
+        {
+          hasItems
+            ? (
+              <div class="bio-properties-panel-group-header-button">
+                <GroupArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
+              </div>
+            )
+            : null
+        }
+      </div>
     </div>
     <div class={ classnames(
       'bio-properties-panel-list',
       open ? 'open' : ''
     ) }>
       {
-        items.map(item => {
+        ordering.map((o, index) => {
+          const item = getItem(items, o);
+
+          if (!item) {
+            return;
+          }
+
           return (
-            <ListItem { ...item } />
+            <ListItem
+              key={ item.id }
+              autoOpen={ index === 0 && newItemAdded } // open first item when recently added
+              { ...item } />
           );
         })
       }
     </div>
   </div>;
+}
+
+
+// helpers ////////////////////
+
+/**
+ * Sorts given items alphanumeric by label
+ */
+function sortItems(items) {
+  return sortBy(items, i => i.label.toLowerCase());
+}
+
+function getItem(items, id) {
+  return find(items, i => i.id === id);
+}
+
+function createOrdering(items) {
+  return items.map(i => i.id);
+}
+
+function removeDuplicates(items) {
+  return items.filter((i, index) => items.indexOf(i) === index);
 }
