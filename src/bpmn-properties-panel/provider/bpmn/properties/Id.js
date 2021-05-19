@@ -11,6 +11,7 @@ export default function IdProperty(props) {
   } = props;
 
   const modeling = useService('modeling');
+  const debounce = useService('debounceInput');
 
   const setValue = (value) => {
     modeling.updateProperties(element, {
@@ -28,6 +29,6 @@ export default function IdProperty(props) {
     label: 'ID',
     getValue,
     setValue,
-    debounce: true
+    debounce
   });
 }

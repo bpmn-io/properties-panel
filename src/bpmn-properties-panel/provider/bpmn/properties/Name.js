@@ -14,6 +14,7 @@ export default function NameProperty(props) {
   // a) Text Annotations
   // b) Groups
   const modeling = useService('modeling');
+  const debounce = useService('debounceInput');
 
   const setValue = (value) => {
     modeling.updateProperties(element, {
@@ -31,6 +32,6 @@ export default function NameProperty(props) {
     label: 'Name',
     getValue,
     setValue,
-    debounce: true
+    debounce
   });
 }

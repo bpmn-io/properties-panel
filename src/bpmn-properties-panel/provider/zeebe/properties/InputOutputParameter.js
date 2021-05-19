@@ -35,6 +35,7 @@ function TargetProperty(props) {
 
   const commandStack = useService('commandStack');
   const translate = useService('translate');
+  const debounce = useService('debounceInput');
 
   const setValue = (value) => {
     commandStack.execute('properties-panel.update-businessobject', {
@@ -56,7 +57,7 @@ function TargetProperty(props) {
     label: translate((is(parameter, 'zeebe:Input') ? 'Local Variable Name' : 'Process Variable Name')),
     getValue,
     setValue,
-    debounce: true
+    debounce
   });
 }
 
@@ -68,6 +69,7 @@ function SourceProperty(props) {
 
   const commandStack = useService('commandStack');
   const translate = useService('translate');
+  const debounce = useService('debounceInput');
 
   const setValue = (value) => {
     commandStack.execute('properties-panel.update-businessobject', {
@@ -89,6 +91,6 @@ function SourceProperty(props) {
     label: translate('Variable Assignment Value'),
     getValue,
     setValue,
-    debounce: true
+    debounce
   });
 }
