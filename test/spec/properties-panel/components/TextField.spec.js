@@ -65,7 +65,7 @@ function createTextField(options = {}) {
     element,
     id,
     description,
-    debounce,
+    debounce = fn => fn,
     label,
     getValue = noop,
     setValue = noop,

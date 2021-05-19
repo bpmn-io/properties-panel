@@ -84,6 +84,7 @@ function SimpleInputEntry(props) {
   } = props;
 
   const modeling = useService('modeling');
+  const debounce = useService('debounceInput');
 
   if (!is(element, 'bpmn:StartEvent')) {
     return;
@@ -105,7 +106,7 @@ function SimpleInputEntry(props) {
     label: 'Some custom <Foo> Entry',
     getValue,
     setValue,
-    debounce: true
+    debounce
   });
 }
 

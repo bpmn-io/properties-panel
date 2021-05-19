@@ -2,26 +2,19 @@ import {
   useMemo
 } from 'preact/hooks';
 
-import {
-  debounce
-} from 'min-dash';
-
 function Textfield(props) {
 
   const {
-    debounce: shouldDebounce,
+    debounce,
     id,
     label,
     onInput,
     value = ''
   } = props;
 
-  const debouncedOnInput = useMemo(() => shouldDebounce ? debounce(onInput, 300) : onInput,
-    [ onInput, shouldDebounce ]);
-
-  const handleInput = ({ target }) => {
-    debouncedOnInput(target.value.length ? target.value : undefined);
-  };
+  const handleInput = useMemo(() => {
+    return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
+  }, [ onInput, debounce ]);
 
   return (
     <div class="bio-properties-panel-textfield">
