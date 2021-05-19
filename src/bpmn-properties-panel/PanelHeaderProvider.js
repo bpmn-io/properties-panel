@@ -61,6 +61,10 @@ export function getConcreteType(element) {
 export const PanelHeaderProvider = {
 
   getElementLabel: (element) => {
+    if (is(element, 'bpmn:Process')) {
+      return getBusinessObject(element).name;
+    }
+
     return getLabel(element);
   },
 

@@ -160,6 +160,21 @@ describe('<PanelHeaderProvider>', function() {
       expect(elementLabel).to.equal('foo');
     });
 
+
+    it('should get label - processes', function() {
+
+      // given
+      const element = createElement('bpmn:Process', {
+        name: 'foo'
+      });
+
+      // when
+      const elementLabel = PanelHeaderProvider.getElementLabel(element);
+
+      // then
+      expect(elementLabel).to.equal('foo');
+    });
+
   });
 
 
