@@ -3,7 +3,8 @@ import Group from '../../../properties-panel/components/Group';
 import {
   NameProperty,
   IdProperty,
-  ExecutableProperty
+  ExecutableProperty,
+  ProcessProps
 } from './properties';
 
 function GeneralGroup(element) {
@@ -17,6 +18,7 @@ function GeneralGroup(element) {
       id: 'id',
       component: <IdProperty element={ element } />
     },
+    ...ProcessProps({ element }),
     {
       id: 'executable',
       component: <ExecutableProperty element={ element } />
