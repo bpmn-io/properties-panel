@@ -1,3 +1,7 @@
+import {
+  is
+} from 'bpmn-js/lib/util/ModelUtil';
+
 import TextField from '../../../../properties-panel/components/entries/TextField';
 
 import {
@@ -12,6 +16,7 @@ export default function IdProperty(props) {
 
   const modeling = useService('modeling');
   const debounce = useService('debounceInput');
+  const translate = useService('translate');
 
   const setValue = (value) => {
     modeling.updateProperties(element, {
@@ -26,7 +31,7 @@ export default function IdProperty(props) {
   return TextField({
     element,
     id: 'id',
-    label: 'ID',
+    label: translate(is(element, 'bpmn:Participant') ? 'Participant ID' : 'ID'),
     getValue,
     setValue,
     debounce
