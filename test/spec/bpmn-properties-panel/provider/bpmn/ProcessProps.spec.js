@@ -210,6 +210,8 @@ describe('provider/bpmn - ProcessProps', function() {
   });
 });
 
+
+// helper //////////////////
 function getProcess(participant) {
   return getBusinessObject(participant).get('processRef');
 }
