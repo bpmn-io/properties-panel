@@ -4,7 +4,8 @@ import {
   NameProperty,
   IdProperty,
   ExecutableProperty,
-  ProcessProps
+  ProcessProps,
+  DocumentationProps
 } from './properties';
 
 function GeneralGroup(element) {
@@ -34,10 +35,26 @@ function GeneralGroup(element) {
 
 }
 
+function DocumentationGroup(element) {
+
+  const entries = [
+    ...DocumentationProps({ element })
+  ];
+
+  return {
+    id: 'documentation',
+    label: 'Documentation',
+    entries,
+    component: Group
+  };
+
+}
+
 function getGroups(element) {
 
   const groups = [
-    GeneralGroup(element)
+    GeneralGroup(element),
+    DocumentationGroup(element)
   ];
 
   return groups;
