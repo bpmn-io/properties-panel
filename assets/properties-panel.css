@@ -271,7 +271,7 @@
 }
 
 .bio-properties-panel-input[type=number],
-.select.bio-properties-panel-input,
+textarea.bio-properties-panel-input,
 .bio-properties-panel-input[type=text] {
   display: block;
   width: 100%;
@@ -344,6 +344,9 @@
   text-align: center;
 }
 
+textarea.bio-properties-panel-input {
+  resize: vertical;
+}
 
 /**
  * Collapsible entries
