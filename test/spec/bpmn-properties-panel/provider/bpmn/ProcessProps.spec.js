@@ -67,7 +67,24 @@ describe('provider/bpmn - ProcessProps', function() {
     );
 
 
-    it('should set', inject(async function(elementRegistry, selection) {
+    it('should display', inject(async function(elementRegistry, selection) {
+
+      // given
+      const participant = elementRegistry.get('Participant_1');
+
+      await act(() => {
+        selection.select(participant);
+      });
+
+      // when
+      const processNameInput = domQuery('input[name=processName]', container);
+
+      // then
+      expect(processNameInput.value).to.eql(getProcess(participant).get('name'));
+    }));
+
+
+    it('should update', inject(async function(elementRegistry, selection) {
 
       // given
       const participant = elementRegistry.get('Participant_1');
@@ -81,50 +98,32 @@ describe('provider/bpmn - ProcessProps', function() {
       changeInput(processNameInput, 'newValue');
 
       // then
-      expect(getProcess(participant).get('name')).to.equal('newValue');
+      expect(getProcess(participant).get('name')).to.eql('newValue');
     }));
 
 
-    it('should undo', inject(async function(elementRegistry, selection, commandStack) {
+    it('should update on external change',
+      inject(async function(elementRegistry, selection, commandStack) {
 
-      // given
-      const participant = elementRegistry.get('Participant_1');
-      const originalName = getBusinessObject(participant).get('processName');
+        // given
+        const participant = elementRegistry.get('Participant_1');
+        const originalValue = getProcess(participant).get('name');
 
-      await act(() => {
-        selection.select(participant);
-      });
+        await act(() => {
+          selection.select(participant);
+        });
+        const processNameInput = domQuery('input[name=processName]', container);
+        changeInput(processNameInput, 'newValue');
 
-      const processNameInput = domQuery('input[name=processName]', container);
-      changeInput(processNameInput, 'newValue');
+        // when
+        await act(() => {
+          commandStack.undo();
+        });
 
-      // when
-      commandStack.undo();
-
-      // then
-      expect(getProcess(participant).get('name')).to.equal(originalName);
-    }));
-
-
-    it('should redo', inject(async function(elementRegistry, selection, commandStack) {
-
-      // given
-      const participant = elementRegistry.get('Participant_1');
-
-      await act(() => {
-        selection.select(participant);
-      });
-
-      const processNameInput = domQuery('input[name=processName]', container);
-      changeInput(processNameInput, 'newValue');
-
-      // when
-      commandStack.undo();
-      commandStack.redo();
-
-      // then
-      expect(getProcess(participant).get('name')).to.equal('newValue');
-    }));
+        // then
+        expect(processNameInput.value).to.eql(originalValue);
+      })
+    );
   });
 
 
@@ -149,7 +148,24 @@ describe('provider/bpmn - ProcessProps', function() {
     );
 
 
-    it('should set', inject(async function(elementRegistry, selection) {
+    it('should display', inject(async function(elementRegistry, selection) {
+
+      // given
+      const participant = elementRegistry.get('Participant_1');
+
+      await act(() => {
+        selection.select(participant);
+      });
+
+      // when
+      const processIdInput = domQuery('input[name=processId]', container);
+
+      // then
+      expect(processIdInput.value).to.eql(getProcess(participant).get('id'));
+    }));
+
+
+    it('should update', inject(async function(elementRegistry, selection) {
 
       // given
       const participant = elementRegistry.get('Participant_1');
@@ -163,50 +179,32 @@ describe('provider/bpmn - ProcessProps', function() {
       changeInput(processIdInput, 'newValue');
 
       // then
-      expect(getProcess(participant).get('id')).to.equal('newValue');
+      expect(getProcess(participant).get('id')).to.eql('newValue');
     }));
 
 
-    it('should undo', inject(async function(elementRegistry, selection, commandStack) {
+    it('should update on external change',
+      inject(async function(elementRegistry, selection, commandStack) {
 
-      // given
-      const participant = elementRegistry.get('Participant_1');
-      const originalName = getProcess(participant).get('id');
+        // given
+        const participant = elementRegistry.get('Participant_1');
+        const originalValue = getProcess(participant).get('id');
 
-      await act(() => {
-        selection.select(participant);
-      });
+        await act(() => {
+          selection.select(participant);
+        });
+        const processIdInput = domQuery('input[name=processId]', container);
+        changeInput(processIdInput, 'newValue');
 
-      const processIdInput = domQuery('input[name=processId]', container);
-      changeInput(processIdInput, 'newValue');
+        // when
+        await act(() => {
+          commandStack.undo();
+        });
 
-      // when
-      commandStack.undo();
-
-      // then
-      expect(getProcess(participant).get('id')).to.equal(originalName);
-    }));
-
-
-    it('should redo', inject(async function(elementRegistry, selection, commandStack) {
-
-      // given
-      const participant = elementRegistry.get('Participant_1');
-
-      await act(() => {
-        selection.select(participant);
-      });
-
-      const processIdInput = domQuery('input[name=processId]', container);
-      changeInput(processIdInput, 'newValue');
-
-      // when
-      commandStack.undo();
-      commandStack.redo();
-
-      // then
-      expect(getProcess(participant).get('id')).to.equal('newValue');
-    }));
+        // then
+        expect(processIdInput.value).to.eql(originalValue);
+      })
+    );
   });
 });
 
