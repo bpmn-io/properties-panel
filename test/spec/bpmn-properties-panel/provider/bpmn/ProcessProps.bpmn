@@ -14,7 +14,7 @@
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="StartEvent_1" targetRef="EndEvent_1" />
   </bpmn2:process>
-  <bpmn2:process id="Process_2" isExecutable="false">
+  <bpmn2:process id="Process_2" name="Process 2" isExecutable="false">
     <bpmn2:startEvent id="StartEvent_2">
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:startEvent>
