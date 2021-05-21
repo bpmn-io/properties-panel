@@ -1,6 +1,8 @@
+import Group from '../../../properties-panel/components/Group';
 import ListGroup from '../../../properties-panel/components/ListGroup';
 
 import {
+  TaskDefinitionProps,
   InputProperties,
   OutputProperties
 } from './properties';
@@ -12,6 +14,19 @@ import {
 
 const LOW_PRIORITY = 500;
 
+function DetailsGroup(element) {
+
+  const entries = [
+    ...TaskDefinitionProps({ element })
+  ];
+
+  return {
+    id: 'details',
+    label: 'Details',
+    entries,
+    component: Group
+  };
+}
 
 function InputGroup(element) {
 
@@ -35,6 +50,12 @@ function OutputGroup(element) {
 function getGroups(element) {
 
   const groups = [];
+
+  const detailsGroup = DetailsGroup(element);
+
+  if (detailsGroup.entries.length) {
+    groups.push(detailsGroup);
+  }
 
   if (areInputParametersSupported(element)) {
     groups.push(InputGroup(element));
