@@ -3,6 +3,7 @@ import ListGroup from '../../../properties-panel/components/ListGroup';
 
 import {
   TaskDefinitionProps,
+  MultiInstanceProps,
   InputProperties,
   OutputProperties
 } from './properties';
@@ -23,6 +24,20 @@ function DetailsGroup(element) {
   return {
     id: 'details',
     label: 'Details',
+    entries,
+    component: Group
+  };
+}
+
+function MultiInstanceGroup(element) {
+
+  const entries = [
+    ...MultiInstanceProps({ element })
+  ];
+
+  return {
+    id: 'multiInstance',
+    label: 'Multi Instance',
     entries,
     component: Group
   };
@@ -55,6 +70,12 @@ function getGroups(element) {
 
   if (detailsGroup.entries.length) {
     groups.push(detailsGroup);
+  }
+
+  const multiInstanceGroup = MultiInstanceGroup(element);
+
+  if (multiInstanceGroup.entries.length) {
+    groups.push(multiInstanceGroup);
   }
 
   if (areInputParametersSupported(element)) {
