@@ -10,7 +10,7 @@ import {
 
 import {
   insertCoreStyles,
-  triggerEvent
+  clickInput
 } from 'test/TestHelper';
 
 import Checkbox from 'src/properties-panel/components/entries/Checkbox';
@@ -49,7 +49,7 @@ describe('<Checkbox>', function() {
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
-    triggerEvent(input, 'click');
+    clickInput(input);
 
     // then
     expect(updateSpy).to.have.been.calledWith(true);

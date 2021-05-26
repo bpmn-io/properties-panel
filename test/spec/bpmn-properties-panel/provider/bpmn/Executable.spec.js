@@ -5,7 +5,7 @@ import {
   inject,
   insertCoreStyles,
   insertBpmnStyles,
-  triggerEvent
+  clickInput
 } from 'test/TestHelper';
 
 import {
@@ -73,7 +73,7 @@ describe('provider/bpmn - Executable', function() {
     const isExecutableNode = domQuery('input[name=isExecutable]', container);
 
     // when
-    triggerEvent(isExecutableNode, 'click');
+    clickInput(isExecutableNode);
 
     // then
     expect(getBusinessObject(shape).get('isExecutable')).to.equal(true);
@@ -89,7 +89,7 @@ describe('provider/bpmn - Executable', function() {
 
     const isExecutableNode = domQuery('input[name=isExecutable]', container);
 
-    triggerEvent(isExecutableNode, 'click');
+    clickInput(isExecutableNode);
 
     // when
     commandStack.undo();
@@ -108,7 +108,7 @@ describe('provider/bpmn - Executable', function() {
 
     const isExecutableNode = domQuery('input[name=isExecutable]', container);
 
-    triggerEvent(isExecutableNode, 'click');
+    clickInput(isExecutableNode);
 
     // when
     commandStack.undo();

@@ -10,7 +10,7 @@ import {
 
 import {
   insertCoreStyles,
-  triggerInput
+  changeInput
 } from 'test/TestHelper';
 
 import TextField from 'src/properties-panel/components/entries/TextField';
@@ -49,7 +49,7 @@ describe('<TextField>', function() {
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
-    triggerInput(input, 'foo');
+    changeInput(input, 'foo');
 
     // then
     expect(updateSpy).to.have.been.calledWith('foo');
