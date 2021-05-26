@@ -132,11 +132,11 @@ export default function ListGroup(props) {
           : null
       }
       <div class="bio-properties-panel-group-header-buttons">
-        <div class="bio-properties-panel-group-header-button">
-          <AddContainer>
-            <CreateIcon class="bio-properties-panel-add-entry" />
-          </AddContainer>
-        </div>
+        <AddContainer>
+          <div class="bio-properties-panel-add-entry">
+            <CreateIcon />
+          </div>
+        </AddContainer>
         {
           hasItems
             ? (
@@ -150,7 +150,7 @@ export default function ListGroup(props) {
     </div>
     <div class={ classnames(
       'bio-properties-panel-list',
-      open ? 'open' : ''
+      open && hasItems ? 'open' : ''
     ) }>
       {
         ordering.map((o, index) => {
