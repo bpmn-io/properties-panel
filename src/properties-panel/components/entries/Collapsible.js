@@ -31,11 +31,11 @@ export default function CollapsibleEntry(props) {
         open ? 'open' : ''
       ) }>
       <div class="bio-properties-panel-collapsible-entry-header" onClick={ toggleOpen }>
-        <div>
+        <div class="bio-properties-panel-collapsible-entry-header-title">
+          { label }
+        </div>
+        <div class="bio-properties-panel-collapsible-entry-arrow">
           <ListArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
-          <span class="bio-properties-panel-collapsible-entry-header-label">
-            { label }
-          </span>
         </div>
         <RemoveContainer>
           <ListDeleteIcon class="bio-properties-panel-remove-entry" />

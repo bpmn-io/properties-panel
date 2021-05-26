@@ -202,7 +202,7 @@ function AddInputParameter(props) {
   };
 
   return (
-    <div onClick={ addElement }>
+    <div class="bio-properties-panel-group-header-button" onClick={ addElement }>
       {
         children
       }

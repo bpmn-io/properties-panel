@@ -20,6 +20,7 @@
   --color-input-focus-light: #f4faff;
 
   --text-size-base: 14px;
+  --text-line-height: 1.5;
 
   display: none;
   position: relative;
@@ -30,6 +31,7 @@
 
 .bio-properties-panel * {
   box-sizing: border-box;
+  line-height: var(--text-line-height);
 }
 
 .bio-properties-panel.open {
@@ -108,11 +110,6 @@
   border-bottom: 1px solid var(--color-cccccc);
 }
 
-.bio-properties-panel-group-header-title {
-  opacity: 1;
-  font-weight: bold;
-}
-
 .bio-properties-panel-group-header.empty .bio-properties-panel-group-header-title {
   opacity: 0.6;
   font-weight: normal;
@@ -124,13 +121,24 @@
   flex-direction: row;
   align-items: center;
   font-size: var(--text-size-base);
-  padding: 12px;
+  height: 32px;
+  padding-right: 64px;
   user-select: none;
+  overflow: hidden;
+}
+
+.bio-properties-panel-group-header .bio-properties-panel-group-header-title {
+  opacity: 1;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 1px 12px 0;
 }
 
 .bio-properties-panel-group-header-buttons {
   position: absolute;
-  right: 5px;
+  right: 12px;
 }
 
 .bio-properties-panel-group-header-buttons .bio-properties-panel-group-header-button {
@@ -139,7 +147,7 @@
   align-items: center;
   width: 20px;
   height: 20px;
-  margin-right: 10px;
+  margin-right: 6px;
   padding: 0;
   border: none;
   background: none;
@@ -151,6 +159,11 @@
 
 .bio-properties-panel-group-header-buttons .bio-properties-panel-add-entry {
   opacity: 0.3;
+  width: 20px;
+  height: 20px;
+  display: inherit;
+  justify-content: center;
+  align-items: center;
 }
 
 .bio-properties-panel-group-header-buttons .bio-properties-panel-add-entry:hover {
@@ -197,6 +210,7 @@
 
 .bio-properties-panel-list.open {
   display: block;
+  margin-bottom: 6px;
 }
 
 .bio-properties-panel-list-item .bio-properties-panel-collapsible-entry-entries {
@@ -214,8 +228,8 @@
   font-weight: 600;
   height: 22px;
   padding: 2px 6px;
-  margin-left: 12px;
   user-select: none;
+  line-height: normal;
 }
 
 /**
@@ -306,15 +320,27 @@
 }
 
 .bio-properties-panel-collapsible-entry-header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--text-size-base);
-  padding: 0 10px 10px 10px;
+  overflow: hidden;
 }
 
-.bio-properties-panel-collapsible-entry-header .bio-properties-panel-collapsible-entry-header-label {
-  margin-left: 10px;
+.bio-properties-panel-collapsible-entry-header .bio-properties-panel-collapsible-entry-header-title {
+  padding: 2px 24px 2px 25px;
+  font-size: var(--text-size-base);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bio-properties-panel-collapsible-entry-arrow {
+  position: absolute;
+  left: 8px;
+  top: 0;
+  width: 12px;
+  height: 12px;
 }
 
 .bio-properties-panel-collapsible-entry-header .bio-properties-panel-arrow-down {
@@ -326,6 +352,11 @@
 }
 
 .bio-properties-panel-remove-entry {
+  position: absolute;
+  transform: translateY(calc(-50% - 1px));
+  right: 11px;
+  width: 16px;
+  height: 16px;
   opacity: 0.3;
   visibility: hidden;
 }
@@ -341,9 +372,9 @@
 .bio-properties-panel-collapsible-entry-entries::before {
   content: "";
   position: absolute;
-  top: -4px;
-  left: 12px;
+  left: 10px;
   width: 2px;
+  top: 0;
   bottom: 0;
   background-color: var(--color-000000-opacity-25);
 }
