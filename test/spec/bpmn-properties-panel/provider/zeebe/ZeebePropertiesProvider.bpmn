@@ -7,7 +7,7 @@
           <zeebe:output source="= source" target="target" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
-      <bpmn:outgoing>Flow_10peumi</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:serviceTask id="ServiceTask_1" name="Service Task">
       <bpmn:extensionElements>
@@ -16,24 +16,24 @@
           <zeebe:output source="= foo" target="myOutput" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_10peumi</bpmn:incoming>
-      <bpmn:outgoing>Flow_0pxbkit</bpmn:outgoing>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics />
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_10peumi" sourceRef="StartEvent_1" targetRef="ServiceTask_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="ServiceTask_1" />
     <bpmn:endEvent id="Event_1" name="End Event">
-      <bpmn:incoming>Flow_0pxbkit</bpmn:incoming>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0pxbkit" sourceRef="ServiceTask_1" targetRef="Event_1" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="ServiceTask_1" targetRef="Event_1" />
     <bpmn:task id="Task_1" name="Task" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-      <bpmndi:BPMNEdge id="Flow_0pxbkit_di" bpmnElement="Flow_0pxbkit">
+      <bpmndi:BPMNEdge id="Flow_0pxbkit_di" bpmnElement="Flow_2">
         <di:waypoint x="380" y="160" />
         <di:waypoint x="462" y="160" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_10peumi_di" bpmnElement="Flow_10peumi">
+      <bpmndi:BPMNEdge id="Flow_10peumi_di" bpmnElement="Flow_1">
         <di:waypoint x="198" y="160" />
         <di:waypoint x="280" y="160" />
       </bpmndi:BPMNEdge>

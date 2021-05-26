@@ -29,8 +29,10 @@ import diagramXML from './ZeebePropertiesProvider.bpmn';
 describe('<ZeebePropertiesProvider>', function() {
 
   const testModules = [
-    CoreModule, SelectionModule, ModelingModule,
     BpmnPropertiesPanel,
+    CoreModule,
+    ModelingModule,
+    SelectionModule,
     ZeebePropertiesProvider
   ];
 
@@ -184,6 +186,40 @@ describe('<ZeebePropertiesProvider>', function() {
 
     // then
     expect(multiInstanceGroup).to.exist;
+  }));
+
+
+  it('should NOT show condition group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const task = elementRegistry.get('Flow_1');
+
+    await act(() => {
+      selection.select(task);
+    });
+
+    // when
+    const conditionGroup = getGroup(container, 'condition');
+
+    // then
+    expect(conditionGroup).to.not.exist;
+  }));
+
+
+  it('should show condition group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const serviceTask = elementRegistry.get('Flow_2');
+
+    await act(() => {
+      selection.select(serviceTask);
+    });
+
+    // when
+    const conditionGroup = getGroup(container, 'condition');
+
+    // then
+    expect(conditionGroup).to.exist;
   }));
 
 });

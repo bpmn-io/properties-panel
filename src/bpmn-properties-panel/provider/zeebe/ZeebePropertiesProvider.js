@@ -2,10 +2,11 @@ import Group from '../../../properties-panel/components/Group';
 import ListGroup from '../../../properties-panel/components/ListGroup';
 
 import {
-  TaskDefinitionProps,
-  MultiInstanceProps,
+  ConditionProps,
   InputProperties,
-  OutputProperties
+  MultiInstanceProps,
+  OutputProperties,
+  TaskDefinitionProps
 } from './properties';
 
 import {
@@ -62,6 +63,20 @@ function OutputGroup(element) {
   };
 }
 
+function ConditionGroup(element) {
+
+  const entries = [
+    ...ConditionProps({ element })
+  ];
+
+  return {
+    id: 'condition',
+    label: 'Condition',
+    entries,
+    component: Group
+  };
+}
+
 function getGroups(element) {
 
   const groups = [];
@@ -70,6 +85,12 @@ function getGroups(element) {
 
   if (taskDefinitionGroup.entries.length) {
     groups.push(taskDefinitionGroup);
+  }
+
+  const conditionGroup = ConditionGroup(element);
+
+  if (conditionGroup.entries.length) {
+    groups.push(conditionGroup);
   }
 
   const multiInstanceGroup = MultiInstanceGroup(element);
