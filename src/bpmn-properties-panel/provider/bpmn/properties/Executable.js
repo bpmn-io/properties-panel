@@ -15,26 +15,61 @@ export default function ExecutableProperty(props) {
   } = props;
 
   const modeling = useService('modeling');
+  const commandStack = useService('commandStack');
+  const translate = useService('translate');
 
-  if (!is(element, 'bpmn:Process')) {
+  let getValue, setValue;
+
+  if (!is(element, 'bpmn:Process') && !hasProcessRef(element)) {
     return;
   }
 
-  const setValue = (value) => {
+  setValue = (value) => {
     modeling.updateProperties(element, {
       isExecutable: value
     });
   };
 
-  const getValue = (element) => {
+  getValue = (element) => {
     return element.businessObject.isExecutable;
   };
+
+  // handle properties on processRef level for participants
+  if (is(element, 'bpmn:Participant')) {
+
+    const process = element.businessObject.get('processRef');
+
+    setValue = (value) => {
+      commandStack.execute(
+        'properties-panel.update-businessobject',
+        {
+          element,
+          businessObject: process,
+          properties: {
+            isExecutable: value
+          }
+        }
+      );
+    };
+
+    getValue = () => {
+      return process.get('isExecutable');
+    };
+
+  }
 
   return Checkbox({
     element,
     id: 'isExecutable',
-    label: 'Executable',
+    label: translate('Executable'),
     getValue,
     setValue
   });
+}
+
+
+// helper /////////////////////
+
+function hasProcessRef(element) {
+  return is(element, 'bpmn:Participant') && element.businessObject.get('processRef');
 }

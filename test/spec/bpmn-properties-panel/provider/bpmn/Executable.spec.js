@@ -1,10 +1,9 @@
 import TestContainer from 'mocha-test-container-support';
+import { act } from '@testing-library/preact';
 
 import {
-  bootstrapModeler,
+  bootstrapPropertiesPanel,
   inject,
-  insertCoreStyles,
-  insertBpmnStyles,
   clickInput
 } from 'test/TestHelper';
 
@@ -24,10 +23,8 @@ import BpmnPropertiesPanel from 'src/bpmn-properties-panel';
 
 import BpmnPropertiesProvider from 'src/bpmn-properties-panel/provider/bpmn';
 
-import diagramXML from './Executable.bpmn';
-
-insertCoreStyles();
-insertBpmnStyles();
+import executableDiagramXML from './Executable.bpmn';
+import participantsDiagramXML from './Executable.participants.bpmn';
 
 
 describe('provider/bpmn - Executable', function() {
@@ -44,78 +41,183 @@ describe('provider/bpmn - Executable', function() {
     container = TestContainer.get(this);
   });
 
-  beforeEach(bootstrapModeler(diagramXML, {
-    modules: testModules
-  }));
+  describe('bpmn:Process#isExecutable', function() {
 
-  beforeEach(inject(function(commandStack, propertiesPanel) {
+    beforeEach(bootstrapPropertiesPanel(executableDiagramXML, {
+      modules: testModules,
+      debounceInput: false
+    }));
 
-    const undoButton = document.createElement('button');
-    undoButton.textContent = 'UNDO';
+    it('should NOT be displayed for start event',
+      inject(async function(elementRegistry, selection) {
 
-    undoButton.addEventListener('click', function() {
-      commandStack.undo();
-    });
+        // given
+        const startEvent = elementRegistry.get('StartEvent_1');
 
-    container.appendChild(undoButton);
+        // when
+        await act(() => {
+          selection.select(startEvent);
+        });
 
-    propertiesPanel.attachTo(container);
-  }));
+        // then
+        const executableInput = domQuery('input[name=isExecutable]', container);
 
-
-  it('should set', inject(function(elementRegistry, selection) {
-
-    // given
-    const shape = elementRegistry.get('Process_1');
-
-    selection.select(shape);
-
-    const isExecutableNode = domQuery('input[name=isExecutable]', container);
-
-    // when
-    clickInput(isExecutableNode);
-
-    // then
-    expect(getBusinessObject(shape).get('isExecutable')).to.equal(true);
-  }));
+        expect(executableInput).to.be.null;
+      })
+    );
 
 
-  it('should undo', inject(function(elementRegistry, selection, commandStack) {
+    it('should display', inject(async function(elementRegistry, selection) {
 
-    // given
-    const shape = elementRegistry.get('Process_1');
+      // given
+      const process = elementRegistry.get('Process_1');
 
-    selection.select(shape);
+      await act(() => {
+        selection.select(process);
+      });
 
-    const isExecutableNode = domQuery('input[name=isExecutable]', container);
+      // when
+      const executableIput = domQuery('input[name=isExecutable]', container);
 
-    clickInput(isExecutableNode);
-
-    // when
-    commandStack.undo();
-
-    // then
-    expect(getBusinessObject(shape).get('isExecutable')).to.equal(false);
-  }));
+      // then
+      expect(executableIput.checked).to.eql(getBusinessObject(process).get('isExecutable'));
+    }));
 
 
-  it('should redo', inject(function(elementRegistry, selection, commandStack) {
+    it('should update', inject(async function(elementRegistry, selection) {
 
-    // given
-    const shape = elementRegistry.get('Process_1');
+      // given
+      const process = elementRegistry.get('Process_1');
 
-    selection.select(shape);
+      await act(() => {
+        selection.select(process);
+      });
 
-    const isExecutableNode = domQuery('input[name=isExecutable]', container);
+      // when
+      const executableInput = domQuery('input[name=isExecutable]', container);
+      clickInput(executableInput);
 
-    clickInput(isExecutableNode);
+      // then
+      expect(getBusinessObject(process).get('isExecutable')).to.be.false;
+    }));
 
-    // when
-    commandStack.undo();
-    commandStack.redo();
 
-    // then
-    expect(getBusinessObject(shape).get('isExecutable')).to.equal(true);
-  }));
+    it('should update on external change',
+      inject(async function(elementRegistry, selection, commandStack) {
+
+        // given
+        const process = elementRegistry.get('Process_1');
+        const originalValue = getBusinessObject(process).get('isExecutable');
+
+        await act(() => {
+          selection.select(process);
+        });
+        const executableInput = domQuery('input[name=isExecutable]', container);
+        clickInput(executableInput);
+
+        // when
+        await act(() => {
+          commandStack.undo();
+        });
+
+        // then
+        expect(executableInput.checked).to.eql(originalValue);
+      })
+    );
+  });
+
+
+  describe('bpmn:Participant#processRef.isExecutable', function() {
+
+    beforeEach(bootstrapPropertiesPanel(participantsDiagramXML, {
+      modules: testModules,
+      debounceInput: false
+    }));
+
+    it('should NOT be displayed for empty participant',
+      inject(async function(elementRegistry, selection) {
+
+        // given
+        const participant = elementRegistry.get('Participant_empty');
+
+        // when
+        await act(() => {
+          selection.select(participant);
+        });
+
+        // then
+        const executableInput = domQuery('input[name=isExecutable]', container);
+
+        expect(executableInput).to.be.null;
+      })
+    );
+
+
+    it('should display', inject(async function(elementRegistry, selection) {
+
+      // given
+      const participant = elementRegistry.get('Participant_1');
+
+      await act(() => {
+        selection.select(participant);
+      });
+
+      // when
+      const executableInput = domQuery('input[name=isExecutable]', container);
+
+      // then
+      expect(executableInput.checked).to.eql(getProcess(participant).get('isExecutable'));
+    }));
+
+
+    it('should update', inject(async function(elementRegistry, selection) {
+
+      // given
+      const participant = elementRegistry.get('Participant_1');
+
+      await act(() => {
+        selection.select(participant);
+      });
+
+      // when
+      const executableInput = domQuery('input[name=isExecutable]', container);
+      clickInput(executableInput);
+
+      // then
+      expect(getProcess(participant).get('isExecutable')).to.be.false;
+    }));
+
+
+    it('should update on external change',
+      inject(async function(elementRegistry, selection, commandStack) {
+
+        // given
+        const participant = elementRegistry.get('Participant_1');
+        const originalValue = getProcess(participant).get('isExecutable');
+
+        await act(() => {
+          selection.select(participant);
+        });
+        const executableInput = domQuery('input[name=isExecutable]', container);
+        clickInput(executableInput);
+
+        // when
+        await act(() => {
+          commandStack.undo();
+        });
+
+        // then
+        expect(executableInput.checked).to.eql(originalValue);
+      })
+    );
+
+  });
 
 });
+
+
+// helper //////////////////
+
+function getProcess(participant) {
+  return getBusinessObject(participant).get('processRef');
+}
