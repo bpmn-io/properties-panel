@@ -48,6 +48,23 @@ describe('<Collapsible>', function() {
   });
 
 
+  it('should display placeholder for empty labels', function() {
+
+    // given
+    const label = '';
+
+    // when
+    const { container } = createCollapsible({ container: parentContainer, label });
+
+    const entry = domQuery('.bio-properties-panel-collapsible-entry', container);
+
+    const headerTitle = domQuery('.bio-properties-panel-collapsible-entry-header-title', entry);
+
+    // then
+    expect(headerTitle.innerText).to.equal('<empty>');
+  });
+
+
   it('should be closed initially', function() {
 
     // when
@@ -120,7 +137,7 @@ describe('<Collapsible>', function() {
 function createCollapsible(options = {}) {
   const {
     id,
-    label = 'collapsible entry',
+    label,
     open,
     entries = [],
     remove,
