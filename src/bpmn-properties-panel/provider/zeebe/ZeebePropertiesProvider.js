@@ -15,15 +15,15 @@ import {
 
 const LOW_PRIORITY = 500;
 
-function DetailsGroup(element) {
+function TaskDefinitionGroup(element) {
 
   const entries = [
     ...TaskDefinitionProps({ element })
   ];
 
   return {
-    id: 'details',
-    label: 'Details',
+    id: 'taskDefinition',
+    label: 'Task Definition',
     entries,
     component: Group
   };
@@ -66,10 +66,10 @@ function getGroups(element) {
 
   const groups = [];
 
-  const detailsGroup = DetailsGroup(element);
+  const taskDefinitionGroup = TaskDefinitionGroup(element);
 
-  if (detailsGroup.entries.length) {
-    groups.push(detailsGroup);
+  if (taskDefinitionGroup.entries.length) {
+    groups.push(taskDefinitionGroup);
   }
 
   const multiInstanceGroup = MultiInstanceGroup(element);
