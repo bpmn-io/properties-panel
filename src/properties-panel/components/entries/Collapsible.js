@@ -23,6 +23,9 @@ export default function CollapsibleEntry(props) {
 
   const toggleOpen = () => setOpen(!open);
 
+  // todo(pinussilvestrus): translate once we have a translate mechanism for the core
+  const placeholderLabel = '<empty>';
+
   return (
     <div
       data-entry-id={ id }
@@ -31,8 +34,12 @@ export default function CollapsibleEntry(props) {
         open ? 'open' : ''
       ) }>
       <div class="bio-properties-panel-collapsible-entry-header" onClick={ toggleOpen }>
-        <div class="bio-properties-panel-collapsible-entry-header-title">
-          { label }
+        <div
+          class={ classnames(
+            'bio-properties-panel-collapsible-entry-header-title',
+            !label && 'empty'
+          ) }>
+          { label || placeholderLabel }
         </div>
         <div class="bio-properties-panel-collapsible-entry-arrow">
           <ListArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />

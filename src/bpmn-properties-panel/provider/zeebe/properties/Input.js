@@ -36,7 +36,7 @@ export default function InputProperties(element) {
 
     return {
       id,
-      label: parameter.get('target'),
+      label: parameter.get('target') || '',
       entries: InputOutputParameter({
         idPrefix: id,
         element,
