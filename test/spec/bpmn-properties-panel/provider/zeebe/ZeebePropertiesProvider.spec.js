@@ -119,7 +119,7 @@ describe('<ZeebePropertiesProvider>', function() {
   }));
 
 
-  it('should NOT show details group', inject(async function(elementRegistry, selection) {
+  it('should NOT show task definition group', inject(async function(elementRegistry, selection) {
 
     // given
     const task = elementRegistry.get('Task_1');
@@ -129,14 +129,14 @@ describe('<ZeebePropertiesProvider>', function() {
     });
 
     // when
-    const detailsGroup = getGroup(container, 'details');
+    const taskDefinitionGroup = getGroup(container, 'taskDefinition');
 
     // then
-    expect(detailsGroup).to.not.exist;
+    expect(taskDefinitionGroup).to.not.exist;
   }));
 
 
-  it('should show details group', inject(async function(elementRegistry, selection) {
+  it('should show taskDefinition group', inject(async function(elementRegistry, selection) {
 
     // given
     const serviceTask = elementRegistry.get('ServiceTask_1');
@@ -146,10 +146,10 @@ describe('<ZeebePropertiesProvider>', function() {
     });
 
     // when
-    const detailsGroup = getGroup(container, 'details');
+    const taskDefinitionGroup = getGroup(container, 'taskDefinition');
 
     // then
-    expect(detailsGroup).to.exist;
+    expect(taskDefinitionGroup).to.exist;
   }));
 
 
