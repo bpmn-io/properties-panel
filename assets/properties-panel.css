@@ -271,6 +271,7 @@
 }
 
 .bio-properties-panel-input[type=number],
+select.bio-properties-panel-input,
 textarea.bio-properties-panel-input,
 .bio-properties-panel-input[type=text] {
   display: block;
