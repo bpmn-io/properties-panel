@@ -33,10 +33,10 @@ import {
   getIoMapping
 } from 'src/bpmn-properties-panel/provider/zeebe/utils/InputOutputUtil';
 
-import diagramXML from './Output.bpmn';
+import diagramXML from './OutputProps.bpmn';
 
 
-describe('provider/zeebe - Output', function() {
+describe('provider/zeebe - OutputProps', function() {
 
   const testModules = [
     CoreModule, SelectionModule, ModelingModule,
