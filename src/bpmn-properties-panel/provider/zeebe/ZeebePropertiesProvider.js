@@ -16,6 +16,10 @@ import {
   areOutputParametersSupported
 } from './utils/InputOutputUtil';
 
+import {
+  areHeadersSupported
+} from './utils/HeadersUtil';
+
 const LOW_PRIORITY = 500;
 
 function TaskDefinitionGroup(element) {
@@ -93,6 +97,15 @@ function TargetGroup(element) {
   };
 }
 
+function HeaderGroup(element) {
+  return {
+    id: 'headers',
+    label: 'Header',
+    component: ListGroup,
+    ...HeaderProps(element)
+  };
+}
+
 function getGroups(element) {
 
   const groups = [];
@@ -127,6 +140,10 @@ function getGroups(element) {
 
   if (areOutputParametersSupported(element)) {
     groups.push(OutputGroup(element));
+  }
+
+  if (areHeadersSupported(element)) {
+    groups.push(HeaderGroup(element));
   }
 
   return groups;
