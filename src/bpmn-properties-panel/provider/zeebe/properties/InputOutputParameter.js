@@ -18,10 +18,10 @@ export default function InputOutputParameter(props) {
   } = props;
 
   const entries = [{
-    id: 'target',
+    id: idPrefix + '-target',
     component: <TargetProperty idPrefix={ idPrefix } element={ element } parameter={ parameter } />
   },{
-    id: 'source',
+    id: idPrefix + '-source',
     component: <SourceProperty idPrefix={ idPrefix } element={ element } parameter={ parameter } />
   }];
 
