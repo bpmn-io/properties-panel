@@ -449,7 +449,7 @@ describe('<PanelHeaderProvider>', function() {
       const type = getConcreteType(element);
 
       // then
-      expect(type).to.equal('TaskParallel');
+      expect(type).to.equal('Task');
     });
 
 
@@ -468,7 +468,7 @@ describe('<PanelHeaderProvider>', function() {
       const type = getConcreteType(element);
 
       // then
-      expect(type).to.equal('TaskSequential');
+      expect(type).to.equal('Task');
     });
 
 
@@ -485,7 +485,7 @@ describe('<PanelHeaderProvider>', function() {
       const type = getConcreteType(element);
 
       // then
-      expect(type).to.equal('CollapsedSubProcessLoop');
+      expect(type).to.equal('CollapsedSubProcess');
     });
 
   });

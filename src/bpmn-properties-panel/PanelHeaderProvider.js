@@ -48,13 +48,6 @@ export function getConcreteType(element) {
     }
   }
 
-  // (3) loop characteristics markers
-  const loopCharacteristics = getLoopCharacteristics(element);
-
-  if (loopCharacteristics) {
-    type = `${type}${getLoopCharacteristicsSuffix(loopCharacteristics)}`;
-  }
-
   return type;
 }
 
@@ -100,12 +93,6 @@ function getEventDefinition(element) {
   return eventDefinitions && eventDefinitions[0];
 }
 
-function getLoopCharacteristics(element) {
-  const businessObject = getBusinessObject(element);
-
-  return businessObject && businessObject.loopCharacteristics;
-}
-
 function getRawType(type) {
   return type.split(':')[1];
 }
@@ -114,13 +101,4 @@ function getEventDefinitionPrefix(eventDefinition) {
   const rawType = getRawType(eventDefinition.$type);
 
   return rawType.replace('EventDefinition', '');
-}
-
-function getLoopCharacteristicsSuffix(loopCharacteristics) {
-  if (is(loopCharacteristics, 'bpmn:StandardLoopCharacteristics')) {
-    return 'Loop';
-  }
-
-  // assume 'bpmn:MultiInstanceLoopCharacteristics'
-  return loopCharacteristics.isSequential ? 'Sequential' : 'Parallel';
 }
