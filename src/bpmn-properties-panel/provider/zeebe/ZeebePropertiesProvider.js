@@ -3,10 +3,11 @@ import ListGroup from '../../../properties-panel/components/ListGroup';
 
 import {
   ConditionProps,
-  InputProperties,
+  HeaderProps,
+  InputProps,
   MultiInstanceProps,
-  OutputProperties,
   TargetProps,
+  OutputProps,
   TaskDefinitionProps
 } from './properties';
 
@@ -51,7 +52,7 @@ function InputGroup(element) {
     id: 'inputs',
     label: 'Input',
     component: ListGroup,
-    ...InputProperties(element)
+    ...InputProps(element)
   };
 }
 
@@ -60,7 +61,7 @@ function OutputGroup(element) {
     id: 'outputs',
     label: 'Output',
     component: ListGroup,
-    ...OutputProperties(element)
+    ...OutputProps(element)
   };
 }
 

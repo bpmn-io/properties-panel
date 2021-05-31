@@ -28,7 +28,7 @@ import {
 } from '../utils/ElementUtil';
 
 
-export default function InputProperties(element) {
+export function InputProps(element) {
   const inputParameters = getInputParameters(element) || [];
 
   const items = inputParameters.map((parameter, index) => {

@@ -1,5 +1,5 @@
-export { default as InputProperties } from './Input';
-export { default as OutputProperties } from './Output';
+export { InputProps } from './InputProps';
+export { OutputProps } from './OutputProps';
 export { ConditionProps } from './ConditionProps';
 export { MultiInstanceProps } from './MultiInstanceProps';
 export { TargetProps } from './TargetProps';
