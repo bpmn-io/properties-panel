@@ -6,6 +6,7 @@ import {
   InputProperties,
   MultiInstanceProps,
   OutputProperties,
+  TargetProps,
   TaskDefinitionProps
 } from './properties';
 
@@ -77,6 +78,20 @@ function ConditionGroup(element) {
   };
 }
 
+function TargetGroup(element) {
+
+  const entries = [
+    ...TargetProps({ element })
+  ];
+
+  return {
+    id: 'target',
+    label: 'Target',
+    entries,
+    component: Group
+  };
+}
+
 function getGroups(element) {
 
   const groups = [];
@@ -91,6 +106,12 @@ function getGroups(element) {
 
   if (conditionGroup.entries.length) {
     groups.push(conditionGroup);
+  }
+
+  const targetGroup = TargetGroup(element);
+
+  if (targetGroup.entries.length) {
+    groups.push(targetGroup);
   }
 
   const multiInstanceGroup = MultiInstanceGroup(element);

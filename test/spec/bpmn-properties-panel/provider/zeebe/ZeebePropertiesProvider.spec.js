@@ -86,6 +86,40 @@ describe('<ZeebePropertiesProvider>', function() {
   }));
 
 
+  it('should NOT show target group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const task = elementRegistry.get('Task_1');
+
+    await act(() => {
+      selection.select(task);
+    });
+
+    // when
+    const targetGroup = getGroup(container, 'target');
+
+    // then
+    expect(targetGroup).to.not.exist;
+  }));
+
+
+  it('should show target group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const serviceTask = elementRegistry.get('CallActivity_1');
+
+    await act(() => {
+      selection.select(serviceTask);
+    });
+
+    // when
+    const targetGroup = getGroup(container, 'target');
+
+    // then
+    expect(targetGroup).to.exist;
+  }));
+
+
   it('should NOT show output group', inject(async function(elementRegistry, selection) {
 
     // given
