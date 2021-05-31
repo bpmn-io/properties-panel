@@ -4,3 +4,4 @@ export { ConditionProps } from './ConditionProps';
 export { MultiInstanceProps } from './MultiInstanceProps';
 export { TargetProps } from './TargetProps';
 export { TaskDefinitionProps } from './TaskDefinitionProps';
+export { HeaderProps } from './HeaderProps';
