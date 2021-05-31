@@ -26,7 +26,7 @@ export default function Header(props) {
 
   return (<div class="bio-properties-panel-header">
     <div class="bio-properties-panel-header-icon">
-      <ElementIcon width="48" height="48" viewBox="0 0 48 48" />
+      <ElementIcon width="32" height="32" viewBox="0 0 32 32" />
     </div>
     <div class="bio-properties-panel-header-labels">
       { getElementLabel(element) ?
