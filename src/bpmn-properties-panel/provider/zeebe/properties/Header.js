@@ -14,10 +14,10 @@ export default function Header(props) {
   } = props;
 
   const entries = [{
-    id: 'key',
+    id: idPrefix + '-key',
     component: <KeyProperty idPrefix={ idPrefix } element={ element } header={ header } />
   },{
-    id: 'value',
+    id: idPrefix + '-value',
     component: <ValueProperty idPrefix={ idPrefix } element={ element } header={ header } />
   }];
 
