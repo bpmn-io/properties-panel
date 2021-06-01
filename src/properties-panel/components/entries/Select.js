@@ -35,7 +35,7 @@ function Select(props) {
  * @param {Object} props
  * @param {Object} props.element
  * @param {String} props.id
- * @param {String} props.description
+ * @param {String} [props.description]
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
