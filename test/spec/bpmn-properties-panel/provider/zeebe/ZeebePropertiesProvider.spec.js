@@ -256,6 +256,40 @@ describe('<ZeebePropertiesProvider>', function() {
     expect(conditionGroup).to.exist;
   }));
 
+
+  it('should NOT show output propagation group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const task = elementRegistry.get('Task_1');
+
+    await act(() => {
+      selection.select(task);
+    });
+
+    // when
+    const outputPropagationGroup = getGroup(container, 'outputPropagation');
+
+    // then
+    expect(outputPropagationGroup).to.not.exist;
+  }));
+
+
+  it('should show output propagation group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const callActivity = elementRegistry.get('CallActivity_1');
+
+    await act(() => {
+      selection.select(callActivity);
+    });
+
+    // when
+    const outputPropagationGroup = getGroup(container, 'outputPropagation');
+
+    // then
+    expect(outputPropagationGroup).to.exist;
+  }));
+
 });
 
 

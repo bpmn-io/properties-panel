@@ -6,6 +6,7 @@ import {
   HeaderProps,
   InputProps,
   MultiInstanceProps,
+  OutputPropagationProps,
   TargetProps,
   OutputProps,
   TaskDefinitionProps
@@ -106,6 +107,20 @@ function HeaderGroup(element) {
   };
 }
 
+function OutputPropagationGroup(element) {
+
+  const entries = [
+    ...OutputPropagationProps({ element })
+  ];
+
+  return {
+    id: 'outputPropagation',
+    label: 'Output Propagation',
+    entries,
+    component: Group
+  };
+}
+
 function getGroups(element) {
 
   const groups = [];
@@ -140,6 +155,12 @@ function getGroups(element) {
 
   if (areOutputParametersSupported(element)) {
     groups.push(OutputGroup(element));
+  }
+
+  const outputPropagationGroup = OutputPropagationGroup(element);
+
+  if (outputPropagationGroup.entries.length) {
+    groups.push(outputPropagationGroup);
   }
 
   if (areHeadersSupported(element)) {

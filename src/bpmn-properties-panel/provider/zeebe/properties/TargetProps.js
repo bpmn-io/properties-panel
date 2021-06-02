@@ -12,6 +12,11 @@ import {
 } from '../utils/ElementUtil';
 
 import {
+  getCalledElement,
+  getProcessId
+} from 'src/bpmn-properties-panel/provider/zeebe/utils/CalledElementUtil.js';
+
+import {
   useService
 } from '../../../hooks';
 
@@ -115,24 +120,4 @@ function TargetProcessId(props) {
     setValue,
     debounce
   });
-}
-
-
-// helper ///////////////////
-
-function getProcessId(element) {
-  const calledElement = getCalledElement(element);
-
-  return calledElement ? calledElement.get('processId') : '';
-}
-
-function getCalledElement(element) {
-  const calledElements = getCalledElements(element);
-  return calledElements[0];
-}
-
-function getCalledElements(element) {
-  const bo = getBusinessObject(element);
-  const extElements = getExtensionElements(bo, 'zeebe:CalledElement');
-  return extElements;
 }
