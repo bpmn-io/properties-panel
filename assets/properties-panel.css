@@ -4,6 +4,8 @@
 .bio-properties-panel {
   --silver-darken-80: #cdcdcd;
 
+  --blue-base-65: #4d90ff;
+
   --color-cccccc: #cccccc;
   --color-aaaaaa: #aaaaaa;
   --color-white: white;
@@ -204,7 +206,7 @@
 
 /**
  * Lists
- */ 
+ */
 .bio-properties-panel-list {
   display: none;
 }
@@ -235,7 +237,7 @@
 
 /**
  * Basic entries
- */ 
+ */
 .bio-properties-panel-add-entry {
   opacity: 0.3;
 }
@@ -347,6 +349,69 @@ textarea.bio-properties-panel-input,
 
 textarea.bio-properties-panel-input {
   resize: vertical;
+}
+
+/**
+ * Toggle Switch
+ */
+.bio-properties-panel-toggle-switch .bio-properties-panel-field-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__label {
+  margin: 0;
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher {
+  position: relative;
+  width: 48px;
+  height: 20px;
+}
+
+.bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher input[type='checkbox'] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher .bio-properties-panel-toggle-switch__slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--silver-darken-80);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher .bio-properties-panel-toggle-switch__slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher input[type='checkbox']:checked + .bio-properties-panel-toggle-switch__slider {
+  background-color: var(--blue-base-65);
+  box-shadow: 0 0 1px ;
+}
+
+.bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher input[type='checkbox']:checked + .bio-properties-panel-toggle-switch__slider:before {
+  -webkit-transform: translateX(28px);
+  -ms-transform: translateX(28px);
+  transform: translateX(28px);
 }
 
 /**
