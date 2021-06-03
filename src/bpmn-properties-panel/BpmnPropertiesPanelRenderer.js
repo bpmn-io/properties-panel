@@ -76,11 +76,16 @@ export default class BpmnPropertiesPanelRenderer {
       />,
       this._parentNode
     );
+
+    // (4) notify interested parties
+    this._eventBus.fire('propertiesPanel.attach');
   }
 
   detach() {
     if (this._parentNode) {
       render(null, this._parentNode);
+
+      this._eventBus.fire('propertiesPanel.detach');
     }
   }
 
