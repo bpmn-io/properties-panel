@@ -1,3 +1,17 @@
+/**
+ * @typedef { { value: String, label: String } } Option
+ */
+
+/**
+ * Provides basic select input.
+ *
+ * @param {Object} props
+ * @param {String} props.id
+ * @param {String} props.label
+ * @param {Function} props.onChange
+ * @param {Array<Option>} [props.options]
+ * @param {String} props.value
+ */
 function Select(props) {
   const {
     id,
