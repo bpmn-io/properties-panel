@@ -267,6 +267,57 @@ describe('<BpmnPropertiesPanelRenderer>', function() {
     expect(domQuery('.bio-properties-panel', container)).to.not.exist;
   });
 
+
+  describe('event emitting', function() {
+
+    it('should emit <propertiesPanel.attach>', async function() {
+
+      // given
+      const spy = sinon.spy();
+
+      const container = domify('<div></div>');
+      TestContainer.get(this).appendChild(container);
+
+      const diagramXml = require('test/fixtures/service-task.bpmn').default;
+
+      const { modeler } = await createModeler(diagramXml);
+
+      const eventBus = modeler.get('eventBus');
+      const propertiesPanel = modeler.get('propertiesPanel');
+
+      eventBus.on('propertiesPanel.attach', spy);
+
+      // when
+      propertiesPanel.attachTo(container);
+
+      // then
+      expect(spy).to.have.been.calledOnce;
+    });
+
+
+    it('should emit <propertiesPanel.detach>', async function() {
+
+      // given
+      const spy = sinon.spy();
+
+      const diagramXml = require('test/fixtures/service-task.bpmn').default;
+
+      const { modeler } = await createModeler(diagramXml);
+
+      const eventBus = modeler.get('eventBus');
+      const propertiesPanel = modeler.get('propertiesPanel');
+
+      eventBus.on('propertiesPanel.detach', spy);
+
+      // when
+      propertiesPanel.detach();
+
+      // then
+      expect(spy).to.have.been.calledOnce;
+    });
+
+  });
+
 });
 
 
