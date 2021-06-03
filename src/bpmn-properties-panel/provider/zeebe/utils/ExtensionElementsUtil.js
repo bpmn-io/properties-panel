@@ -2,20 +2,22 @@ import {
   is
 } from 'bpmn-js/lib/util/ModelUtil';
 
-export function getExtensionElements(businessObject, type) {
-  let elements = [];
 
-  const extensionElements = businessObject.get('extensionElements');
 
-  if (typeof extensionElements !== 'undefined') {
-    const extensionValues = extensionElements.get('values');
+/**
+ * getExtensionElementsList - get the extensionElements of a given type for a given
+ * businessObject as list. Will return an empty list if no extensionElements (of
+ * given type) are present
+ *
+ * @param  {ModdleElement} businessObject
+ * @param  {string} [type=undefined]
+ * @return {Array<ModdleElement>}
+ */
+export function getExtensionElementsList(businessObject, type = undefined) {
+  const elements = ((businessObject.get('extensionElements') &&
+                  businessObject.get('extensionElements').get('values')) || []);
 
-    if (typeof extensionValues !== 'undefined') {
-      elements = extensionValues.filter(function(value) {
-        return is(value, type);
-      });
-    }
-  }
-
-  return elements;
+  return (elements.length && type) ?
+    elements.filter((value) => is(value, type)) :
+    elements;
 }

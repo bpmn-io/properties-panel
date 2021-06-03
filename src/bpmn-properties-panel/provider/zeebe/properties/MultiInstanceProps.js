@@ -5,7 +5,7 @@ import {
 import TextField from '../../../../properties-panel/components/entries/TextField';
 
 import {
-  getExtensionElements
+  getExtensionElementsList
 } from '../utils/ExtensionElementsUtil';
 
 import {
@@ -155,7 +155,7 @@ function getLoopCharacteristics(element) {
 }
 
 function getZeebeLoopCharacteristics(loopCharacteristics) {
-  const extensionElements = getExtensionElements(loopCharacteristics, 'zeebe:LoopCharacteristics');
+  const extensionElements = getExtensionElementsList(loopCharacteristics, 'zeebe:LoopCharacteristics');
 
   return extensionElements && extensionElements[0];
 }

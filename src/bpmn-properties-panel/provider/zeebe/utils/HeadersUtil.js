@@ -7,7 +7,7 @@ import {
 } from 'bpmn-js/lib/util/ModelUtil';
 
 import {
-  getExtensionElements
+  getExtensionElementsList
 } from './ExtensionElementsUtil';
 
 export function areHeadersSupported(element) {
@@ -27,7 +27,7 @@ export function areHeadersSupported(element) {
 export function getTaskHeaders(element) {
   const businessObject = getBusinessObject(element);
 
-  return getExtensionElements(businessObject, 'zeebe:TaskHeaders')[0];
+  return getExtensionElementsList(businessObject, 'zeebe:TaskHeaders')[0];
 }
 
 /**

@@ -21,6 +21,13 @@
       </bpmn:extensionElements>
     </bpmn:callActivity>
     <bpmn:task id="Task_1" name="Task_1" />
+    <bpmn:callActivity id="CallActivity_5" name="CallActivity_5">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="= source" target="target" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
     <bpmn:group id="Group_0g7mvor" categoryValueRef="CategoryValue_0i5rzi3" />
   </bpmn:process>
   <bpmn:category id="Category_028vbmh">
@@ -42,6 +49,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1qlrc91_di" bpmnElement="Task_1">
         <dc:Bounds x="160" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ucjhow_di" bpmnElement="CallActivity_5">
+        <dc:Bounds x="160" y="490" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Group_0g7mvor_di" bpmnElement="Group_0g7mvor">
         <dc:Bounds x="390" y="180" width="300" height="300" />

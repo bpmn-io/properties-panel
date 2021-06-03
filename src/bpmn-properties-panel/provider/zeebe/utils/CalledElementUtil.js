@@ -3,7 +3,7 @@ import {
 } from 'bpmn-js/lib/util/ModelUtil';
 
 import {
-  getExtensionElements
+  getExtensionElementsList
 } from './ExtensionElementsUtil';
 
 
@@ -26,6 +26,6 @@ export function getCalledElement(element) {
 
 function getCalledElements(element) {
   const bo = getBusinessObject(element);
-  const extElements = getExtensionElements(bo, 'zeebe:CalledElement');
+  const extElements = getExtensionElementsList(bo, 'zeebe:CalledElement');
   return extElements;
 }

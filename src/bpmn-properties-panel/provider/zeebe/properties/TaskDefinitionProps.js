@@ -6,7 +6,7 @@ import {
 import TextField from '../../../../properties-panel/components/entries/TextField';
 
 import {
-  getExtensionElements
+  getExtensionElementsList
 } from '../utils/ExtensionElementsUtil';
 
 import {
@@ -210,5 +210,5 @@ function TaskDefinitionRetries(props) {
 function getTaskDefinition(element) {
   const businessObject = getBusinessObject(element);
 
-  return getExtensionElements(businessObject, 'zeebe:TaskDefinition')[0];
+  return getExtensionElementsList(businessObject, 'zeebe:TaskDefinition')[0];
 }
