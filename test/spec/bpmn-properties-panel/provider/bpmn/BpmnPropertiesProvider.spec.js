@@ -21,7 +21,7 @@ import BpmnPropertiesPanel from 'src/bpmn-properties-panel';
 
 import BpmnPropertiesProvider from 'src/bpmn-properties-panel/provider/bpmn';
 
-import diagramXML from 'test/fixtures/simple.bpmn';
+import diagramXML from './BpmnPropertiesProvider.bpmn';
 
 
 describe('<BpmnPropertiesProvider>', function() {
@@ -57,6 +57,40 @@ describe('<BpmnPropertiesProvider>', function() {
 
     // then
     expect(generalGroup).to.exist;
+  }));
+
+
+  it('should NOT show error group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const startEvent = elementRegistry.get('StartEvent_1');
+
+    await act(() => {
+      selection.select(startEvent);
+    });
+
+    // when
+    const errorGroup = getGroup(container, 'error');
+
+    // then
+    expect(errorGroup).to.not.exist;
+  }));
+
+
+  it('should show error group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const errorBoundaryEvent = elementRegistry.get('BoundaryEvent_1');
+
+    await act(() => {
+      selection.select(errorBoundaryEvent);
+    });
+
+    // when
+    const errorGroup = getGroup(container, 'error');
+
+    // then
+    expect(errorGroup).to.exist;
   }));
 
 });

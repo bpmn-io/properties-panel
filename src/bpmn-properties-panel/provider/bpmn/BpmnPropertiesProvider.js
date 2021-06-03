@@ -1,12 +1,17 @@
 import Group from '../../../properties-panel/components/Group';
 
 import {
-  NameProperty,
-  IdProperty,
+  DocumentationProps,
+  ErrorProps,
   ExecutableProperty,
+  IdProperty,
+  NameProperty,
   ProcessProps,
-  DocumentationProps
 } from './properties';
+
+import {
+  isErrorSupported
+} from './utils/EventDefinitionUtil';
 
 function GeneralGroup(element) {
 
@@ -50,12 +55,31 @@ function DocumentationGroup(element) {
 
 }
 
+function ErrorGroup(element) {
+
+  const entries = [
+    ...ErrorProps({ element })
+  ];
+
+  return {
+    id: 'error',
+    label: 'Error',
+    entries,
+    component: Group
+  };
+
+}
+
 function getGroups(element) {
 
   const groups = [
     GeneralGroup(element),
     DocumentationGroup(element)
   ];
+
+  if (isErrorSupported(element)) {
+    groups.push(ErrorGroup(element));
+  }
 
   return groups;
 }
