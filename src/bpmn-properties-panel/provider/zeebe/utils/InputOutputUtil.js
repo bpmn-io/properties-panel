@@ -7,7 +7,7 @@ import {
 } from 'bpmn-js/lib/util/ModelUtil';
 
 import {
-  getExtensionElements
+  getExtensionElementsList
 } from './ExtensionElementsUtil';
 
 import {
@@ -15,7 +15,7 @@ import {
 } from './ElementUtil';
 
 function getElements(bo, type, prop) {
-  const elems = getExtensionElements(bo, type);
+  const elems = getExtensionElementsList(bo, type);
   return !prop ? elems : (elems[0] || {})[prop] || [];
 }
 

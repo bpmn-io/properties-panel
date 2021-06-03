@@ -4,10 +4,6 @@ import {
 } from 'bpmn-js/lib/util/ModelUtil';
 
 import {
-  getExtensionElements
-} from '../utils/ExtensionElementsUtil';
-
-import {
   createElement
 } from '../utils/ElementUtil';
 
@@ -55,9 +51,9 @@ function TargetProcessId(props) {
     const businessObject = getBusinessObject(element);
 
     // (1) ensure extension elements
-    let extensionElements = getExtensionElements(businessObject, 'zeebe:CalledElement');
+    let extensionElements = businessObject.get('extensionElements');
 
-    if (extensionElements.length === 0) {
+    if (!extensionElements) {
       extensionElements = createElement(
         'bpmn:ExtensionElements',
         { values: [] },

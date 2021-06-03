@@ -19,7 +19,7 @@ import {
 } from 'bpmn-js/lib/util/ModelUtil';
 
 import {
-  getExtensionElements
+  getExtensionElementsList
 } from 'src/bpmn-properties-panel/provider/zeebe/utils/ExtensionElementsUtil.js';
 
 import {
@@ -154,7 +154,8 @@ describe('provider/zeebe - TargetProps', function() {
     it('should re-use extension elements', inject(async function(elementRegistry, selection) {
 
       // given
-      const callActivity = elementRegistry.get('CallActivity_1');
+      const callActivity = elementRegistry.get('CallActivity_3'),
+            businessObject = getBusinessObject(callActivity);
 
       await act(() => {
         selection.select(callActivity);
@@ -162,14 +163,16 @@ describe('provider/zeebe - TargetProps', function() {
 
       const targetProcessIdInput = domQuery('input[name=targetProcessId]', container);
 
+      // assume
+      expect(getExtensionElementsList(businessObject, 'zeebe:IoMapping')).to.have.length(1);
+
       // when
       changeInput(targetProcessIdInput, 'someOtherProcessId');
 
       // then
-      const businessObject = getBusinessObject(callActivity),
-            ioMapping = getExtensionElements(businessObject, 'zeebe:IoMapping');
+      const ioMapping = getExtensionElementsList(businessObject, 'zeebe:IoMapping');
 
-      expect(ioMapping).to.exist;
+      expect(ioMapping).to.have.length(1);
     }));
 
 

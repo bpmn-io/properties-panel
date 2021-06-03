@@ -29,7 +29,7 @@ import ZeebePropertiesProvider from 'src/bpmn-properties-panel/provider/zeebe';
 import zeebeModdleExtensions from 'zeebe-bpmn-moddle/resources/zeebe';
 
 import {
-  getExtensionElements
+  getExtensionElementsList
 } from 'src/bpmn-properties-panel/provider/zeebe/utils/ExtensionElementsUtil';
 
 import diagramXML from './MultiInstanceProps.bpmn';
@@ -592,7 +592,7 @@ function getLoopCharacteristics(element) {
 function getZeebeLoopCharacteristics(element) {
   const loopCharacteristics = getLoopCharacteristics(element);
 
-  const extensionElements = getExtensionElements(loopCharacteristics, 'zeebe:LoopCharacteristics');
+  const extensionElements = getExtensionElementsList(loopCharacteristics, 'zeebe:LoopCharacteristics');
 
   return extensionElements && extensionElements[0];
 }

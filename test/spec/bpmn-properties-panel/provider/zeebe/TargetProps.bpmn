@@ -10,7 +10,13 @@
       </bpmn:extensionElements>
     </bpmn:callActivity>
     <bpmn:task id="Task_1" name="Task_1" />
-    <bpmn:callActivity id="CallActivity_2" name="CallActivity_2">
+    <bpmn:callActivity id="CallActivity_2" name="CallActivity_2" />
+    <bpmn:callActivity id="CallActivity_3" name="CallActivity_3">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="= source" target="target" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
     </bpmn:callActivity>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -23,6 +29,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1gt91s8_di" bpmnElement="CallActivity_2">
         <dc:Bounds x="160" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0s74y25_di" bpmnElement="CallActivity_3">
+        <dc:Bounds x="160" y="440" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

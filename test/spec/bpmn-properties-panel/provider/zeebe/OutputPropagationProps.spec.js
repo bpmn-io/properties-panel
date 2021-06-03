@@ -19,6 +19,14 @@ import {
   getPropagateAllChildVariables
 } from 'src/bpmn-properties-panel/provider/zeebe/utils/CalledElementUtil.js';
 
+import {
+  getExtensionElementsList
+} from 'src/bpmn-properties-panel/provider/zeebe/utils/ExtensionElementsUtil.js';
+
+import {
+  getBusinessObject
+} from 'bpmn-js/lib/util/ModelUtil';
+
 import BpmnPropertiesPanel from 'src/bpmn-properties-panel';
 import CoreModule from 'bpmn-js/lib/core';
 import ModelingModule from 'bpmn-js/lib/features/modeling';
@@ -260,6 +268,31 @@ describe('provider/zeebe - OutputPropagationProps', function() {
 
       expect(processId).to.equal('someProcessId');
     }));
+
+
+    it('should re-use extensionElements', inject(async function(elementRegistry, selection) {
+
+      // given
+      const callActivity = elementRegistry.get('CallActivity_5'),
+            businessObject = getBusinessObject(callActivity);
+
+      await act(() => {
+        selection.select(callActivity);
+      });
+
+      // assume
+      expect(getExtensionElementsList(businessObject, 'zeebe:IoMapping')).to.have.length(1);
+
+      // when
+      const slider = domQuery('.bio-properties-panel-toggle-switch__slider', container);
+      clickInput(slider);
+
+      // then
+      const ioMapping = getExtensionElementsList(businessObject, 'zeebe:IoMapping');
+
+      expect(ioMapping).to.have.length(1);
+    }));
+
 
     it('should create called element extension element', inject(async function(elementRegistry, selection) {
 

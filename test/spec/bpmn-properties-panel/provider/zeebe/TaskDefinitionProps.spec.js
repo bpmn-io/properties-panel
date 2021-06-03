@@ -29,7 +29,7 @@ import ZeebePropertiesProvider from 'src/bpmn-properties-panel/provider/zeebe';
 import zeebeModdleExtensions from 'zeebe-bpmn-moddle/resources/zeebe';
 
 import {
-  getExtensionElements
+  getExtensionElementsList
 } from 'src/bpmn-properties-panel/provider/zeebe/utils/ExtensionElementsUtil';
 
 import diagramXML from './TaskDefinitionProps.bpmn';
@@ -319,5 +319,5 @@ describe('provider/zeebe - TaskDefinitionProps', function() {
 function getTaskDefinition(element) {
   const businessObject = getBusinessObject(element);
 
-  return getExtensionElements(businessObject, 'zeebe:TaskDefinition')[0];
+  return getExtensionElementsList(businessObject, 'zeebe:TaskDefinition')[0];
 }
