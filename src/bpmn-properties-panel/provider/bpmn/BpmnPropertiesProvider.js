@@ -5,12 +5,14 @@ import {
   ErrorProps,
   ExecutableProperty,
   IdProperty,
+  MessageProps,
   NameProperty,
   ProcessProps,
 } from './properties';
 
 import {
-  isErrorSupported
+  isErrorSupported,
+  isMessageSupported
 } from './utils/EventDefinitionUtil';
 
 function GeneralGroup(element) {
@@ -70,6 +72,21 @@ function ErrorGroup(element) {
 
 }
 
+function MessageGroup(element) {
+
+  const entries = [
+    ...MessageProps({ element })
+  ];
+
+  return {
+    id: 'message',
+    label: 'Message',
+    entries,
+    component: Group
+  };
+
+}
+
 function getGroups(element) {
 
   const groups = [
@@ -79,6 +96,10 @@ function getGroups(element) {
 
   if (isErrorSupported(element)) {
     groups.push(ErrorGroup(element));
+  }
+
+  if (isMessageSupported(element)) {
+    groups.push(MessageGroup(element));
   }
 
   return groups;
