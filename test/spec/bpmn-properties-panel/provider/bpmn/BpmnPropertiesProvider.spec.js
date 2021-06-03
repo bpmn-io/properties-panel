@@ -93,6 +93,57 @@ describe('<BpmnPropertiesProvider>', function() {
     expect(errorGroup).to.exist;
   }));
 
+
+  it('should NOT show message group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const startEvent = elementRegistry.get('StartEvent_1');
+
+    await act(() => {
+      selection.select(startEvent);
+    });
+
+    // when
+    const messageGroup = getGroup(container, 'message');
+
+    // then
+    expect(messageGroup).to.not.exist;
+  }));
+
+
+  it('should show message group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const messageEvent = elementRegistry.get('MessageEvent_1');
+
+    await act(() => {
+      selection.select(messageEvent);
+    });
+
+    // when
+    const messageGroup = getGroup(container, 'message');
+
+    // then
+    expect(messageGroup).to.exist;
+  }));
+
+
+  it('should show message group - receive task', inject(async function(elementRegistry, selection) {
+
+    // given
+    const receiveTask = elementRegistry.get('ReceiveTask_1');
+
+    await act(() => {
+      selection.select(receiveTask);
+    });
+
+    // when
+    const messageGroup = getGroup(container, 'message');
+
+    // then
+    expect(messageGroup).to.exist;
+  }));
+
 });
 
 

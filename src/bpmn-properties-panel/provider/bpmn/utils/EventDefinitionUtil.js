@@ -38,3 +38,29 @@ export function getEventDefinition(element, eventType) {
     return is(definition, eventType);
   });
 }
+
+export function isMessageSupported(element) {
+  return is(element, 'bpmn:ReceiveTask') || (
+    isAny(element, [
+      'bpmn:StartEvent',
+      'bpmn:EndEvent',
+      'bpmn:IntermediateThrowEvent',
+      'bpmn:BoundaryEvent',
+      'bpmn:IntermediateCatchEvent'
+    ]) && !!getMessageEventDefinition(element)
+  );
+}
+
+export function getMessageEventDefinition(element) {
+  if (is(element, 'bpmn:ReceiveTask')) {
+    return getBusinessObject(element);
+  }
+
+  return getEventDefinition(element, 'bpmn:MessageEventDefinition');
+}
+
+export function getMessage(element) {
+  const messageEventDefinition = getMessageEventDefinition(element);
+
+  return messageEventDefinition && messageEventDefinition.get('messageRef');
+}
