@@ -5,6 +5,7 @@ import {
   ConditionProps,
   HeaderProps,
   InputProps,
+  MessageProps,
   MultiInstanceProps,
   OutputPropagationProps,
   TargetProps,
@@ -121,6 +122,19 @@ function OutputPropagationGroup(element) {
   };
 }
 
+function updateMessageGroup(groups, element) {
+  const messageGroup = findGroup(groups, 'message');
+
+  if (!messageGroup) {
+    return;
+  }
+
+  messageGroup.entries = [
+    ...messageGroup.entries,
+    ...MessageProps({ element })
+  ];
+}
+
 function getGroups(element) {
 
   const groups = [];
@@ -178,7 +192,13 @@ export default class ZeebePropertiesProvider {
 
   getGroups(element) {
     return (groups) => {
+
+      // (1) add zeebe specific groups
       groups = groups.concat(getGroups(element));
+
+      // (2) update existing groups with zeebe specific properties
+      updateMessageGroup(groups, element);
+
       return groups;
     };
   }
@@ -186,3 +206,10 @@ export default class ZeebePropertiesProvider {
 }
 
 ZeebePropertiesProvider.$inject = [ 'propertiesPanel' ];
+
+
+// helper /////////////////////
+
+function findGroup(groups, id) {
+  return groups.find(g => g.id === id);
+}

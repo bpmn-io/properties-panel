@@ -6,3 +6,4 @@ export { OutputPropagationProps } from './OutputPropagationProps';
 export { TargetProps } from './TargetProps';
 export { TaskDefinitionProps } from './TaskDefinitionProps';
 export { HeaderProps } from './HeaderProps';
+export { MessageProps } from './MessageProps';
