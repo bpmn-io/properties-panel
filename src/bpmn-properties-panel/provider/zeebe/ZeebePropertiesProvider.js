@@ -10,7 +10,8 @@ import {
   OutputPropagationProps,
   TargetProps,
   OutputProps,
-  TaskDefinitionProps
+  TaskDefinitionProps,
+  FormProps
 } from './properties';
 
 import {
@@ -85,6 +86,20 @@ function ConditionGroup(element) {
   };
 }
 
+function FormGroup(element) {
+
+  const entries = [
+    ...FormProps({ element })
+  ];
+
+  return {
+    id: 'form',
+    label: 'Form',
+    entries,
+    component: Group
+  };
+}
+
 function TargetGroup(element) {
 
   const entries = [
@@ -143,6 +158,12 @@ function getGroups(element) {
 
   if (taskDefinitionGroup.entries.length) {
     groups.push(taskDefinitionGroup);
+  }
+
+  const formGroup = FormGroup(element);
+
+  if (formGroup.entries.length) {
+    groups.push(formGroup);
   }
 
   const conditionGroup = ConditionGroup(element);
