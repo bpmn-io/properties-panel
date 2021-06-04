@@ -7,7 +7,7 @@ import {
 } from 'min-dash';
 
 import TextField from '../../../../properties-panel/components/entries/TextField';
-import Select from '../../../../properties-panel/components/entries/Select';
+import ReferenceSelect from '../../../entries/ReferenceSelect';
 
 import {
   useService
@@ -116,7 +116,7 @@ function ErrorRef(props) {
 
     let options = [
       { value: '', label: translate('<none>') },
-      { value: CREATE_NEW_OPTION, label: translate('Create new') }
+      { value: CREATE_NEW_OPTION, label: translate('Create new ...') }
     ];
 
     const errors = findRootElementsByType(getBusinessObject(element), 'bpmn:Error');
@@ -131,10 +131,11 @@ function ErrorRef(props) {
     return options;
   };
 
-  return Select({
+  return ReferenceSelect({
     element,
     id: 'errorRef',
     label: translate('Global Error Reference'),
+    autoFocusEntry: 'errorName',
     getValue,
     setValue,
     getOptions

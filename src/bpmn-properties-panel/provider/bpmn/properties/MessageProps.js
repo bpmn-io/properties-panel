@@ -7,7 +7,7 @@ import {
 } from 'min-dash';
 
 import TextField from '../../../../properties-panel/components/entries/TextField';
-import Select from '../../../../properties-panel/components/entries/Select';
+import ReferenceSelect from '../../../entries/ReferenceSelect';
 
 import {
   useService
@@ -73,9 +73,11 @@ function MessageRef(props) {
 
     // (1) create new message
     if (value === CREATE_NEW_OPTION) {
+      const id = nextId('Message_');
+
       message = createElement(
         'bpmn:Message',
-        { name: nextId('Message_') },
+        { id, name: id },
         root,
         bpmnFactory
       );
@@ -115,7 +117,7 @@ function MessageRef(props) {
 
     let options = [
       { value: '', label: translate('<none>') },
-      { value: CREATE_NEW_OPTION, label: translate('Create new') }
+      { value: CREATE_NEW_OPTION, label: translate('Create new ...') }
     ];
 
     const messages = findRootElementsByType(getBusinessObject(element), 'bpmn:Message');
@@ -130,10 +132,11 @@ function MessageRef(props) {
     return options;
   };
 
-  return Select({
+  return ReferenceSelect({
     element,
     id: 'messageRef',
     label: translate('Global Message Reference'),
+    autoFocusEntry: 'messageName',
     getValue,
     setValue,
     getOptions

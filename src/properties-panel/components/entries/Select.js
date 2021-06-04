@@ -28,13 +28,13 @@ function Select(props) {
   return (
     <div class="bio-properties-panel-select">
       <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
-      <select id={ prefixId(id) } name={ id } class="bio-properties-panel-input" onInput={ handleChange }>
+      <select id={ prefixId(id) } name={ id } class="bio-properties-panel-input" onInput={ handleChange } value={ value }>
         {
-          options.map((option) => {
+          options.map((option, idx) => {
             return (
               <option
-                value={ option.value }
-                selected={ option.value === value }>
+                key={ idx }
+                value={ option.value }>
                 { option.label }
               </option>
             );

@@ -102,7 +102,7 @@ describe('provider/bpmn - ErrorProps', function() {
       // then
       expect(asOptionNamesList(errorRefSelect)).to.eql([
         '<none>',
-        'Create new',
+        'Create new ...',
         'Error_1',
         'Error_2',
         'Error_3'
