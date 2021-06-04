@@ -488,6 +488,18 @@ describe('<PanelHeaderProvider>', function() {
       expect(type).to.equal('CollapsedSubProcess');
     });
 
+
+    it('should get type - transaction', async function() {
+
+      // given
+      const element = createElement('bpmn:Transaction');
+
+      // when
+      const type = getConcreteType(element);
+
+      // then
+      expect(type).to.equal('Transaction');
+    });
   });
 
 });

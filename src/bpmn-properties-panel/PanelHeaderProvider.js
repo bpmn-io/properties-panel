@@ -40,7 +40,7 @@ export function getConcreteType(element) {
   }
 
   // (2) sub process types
-  if (is(element, 'bpmn:SubProcess')) {
+  if (is(element, 'bpmn:SubProcess') && !is(element, 'bpmn:Transaction')) {
     if (isEventSubProcess(element)) {
       type = `Event${type}`;
     } else {
