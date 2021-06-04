@@ -102,7 +102,7 @@ describe('provider/bpmn - MessageProps', function() {
       // then
       expect(asOptionNamesList(messageRefSelect)).to.eql([
         '<none>',
-        'Create new',
+        'Create new ...',
         'Message_1',
         'Message_2',
         'Message_3'
@@ -249,7 +249,7 @@ describe('provider/bpmn - MessageProps', function() {
       // then
       expect(asOptionNamesList(messageRefSelect)).to.eql([
         '<none>',
-        'Create new',
+        'Create new ...',
         'Message_1',
         'Message_2',
         'Message_3'
