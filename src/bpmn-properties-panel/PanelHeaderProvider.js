@@ -64,7 +64,7 @@ export const PanelHeaderProvider = {
   getElementIcon: (element) => {
     const concreteType = getConcreteType(element);
 
-    return iconsByType[ concreteType ] || iconsByType[ 'default' ];
+    return iconsByType[ concreteType ];
   },
 
   getTypeLabel: (element) => {
