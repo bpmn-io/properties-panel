@@ -368,8 +368,8 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher {
   position: relative;
-  width: 48px;
-  height: 20px;
+  width: 32px;
+  height: 16px;
 }
 
 .bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher input[type='checkbox'] {
@@ -393,8 +393,8 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher .bio-properties-panel-toggle-switch__slider:before {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
+  height: 12px;
+  width: 12px;
   left: 2px;
   bottom: 2px;
   background-color: white;
@@ -409,9 +409,9 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher input[type='checkbox']:checked + .bio-properties-panel-toggle-switch__slider:before {
-  -webkit-transform: translateX(28px);
-  -ms-transform: translateX(28px);
-  transform: translateX(28px);
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
 }
 
 /**
