@@ -10,7 +10,7 @@ import {
 import {
   getCalledElement,
   getProcessId
-} from 'src/bpmn-properties-panel/provider/zeebe/utils/CalledElementUtil.js';
+} from '../utils/CalledElementUtil.js';
 
 import {
   useService
