@@ -1,5 +1,6 @@
 import BusinessRuleTaskIcon from './bpmn-icon-business-rule-task.svg';
 import CallActivityIcon from './bpmn-icon-call-activity.svg';
+import CollaborationIcon from './bpmn-icon-collaboration.svg';
 import ConditionalFlowIcon from './bpmn-icon-conditional-flow.svg';
 import ConnectionIcon from './bpmn-icon-connection.svg';
 import DataInputIcon from './bpmn-icon-data-input.svg';
@@ -86,6 +87,7 @@ import UserTaskIcon from './bpmn-icon-user-task.svg';
 export default {
   'BusinessRuleTask': BusinessRuleTaskIcon,
   'CallActivity': CallActivityIcon,
+  'Collaboration': CollaborationIcon,
   'ConditionalFlow': ConditionalFlowIcon,
   'SequenceFlow': ConnectionIcon,
   'DataInput': DataInputIcon,
