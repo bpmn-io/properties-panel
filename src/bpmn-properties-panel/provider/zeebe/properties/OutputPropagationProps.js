@@ -9,7 +9,7 @@ import {
 
 import {
   getCalledElement
-} from 'src/bpmn-properties-panel/provider/zeebe/utils/CalledElementUtil.js';
+} from '../utils/CalledElementUtil.js';
 
 import {
   has
