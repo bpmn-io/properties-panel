@@ -11,6 +11,7 @@ import {
 
 import {
   Injector as injectorMock,
+  ElementRegistry as elementRegistryMock,
   EventBus as eventBusMock,
   getProviders as getProvidersMock
 } from './mocks';
@@ -209,6 +210,46 @@ describe('<BpmnPropertiesPanel>', function() {
       expect(updateSpy).to.have.been.calledOnce;
     });
 
+
+    it('should not update deleted element', async function() {
+
+      // given
+      const element = {
+        ...noopElement,
+        id: 'B',
+        type: 'foo:Deleted'
+      };
+
+      let elements = [
+        element,
+        noopElement,
+        noopElement
+      ];
+
+      const elementRegistry = new elementRegistryMock();
+      elementRegistry.setElements(elements);
+
+      const updateSpy = sinon.spy();
+      const eventBus = new eventBusMock();
+      eventBus.on('propertiesPanel.updated', updateSpy);
+
+      createBpmnPropertiesPanel({
+        container,
+        element,
+        elementRegistry,
+        eventBus
+      });
+
+      // when --> remove the currently selected element
+      elements.splice(0, 1);
+      elementRegistry.setElements(elements);
+
+      eventBus.fire('elements.changed', { elements: [ element ] });
+
+      // then
+      expect(updateSpy).to.not.have.been.called;
+    });
+
   });
 
 });
@@ -220,11 +261,24 @@ function createBpmnPropertiesPanel(options = {}) {
 
   const {
     element = noopElement,
-    injector = new injectorMock(options),
     getProviders = getProvidersMock,
     layoutConfig,
     container
   } = options;
+
+  let {
+    elementRegistry
+  } = options;
+
+  if (!elementRegistry) {
+    elementRegistry = new elementRegistryMock();
+    elementRegistry.setElements([ element ]);
+  }
+
+  const injector = new injectorMock({
+    ...options,
+    elementRegistry
+  });
 
   return render(
     <BpmnPropertiesPanel

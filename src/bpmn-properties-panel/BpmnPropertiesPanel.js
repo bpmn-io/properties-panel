@@ -32,9 +32,9 @@ export default function BpmnPropertiesPanel(props) {
     layoutConfig
   } = props;
 
-  const eventBus = injector.get('eventBus');
-
   const canvas = injector.get('canvas');
+  const elementRegistry = injector.get('elementRegistry');
+  const eventBus = injector.get('eventBus');
 
   const [ state, setState ] = useState({
     selectedElement: element
@@ -95,7 +95,7 @@ export default function BpmnPropertiesPanel(props) {
 
       const updatedElement = findElement(elements, selectedElement);
 
-      if (updatedElement) {
+      if (updatedElement && elementExists(updatedElement, elementRegistry)) {
         _update(updatedElement);
       }
     };
@@ -165,4 +165,8 @@ function isImplicitRoot(element) {
 
 function findElement(elements, element) {
   return find(elements, (e) => e === element);
+}
+
+function elementExists(element, elementRegistry) {
+  return element && elementRegistry.get(element.id);
 }
