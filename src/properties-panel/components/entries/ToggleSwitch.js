@@ -21,6 +21,7 @@ function ToggleSwitch(props) {
         <label class="bio-properties-panel-toggle-switch__switcher">
           <input
             id={ prefixId(id) }
+            class="bio-properties-panel-input"
             type="checkbox"
             name={ id }
             onInput={ handleInput }
