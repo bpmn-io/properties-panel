@@ -48,6 +48,16 @@ export function getConcreteType(element) {
     }
   }
 
+  // (3) conditional + default flows
+  if (isDefaultFlow(element)) {
+    type = 'DefaultFlow';
+  }
+
+  if (isConditionalFlow(element)) {
+    type = 'ConditionalFlow';
+  }
+
+
   return type;
 }
 
@@ -101,4 +111,28 @@ function getEventDefinitionPrefix(eventDefinition) {
   const rawType = getRawType(eventDefinition.$type);
 
   return rawType.replace('EventDefinition', '');
+}
+
+function isDefaultFlow(element) {
+  const businessObject = getBusinessObject(element);
+  const sourceBusinessObject = getBusinessObject(element.source);
+
+  if (!is(element, 'bpmn:SequenceFlow') || !sourceBusinessObject) {
+    return false;
+  }
+
+  return sourceBusinessObject.default && sourceBusinessObject.default === businessObject && (
+    is(sourceBusinessObject, 'bpmn:Gateway') || is(sourceBusinessObject, 'bpmn:Activity')
+  );
+}
+
+function isConditionalFlow(element) {
+  const businessObject = getBusinessObject(element);
+  const sourceBusinessObject = getBusinessObject(element.source);
+
+  if (!is(element, 'bpmn:SequenceFlow') || !sourceBusinessObject) {
+    return false;
+  }
+
+  return businessObject.conditionExpression && is(sourceBusinessObject, 'bpmn:Activity');
 }
