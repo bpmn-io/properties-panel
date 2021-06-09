@@ -500,6 +500,59 @@ describe('<PanelHeaderProvider>', function() {
       // then
       expect(type).to.equal('Transaction');
     });
+
+
+    it('should get type - sequence flow', async function() {
+
+      // given
+      const sequenceFlow = createElement('bpmn:SequenceFlow');
+
+      // when
+      const type = getConcreteType(sequenceFlow);
+
+      // then
+      expect(type).to.equal('SequenceFlow');
+    });
+
+
+    it('should get type - default flow', async function() {
+
+      // given
+      const sequenceFlow = createElement('bpmn:SequenceFlow');
+      const task = moddle.create('bpmn:Task');
+
+      task.default = sequenceFlow.businessObject;
+      sequenceFlow.source = task;
+
+      // when
+      const type = getConcreteType(sequenceFlow);
+
+      // then
+      expect(type).to.equal('DefaultFlow');
+    });
+
+
+    it('should get type - conditional flow', async function() {
+
+      // given
+      const conditionExpression = moddle.create('bpmn:FormalExpression', {
+        body: 'foo'
+      });
+      const task = moddle.create('bpmn:Task');
+      const sequenceFlow = createElement('bpmn:SequenceFlow', {
+        conditionExpression,
+        sourceRef: task
+      });
+
+      sequenceFlow.source = task;
+
+      // when
+      const type = getConcreteType(sequenceFlow);
+
+      // then
+      expect(type).to.equal('ConditionalFlow');
+    });
+
   });
 
 });
