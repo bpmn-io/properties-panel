@@ -115,7 +115,6 @@
 
 .bio-properties-panel-group-header.empty .bio-properties-panel-group-header-title {
   opacity: 0.6;
-  font-weight: normal;
 }
 
 .bio-properties-panel-group-header {
@@ -132,7 +131,6 @@
 
 .bio-properties-panel-group-header .bio-properties-panel-group-header-title {
   opacity: 1;
-  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
