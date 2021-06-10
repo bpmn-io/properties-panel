@@ -82,7 +82,7 @@ export const PanelHeaderProvider = {
 
     return concreteType
       .replace(/([A-Z])/g, ' $1')
-      .replace(/(\bNon Interrupting|Loop|Parallel|Sequential)/g, '($1)')
+      .replace(/(\bNon Interrupting)/g, '($1)')
       .toUpperCase();
   }
 };
