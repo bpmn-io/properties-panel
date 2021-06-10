@@ -26,10 +26,35 @@ function renderGroup(props) {
 }
 
 /**
- * @typedef { { id: String, component: import('preact').ComponentChild } } EntryDefinition
- * @typedef { { id: String, label: String, entries: Array<EntryDefinition>, autoOpen?: Boolean, autoFocusEntry: String, remove: import('preact').Component }} ListItemDefinition
- * @typedef { { id: String, label: String, items: Array<ListItemDefinition>, add: import('preact').Component }, component: import('preact').Component }} ListGroupDefinition
- * @typedef { { id: String, label: String, entries: Array<EntryDefinition>, component?: import('preact').Component } } GroupDefinition
+ * @typedef { {
+ *    component: import('preact').ComponentChild,
+ *    id: String
+ * } } EntryDefinition
+ *
+ * @typedef { {
+ *    autoFocusEntry: String,
+ *    autoOpen?: Boolean,
+ *    entries: Array<EntryDefinition>,
+ *    id: String,
+ *    label: String,
+ *    remove: import('preact').Component
+ * } } ListItemDefinition
+ *
+ * @typedef { {
+ *    add: import('preact').Component,
+ *    component: import('preact').Component,
+ *    id: String,
+ *    items: Array<ListItemDefinition>,
+ *    label: String
+ * } } ListGroupDefinition
+ *
+ * @typedef { {
+ *    component?: import('preact').Component,
+ *    entries: Array<EntryDefinition>,
+ *    id: String,
+ *    label: String
+ * } } GroupDefinition
+ *
  */
 
 
