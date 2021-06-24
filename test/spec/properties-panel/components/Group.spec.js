@@ -5,8 +5,8 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
-  query as domQuery,
-  classes as domClasses
+  classes as domClasses,
+  query as domQuery
 } from 'min-dom';
 
 import {
@@ -16,6 +16,8 @@ import {
 import Group from 'src/properties-panel/components/Group';
 
 insertCoreStyles();
+
+const noop = () => {};
 
 
 describe('<Group>', function() {
@@ -56,6 +58,87 @@ describe('<Group>', function() {
     expect(domClasses(entries).has('open')).to.be.true;
   });
 
+
+  describe('data markers', function() {
+
+    it('should NOT show group as edited - empty entries', function() {
+
+      // given
+      const entries = createEntries();
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const dataMarker = domQuery('.bio-properties-panel-dot', header);
+
+      // then
+      expect(dataMarker).not.to.exist;
+    });
+
+
+    it('should NOT show group as edited - empty entry input', function() {
+
+      // given
+      const entries = createEntries({
+        isEdited: (node) => !!node.value,
+        entryComponent: <TestEntry id="entry1" />,
+      });
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const dataMarker = domQuery('.bio-properties-panel-dot', header);
+
+      // then
+      expect(dataMarker).not.to.exist;
+    });
+
+
+    it('should NOT show group as edited - always false', function() {
+
+      // given
+      const entries = createEntries({
+        isEdited: () => false,
+        entryComponent: <TestEntry id="entry1" value="foo" />,
+      });
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const dataMarker = domQuery('.bio-properties-panel-dot', header);
+
+      // then
+      expect(dataMarker).not.to.exist;
+    });
+
+
+    it('should show group as edited', function() {
+
+      // given
+      const entries = createEntries({
+        isEdited: (node) => !!node.value,
+        entryComponent: <TestEntry id="entry1" value="foo" />,
+      });
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const dataMarker = domQuery('.bio-properties-panel-dot', header);
+
+      // then
+      expect(dataMarker).to.exist;
+    });
+
+  });
+
 });
 
 
@@ -75,4 +158,40 @@ function createGroup(options = {}) {
       container
     }
   );
+}
+
+function createEntries(overrides = {}) {
+  const {
+    entries = [],
+    isEdited = noop,
+    entryComponent
+  } = overrides;
+
+  const newEntries = [
+    {
+      id: 'entry1',
+      component: entryComponent,
+      isEdited
+    },
+    {
+      id: 'entry2'
+    },
+    {
+      id: 'entry2'
+    },
+    ...entries
+  ];
+
+  return newEntries;
+}
+
+function TestEntry(props) {
+  const {
+    id,
+    value
+  } = props;
+
+  return <div data-entry-id={ id }>
+    <input className="bio-properties-panel-input" value={ value }></input>
+  </div>;
 }
