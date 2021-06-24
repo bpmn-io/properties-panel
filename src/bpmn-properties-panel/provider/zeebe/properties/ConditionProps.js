@@ -15,7 +15,7 @@ import {
   useService
 } from '../../../hooks';
 
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as defaultIsEdited } from '../../../../properties-panel/components/entries/TextField';
 
 
 export function ConditionProps(props) {
@@ -30,7 +30,11 @@ export function ConditionProps(props) {
   const conditionProps = [];
 
   if (isConditionalSource(element.source)) {
-    conditionProps.push({ id: 'conditionExpression', component: <ConditionExpression element={ element } /> });
+    conditionProps.push({
+      id: 'conditionExpression',
+      component: <ConditionExpression element={ element } />,
+      isEdited: defaultIsEdited
+    });
   }
 
   return conditionProps;

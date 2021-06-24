@@ -23,7 +23,7 @@ import {
   useService
 } from '../../../hooks';
 
-import ToggleSwitch from '../../../../properties-panel/components/entries/ToggleSwitch';
+import ToggleSwitch, { isEdited as defaultIsEdited } from '../../../../properties-panel/components/entries/ToggleSwitch';
 
 
 export function OutputPropagationProps(props) {
@@ -36,7 +36,12 @@ export function OutputPropagationProps(props) {
   }
 
   return [
-    { id: 'propagateAllChildVariables', component: <PropagateAllChildVariables element={ element } /> } ];
+    {
+      id: 'propagateAllChildVariables',
+      component: <PropagateAllChildVariables element={ element } />,
+      isEdited: defaultIsEdited
+    }
+  ];
 }
 
 function PropagateAllChildVariables(props) {

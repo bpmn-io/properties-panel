@@ -3,7 +3,7 @@ import {
   is
 } from 'bpmn-js/lib/util/ModelUtil';
 
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as textFieldIsEdited } from '../../../../properties-panel/components/entries/TextField';
 
 import {
   getExtensionElementsList
@@ -28,8 +28,16 @@ export function TaskDefinitionProps(props) {
   }
 
   return [
-    { id: 'taskDefinitionType', component: <TaskDefinitionType element={ element } /> },
-    { id: 'taskDefinitionRetries', component: <TaskDefinitionRetries element={ element } /> }
+    {
+      id: 'taskDefinitionType',
+      component: <TaskDefinitionType element={ element } />,
+      isEdited: textFieldIsEdited
+    },
+    {
+      id: 'taskDefinitionRetries',
+      component: <TaskDefinitionRetries element={ element } />,
+      isEdited: textFieldIsEdited
+    }
   ];
 }
 

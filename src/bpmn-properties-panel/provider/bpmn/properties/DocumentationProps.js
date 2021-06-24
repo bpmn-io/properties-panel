@@ -3,7 +3,7 @@ import {
   is
 } from 'bpmn-js/lib/util/ModelUtil';
 
-import TextArea from '../../../../properties-panel/components/entries/TextArea';
+import TextArea, { isEdited as defaultIsEdited } from '../../../../properties-panel/components/entries/TextArea';
 
 import {
   useService
@@ -19,14 +19,16 @@ export function DocumentationProps(props) {
   const entries = [
     {
       id: 'documentation',
-      component: <ElementDocumentationProperty element={ element } />
+      component: <ElementDocumentationProperty element={ element } />,
+      isEdited: defaultIsEdited
     }
   ];
 
   if (hasProcessRef(element)) {
     entries.push({
       id: 'processDocumentation',
-      component: <ProcessDocumentationProperty element={ element } />
+      component: <ProcessDocumentationProperty element={ element } />,
+      isEdited: defaultIsEdited
     });
   }
 

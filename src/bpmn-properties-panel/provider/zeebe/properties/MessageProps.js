@@ -6,7 +6,7 @@ import {
   isEventSubProcess
 } from 'bpmn-js/lib/util/DiUtil';
 
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as defaultIsEdited } from '../../../../properties-panel/components/entries/TextField';
 
 import {
   useService
@@ -37,7 +37,11 @@ export function MessageProps(props) {
   }
 
   const entries = [
-    { id: 'messageSubscriptionCorrelationKey', component: <SubscriptionCorrelationKey element={ element } /> },
+    {
+      id: 'messageSubscriptionCorrelationKey',
+      component: <SubscriptionCorrelationKey element={ element } />,
+      isEdited: defaultIsEdited
+    },
   ];
 
   return entries;

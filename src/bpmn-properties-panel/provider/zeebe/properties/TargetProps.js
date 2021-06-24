@@ -16,7 +16,7 @@ import {
   useService
 } from '../../../hooks';
 
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as defaultIsEdited } from '../../../../properties-panel/components/entries/TextField';
 
 
 export function TargetProps(props) {
@@ -28,7 +28,13 @@ export function TargetProps(props) {
     return [];
   }
 
-  return [ { id: 'targetProcessId', component: <TargetProcessId element={ element } /> } ];
+  return [
+    {
+      id: 'targetProcessId',
+      component: <TargetProcessId element={ element } />,
+      isEdited: defaultIsEdited
+    }
+  ];
 }
 
 function TargetProcessId(props) {

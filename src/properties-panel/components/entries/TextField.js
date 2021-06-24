@@ -64,6 +64,10 @@ export default function TextfieldEntry(props) {
   );
 }
 
+export function isEdited(node) {
+  return node && !!node.value;
+}
+
 
 // helpers /////////////////
 

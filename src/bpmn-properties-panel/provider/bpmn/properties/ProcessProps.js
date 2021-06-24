@@ -1,5 +1,5 @@
 import { is } from 'bpmn-js/lib/util/ModelUtil';
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as textFieldIsEdited } from '../../../../properties-panel/components/entries/TextField';
 
 import {
   useService
@@ -16,8 +16,16 @@ export function ProcessProps(props) {
   }
 
   return [
-    { id: 'processId', component: <ProcessId element={ element } /> },
-    { id: 'processName', component: <ProcessName element={ element } /> }
+    {
+      id: 'processId',
+      component: <ProcessId element={ element } />,
+      isEdited: textFieldIsEdited
+    },
+    {
+      id: 'processName',
+      component: <ProcessName element={ element } />,
+      isEdited: textFieldIsEdited
+    }
   ];
 }
 

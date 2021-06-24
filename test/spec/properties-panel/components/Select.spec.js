@@ -14,7 +14,7 @@ import {
   changeInput
 } from 'test/TestHelper';
 
-import Select from 'src/properties-panel/components/entries/Select';
+import Select, { isEdited } from 'src/properties-panel/components/entries/Select';
 
 insertCoreStyles();
 
@@ -43,20 +43,7 @@ describe('<Select>', function() {
   it('should render options', function() {
 
     // given
-    const getOptions = () => [
-      {
-        label: 'option A',
-        value: 'A'
-      },
-      {
-        label: 'option B',
-        value: 'B'
-      },
-      {
-        label: 'option C',
-        value: 'C'
-      }
-    ];
+    const getOptions = () => createOptions();
 
     // when
     const result = createSelect({ container, getOptions });
@@ -64,7 +51,7 @@ describe('<Select>', function() {
     const select = domQuery('.bio-properties-panel-select', result.container);
 
     // then
-    expect(domQueryAll('option', select)).to.have.length(3);
+    expect(domQueryAll('option', select)).to.have.length(4);
 
   });
 
@@ -72,20 +59,7 @@ describe('<Select>', function() {
   it('should update', function() {
 
     // given
-    const getOptions = () => [
-      {
-        label: 'option A',
-        value: 'A'
-      },
-      {
-        label: 'option B',
-        value: 'B'
-      },
-      {
-        label: 'option C',
-        value: 'C'
-      }
-    ];
+    const getOptions = () => createOptions();
 
     const updateSpy = sinon.spy();
 
@@ -98,6 +72,64 @@ describe('<Select>', function() {
 
     // then
     expect(updateSpy).to.have.been.calledWith('B');
+  });
+
+
+  describe('#isEdited', function() {
+
+    it('should NOT be edited', function() {
+
+      // given
+      const getOptions = () => createOptions();
+
+      const result = createSelect({ container, getOptions });
+
+      const select = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const edited = isEdited(select);
+
+      // then
+      expect(edited).to.be.false;
+    });
+
+
+    it('should be edited', function() {
+
+      // given
+      const getOptions = () => createOptions();
+
+      const result = createSelect({ container, getOptions, getValue: () => 'B' });
+
+      const select = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const edited = isEdited(select);
+
+      // then
+      expect(edited).to.be.true;
+    });
+
+
+    it('should be edited after update', function() {
+
+      // given
+      const getOptions = () => createOptions();
+
+      const result = createSelect({ container, getOptions });
+
+      const select = domQuery('.bio-properties-panel-input', result.container);
+
+      // assume
+      expect(isEdited(select)).to.be.false;
+
+      // when
+      changeInput(select, 'B');
+
+      // then
+      expect(isEdited(select)).to.be.true;
+    });
+
   });
 
 });
@@ -130,4 +162,31 @@ function createSelect(options = {}) {
       container
     }
   );
+}
+
+function createOptions(overrides = {}) {
+  const {
+    options = []
+  } = overrides;
+
+  const newOptions = [
+    {
+      value: ''
+    },
+    {
+      label: 'option A',
+      value: 'A'
+    },
+    {
+      label: 'option B',
+      value: 'B'
+    },
+    {
+      label: 'option C',
+      value: 'C'
+    },
+    ...options
+  ];
+
+  return newOptions;
 }

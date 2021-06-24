@@ -72,6 +72,10 @@ export default function TextAreaEntry(props) {
   );
 }
 
+export function isEdited(node) {
+  return node && !!node.value;
+}
+
 
 // helpers /////////////////
 

@@ -13,7 +13,7 @@ import {
   clickInput
 } from 'test/TestHelper';
 
-import ToggleSwitch from 'src/properties-panel/components/entries/ToggleSwitch';
+import ToggleSwitch, { isEdited } from 'src/properties-panel/components/entries/ToggleSwitch';
 
 insertCoreStyles();
 
@@ -114,6 +114,59 @@ describe('<TextField>', function() {
     expect(label.innerHTML).to.equal('myLabel');
     expect(switchLabel.innerHTML).to.equal('mySwitcherLabel');
     expect(description.innerHTML).to.equal('myDescription');
+  });
+
+
+
+  describe('#isEdited', function() {
+
+    it('should NOT be edited', function() {
+
+      // given
+      const result = createToggleSwitch({ container });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const edited = isEdited(input);
+
+      // then
+      expect(edited).to.be.false;
+    });
+
+
+    it('should be edited', function() {
+
+      // given
+      const result = createToggleSwitch({ container, getValue: () => 'foo' });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const edited = isEdited(input);
+
+      // then
+      expect(edited).to.be.true;
+    });
+
+
+    it('should be edited after update', function() {
+
+      // given
+      const result = createToggleSwitch({ container });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // assume
+      expect(isEdited(input)).to.be.false;
+
+      // when
+      clickInput(input);
+
+      // then
+      expect(isEdited(input)).to.be.true;
+    });
+
   });
 
 });
