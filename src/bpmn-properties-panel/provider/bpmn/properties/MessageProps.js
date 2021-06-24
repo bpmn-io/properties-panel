@@ -6,8 +6,9 @@ import {
   sortBy
 } from 'min-dash';
 
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as textFieldIsEdited } from '../../../../properties-panel/components/entries/TextField';
 import ReferenceSelect from '../../../entries/ReferenceSelect';
+import { isEdited as selectIsEdited } from '../../../../properties-panel/components/entries/Select';
 
 import {
   useService
@@ -37,13 +38,21 @@ export function MessageProps(props) {
   const message = getMessage(element);
 
   let entries = [
-    { id: 'messageRef', component: <MessageRef element={ element } /> }
+    {
+      id: 'messageRef',
+      component: <MessageRef element={ element } />,
+      isEdited: selectIsEdited
+    }
   ];
 
   if (message) {
     entries = [
       ...entries,
-      { id: 'messageName', component: <MessageName element={ element } /> },
+      {
+        id: 'messageName',
+        component: <MessageName element={ element } />,
+        isEdited: textFieldIsEdited
+      },
     ];
   }
 

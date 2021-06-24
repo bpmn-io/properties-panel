@@ -2,7 +2,7 @@ import {
   getBusinessObject
 } from 'bpmn-js/lib/util/ModelUtil';
 
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as defaultIsEdited } from '../../../../properties-panel/components/entries/TextField';
 
 import {
   getExtensionElementsList
@@ -27,10 +27,26 @@ export function MultiInstanceProps(props) {
   }
 
   return [
-    { id: 'multiInstance-inputCollection', component: <InputCollection element={ element } /> },
-    { id: 'multiInstance-inputElement', component: <InputElement element={ element } /> },
-    { id: 'multiInstance-outputCollection', component: <OutputCollection element={ element } /> },
-    { id: 'multiInstance-outputElement', component: <OutputElement element={ element } /> }
+    {
+      id: 'multiInstance-inputCollection',
+      component: <InputCollection element={ element } />,
+      isEdited: defaultIsEdited
+    },
+    {
+      id: 'multiInstance-inputElement',
+      component: <InputElement element={ element } />,
+      isEdited: defaultIsEdited
+    },
+    {
+      id: 'multiInstance-outputCollection',
+      component: <OutputCollection element={ element } />,
+      isEdited: defaultIsEdited
+    },
+    {
+      id: 'multiInstance-outputElement',
+      component: <OutputElement element={ element } />,
+      isEdited: defaultIsEdited
+    }
   ];
 }
 

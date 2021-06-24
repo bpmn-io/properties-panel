@@ -1,6 +1,14 @@
 import Group from '../../../properties-panel/components/Group';
 
 import {
+  isEdited as textFieldIsEdited
+} from '../../../properties-panel/components/entries/TextField';
+
+import {
+  isEdited as checkboxIsEdited
+} from '../../../properties-panel/components/entries/Checkbox';
+
+import {
   DocumentationProps,
   ErrorProps,
   ExecutableProperty,
@@ -20,16 +28,19 @@ function GeneralGroup(element) {
   const entries = [
     {
       id: 'name',
-      component: <NameProperty element={ element } />
+      component: <NameProperty element={ element } />,
+      isEdited: textFieldIsEdited
     },
     {
       id: 'id',
-      component: <IdProperty element={ element } />
+      component: <IdProperty element={ element } />,
+      isEdited: textFieldIsEdited
     },
     ...ProcessProps({ element }),
     {
-      id: 'executable',
-      component: <ExecutableProperty element={ element } />
+      id: 'isExecutable',
+      component: <ExecutableProperty element={ element } />,
+      isEdited: checkboxIsEdited
     }
   ];
 

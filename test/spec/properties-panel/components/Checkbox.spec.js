@@ -13,7 +13,7 @@ import {
   clickInput
 } from 'test/TestHelper';
 
-import Checkbox from 'src/properties-panel/components/entries/Checkbox';
+import Checkbox, { isEdited } from 'src/properties-panel/components/entries/Checkbox';
 
 insertCoreStyles();
 
@@ -53,6 +53,58 @@ describe('<Checkbox>', function() {
 
     // then
     expect(updateSpy).to.have.been.calledWith(true);
+  });
+
+
+  describe('#isEdited', function() {
+
+    it('should NOT be edited', function() {
+
+      // given
+      const result = createCheckbox({ container });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const edited = isEdited(input);
+
+      // then
+      expect(edited).to.be.false;
+    });
+
+
+    it('should be edited', function() {
+
+      // given
+      const result = createCheckbox({ container, getValue: () => 'foo' });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const edited = isEdited(input);
+
+      // then
+      expect(edited).to.be.true;
+    });
+
+
+    it('should be edited after update', function() {
+
+      // given
+      const result = createCheckbox({ container });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // assume
+      expect(isEdited(input)).to.be.false;
+
+      // when
+      clickInput(input);
+
+      // then
+      expect(isEdited(input)).to.be.true;
+    });
+
   });
 
 });

@@ -6,8 +6,9 @@ import {
   sortBy
 } from 'min-dash';
 
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as textFieldIsEdited } from '../../../../properties-panel/components/entries/TextField';
 import ReferenceSelect from '../../../entries/ReferenceSelect';
+import { isEdited as selectIsEdited } from '../../../../properties-panel/components/entries/Select';
 
 import {
   useService
@@ -37,14 +38,26 @@ export function ErrorProps(props) {
   const error = getError(element);
 
   let entries = [
-    { id: 'errorRef', component: <ErrorRef element={ element } /> }
+    {
+      id: 'errorRef',
+      component: <ErrorRef element={ element } />,
+      isEdited: selectIsEdited
+    }
   ];
 
   if (error) {
     entries = [
       ...entries,
-      { id: 'errorName', component: <ErrorName element={ element } /> },
-      { id: 'errorCode', component: <ErrorCode element={ element } /> }
+      {
+        id: 'errorName',
+        component: <ErrorName element={ element } />,
+        isEdited: textFieldIsEdited
+      },
+      {
+        id: 'errorCode',
+        component: <ErrorCode element={ element } />,
+        isEdited: textFieldIsEdited
+      }
     ];
   }
 

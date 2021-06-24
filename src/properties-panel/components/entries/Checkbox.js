@@ -51,6 +51,10 @@ export default function CheckboxEntry(props) {
   );
 }
 
+export function isEdited(node) {
+  return node && !!node.checked;
+}
+
 
 // helpers /////////////////
 

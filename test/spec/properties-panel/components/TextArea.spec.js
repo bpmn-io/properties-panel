@@ -13,7 +13,7 @@ import {
   changeInput
 } from 'test/TestHelper';
 
-import TextArea from 'src/properties-panel/components/entries/TextArea';
+import TextArea, { isEdited } from 'src/properties-panel/components/entries/TextArea';
 
 insertCoreStyles();
 
@@ -53,6 +53,58 @@ describe('<TextArea>', function() {
 
     // then
     expect(updateSpy).to.have.been.calledWith('foo');
+  });
+
+
+  describe('#isEdited', function() {
+
+    it('should NOT be edited', function() {
+
+      // given
+      const result = createTextArea({ container });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const edited = isEdited(input);
+
+      // then
+      expect(edited).to.be.false;
+    });
+
+
+    it('should be edited', function() {
+
+      // given
+      const result = createTextArea({ container, getValue: () => 'foo' });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const edited = isEdited(input);
+
+      // then
+      expect(edited).to.be.true;
+    });
+
+
+    it('should be edited after update', function() {
+
+      // given
+      const result = createTextArea({ container });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // assume
+      expect(isEdited(input)).to.be.false;
+
+      // when
+      changeInput(input, 'foo');
+
+      // then
+      expect(isEdited(input)).to.be.true;
+    });
+
   });
 
 });

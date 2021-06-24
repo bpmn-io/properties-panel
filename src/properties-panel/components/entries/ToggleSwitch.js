@@ -62,6 +62,10 @@ export default function ToggleSwitchEntry(props) {
   );
 }
 
+export function isEdited(node) {
+  return node && !!node.checked;
+}
+
 
 // helpers /////////////////
 

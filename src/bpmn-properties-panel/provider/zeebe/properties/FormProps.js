@@ -3,7 +3,7 @@ import {
   is
 } from 'bpmn-js/lib/util/ModelUtil';
 
-import TextField from '../../../../properties-panel/components/entries/TextField';
+import TextField, { isEdited as defaultIsEdited } from '../../../../properties-panel/components/entries/TextField';
 
 import {
   createElement
@@ -37,8 +37,9 @@ export function FormProps(props) {
 
   return [
     {
-      id: 'formDefinition',
-      component: <FormProperty element={ element } />
+      id: 'formConfiguration',
+      component: <FormProperty element={ element } />,
+      isEdited: defaultIsEdited
     }
   ];
 }
