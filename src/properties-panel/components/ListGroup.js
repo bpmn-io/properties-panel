@@ -119,7 +119,7 @@ export default function ListGroup(props) {
         hasItems ? '' : 'empty'
       ) }
       onClick={ hasItems ? toggleOpen : noop }>
-      <div title={ label } class="bio-properties-panel-group-header-title">
+      <div title={ getTitleAttribute(label, items) } class="bio-properties-panel-group-header-title">
         { label }
       </div>
       <div class="bio-properties-panel-group-header-buttons">
@@ -192,4 +192,10 @@ function createOrdering(items) {
 
 function removeDuplicates(items) {
   return items.filter((i, index) => items.indexOf(i) === index);
+}
+
+function getTitleAttribute(label, items) {
+  const count = items.length;
+
+  return label + (count ? ` (${count} item${count != 1 ? 's' : ''})` : '');
 }
