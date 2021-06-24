@@ -62,7 +62,6 @@
   margin-bottom: 2px;
   background-color: var(--color-background-light);
   border-bottom: 1px solid var(--color-cccccc);
-  border-top: 1px solid var(--color-aaaaaa);
   width: 100%;
   z-index: 1;
   max-height: 64px;
@@ -116,10 +115,6 @@
   border-bottom: 1px solid var(--color-cccccc);
 }
 
-.bio-properties-panel-group-header.empty .bio-properties-panel-group-header-title {
-  opacity: 0.6;
-}
-
 .bio-properties-panel-group-header {
   position: relative;
   display: flex;
@@ -127,13 +122,12 @@
   align-items: center;
   font-size: var(--text-size-base);
   height: 32px;
-  padding-right: 64px;
   user-select: none;
   overflow: hidden;
+  justify-content: space-between;
 }
 
 .bio-properties-panel-group-header .bio-properties-panel-group-header-title {
-  opacity: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -141,17 +135,18 @@
 }
 
 .bio-properties-panel-group-header-buttons {
-  position: absolute;
-  right: 12px;
+  display: flex;
+  margin-right: 12px;
 }
 
 .bio-properties-panel-group-header-buttons .bio-properties-panel-group-header-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  align-self: center;
   width: 20px;
   height: 20px;
-  margin-right: 6px;
+  margin-right: 4px;
   padding: 0;
   border: none;
   background: none;
@@ -162,16 +157,11 @@
 }
 
 .bio-properties-panel-group-header-buttons .bio-properties-panel-add-entry {
-  opacity: 0.3;
   width: 20px;
   height: 20px;
   display: inherit;
   justify-content: center;
   align-items: center;
-}
-
-.bio-properties-panel-group-header-buttons .bio-properties-panel-add-entry:hover {
-  opacity: 1;
 }
 
 .bio-properties-panel-group-header:not(.empty) .bio-properties-panel-add-entry {
@@ -198,11 +188,12 @@
 
 .bio-properties-panel-arrow-down {
   transform: rotate(90deg);
-  opacity: 0.3;
 }
 
-.bio-properties-panel-arrow-right {
-  opacity: 0.3;
+.bio-properties-panel-dot {
+  width: 6px;
+  margin-right: 12px;
+  margin-top: -1px;
 }
 
 /**
@@ -223,15 +214,15 @@
 }
 
 .bio-properties-panel-list-badge {
-  align-self: center;
-  color: var(--color-000000-opacity-40);
-  border: 2px solid var(--color-000000-opacity-20);
+  color: var(--color-white);
+  background-color: var(--color-black);
+  border: 2px solid;
   border-radius: 20px;
-  min-width: 22px;
+  min-width: fit-content;
   font-size: 12px;
-  font-weight: 600;
   height: 22px;
   padding: 2px 6px;
+  margin-right: 4px;
   user-select: none;
   line-height: normal;
 }
@@ -239,10 +230,6 @@
 /**
  * Basic entries
  */
-.bio-properties-panel-add-entry {
-  opacity: 0.3;
-}
-
 .bio-properties-panel-entry {
   margin: 2px 12px 4px;
 }
@@ -458,14 +445,7 @@ textarea.bio-properties-panel-input {
   top: 0;
   width: 12px;
   height: 12px;
-}
-
-.bio-properties-panel-collapsible-entry-header .bio-properties-panel-arrow-down {
-  opacity: 1;
-}
-
-.bio-properties-panel-collapsible-entry-header .bio-properties-panel-arrow-right {
-  opacity: 1;
+  font-size: 16px;
 }
 
 .bio-properties-panel-remove-entry {
@@ -474,16 +454,11 @@ textarea.bio-properties-panel-input {
   right: 11px;
   width: 16px;
   height: 16px;
-  opacity: 0.3;
   visibility: hidden;
 }
 
 .bio-properties-panel-collapsible-entry-header:hover .bio-properties-panel-remove-entry {
   visibility: visible;
-}
-
-.bio-properties-panel-remove-entry:hover {
-  opacity: 1;
 }
 
 .bio-properties-panel-collapsible-entry-entries::before {
