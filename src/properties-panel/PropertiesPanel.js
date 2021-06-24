@@ -28,7 +28,8 @@ function renderGroup(props) {
 /**
  * @typedef { {
  *    component: import('preact').ComponentChild,
- *    id: String
+ *    id: String,
+ *    isEdited?: Function
  * } } EntryDefinition
  *
  * @typedef { {
