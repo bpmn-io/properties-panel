@@ -31,6 +31,33 @@
         <zeebe:calledElement propagateAllChildVariables="false" />
       </bpmn:extensionElements>
     </bpmn:callActivity>
+    <bpmn:sendTask id="SendTask_1">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="inputSourceValue" target="inputTargetValue" />
+          <zeebe:output source="outputSourceValue" target="outputTargetValue" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:multiInstanceLoopCharacteristics />
+    </bpmn:sendTask>
+    <bpmn:scriptTask id="ScriptTask_1">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="inputSourceValue" target="inputTargetValue" />
+          <zeebe:output source="outputSourceValue" target="outputTargetValue" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:multiInstanceLoopCharacteristics />
+    </bpmn:scriptTask>
+    <bpmn:businessRuleTask id="BusinessRuleTask_1">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="inputSourceValue" target="inputTargetValue" />
+          <zeebe:output source="outputSourceValue" target="outputTargetValue" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:multiInstanceLoopCharacteristics />
+    </bpmn:businessRuleTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
@@ -62,6 +89,15 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1qkexdq_di" bpmnElement="CallActivity_1">
         <dc:Bounds x="450" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0nh5coi_di" bpmnElement="SendTask_1">
+        <dc:Bounds x="280" y="370" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xwcq1n_di" bpmnElement="ScriptTask_1">
+        <dc:Bounds x="420" y="370" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pq7z6l_di" bpmnElement="BusinessRuleTask_1">
+        <dc:Bounds x="560" y="370" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

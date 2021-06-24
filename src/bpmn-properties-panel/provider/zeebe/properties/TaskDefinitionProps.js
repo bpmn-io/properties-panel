@@ -23,7 +23,7 @@ export function TaskDefinitionProps(props) {
     element
   } = props;
 
-  if (!is(element, 'bpmn:ServiceTask')) {
+  if (!is(element, 'zeebe:ZeebeServiceTask')) {
     return [];
   }
 
