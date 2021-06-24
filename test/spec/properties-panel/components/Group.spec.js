@@ -5,6 +5,7 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
+  attr as domAttr,
   classes as domClasses,
   query as domQuery
 } from 'min-dom';
@@ -135,6 +136,43 @@ describe('<Group>', function() {
 
       // then
       expect(dataMarker).to.exist;
+    });
+
+  });
+
+
+  describe('title attributes', function() {
+
+    it('should have title for empty groups', function() {
+
+      // given
+      const result = createGroup({ container, label: 'Group' });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const title = domQuery('.bio-properties-panel-group-header-title', header);
+
+      // then
+      expect(domAttr(title, 'title')).to.eql('Group');
+    });
+
+
+    it('should have title for configured groups', function() {
+
+      // given
+      const entries = createEntries({
+        isEdited: () => true,
+        entryComponent: <TestEntry id="entry1" value="foo" />,
+      });
+
+      const result = createGroup({ container, label: 'Group', entries });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const title = domQuery('.bio-properties-panel-group-header-title', header);
+
+      // then
+      expect(domAttr(title, 'title')).to.eql('Group (edited)');
     });
 
   });

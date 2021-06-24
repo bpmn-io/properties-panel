@@ -514,6 +514,49 @@ describe('<ListGroup>', function() {
     ]);
   });
 
+
+  describe('title attributes', function() {
+
+    it('should have title for empty lists', function() {
+
+      // given
+      const { container } = createListGroup({ container: parentContainer });
+
+      const header = domQuery('.bio-properties-panel-group-header', container);
+
+      const title = domQuery('.bio-properties-panel-group-header-title', header);
+
+      // then
+      expect(domAttr(title, 'title')).to.eql('List');
+    });
+
+
+    it('should have title for list with items', function() {
+
+      // given
+      const items = [
+        {
+          id: 'foo',
+          label: 'Item 1'
+        },
+        {
+          id: 'bar',
+          label: 'Item 2'
+        }
+      ];
+
+      const { container } = createListGroup({ container: parentContainer, items });
+
+      const header = domQuery('.bio-properties-panel-group-header', container);
+
+      const title = domQuery('.bio-properties-panel-group-header-title', header);
+
+      // then
+      expect(domAttr(title, 'title')).to.eql('List (2 items)');
+    });
+
+  });
+
 });
 
 
