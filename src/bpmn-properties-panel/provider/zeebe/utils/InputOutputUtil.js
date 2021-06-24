@@ -63,7 +63,7 @@ export function getOutputParameters(element) {
 
 export function areInputParametersSupported(element) {
   return isAny(element, [
-    'bpmn:ServiceTask',
+    'zeebe:ZeebeServiceTask',
     'bpmn:UserTask',
     'bpmn:SubProcess',
     'bpmn:CallActivity'
@@ -72,7 +72,7 @@ export function areInputParametersSupported(element) {
 
 export function areOutputParametersSupported(element) {
   return isAny(element, [
-    'bpmn:ServiceTask',
+    'zeebe:ZeebeServiceTask',
     'bpmn:UserTask',
     'bpmn:SubProcess',
     'bpmn:ReceiveTask',

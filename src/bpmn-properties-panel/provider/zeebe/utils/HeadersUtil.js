@@ -12,7 +12,7 @@ import {
 
 export function areHeadersSupported(element) {
   return isAny(element, [
-    'bpmn:ServiceTask',
+    'zeebe:ZeebeServiceTask',
     'bpmn:UserTask'
   ]);
 }

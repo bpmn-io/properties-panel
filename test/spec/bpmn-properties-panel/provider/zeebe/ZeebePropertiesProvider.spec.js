@@ -137,7 +137,6 @@ describe('<ZeebePropertiesProvider>', function() {
   }));
 
 
-
   it('should show output group', inject(async function(elementRegistry, selection) {
 
     // given
@@ -152,6 +151,40 @@ describe('<ZeebePropertiesProvider>', function() {
 
     // then
     expect(outputGroup).to.exist;
+  }));
+
+
+  it('should NOT show header group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const task = elementRegistry.get('Task_1');
+
+    await act(() => {
+      selection.select(task);
+    });
+
+    // when
+    const headerGroup = getGroup(container, 'headers');
+
+    // then
+    expect(headerGroup).to.not.exist;
+  }));
+
+
+  it('should show header group', inject(async function(elementRegistry, selection) {
+
+    // given
+    const scriptTask = elementRegistry.get('ScriptTask_1');
+
+    await act(() => {
+      selection.select(scriptTask);
+    });
+
+    // when
+    const headerGroup = getGroup(container, 'headers');
+
+    // then
+    expect(headerGroup).to.exist;
   }));
 
 
@@ -288,6 +321,63 @@ describe('<ZeebePropertiesProvider>', function() {
 
     // then
     expect(outputPropagationGroup).to.exist;
+  }));
+
+
+  it('should show groups for sendTasks', inject(async function(selection, elementRegistry) {
+
+    // given
+    const sendTask = elementRegistry.get('SendTask_1');
+
+    // when
+    await act(() => {
+      selection.select(sendTask);
+    });
+
+    // then
+    expect(getGroup(container, 'inputs')).to.exist;
+    expect(getGroup(container, 'outputs')).to.exist;
+    expect(getGroup(container, 'multiInstance')).to.exist;
+    expect(getGroup(container, 'taskDefinition')).to.exist;
+    expect(getGroup(container, 'headers')).to.exist;
+  }));
+
+
+  it('should show for scriptTasks', inject(async function(selection, elementRegistry) {
+
+    // given
+    const scriptTask = elementRegistry.get('ScriptTask_1');
+
+    // when
+    await act(() => {
+      selection.select(scriptTask);
+    });
+
+    // then
+    expect(getGroup(container, 'inputs')).to.exist;
+    expect(getGroup(container, 'outputs')).to.exist;
+    expect(getGroup(container, 'multiInstance')).to.exist;
+    expect(getGroup(container, 'taskDefinition')).to.exist;
+    expect(getGroup(container, 'headers')).to.exist;
+  }));
+
+
+  it('should show for businessRuleTasks', inject(async function(selection, elementRegistry) {
+
+    // given
+    const businessRuleTask = elementRegistry.get('BusinessRuleTask_1');
+
+    // when
+    await act(() => {
+      selection.select(businessRuleTask);
+    });
+
+    // then
+    expect(getGroup(container, 'inputs')).to.exist;
+    expect(getGroup(container, 'outputs')).to.exist;
+    expect(getGroup(container, 'multiInstance')).to.exist;
+    expect(getGroup(container, 'taskDefinition')).to.exist;
+    expect(getGroup(container, 'headers')).to.exist;
   }));
 
 });
