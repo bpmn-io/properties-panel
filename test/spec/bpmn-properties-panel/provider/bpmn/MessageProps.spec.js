@@ -422,6 +422,26 @@ describe('provider/bpmn - MessageProps', function() {
       })
     );
 
+
+    it('should not blow up on empty message name', inject(async function(elementRegistry, selection) {
+
+      // given
+      const messageEvent = elementRegistry.get('MessageEvent_1');
+
+      await act(() => {
+        selection.select(messageEvent);
+      });
+
+      // when
+      const messageNameInput = domQuery('input[name=messageName]', container);
+      await act(() => {
+        changeInput(messageNameInput, '');
+      });
+
+      // then
+      expect(getMessage(messageEvent).get('name')).to.eql(undefined);
+    }));
+
   });
 
 
