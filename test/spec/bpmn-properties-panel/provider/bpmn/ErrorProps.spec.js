@@ -275,6 +275,26 @@ describe('provider/bpmn - ErrorProps', function() {
       })
     );
 
+
+    it('should not blow up on empty error name', inject(async function(elementRegistry, selection) {
+
+      // given
+      const errorEvent = elementRegistry.get('ErrorEvent_1');
+
+      await act(() => {
+        selection.select(errorEvent);
+      });
+
+      // when
+      const errorNameInput = domQuery('input[name=errorName]', container);
+      await act(() => {
+        changeInput(errorNameInput, '');
+      });
+
+      // then
+      expect(getError(errorEvent).get('name')).to.eql(undefined);
+    }));
+
   });
 
 

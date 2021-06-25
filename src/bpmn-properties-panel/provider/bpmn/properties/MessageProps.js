@@ -183,5 +183,5 @@ function MessageName(props) {
 // helper /////////////////////////
 
 function sortByName(elements) {
-  return sortBy(elements, e => e.name.toLowerCase());
+  return sortBy(elements, e => (e.name || '').toLowerCase());
 }
