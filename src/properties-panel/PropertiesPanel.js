@@ -17,13 +17,6 @@ const DEFAULT_LAYOUT = {
   open: true
 };
 
-function renderGroup(props) {
-  const {
-    component: GroupComponent = Group,
-  } = props;
-
-  return <GroupComponent { ...props } />;
-}
 
 /**
  * @typedef { {
@@ -115,7 +108,15 @@ export default function PropertiesPanel(props) {
         headerProvider={ headerProvider } />
       <div class="bio-properties-panel-scroll-container">
         {
-          groups.map(renderGroup)
+          groups.map(group => {
+
+            const {
+              component: GroupComponent = Group,
+              id
+            } = group;
+
+            return <GroupComponent key={ id } { ...group } />;
+          })
         }
       </div>
     </div>
