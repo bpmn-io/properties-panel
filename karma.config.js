@@ -56,7 +56,7 @@ module.exports = function(karma) {
       module: {
         rules: [
           {
-            test: /\.(css|bpmn)$/,
+            test: /\.(css)$/,
             use: 'raw-loader'
           },
           {

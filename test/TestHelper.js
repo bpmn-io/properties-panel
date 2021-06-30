@@ -1,40 +1,26 @@
 import {
-  act,
   fireEvent
 } from '@testing-library/preact';
 
-import TestContainer from 'mocha-test-container-support';
 
-import {
-  bootstrapBpmnJS,
-  inject,
-  insertCSS
-} from 'bpmn-js/test/helper';
+export function insertCSS(name, css) {
+  if (document.querySelector('[data-css-file="' + name + '"]')) {
+    return;
+  }
 
-import Modeler from 'bpmn-js/lib/Modeler';
+  const head = document.head || document.getElementsByTagName('head')[0];
+  const style = document.createElement('style');
 
-export * from 'bpmn-js/test/helper';
+  style.setAttribute('data-css-file', name);
 
-export function bootstrapPropertiesPanel(diagram, options, locals) {
-  return async function() {
-    const container = TestContainer.get(this);
+  style.type = 'text/css';
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
 
-    insertBpmnStyles();
-    insertCoreStyles();
-
-    const createModeler = bootstrapBpmnJS(Modeler, diagram, options, locals);
-    await createModeler.call(this);
-
-    const attachPropertiesPanel = inject(function(propertiesPanel) {
-      const propertiesPanelContainer = document.createElement('div');
-      propertiesPanelContainer.classList.add('properties-container');
-
-      container.appendChild(propertiesPanelContainer);
-
-      return act(() => propertiesPanel.attachTo(propertiesPanelContainer));
-    });
-    await attachPropertiesPanel();
-  };
+  head.appendChild(style);
 }
 
 export function changeInput(input, value) {
@@ -55,20 +41,4 @@ export function insertCoreStyles() {
     'test.css',
     require('./test.css').default
   );
-}
-
-export function insertBpmnStyles() {
-  insertCSS(
-    'diagram.css',
-    require('bpmn-js/dist/assets/diagram-js.css').default
-  );
-
-  insertCSS(
-    'bpmn-font.css',
-    require('bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css').default
-  );
-}
-
-export function bootstrapModeler(diagram, options, locals) {
-  return bootstrapBpmnJS(Modeler, diagram, options, locals);
 }

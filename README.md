@@ -1,37 +1,34 @@
-> 👷‍♀️👷‍♂️🏗
+# @bpmn-io/properties-panel
 
-# properties-panel-next
-
-[![CI](https://github.com/bpmn-io/properties-panel-next/workflows/CI/badge.svg)](https://github.com/bpmn-io/properties-panel-next/actions?query=workflow%3ACI)
+[![CI](https://github.com/bpmn-io/properties-panel/workflows/CI/badge.svg)](https://github.com/bpmn-io/properties-panel/actions?query=workflow%3ACI)
 
 
-Experiments for next-gen bpmn.io Properties Panel.
-
-## Usage
-
-...
-
-## Build and Run
+Library for creating bpmn-io properties panels.
 
 
-Prepare the project by installing all dependencies:
+## Hacking the Project
 
-```sh
+To get the development setup make sure to have [NodeJS](https://nodejs.org/en/download/) installed.
+As soon as you are set up, clone the project and execute
+
+```
 npm install
 ```
 
-Then, depending on your use-case, you may run any of the following commands:
 
-```sh
-# build the library and run all tests
-npm run all
+### Testing
 
-# spin up a single local modeler instance
-npm start
+Execute `npm run dev` to run the test suite in watch mode.
 
-# run the full development setup
-npm run dev
-```
+Expose an environment variable `TEST_BROWSERS=(Chrome|Firefox|IE)` to execute the tests in a non-headless browser.
+
+
+### Package
+
+Execute `npm run all` to lint and test the project.
+
+__Note:__ We do not generate any build artifacts. Required parts of the library should be bundled by properties panels as needed instead.
+
 
 ## License
 
