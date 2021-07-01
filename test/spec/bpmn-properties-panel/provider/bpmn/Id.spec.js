@@ -110,6 +110,136 @@ describe('provider/bpmn - Id', function() {
       })
     );
 
+
+    describe('validation', function() {
+
+      it('should NOT remove id', inject(async function(elementRegistry, selection) {
+
+        // given
+        const task = elementRegistry.get('Task_1');
+
+        await act(() => {
+          selection.select(task);
+        });
+
+        // when
+        const idInput = domQuery('input[name=id]', container);
+        changeInput(idInput, '');
+
+        // then
+        expect(getBusinessObject(task).get('id')).to.eql('Task_1');
+      }));
+
+
+      it('should NOT set existing id', inject(async function(elementRegistry, selection) {
+
+        // given
+        const task = elementRegistry.get('Task_1');
+
+        await act(() => {
+          selection.select(task);
+        });
+
+        // when
+        const idInput = domQuery('input[name=id]', container);
+        changeInput(idInput, 'Task_2');
+
+        // then
+        expect(getBusinessObject(task).get('id')).to.eql('Task_1');
+      }));
+
+
+      it('should NOT set with spaces', inject(async function(elementRegistry, selection) {
+
+        // given
+        const task = elementRegistry.get('Task_1');
+
+        await act(() => {
+          selection.select(task);
+        });
+
+        // when
+        const idInput = domQuery('input[name=id]', container);
+        changeInput(idInput, 'foo bar');
+
+        // then
+        expect(getBusinessObject(task).get('id')).to.eql('Task_1');
+      }));
+
+
+      it('should NOT set invalid QName', inject(async function(elementRegistry, selection) {
+
+        // given
+        const task = elementRegistry.get('Task_1');
+
+        await act(() => {
+          selection.select(task);
+        });
+
+        // when
+        const idInput = domQuery('input[name=id]', container);
+        changeInput(idInput, '::foo');
+
+        // then
+        expect(getBusinessObject(task).get('id')).to.eql('Task_1');
+      }));
+
+
+      it('should NOT set prefix', inject(async function(elementRegistry, selection) {
+
+        // given
+        const task = elementRegistry.get('Task_1');
+
+        await act(() => {
+          selection.select(task);
+        });
+
+        // when
+        const idInput = domQuery('input[name=id]', container);
+        changeInput(idInput, 'foo:Task_1');
+
+        // then
+        expect(getBusinessObject(task).get('id')).to.eql('Task_1');
+      }));
+
+
+      it('should NOT set invalid HTML characters', inject(async function(elementRegistry, selection) {
+
+        // given
+        const task = elementRegistry.get('Task_1');
+
+        await act(() => {
+          selection.select(task);
+        });
+
+        // when
+        const idInput = domQuery('input[name=id]', container);
+        changeInput(idInput, '<foo>');
+
+        // then
+        expect(getBusinessObject(task).get('id')).to.eql('Task_1');
+      }));
+
+
+      it('should NOT set expression', inject(async function(elementRegistry, selection) {
+
+        // given
+        const task = elementRegistry.get('Task_1');
+
+        await act(() => {
+          selection.select(task);
+        });
+
+        // when
+        const idInput = domQuery('input[name=id]', container);
+        changeInput(idInput, '${foo}');
+
+        // then
+        expect(getBusinessObject(task).get('id')).to.eql('Task_1');
+      }));
+
+    });
+
   });
 
 });

@@ -1,9 +1,14 @@
 import { is } from 'bpmn-js/lib/util/ModelUtil';
+
 import TextField, { isEdited as textFieldIsEdited } from '../../../../properties-panel/components/entries/TextField';
 
 import {
   useService
 } from '../../../hooks';
+
+import {
+  isIdValid
+} from '../utils/ValidationUtil';
 
 
 export function ProcessProps(props) {
@@ -89,15 +94,23 @@ function ProcessId(props) {
     );
   };
 
+  const validate = (value) => {
+    return isIdValid(process, value, translate);
+  };
+
   return TextField({
     element,
     id: 'processId',
     label: translate('Process ID'),
     getValue,
     setValue,
-    debounce
+    debounce,
+    validate
   });
 }
+
+
+// helper ////////////////
 
 function hasProcessRef(element) {
   return is(element, 'bpmn:Participant') && element.businessObject.get('processRef');

@@ -1,4 +1,5 @@
 import {
+  getBusinessObject,
   is
 } from 'bpmn-js/lib/util/ModelUtil';
 
@@ -7,6 +8,10 @@ import TextField from '../../../../properties-panel/components/entries/TextField
 import {
   useService
 } from '../../../hooks';
+
+import {
+  isIdValid
+} from '../utils/ValidationUtil';
 
 
 export default function IdProperty(props) {
@@ -28,12 +33,19 @@ export default function IdProperty(props) {
     return element.businessObject.id;
   };
 
+  const validate = (value) => {
+    const businessObject = getBusinessObject(element);
+
+    return isIdValid(businessObject, value, translate);
+  };
+
   return TextField({
     element,
     id: 'id',
     label: translate(is(element, 'bpmn:Participant') ? 'Participant ID' : 'ID'),
     getValue,
     setValue,
-    debounce
+    debounce,
+    validate
   });
 }
