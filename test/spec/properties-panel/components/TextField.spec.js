@@ -5,6 +5,7 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
+  classes as domClasses,
   query as domQuery
 } from 'min-dom';
 
@@ -107,6 +108,102 @@ describe('<TextField>', function() {
 
   });
 
+
+  describe('validation', function() {
+
+    it('should set valid', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'bar') {
+          return 'error';
+        }
+      };
+
+      const result = createTextField({ container, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 'foo');
+
+      // then
+      expect(isValid(entry)).to.be.true;
+    });
+
+
+    it('should set invalid', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'bar') {
+          return 'error';
+        }
+      };
+
+      const result = createTextField({ container, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 'bar');
+
+      // then
+      expect(isValid(entry)).to.be.false;
+    });
+
+
+    it('should keep showing invalid value', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'bar') {
+          return 'error';
+        }
+      };
+
+      const result = createTextField({ container, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 'bar');
+
+      // then
+      expect(input.value).to.eql('bar');
+    });
+
+
+    it('should show error message', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'bar') {
+          return 'error';
+        }
+      };
+
+      const result = createTextField({ container, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 'bar');
+
+      const error = domQuery('.bio-properties-panel-error', entry);
+
+      // then
+      expect(error).to.exist;
+      expect(error.innerText).to.eql('error');
+    });
+
+  });
+
 });
 
 
@@ -121,6 +218,7 @@ function createTextField(options = {}) {
     label,
     getValue = noop,
     setValue = noop,
+    validate = noop,
     container
   } = options;
 
@@ -132,9 +230,14 @@ function createTextField(options = {}) {
       description={ description }
       getValue={ getValue }
       setValue={ setValue }
-      debounce={ debounce } />,
+      debounce={ debounce }
+      validate={ validate } />,
     {
       container
     }
   );
+}
+
+function isValid(node) {
+  return !domClasses(node).has('has-error');
 }

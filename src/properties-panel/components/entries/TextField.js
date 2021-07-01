@@ -1,6 +1,15 @@
 import {
-  useMemo
+  useEffect,
+  useMemo,
+  useState
 } from 'preact/hooks';
+
+import classnames from 'classnames';
+
+import {
+  usePrevious
+} from '../../hooks';
+
 
 function Textfield(props) {
 
@@ -43,6 +52,7 @@ function Textfield(props) {
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.validate
  */
 export default function TextfieldEntry(props) {
   const {
@@ -52,14 +62,48 @@ export default function TextfieldEntry(props) {
     debounce,
     label,
     getValue,
-    setValue
+    setValue,
+    validate
   } = props;
 
-  const value = getValue(element);
+  const [ error, setError ] = useState(null);
+  const [ invalidValueCache, setInvalidValueCache ] = useState(null);
+
+  let value = getValue(element);
+  const prevValue = usePrevious(value);
+
+  // validate again when value prop changed
+  useEffect(() => {
+    const err = validate ? validate(value) : null;
+    setError(err);
+  }, [ value ]);
+
+  // validate on change
+  const handleChange = (newValue) => {
+    const err = validate ? validate(newValue) : null;
+
+    if (err) {
+      setInvalidValueCache(newValue);
+    } else {
+      setValue(newValue);
+    }
+
+    setError(err);
+  };
+
+  // keep showing invalid value on errors, although it was not set
+  if (prevValue === value && error) {
+    value = invalidValueCache;
+  }
+
   return (
-    <div class="bio-properties-panel-entry" data-entry-id={ id }>
-      <Textfield id={ id } label={ label } value={ value } onInput={ setValue } debounce={ debounce } />
+    <div class={ classnames(
+      'bio-properties-panel-entry',
+      error ? 'has-error' : '')
+    } data-entry-id={ id }>
+      <Textfield id={ id } label={ label } value={ value } onInput={ handleChange } debounce={ debounce } />
       { description && <div class="bio-properties-panel-description">{ description }</div> }
+      { error && <div class="bio-properties-panel-error">{ error }</div> }
     </div>
   );
 }

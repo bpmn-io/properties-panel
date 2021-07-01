@@ -2,9 +2,13 @@
  * Theming
  */
 .bio-properties-panel {
-  --silver-darken-80: #cdcdcd;
+  --color-silver-darken-80: #cdcdcd;
 
-  --blue-base-65: #4d90ff;
+  --color-blue-205-100-95: #e5f4ff;
+  --color-blue-205-100-50: #0095ff;
+
+  --color-red-360-100-97: #fff0f0;
+  --color-red-360-100-45: #e60000;
 
   --color-cccccc: #cccccc;
   --color-aaaaaa: #aaaaaa;
@@ -16,11 +20,21 @@
   --color-000000-opacity-40: rgba(0, 0, 0, 0.4);
 
   --color-background-light: #e8eaee;
-  --color-line-base: #d2d2d2;
 
-  --color-input-background: #f3f4f6;
-  --color-input-focus: #0391ef;
-  --color-input-focus-light: #f4faff;
+  --color-input-background: #f1f2f4;
+  --color-input-border: #d5d6dd;
+  --color-input-background-focus: var(--color-blue-205-100-95);
+  --color-input-border-focus: var(--color-blue-205-100-50);
+
+  --color-input-background-error: var(--color-red-360-100-97);
+  --color-input-border-error: var(--color-red-360-100-45);
+  --color-input-border-error-focus: var(--color-blue-205-100-50);
+
+  --color-toggle-switch-background-on: var(--color-blue-205-100-50);
+  --color-toggle-switch-background-off: var(--color-silver-darken-80);
+
+  --color-text-base: var(--color-black);
+  --color-text-error: var(--color-red-360-100-45);
 
   --text-size-base: 14px;
   --text-line-height: 1.5;
@@ -242,7 +256,6 @@
 .bio-properties-panel-description {
   display: block;
   margin: 4px 0;
-  font-size: 14px;
   line-height: 18px;
   font-weight: 400;
   font-size: 13px;
@@ -254,7 +267,7 @@
 
 .bio-properties-panel-input {
   padding: 5px 6px 4px;
-  border: 1px solid var(--color-line-base);
+  border: 1px solid var(--color-input-border);
   border-radius: 3px;
   background-color: var(--color-input-background);
   font-size: 14px;
@@ -270,8 +283,8 @@ textarea.bio-properties-panel-input,
 
 .bio-properties-panel-input:focus {
   outline: none;
-  background-color: var(--color-input-focus-light);
-  border: 1px solid var(--color-input-focus);
+  background-color: var(--color-input-background-focus);
+  border: 1px solid var(--color-input-border-focus);
 }
 
 .bio-properties-panel-input[type="checkbox"], .bio-properties-panel-input[type="radio"] {
@@ -323,7 +336,7 @@ textarea.bio-properties-panel-input,
 
 .bio-properties-panel-checkbox .bio-properties-panel-label::before {
   content: " ";
-  border: 1px solid var(--color-line-base);
+  border: 1px solid var(--color-input-border);
   border-radius: 3px;
   background-color:var(--color-000000-opacity-5);
 }
@@ -337,6 +350,21 @@ textarea.bio-properties-panel-input,
 
 textarea.bio-properties-panel-input {
   resize: vertical;
+}
+
+.bio-properties-panel-entry.has-error .bio-properties-panel-input {
+  border-color: var(--color-input-border-error);
+  background-color: var(--color-input-background-error);
+}
+
+.bio-properties-panel-entry.has-error .bio-properties-panel-input:focus {
+  border-color: var(--color-input-border-error-focus);
+}
+
+.bio-properties-panel-entry .bio-properties-panel-error {
+  color: var(--color-text-error);
+  margin: 4px 0;
+  font-size: 13px;
 }
 
 /**
@@ -372,7 +400,7 @@ textarea.bio-properties-panel-input {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--silver-darken-80);
+  background-color: var(--color-toggle-switch-background-off);
   -webkit-transition: 0.4s;
   transition: 0.4s;
   border-radius: 34px;
@@ -392,7 +420,7 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher input[type='checkbox']:checked + .bio-properties-panel-toggle-switch__slider {
-  background-color: var(--blue-base-65);
+  background-color: var(--color-toggle-switch-background-on);
   box-shadow: 0 0 1px ;
 }
 
