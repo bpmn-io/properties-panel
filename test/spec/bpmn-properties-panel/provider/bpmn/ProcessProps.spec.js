@@ -205,11 +205,144 @@ describe('provider/bpmn - ProcessProps', function() {
         expect(processIdInput.value).to.eql(originalValue);
       })
     );
+
+
+    describe('validation', function() {
+
+      it('should NOT remove id', inject(async function(elementRegistry, selection) {
+
+        // given
+        const participant = elementRegistry.get('Participant_1');
+
+        await act(() => {
+          selection.select(participant);
+        });
+
+        // when
+        const processIdInput = domQuery('input[name=processId]', container);
+        changeInput(processIdInput, '');
+
+        // then
+        expect(getProcess(participant).get('id')).to.eql('Process_2');
+      }));
+
+
+      it('should NOT set existing id', inject(async function(elementRegistry, selection) {
+
+        // given
+        const participant = elementRegistry.get('Participant_1');
+
+        await act(() => {
+          selection.select(participant);
+        });
+
+        // when
+        const processIdInput = domQuery('input[name=processId]', container);
+        changeInput(processIdInput, 'Process_1');
+
+        // then
+        expect(getProcess(participant).get('id')).to.eql('Process_2');
+      }));
+
+
+      it('should NOT set with spaces', inject(async function(elementRegistry, selection) {
+
+        // given
+        const participant = elementRegistry.get('Participant_1');
+
+        await act(() => {
+          selection.select(participant);
+        });
+
+        // when
+        const processIdInput = domQuery('input[name=processId]', container);
+        changeInput(processIdInput, 'foo bar');
+
+        // then
+        expect(getProcess(participant).get('id')).to.eql('Process_2');
+      }));
+
+
+      it('should NOT set invalid QName', inject(async function(elementRegistry, selection) {
+
+        // given
+        const participant = elementRegistry.get('Participant_1');
+
+        await act(() => {
+          selection.select(participant);
+        });
+
+        // when
+        const processIdInput = domQuery('input[name=processId]', container);
+        changeInput(processIdInput, '::foo');
+
+        // then
+        expect(getProcess(participant).get('id')).to.eql('Process_2');
+      }));
+
+
+      it('should NOT set prefix', inject(async function(elementRegistry, selection) {
+
+        // given
+        const participant = elementRegistry.get('Participant_1');
+
+        await act(() => {
+          selection.select(participant);
+        });
+
+        // when
+        const processIdInput = domQuery('input[name=processId]', container);
+        changeInput(processIdInput, 'foo:Process_2');
+
+        // then
+        expect(getProcess(participant).get('id')).to.eql('Process_2');
+      }));
+
+
+      it('should NOT set invalid HTML characters', inject(async function(elementRegistry, selection) {
+
+        // given
+        const participant = elementRegistry.get('Participant_1');
+
+        await act(() => {
+          selection.select(participant);
+        });
+
+        // when
+        const processIdInput = domQuery('input[name=processId]', container);
+        changeInput(processIdInput, '<foo>');
+
+        // then
+        expect(getProcess(participant).get('id')).to.eql('Process_2');
+      }));
+
+
+      it('should NOT set expression', inject(async function(elementRegistry, selection) {
+
+        // given
+        const participant = elementRegistry.get('Participant_1');
+
+        await act(() => {
+          selection.select(participant);
+        });
+
+        // when
+        const processIdInput = domQuery('input[name=processId]', container);
+        changeInput(processIdInput, '${foo}');
+
+        // then
+        expect(getProcess(participant).get('id')).to.eql('Process_2');
+      }));
+
+    });
+
   });
+
 });
 
 
 // helper //////////////////
+
 function getProcess(participant) {
   return getBusinessObject(participant).get('processRef');
 }
