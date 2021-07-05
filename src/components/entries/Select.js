@@ -34,7 +34,8 @@ function Select(props) {
             return (
               <option
                 key={ idx }
-                value={ option.value }>
+                value={ option.value }
+                disabled={ option.disabled }>
                 { option.label }
               </option>
             );
