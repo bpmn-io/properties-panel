@@ -75,6 +75,60 @@ describe('<Select>', function() {
   });
 
 
+  describe('options', function() {
+
+    it('should render options non-disabled per default', function() {
+
+      // given
+      const getOptions = () => createOptions();
+
+      // when
+      const result = createSelect({ container, getOptions });
+
+      const select = domQuery('.bio-properties-panel-select', result.container);
+
+      // then
+      const optionA = domQuery('option[value="A"]', select);
+
+      expect(optionA.disabled).to.be.false;
+    });
+
+
+    it('should render option not-disabled if set explicitly', function() {
+
+      // given
+      const getOptions = () => createOptions();
+
+      // when
+      const result = createSelect({ container, getOptions });
+
+      const select = domQuery('.bio-properties-panel-select', result.container);
+
+      // then
+      const optionB = domQuery('option[value="B"]', select);
+
+      expect(optionB.disabled).to.be.false;
+    });
+
+
+    it('should render option disabled if set explicitly', function() {
+
+      // given
+      const getOptions = () => createOptions();
+
+      // when
+      const result = createSelect({ container, getOptions });
+
+      const select = domQuery('.bio-properties-panel-select', result.container);
+
+      // then
+      const optionC = domQuery('option[value="C"]', select);
+
+      expect(optionC.disabled).to.be.true;
+    });
+
+  });
+
   describe('#isEdited', function() {
 
     it('should NOT be edited', function() {
@@ -179,11 +233,13 @@ function createOptions(overrides = {}) {
     },
     {
       label: 'option B',
-      value: 'B'
+      value: 'B',
+      disabled: false
     },
     {
       label: 'option C',
-      value: 'C'
+      value: 'C',
+      disabled: true
     },
     ...options
   ];
