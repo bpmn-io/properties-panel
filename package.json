@@ -18,6 +18,9 @@
     "type": "git",
     "url": "git+https://github.com/bpmn-io/properties-panel.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Niklas Kiefer <niklas.kiefer@camunda.com> (https://github.com/pinussilvestrus)",
   "contributors": [
     {
