@@ -15,6 +15,7 @@ function Textfield(props) {
 
   const {
     debounce,
+    disabled = false,
     id,
     label,
     onInput,
@@ -34,6 +35,7 @@ function Textfield(props) {
         name={ id }
         spellCheck="false"
         autoComplete="off"
+        disabled={ disabled }
         class="bio-properties-panel-input"
         onInput={ handleInput }
         onFocus={ props.onFocus }
@@ -49,6 +51,7 @@ function Textfield(props) {
  * @param {String} props.id
  * @param {String} props.description
  * @param {Boolean} props.debounce
+ * @param {Boolean} props.disabled
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
@@ -60,6 +63,7 @@ export default function TextfieldEntry(props) {
     id,
     description,
     debounce,
+    disabled,
     label,
     getValue,
     setValue,
@@ -101,7 +105,7 @@ export default function TextfieldEntry(props) {
       'bio-properties-panel-entry',
       error ? 'has-error' : '')
     } data-entry-id={ id }>
-      <Textfield id={ id } label={ label } value={ value } onInput={ handleChange } debounce={ debounce } />
+      <Textfield id={ id } label={ label } value={ value } onInput={ handleChange } debounce={ debounce } disabled={ disabled } />
       { description && <div class="bio-properties-panel-description">{ description }</div> }
       { error && <div class="bio-properties-panel-error">{ error }</div> }
     </div>

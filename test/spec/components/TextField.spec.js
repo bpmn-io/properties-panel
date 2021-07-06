@@ -204,6 +204,49 @@ describe('<TextField>', function() {
 
   });
 
+
+  describe('disabled', function() {
+
+    it('should render enabled per default', function() {
+
+      // given
+      const result = createTextField({ container });
+
+      // then
+      const textInput = domQuery('.bio-properties-panel-textfield input', result.container);
+      expect(textInput.disabled).to.be.false;
+    });
+
+
+    it('should render enabled if set', function() {
+
+      // given
+      const result = createTextField({
+        container,
+        disabled: false
+      });
+
+      // then
+      const textInput = domQuery('.bio-properties-panel-textfield input', result.container);
+      expect(textInput.disabled).to.be.false;
+    });
+
+
+    it('should render disabled if set', function() {
+
+      // given
+      const result = createTextField({
+        container,
+        disabled: true
+      });
+
+      // then
+      const textInput = domQuery('.bio-properties-panel-textfield input', result.container);
+      expect(textInput.disabled).to.be.true;
+    });
+
+  });
+
 });
 
 
@@ -215,6 +258,7 @@ function createTextField(options = {}) {
     id,
     description,
     debounce = fn => fn,
+    disabled,
     label,
     getValue = noop,
     setValue = noop,
@@ -228,6 +272,7 @@ function createTextField(options = {}) {
       id={ id }
       label={ label }
       description={ description }
+      disabled={ disabled }
       getValue={ getValue }
       setValue={ setValue }
       debounce={ debounce }
