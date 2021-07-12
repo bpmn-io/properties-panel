@@ -12,6 +12,7 @@ function NumberField(props) {
     max,
     min,
     onInput,
+    step,
     value = ''
   } = props;
 
@@ -43,6 +44,7 @@ function NumberField(props) {
         max={ max }
         min={ min }
         onInput={ handleInput }
+        step={ step }
         value={ value } />
     </div>
   );
@@ -60,6 +62,7 @@ function NumberField(props) {
  * @param {String} props.max
  * @param {String} props.min
  * @param {Function} props.setValue
+ * @param {String} props.step
  */
 export default function NumberFieldEntry(props) {
   const {
@@ -72,7 +75,8 @@ export default function NumberFieldEntry(props) {
     label,
     max,
     min,
-    setValue
+    setValue,
+    step
   } = props;
 
   const value = getValue(element);
@@ -86,6 +90,7 @@ export default function NumberFieldEntry(props) {
         onInput={ setValue }
         max={ max }
         min={ min }
+        step={ step }
         value={ value } />
       { description && <div class="bio-properties-panel-description">{ description }</div> }
     </div>
