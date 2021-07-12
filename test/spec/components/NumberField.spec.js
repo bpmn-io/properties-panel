@@ -56,6 +56,25 @@ describe('<NumberField>', function() {
   });
 
 
+  it('should NOT update on invalid', function() {
+
+    // given
+    const updateSpy = sinon.spy();
+
+    const step = '3';
+
+    const result = createNumberField({ container, setValue: updateSpy, step });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    changeInput(input, 20);
+
+    // then
+    expect(updateSpy).to.not.have.been.called;
+  });
+
+
   describe('#isEdited', function() {
 
     it('should NOT be edited', function() {
@@ -167,6 +186,7 @@ function createNumberField(options = {}) {
     max,
     min,
     setValue = noop,
+    step,
     container
   } = options;
 
@@ -181,7 +201,8 @@ function createNumberField(options = {}) {
       label={ label }
       max={ max }
       min={ min }
-      setValue={ setValue } />,
+      setValue={ setValue }
+      step={ step } />,
     {
       container
     }
