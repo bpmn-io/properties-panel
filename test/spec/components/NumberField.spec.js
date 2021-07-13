@@ -56,6 +56,40 @@ describe('<NumberField>', function() {
   });
 
 
+  it('should update (floating point number)', function() {
+
+    // given
+    const updateSpy = sinon.spy();
+
+    const result = createNumberField({ container, setValue: updateSpy, step: 'any' });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    changeInput(input, 20.5);
+
+    // then
+    expect(updateSpy).to.have.been.calledWith(20.5);
+  });
+
+
+  it('should update (undefined)', function() {
+
+    // given
+    const updateSpy = sinon.spy();
+
+    const result = createNumberField({ container, setValue: updateSpy });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    changeInput(input, '');
+
+    // then
+    expect(updateSpy).to.have.been.calledWith(undefined);
+  });
+
+
   it('should NOT update on invalid', function() {
 
     // given
