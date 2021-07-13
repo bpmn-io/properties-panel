@@ -14,6 +14,7 @@
   --color-aaaaaa: #aaaaaa;
   --color-white: white;
   --color-black: black;
+  --color-999999: #999999;
   --color-000000-opacity-5: rgba(0, 0, 0, 0.05);
   --color-000000-opacity-20: rgba(0, 0, 0, 0.2);
   --color-000000-opacity-25: rgba(0, 0, 0, 0.25);
@@ -38,6 +39,8 @@
 
   --text-size-base: 14px;
   --text-line-height: 1.5;
+
+  --color-description: var(--color-999999);
 
   display: none;
   position: relative;
@@ -252,8 +255,7 @@
   padding-bottom: 10px;
 }
 
-.bio-properties-panel-label,
-.bio-properties-panel-description {
+.bio-properties-panel-label {
   display: block;
   margin: 4px 0;
   line-height: 18px;
@@ -262,7 +264,12 @@
 }
 
 .bio-properties-panel-description {
-  margin-top: 7px;
+  color: var(--color-description);
+  display: block;
+  margin: 4px 0 8px;
+  line-height: 16px;
+  font-weight: 400;
+  font-size: 12px;
 }
 
 .bio-properties-panel-input {
