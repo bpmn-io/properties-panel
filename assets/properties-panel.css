@@ -28,7 +28,7 @@
 
   --color-input-background-error: var(--color-red-360-100-97);
   --color-input-border-error: var(--color-red-360-100-45);
-  --color-input-border-error-focus: var(--color-blue-205-100-50);
+  --color-input-border-error-focus: var(--color-red-360-100-45);
 
   --color-toggle-switch-background-on: var(--color-blue-205-100-50);
   --color-toggle-switch-background-off: var(--color-silver-darken-80);
