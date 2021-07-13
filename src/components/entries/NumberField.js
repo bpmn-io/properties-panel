@@ -25,7 +25,7 @@ function NumberField(props) {
       } = event.target;
 
       if (validity.valid) {
-        onInput(value ? parseInt(value, 10) : undefined);
+        onInput(value ? parseFloat(value) : undefined);
       }
     });
   }, [ onInput, debounce ]);
