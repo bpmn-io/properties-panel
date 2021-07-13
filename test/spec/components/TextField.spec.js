@@ -247,6 +247,44 @@ describe('<TextField>', function() {
 
   });
 
+
+  describe('description', function() {
+
+    it('should render without description per default', function() {
+
+      // given
+      const result = createTextField({
+        container,
+        id: 'noDescriptionTextField'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
+        result.container);
+      expect(description).not.to.exist;
+    });
+
+
+    it('should render with description if set', function() {
+
+      // given
+      const result = createTextField({
+        container,
+        id: 'noDescriptionTextField',
+        label: 'someLabel',
+        description: 'my description'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('my description');
+    });
+
+  });
+
 });
 
 
