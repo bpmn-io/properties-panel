@@ -44,9 +44,16 @@ export default function CollapsibleEntry(props) {
         <div class="bio-properties-panel-collapsible-entry-arrow">
           <ListArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
         </div>
-        <RemoveContainer>
-          <ListDeleteIcon class="bio-properties-panel-remove-entry" />
-        </RemoveContainer>
+        {
+          RemoveContainer
+            ?
+            (
+              <RemoveContainer>
+                <ListDeleteIcon class="bio-properties-panel-remove-entry" />
+              </RemoveContainer>
+            )
+            : null
+        }
       </div>
       <div class={ classnames(
         'bio-properties-panel-collapsible-entry-entries',

@@ -166,6 +166,18 @@ describe('<ListGroup>', function() {
   });
 
 
+  it('should NOT wrap empty add container', async function() {
+
+    // when
+    const { container } = createListGroup({ container: parentContainer });
+
+    const addEntry = domQuery('.bio-properties-panel-add-entry', container);
+
+    // then
+    expect(addEntry).to.not.exist;
+  });
+
+
   describe('ordering', function() {
 
     it('should create initial ordering from items', function() {
