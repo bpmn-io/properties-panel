@@ -129,6 +129,18 @@ describe('<Collapsible>', function() {
     expect(spy).to.have.been.called;
   });
 
+
+  it('should NOT wrap empty delete container', async function() {
+
+    // when
+    const { container } = createCollapsible({ container: parentContainer });
+
+    const removeEntry = domQuery('.bio-properties-panel-remove-entry', container);
+
+    // then
+    expect(removeEntry).to.not.exist;
+  });
+
 });
 
 

@@ -123,11 +123,17 @@ export default function ListGroup(props) {
         { label }
       </div>
       <div class="bio-properties-panel-group-header-buttons">
-        <AddContainer>
-          <div class="bio-properties-panel-add-entry">
-            <CreateIcon />
-          </div>
-        </AddContainer>
+        {
+          AddContainer
+            ? (
+              <AddContainer>
+                <div class="bio-properties-panel-add-entry">
+                  <CreateIcon />
+                </div>
+              </AddContainer>
+            )
+            : null
+        }
         {
           hasItems
             ? (
