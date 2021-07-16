@@ -31,7 +31,8 @@ export default function ListGroup(props) {
     id,
     items,
     label,
-    add: AddContainer
+    add: AddContainer,
+    shouldSort = true
   } = props;
 
   const [ open, setOpen ] = useState(false);
@@ -45,14 +46,14 @@ export default function ListGroup(props) {
 
   // (0) set initial ordering from given items
   useEffect(() => {
-    if (!prevItems) {
+    if (!prevItems || !shouldSort) {
       setOrdering(createOrdering(items));
     }
   }, [ items ]);
 
   // (1) items were added
   useEffect(() => {
-    if (prevItems && items.length > prevItems.length) {
+    if (shouldSort && prevItems && items.length > prevItems.length) {
 
       let add = [];
 
@@ -87,14 +88,14 @@ export default function ListGroup(props) {
   useEffect(() => {
 
     // we already sorted as items were added
-    if (open && !newItemAdded) {
+    if (shouldSort && open && !newItemAdded) {
       setOrdering(createOrdering(sortItems(items)));
     }
   }, [ open ]);
 
   // (3) items were deleted
   useEffect(() => {
-    if (prevItems && items.length < prevItems.length) {
+    if (shouldSort && prevItems && items.length < prevItems.length) {
       let keep = [];
 
       ordering.forEach(o => {

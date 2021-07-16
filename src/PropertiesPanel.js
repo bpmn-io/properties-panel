@@ -39,7 +39,8 @@ const DEFAULT_LAYOUT = {
  *    component: import('preact').Component,
  *    id: String,
  *    items: Array<ListItemDefinition>,
- *    label: String
+ *    label: String,
+ *    shouldSort?: Boolean
  * } } ListGroupDefinition
  *
  * @typedef { {
