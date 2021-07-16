@@ -211,6 +211,49 @@ describe('<ListGroup>', function() {
     });
 
 
+    it('should NOT sort if configured', async function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'xyz'
+        },
+        {
+          id: 'item-2',
+          label: 'ab'
+        },
+        {
+          id: 'item-3',
+          label: 'def03'
+        },
+        {
+          id: 'item-4',
+          label: 'def04'
+        }
+      ];
+
+      const { container } = createListGroup({ container: parentContainer, items, shouldSort: false });
+
+      const header = domQuery('.bio-properties-panel-group-header', container);
+
+      const list = domQuery('.bio-properties-panel-list', container);
+
+      // when
+      waitFor(async () => {
+        await header.click();
+      });
+
+      // then
+      expect(getListOrdering(list)).to.eql([
+        'item-1',
+        'item-2',
+        'item-3',
+        'item-4'
+      ]);
+    });
+
+
     it('should order alphanumeric on open (label)', async function() {
 
       // given
@@ -580,11 +623,17 @@ function createListGroup(options = {}) {
     label = 'List',
     items = [],
     add,
+    shouldSort,
     container
   } = options;
 
   return render(
-    <ListGroup id={ id } label={ label } items={ items } add={ add } />,
+    <ListGroup
+      id={ id }
+      label={ label }
+      items={ items }
+      add={ add }
+      shouldSort={ shouldSort } />,
     {
       container
     }
