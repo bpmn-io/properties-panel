@@ -5,6 +5,7 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
+  classes as domClasses,
   query as domQuery
 } from 'min-dom';
 
@@ -36,6 +37,18 @@ describe('<TextArea>', function() {
 
     // then
     expect(domQuery('.bio-properties-panel-textarea', result.container)).to.exist;
+  });
+
+
+  it('should render - monospace', function() {
+
+    // given
+    const result = createTextArea({ container, monospace: true });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // then
+    expect(domClasses(input).has('bio-properties-panel-input-monospace')).to.be.true;
   });
 
 
@@ -122,6 +135,7 @@ function createTextArea(options = {}) {
     getValue = noop,
     setValue = noop,
     rows,
+    monospace,
     container
   } = options;
 
@@ -134,6 +148,7 @@ function createTextArea(options = {}) {
       getValue={ getValue }
       setValue={ setValue }
       debounce={ debounce }
-      rows={ rows } />,
+      rows={ rows }
+      monospace={ monospace } />,
     { container });
 }

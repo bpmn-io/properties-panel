@@ -278,6 +278,9 @@
   border-radius: 3px;
   background-color: var(--color-input-background);
   font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  font-family: inherit;
 }
 
 .bio-properties-panel-input[type=number],
@@ -292,6 +295,10 @@ textarea.bio-properties-panel-input,
   outline: none;
   background-color: var(--color-input-background-focus);
   border: 1px solid var(--color-input-border-focus);
+}
+
+.bio-properties-panel-input-monospace {
+  font-family: monospace;
 }
 
 .bio-properties-panel-input[type="checkbox"], .bio-properties-panel-input[type="radio"] {
