@@ -2,6 +2,8 @@ import {
   useMemo
 } from 'preact/hooks';
 
+import classnames from 'classnames';
+
 function TextArea(props) {
 
   const {
@@ -10,7 +12,8 @@ function TextArea(props) {
     rows = 2,
     debounce,
     onInput,
-    value = ''
+    value = '',
+    monospace
   } = props;
 
   const handleInput = useMemo(() => {
@@ -24,7 +27,10 @@ function TextArea(props) {
         id={ prefixId(id) }
         name={ id }
         spellCheck="false"
-        class="bio-properties-panel-input"
+        class={ classnames(
+          'bio-properties-panel-input',
+          monospace ? 'bio-properties-panel-input-monospace' : '')
+        }
         onInput={ handleInput }
         onFocus={ props.onFocus }
         onBlur={ props.onBlur }
@@ -44,6 +50,7 @@ function TextArea(props) {
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Number} props.rows
+ * @param {Boolean} props.monospace
  */
 export default function TextAreaEntry(props) {
   const {
@@ -54,7 +61,8 @@ export default function TextAreaEntry(props) {
     label,
     getValue,
     setValue,
-    rows
+    rows,
+    monospace
   } = props;
 
   const value = getValue(element);
@@ -66,7 +74,8 @@ export default function TextAreaEntry(props) {
         value={ value }
         onInput={ setValue }
         rows={ rows }
-        debounce={ debounce } />
+        debounce={ debounce }
+        monospace={ monospace } />
       { description && <div class="bio-properties-panel-description">{ description }</div> }
     </div>
   );
