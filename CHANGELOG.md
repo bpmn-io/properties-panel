@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.2.1
+
+* `FIX`: do not use monospace as default font for text areas ([#87](https://github.com/bpmn-io/properties-panel/pull/87))
+
 ## 0.2.0
 
 * `FEAT`: add number field entry ([#76](https://github.com/bpmn-io/properties-panel/pull/76))
