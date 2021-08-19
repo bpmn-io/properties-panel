@@ -65,9 +65,9 @@ export default function Group(props) {
         {
           edited && <DataMarker />
         }
-        <div class="bio-properties-panel-group-header-button">
+        <button class="bio-properties-panel-group-header-button">
           <GroupArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
-        </div>
+        </button>
       </div>
     </div>
     <div class={ classnames(

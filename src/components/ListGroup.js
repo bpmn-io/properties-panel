@@ -128,9 +128,9 @@ export default function ListGroup(props) {
           AddContainer
             ? (
               <AddContainer>
-                <div class="bio-properties-panel-add-entry">
+                <button class="bio-properties-panel-group-header-button bio-properties-panel-add-entry">
                   <CreateIcon />
-                </div>
+                </button>
               </AddContainer>
             )
             : null
@@ -147,9 +147,9 @@ export default function ListGroup(props) {
         {
           hasItems
             ? (
-              <div class="bio-properties-panel-group-header-button">
+              <button class="bio-properties-panel-group-header-button">
                 <GroupArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
-              </div>
+              </button>
             )
             : null
         }

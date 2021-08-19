@@ -173,14 +173,6 @@
   margin-right: 0;
 }
 
-.bio-properties-panel-group-header-buttons .bio-properties-panel-add-entry {
-  width: 20px;
-  height: 20px;
-  display: inherit;
-  justify-content: center;
-  align-items: center;
-}
-
 .bio-properties-panel-group-header:not(.empty) .bio-properties-panel-add-entry {
   visibility: hidden;
 }
@@ -491,11 +483,17 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-remove-entry {
-  position: absolute;
-  transform: translateY(calc(-50% - 1px));
-  right: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 16px;
   height: 16px;
+
+  margin-right: 14px;
+  padding: 0;
+
+  border: none;
+  background: none;
   visibility: hidden;
 }
 
