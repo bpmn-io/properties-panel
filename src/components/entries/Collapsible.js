@@ -49,7 +49,9 @@ export default function CollapsibleEntry(props) {
             ?
             (
               <RemoveContainer>
-                <ListDeleteIcon class="bio-properties-panel-remove-entry" />
+                <button class="bio-properties-panel-remove-entry">
+                  <ListDeleteIcon />
+                </button>
               </RemoveContainer>
             )
             : null
