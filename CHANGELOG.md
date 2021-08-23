@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.3.0
+
+* `FEAT`: use semantic HTML for buttons ([#45](https://github.com/bpmn-io/properties-panel/issues/45))
+* `FIX`: prevent list ordering effects on element changes ([#89](https://github.com/bpmn-io/properties-panel/pull/89))
+
 ## 0.2.1
 
 * `FIX`: do not use monospace as default font for text areas ([#87](https://github.com/bpmn-io/properties-panel/pull/87))
