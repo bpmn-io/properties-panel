@@ -28,6 +28,7 @@ const noop = () => {};
  */
 export default function ListGroup(props) {
   const {
+    element,
     id,
     items,
     label,
@@ -40,20 +41,28 @@ export default function ListGroup(props) {
   const [ newItemAdded, setNewItemAdded ] = useState(false);
 
   const prevItems = usePrevious(items);
+  const prevElement = usePrevious(element);
 
+  const elementChanged = element !== prevElement;
+  const shouldHandleEffects = !elementChanged && shouldSort;
 
-  // keep ordering in sync to items and open changes
+  // reset initial ordering when element changes (before first render)
+  if (elementChanged) {
+    setOrdering(createOrdering(shouldSort ? sortItems(items) : items));
+  }
+
+  // keep ordering in sync to items - and open changes
 
   // (0) set initial ordering from given items
   useEffect(() => {
     if (!prevItems || !shouldSort) {
       setOrdering(createOrdering(items));
     }
-  }, [ items ]);
+  }, [ items, element ]);
 
   // (1) items were added
   useEffect(() => {
-    if (shouldSort && prevItems && items.length > prevItems.length) {
+    if (shouldHandleEffects && prevItems && items.length > prevItems.length) {
 
       let add = [];
 
@@ -82,20 +91,20 @@ export default function ListGroup(props) {
     } else {
       setNewItemAdded(false);
     }
-  }, [ items, open ]);
+  }, [ items, open, shouldHandleEffects ]);
 
   // (2) sort items on open
   useEffect(() => {
 
     // we already sorted as items were added
-    if (shouldSort && open && !newItemAdded) {
+    if (shouldHandleEffects && open && !newItemAdded) {
       setOrdering(createOrdering(sortItems(items)));
     }
-  }, [ open ]);
+  }, [ open, shouldHandleEffects ]);
 
   // (3) items were deleted
   useEffect(() => {
-    if (shouldSort && prevItems && items.length < prevItems.length) {
+    if (shouldHandleEffects && prevItems && items.length < prevItems.length) {
       let keep = [];
 
       ordering.forEach(o => {
@@ -106,12 +115,11 @@ export default function ListGroup(props) {
 
       setOrdering(keep);
     }
-  }, [ items ]);
+  }, [ items, shouldHandleEffects ]);
 
   const toggleOpen = () => setOpen(!open);
 
   const hasItems = !!items.length;
-
 
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id }>
     <div
