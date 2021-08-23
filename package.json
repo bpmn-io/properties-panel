@@ -10,6 +10,7 @@
   "scripts": {
     "all": "run-s lint test",
     "build": "del-cli lib && babel -s -d lib src",
+    "build:watch": "babel -w -s -d lib src",
     "lint": "eslint .",
     "dev": "npm test -- --auto-watch --no-single-run",
     "test": "karma start karma.config.js",
