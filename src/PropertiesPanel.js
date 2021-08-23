@@ -37,6 +37,7 @@ const DEFAULT_LAYOUT = {
  * @typedef { {
  *    add: import('preact').Component,
  *    component: import('preact').Component,
+ *    element: Object,
  *    id: String,
  *    items: Array<ListItemDefinition>,
  *    label: String,
@@ -116,7 +117,10 @@ export default function PropertiesPanel(props) {
               id
             } = group;
 
-            return <GroupComponent key={ id } { ...group } />;
+            return <GroupComponent
+              key={ id }
+              element={ element }
+              { ...group } />;
           })
         }
       </div>

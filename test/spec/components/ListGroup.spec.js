@@ -20,6 +20,11 @@ import ListGroup from 'src/components/ListGroup';
 
 insertCoreStyles();
 
+const noopElement = {
+  id: 'foo',
+  type: 'foo'
+};
+
 
 describe('<ListGroup>', function() {
 
@@ -140,7 +145,7 @@ describe('<ListGroup>', function() {
     ];
 
     // when
-    rerender(<ListGroup items={ newItems } />);
+    createListGroup({ items: newItems }, rerender);
 
     // then
     expect(domClasses(list).has('open')).to.be.true;
@@ -207,6 +212,92 @@ describe('<ListGroup>', function() {
         'item-1',
         'item-2',
         'item-3'
+      ]);
+    });
+
+
+    it('should re-iniate ordering when element changed (unsorted)', async function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'xyz'
+        },
+        {
+          id: 'item-2',
+          label: 'ab'
+        },
+        {
+          id: 'item-3',
+          label: 'def03'
+        }
+      ];
+
+      const {
+        container,
+        rerender
+      } = createListGroup({ container: parentContainer, items, shouldSort: false });
+
+      const list = domQuery('.bio-properties-panel-list', container);
+
+      // when
+      const newElement = {
+        ...noopElement,
+        id: 'bar'
+      };
+
+      // when
+      createListGroup({ element: newElement, items, shouldSort: false }, rerender);
+
+      // then
+      expect(getListOrdering(list)).to.eql([
+        'item-1',
+        'item-2',
+        'item-3'
+      ]);
+    });
+
+
+    it('should re-iniate ordering when element changed (sorted)', async function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'xyz'
+        },
+        {
+          id: 'item-2',
+          label: 'ab'
+        },
+        {
+          id: 'item-3',
+          label: 'def03'
+        }
+      ];
+
+      const {
+        container,
+        rerender
+      } = createListGroup({ container: parentContainer, items });
+
+      const list = domQuery('.bio-properties-panel-list', container);
+
+      // when
+      const newElement = {
+        ...noopElement,
+        id: 'bar'
+      };
+
+      // when
+      createListGroup({ element: newElement, items }, rerender);
+
+      // then
+      expect(getListOrdering(list)).to.eql([
+        'item-2',
+        'item-3',
+        'item-1'
       ]);
     });
 
@@ -331,7 +422,7 @@ describe('<ListGroup>', function() {
       ];
 
       // when
-      rerender(<ListGroup items={ newItems } />);
+      createListGroup({ items: newItems }, rerender);
 
       // then
       expect(getListOrdering(list)).to.eql([
@@ -339,6 +430,57 @@ describe('<ListGroup>', function() {
         'item-1',
         'item-2',
         'item-3'
+      ]);
+    });
+
+
+    it('should NOT add new items on top - element changed', function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        },
+        {
+          id: 'item-2',
+          label: 'Item 2'
+        },
+        {
+          id: 'item-3',
+          label: 'Item 3'
+        }
+      ];
+
+      const {
+        container,
+        rerender
+      } = createListGroup({ container: parentContainer, items });
+
+      const list = domQuery('.bio-properties-panel-list', container);
+
+      const newItems = [
+        ...items,
+        {
+          id: 'item-4',
+          label: 'Item 4'
+        }
+      ];
+
+      const newElement = {
+        ...noopElement,
+        id: 'bar'
+      };
+
+      // when
+      createListGroup({ element: newElement, items: newItems }, rerender);
+
+      // then
+      expect(getListOrdering(list)).to.eql([
+        'item-1',
+        'item-2',
+        'item-3',
+        'item-4'
       ]);
     });
 
@@ -379,7 +521,7 @@ describe('<ListGroup>', function() {
       ]);
 
       // when
-      rerender(<ListGroup items={ newItems } />);
+      createListGroup({ items: newItems }, rerender);
 
       // then
       expect(getListOrdering(list)).to.eql([
@@ -431,7 +573,7 @@ describe('<ListGroup>', function() {
       items[2].label = 'aaa';
 
       // when
-      rerender(<ListGroup items={ items } />);
+      createListGroup({ items }, rerender);
 
       // then
       expect(getListOrdering(list)).to.eql([
@@ -486,7 +628,7 @@ describe('<ListGroup>', function() {
         }
       ];
 
-      rerender(<ListGroup items={ items } />);
+      createListGroup({ items }, rerender);
 
       expect(getListOrdering(list)).to.eql([
         'item-3',
@@ -497,7 +639,7 @@ describe('<ListGroup>', function() {
       // (3) change
       items[0].label = 'aaa';
 
-      rerender(<ListGroup items={ items } />);
+      createListGroup({ items }, rerender);
 
       expect(getListOrdering(list)).to.eql([
         'item-3',
@@ -508,7 +650,7 @@ describe('<ListGroup>', function() {
       // (4) remove
       items.splice(1, 1);
 
-      rerender(<ListGroup items={ items } />);
+      createListGroup({ items }, rerender);
 
       expect(getListOrdering(list)).to.eql([
         'item-3',
@@ -558,7 +700,7 @@ describe('<ListGroup>', function() {
     items.splice(0, 1);
 
     // when
-    rerender(<ListGroup items={ items } />);
+    createListGroup({ items }, rerender);
 
     const list = domQuery('.bio-properties-panel-list', container);
 
@@ -617,8 +759,9 @@ describe('<ListGroup>', function() {
 
 // helpers ////////////////////
 
-function createListGroup(options = {}) {
+function createListGroup(options = {}, renderFn = render) {
   const {
+    element = noopElement,
     id,
     label = 'List',
     items = [],
@@ -627,8 +770,9 @@ function createListGroup(options = {}) {
     container
   } = options;
 
-  return render(
+  return renderFn(
     <ListGroup
+      element={ element }
       id={ id }
       label={ label }
       items={ items }
