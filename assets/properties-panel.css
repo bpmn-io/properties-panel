@@ -10,6 +10,8 @@
   --color-red-360-100-97: #fff0f0;
   --color-red-360-100-45: #e60000;
 
+  --color-grey-225-10-35: hsl(225, 10%, 35%);
+
   --color-cccccc: #cccccc;
   --color-aaaaaa: #aaaaaa;
   --color-white: white;
@@ -215,11 +217,6 @@
 .bio-properties-panel-list.open {
   display: block;
   margin-bottom: 6px;
-}
-
-.bio-properties-panel-list-item .bio-properties-panel-collapsible-entry-entries {
-  padding-left: 15px;
-  margin-bottom: 10px;
 }
 
 .bio-properties-panel-list-badge {
@@ -453,6 +450,8 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-collapsible-entry-entries  {
+  padding-left: 15px;
+  margin-bottom: 10px;
   position: relative;
   display: none;
 }
@@ -497,6 +496,7 @@ textarea.bio-properties-panel-input {
   visibility: hidden;
 }
 
+.bio-properties-panel-list-entry-item:hover .bio-properties-panel-remove-entry,
 .bio-properties-panel-collapsible-entry-header:hover .bio-properties-panel-remove-entry {
   visibility: visible;
 }
@@ -507,6 +507,93 @@ textarea.bio-properties-panel-input {
   left: 10px;
   width: 2px;
   top: 0;
+  bottom: 12px;
+  background-color: var(--color-grey-225-10-35);
+}
+
+/* Side line extension for non-list entry or open list entry positioned as the last one. */
+.bio-properties-panel-collapsible-entry-entries .bio-properties-panel-entry:not(.bio-properties-panel-list-entry):last-child::after,
+.bio-properties-panel-list-entry.open:last-child::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  width: 2px;
+  top: 0;
   bottom: 0;
-  background-color: var(--color-000000-opacity-25);
+  background-color: var(--color-grey-225-10-35);
+}
+
+/* List entry */
+
+.bio-properties-panel-list-entry-header {
+  display: flex;
+  justify-content: space-between;
+
+  height: 32px;
+}
+
+.bio-properties-panel-list-entry::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  left: 7px;
+  top: 13px;
+  border-radius: 50%;
+  background-color: var(--color-grey-225-10-35);
+}
+
+.bio-properties-panel-list-entry-header-title {
+  padding: 2px 0;
+  font-size: var(--text-size-base);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bio-properties-panel-list-entry-header-title.open {
+  font-weight: 600;
+}
+
+.bio-properties-panel-list-entry-header-title,
+.bio-properties-panel-list-entry-header-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.bio-properties-panel-list-entry-header-buttons > button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.bio-properties-panel-list-entry-header-buttons > :last-child {
+  margin-right: 0;
+}
+
+.bio-properties-panel-list-entry-items {
+  padding: 0;
+  margin: 0;
+
+  list-style: none;
+}
+
+.bio-properties-panel-list-entry-items:not(.open) {
+  display: none;
+}
+
+.bio-properties-panel-list-entry-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bio-properties-panel-list-entry-item > .bio-properties-panel-remove-entry {
+  margin-right: 2px;
 }
