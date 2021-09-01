@@ -1,4 +1,5 @@
 import {
+  act,
   render,
   waitFor
 } from '@testing-library/preact/pure';
@@ -82,7 +83,9 @@ describe('<ListGroup>', function() {
     expect(domClasses(list).has('open')).to.be.false;
 
     // when
-    await header.click();
+    await act(() => {
+      header.click();
+    });
 
     // then
     expect(domClasses(list).has('open')).to.be.false;
@@ -109,7 +112,9 @@ describe('<ListGroup>', function() {
     expect(domClasses(list).has('open')).to.be.false;
 
     // when
-    await header.click();
+    await act(() => {
+      header.click();
+    });
 
     // then
     expect(domClasses(list).has('open')).to.be.true;
@@ -164,7 +169,9 @@ describe('<ListGroup>', function() {
     const addEntry = domQuery('.bio-properties-panel-add-entry', container);
 
     // when
-    await addEntry.parentNode.click();
+    await act(() => {
+      addEntry.parentNode.click();
+    });
 
     // then
     expect(spy).to.have.been.called;

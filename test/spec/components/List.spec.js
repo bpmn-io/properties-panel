@@ -83,7 +83,9 @@ describe('<List>', function() {
     expect(domClasses(list).has('open')).to.be.false;
 
     // when
-    await header.click();
+    await act(() => {
+      header.click();
+    });
 
     // then
     expect(domClasses(list).has('open')).to.be.false;
@@ -110,7 +112,9 @@ describe('<List>', function() {
     expect(domClasses(list).has('open')).to.be.false;
 
     // when
-    await header.click();
+    await act(() => {
+      header.click();
+    });
 
     // then
     expect(domClasses(list).has('open')).to.be.true;
