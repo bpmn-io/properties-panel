@@ -22,7 +22,7 @@ const KEY_LENGTH = 6;
  * @returns {(element: object) => string}
  */
 export function useKeyFactory(dependencies = []) {
-  const map = useMemo(() => new WeakMap(), dependencies);
+  const map = useMemo(() => new Map(), dependencies);
 
   const getKey = el => {
     let key = map.get(el);
