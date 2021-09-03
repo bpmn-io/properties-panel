@@ -645,41 +645,47 @@ describe('<List>', function() {
   });
 
 
-  it('should remove items', function() {
+  describe('onRemove', function() {
 
-    // given
-    const items = [
-      {
-        id: 'item-1',
-        label: 'Item 1'
-      },
-      {
-        id: 'item-2',
-        label: 'Item 2'
-      },
-      {
-        id: 'item-3',
-        label: 'Item 3'
-      }
-    ];
+    it('should remove items', async function() {
 
-    const {
-      container,
-      rerender
-    } = createListEntry({ container: parentContainer, items });
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        },
+        {
+          id: 'item-2',
+          label: 'Item 2'
+        },
+        {
+          id: 'item-3',
+          label: 'Item 3'
+        }
+      ];
 
-    items.splice(0, 1);
+      const onRemove = item => items.splice(items.indexOf(item), 1);
 
-    // when
-    createListEntry({ items }, rerender);
+      const {
+        container,
+        rerender
+      } = createListEntry({ container: parentContainer, items, onRemove });
 
-    const list = domQuery('.bio-properties-panel-list-entry', container);
+      // when
+      await act(() => {
+        domQuery('.bio-properties-panel-remove-entry', container).click();
+      });
+      createListEntry({ items, onRemove }, rerender);
 
-    // then
-    expect(getListOrdering(list)).to.eql([
-      'item-2',
-      'item-3'
-    ]);
+      const list = domQuery('.bio-properties-panel-list-entry', container);
+
+      // then
+      expect(getListOrdering(list)).to.eql([
+        'item-2',
+        'item-3'
+      ]);
+    });
   });
 
 
