@@ -32,4 +32,19 @@ describe('hooks/useKeyFactory', function() {
     // then
     expect(firstKey).not.to.eql(secondKey);
   });
+
+
+  it('should work with primitives', function() {
+
+    // given
+    const { result } = renderHook(() => useKeyFactory());
+    const element = 'abc';
+
+    // when
+    const firstKey = result.current(element);
+    const secondKey = result.current(element);
+
+    // then
+    expect(firstKey).to.eql(secondKey);
+  });
 });
