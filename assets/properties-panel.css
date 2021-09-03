@@ -516,7 +516,7 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-list-entry.open:last-child::after {
   content: "";
   position: absolute;
-  left: 10px;
+  left: -17px;
   width: 2px;
   top: 0;
   bottom: 0;
@@ -524,6 +524,10 @@ textarea.bio-properties-panel-input {
 }
 
 /* List entry */
+
+.bio-properties-panel-list-entry {
+  position: relative;
+}
 
 .bio-properties-panel-list-entry-header {
   display: flex;
@@ -537,7 +541,7 @@ textarea.bio-properties-panel-input {
   width: 8px;
   height: 8px;
   position: absolute;
-  left: 7px;
+  left: -20px;
   top: 13px;
   border-radius: 50%;
   background-color: var(--color-grey-225-10-35);
