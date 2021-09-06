@@ -513,6 +513,11 @@ textarea.bio-properties-panel-input {
 }
 
 /* Side line extension for non-list entry or open list entry positioned as the last one. */
+.bio-properties-panel-collapsible-entry-entries .bio-properties-panel-entry:not(.bio-properties-panel-list-entry):last-child,
+.bio-properties-panel-list-entry.open:last-child {
+  position: relative;
+}
+
 .bio-properties-panel-collapsible-entry-entries .bio-properties-panel-entry:not(.bio-properties-panel-list-entry):last-child::after,
 .bio-properties-panel-list-entry.open:last-child::after {
   content: "";
