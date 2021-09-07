@@ -373,6 +373,15 @@ textarea.bio-properties-panel-input {
   font-size: 13px;
 }
 
+.bio-properties-panel-simple {
+  width: 100%;
+  margin-right: 12px;
+}
+
+.bio-properties-panel-simple + .bio-properties-panel-remove-entry {
+  margin: auto;
+} 
+
 /**
  * Toggle Switch
  */
