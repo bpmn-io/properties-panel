@@ -154,7 +154,7 @@ describe('<List>', function() {
   });
 
 
-  describe.skip('ordering', function() {
+  describe('ordering', function() {
 
     it('should create initial ordering from items', function() {
 
@@ -208,7 +208,7 @@ describe('<List>', function() {
       const {
         container,
         rerender
-      } = createListEntry({ container: parentContainer, items, shouldSort: false });
+      } = createListEntry({ container: parentContainer, items, compareFn: false });
 
       const list = domQuery('.bio-properties-panel-list-entry', container);
 
@@ -219,7 +219,7 @@ describe('<List>', function() {
       };
 
       // when
-      createListEntry({ element: newElement, items, shouldSort: false }, rerender);
+      createListEntry({ element: newElement, items, compareFn: false }, rerender);
 
       // then
       expect(getListOrdering(list)).to.eql([
@@ -295,7 +295,7 @@ describe('<List>', function() {
         }
       ];
 
-      const { container } = createListEntry({ container: parentContainer, items, shouldSort: false });
+      const { container } = createListEntry({ container: parentContainer, items, compareFn: false });
 
       const header = domQuery('.bio-properties-panel-list-entry-header', container);
 
@@ -487,8 +487,8 @@ describe('<List>', function() {
 
       // assume
       expect(getListOrdering(list)).to.eql([
-        'item-1',
-        'item-2'
+        'item-2',
+        'item-1'
       ]);
 
       // when
@@ -746,7 +746,8 @@ function createListEntry(options = {}, renderFn = render) {
     onRemove,
     open,
     container,
-    renderItem = defaultRenderItem
+    renderItem = defaultRenderItem,
+    compareFn = defaultCompareFn
   } = options;
 
   return renderFn(
@@ -758,7 +759,8 @@ function createListEntry(options = {}, renderFn = render) {
       onAdd={ onAdd }
       onRemove={ onRemove }
       open={ open }
-      renderItem={ renderItem } />,
+      renderItem={ renderItem }
+      compareFn={ compareFn } />,
     {
       container
     }
@@ -781,4 +783,8 @@ function getListOrdering(list) {
   });
 
   return ordering;
+}
+
+function defaultCompareFn(a, b) {
+  return a.label === b.label ? 0 : a.label > b.label ? 1 : -1;
 }
