@@ -471,6 +471,7 @@ textarea.bio-properties-panel-input {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  user-select: none;
 }
 
 .bio-properties-panel-collapsible-entry-arrow {
