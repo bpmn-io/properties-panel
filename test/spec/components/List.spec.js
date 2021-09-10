@@ -154,6 +154,50 @@ describe('<List>', function() {
   });
 
 
+  describe('autofocus', function() {
+
+    it('should focus first input when entry is added', async function() {
+
+      // given
+      const renderItem = item => <input class="bio-properties-panel-input" data-id={ item.id } />;
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        }
+      ];
+      const onAdd = () => items.push({
+        id: 'item-2',
+        label: 'Item 2'
+      });
+      const options = {
+        container: parentContainer,
+        items, onAdd,
+        renderItem,
+        open: true,
+        autoFocusEntry: true
+      };
+
+      const {
+        container,
+        rerender
+      } = createListEntry(options);
+
+      // when
+      await act(() => {
+        domQuery('.bio-properties-panel-add-entry', container).click();
+      });
+      createListEntry(options, rerender);
+
+      // then
+      const input = domQuery('[data-id="item-2"]', container);
+
+      expect(document.activeElement).to.eql(input);
+    });
+
+  });
+
+
   describe('ordering', function() {
 
     it('should create initial ordering from items', function() {
@@ -739,7 +783,7 @@ describe('<List>', function() {
 function createListEntry(options = {}, renderFn = render) {
   const {
     element = noopElement,
-    id,
+    id = 'list-id',
     label = 'List',
     items = [],
     onAdd,
@@ -747,7 +791,8 @@ function createListEntry(options = {}, renderFn = render) {
     open,
     container,
     renderItem = defaultRenderItem,
-    compareFn = defaultCompareFn
+    compareFn = defaultCompareFn,
+    autoFocusEntry = false
   } = options;
 
   return renderFn(
@@ -760,7 +805,8 @@ function createListEntry(options = {}, renderFn = render) {
       onRemove={ onRemove }
       open={ open }
       renderItem={ renderItem }
-      compareFn={ compareFn } />,
+      compareFn={ compareFn }
+      autoFocusEntry={ autoFocusEntry } />,
     {
       container
     }

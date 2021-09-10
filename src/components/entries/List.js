@@ -5,6 +5,10 @@ import {
 } from 'preact/hooks';
 
 import {
+  query as domQuery
+} from 'min-dom';
+
+import {
   useKeyFactory,
   usePrevious
 } from '../../hooks';
@@ -25,11 +29,12 @@ import {
  * @param {string} props.id
  * @param {*} props.element
  * @param {Function} props.onAdd
- * @param {Function} props.renderItem
+ * @param {(item: Item, index: number, isNew: boolean) => JSX.Element} props.renderItem
  * @param {string} [props.label='<empty>']
  * @param {Function} [props.onRemove]
  * @param {Item[]} [props.items]
  * @param {boolean} [props.open]
+ * @param {string} [props.autoFocusEntry]
  * @param {(a: Item, b: Item) => -1 | 0 | 1} [props.compareFn]
  * @returns
  */
@@ -43,6 +48,7 @@ export default function List(props) {
     open: shouldOpen,
     onAdd,
     onRemove,
+    autoFocusEntry,
     compareFn
   } = props;
 
@@ -55,6 +61,8 @@ export default function List(props) {
   const elementChanged = usePrevious(element) !== element;
   const shouldReset = opening || elementChanged;
   const sortedItems = useSortedItems(items, compareFn, shouldReset);
+
+  const newItems = useNewItems(items, elementChanged);
 
   useEffect(() => {
     if (open && !hasItems) {
@@ -116,8 +124,11 @@ export default function List(props) {
       {
         hasItems && (
           <ItemsList
+            autoFocusEntry={ autoFocusEntry }
+            id={ id }
             open={ open }
             items={ sortedItems }
+            newItems={ newItems }
             onRemove={ onRemove }
             renderItem={ renderItem }
           />
@@ -129,13 +140,29 @@ export default function List(props) {
 
 function ItemsList(props) {
   const {
+    autoFocusEntry,
+    id,
     items,
+    newItems,
     open,
     onRemove,
     renderItem
   } = props;
 
   const getKey = useKeyFactory();
+
+  const newItem = newItems[0];
+
+  useEffect(() => {
+    if (newItem && autoFocusEntry) {
+      const entry = domQuery(`[data-entry-id="${id}"]`);
+      const focusableInput = domQuery('.bio-properties-panel-input', entry);
+
+      if (focusableInput) {
+        focusableInput.focus();
+      }
+    }
+  }, [ newItem, autoFocusEntry, id ]);
 
   return (
     <ol class={ classnames(
@@ -147,7 +174,7 @@ function ItemsList(props) {
           const key = getKey(item);
 
           return (<li class="bio-properties-panel-list-entry-item" key={ key }>
-            {renderItem(item, index)}
+            {renderItem(item, index, item === newItem)}
             {
               onRemove && (
                 <button
@@ -205,4 +232,14 @@ function useSortedItems(currentItems, compareFn, shouldReset = false) {
   }
 
   return itemsRef.current;
+}
+
+function useNewItems(items = [], shouldReset) {
+  const previousItems = usePrevious(items.slice()) || [];
+
+  if (shouldReset) {
+    return [];
+  }
+
+  return previousItems ? items.filter(item => !previousItems.includes(item)) : [];
 }
