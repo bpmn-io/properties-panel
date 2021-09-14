@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.4.0
+
+* `FEAT`: add list entry ([#92](https://github.com/bpmn-io/properties-panel/issues/92))
+* `FEAT`: add simple text entry ([#94](https://github.com/bpmn-io/properties-panel/pull/94))
+* `FIX`: use default cursor when hovering collapsible headers ([#95](https://github.com/bpmn-io/properties-panel/pull/95))
+
 ## 0.3.0
 
 * `FEAT`: use semantic HTML for buttons ([#45](https://github.com/bpmn-io/properties-panel/issues/45))
