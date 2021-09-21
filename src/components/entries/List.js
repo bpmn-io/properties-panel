@@ -18,9 +18,9 @@ import {
 import classnames from 'classnames';
 
 import {
+  ArrowIcon,
   CreateIcon,
-  GroupArrowIcon,
-  ListDeleteIcon
+  DeleteIcon
 } from '../icons';
 
 /**
@@ -104,20 +104,30 @@ export default function List(props) {
         <div
           class="bio-properties-panel-list-entry-header-buttons"
         >
-          <button onClick={ addItem } class="bio-properties-panel-add-entry">
+          <button
+            title="Create new list item"
+            onClick={ addItem }
+            class="bio-properties-panel-add-entry"
+          >
             <CreateIcon />
           </button>
           {
             hasItems && (
-              <div class="bio-properties-panel-list-badge">
+              <div
+                title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
+                class="bio-properties-panel-list-badge"
+              >
                 { items.length }
               </div>
             )
           }
           {
             hasItems && (
-              <button class="bio-properties-panel-list-entry-arrow">
-                <GroupArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
+              <button
+                title="Toggle list item"
+                class="bio-properties-panel-arrow"
+              >
+                <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
               </button>
             )
           }
@@ -182,28 +192,21 @@ function ItemsList(props) {
           const key = getKey(item);
 
           return (<li class="bio-properties-panel-list-entry-item" key={ key }>
-            {renderItem(item, index, item === newItem)}
+            { renderItem(item, index, item === newItem) }
             {
               onRemove && (
                 <button
                   type="button"
-                  class="bio-properties-panel-remove-entry"
+                  title="Delete item"
+                  class="bio-properties-panel-remove-entry bio-properties-panel-remove-list-entry"
                   onClick={ () => onRemove && onRemove(item) }
-                ><ListDeleteIcon /></button>
+                ><DeleteIcon /></button>
               )
             }
           </li>);
         })
       }
     </ol>);
-}
-
-function getTitle(label, items) {
-  if (!items.length) {
-    return label;
-  }
-
-  return `${label} (${items.length} items)`;
 }
 
 /**

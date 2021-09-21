@@ -17,7 +17,7 @@ import {
   useLayoutState
 } from '../hooks';
 
-import { GroupArrowIcon } from './icons';
+import { ArrowIcon } from './icons';
 
 /**
  * @param {import('../PropertiesPanel').GroupDefinition} props
@@ -62,7 +62,8 @@ export default function Group(props) {
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id }>
     <div class={ classnames(
       'bio-properties-panel-group-header',
-      edited ? '' : 'empty'
+      edited ? '' : 'empty',
+      open? 'open' : ''
     ) } onClick={ toggleOpen }>
       <div title={ getTitleAttribute(label, edited) } class="bio-properties-panel-group-header-title">
         { label }
@@ -71,8 +72,11 @@ export default function Group(props) {
         {
           edited && <DataMarker />
         }
-        <button class="bio-properties-panel-group-header-button">
-          <GroupArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
+        <button
+          title="Toggle section"
+          class="bio-properties-panel-group-header-button bio-properties-panel-arrow"
+        >
+          <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
         </button>
       </div>
     </div>

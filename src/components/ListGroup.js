@@ -18,8 +18,8 @@ import {
 import ListItem from './ListItem';
 
 import {
-  CreateIcon,
-  GroupArrowIcon
+  ArrowIcon,
+  CreateIcon
 } from './icons';
 
 const noop = () => {};
@@ -148,7 +148,10 @@ export default function ListGroup(props) {
           AddContainer
             ? (
               <AddContainer>
-                <button class="bio-properties-panel-group-header-button bio-properties-panel-add-entry">
+                <button
+                  title="Create new list item"
+                  class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
+                >
                   <CreateIcon />
                 </button>
               </AddContainer>
@@ -167,8 +170,11 @@ export default function ListGroup(props) {
         {
           hasItems
             ? (
-              <button class="bio-properties-panel-group-header-button">
-                <GroupArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
+              <button
+                title="Toggle section"
+                class="bio-properties-panel-group-header-button bio-properties-panel-arrow"
+              >
+                <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
               </button>
             )
             : null
