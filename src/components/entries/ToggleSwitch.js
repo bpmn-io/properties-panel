@@ -55,7 +55,7 @@ export default function ToggleSwitchEntry(props) {
 
   const value = getValue();
   return (
-    <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <div class="bio-properties-panel-entry bio-properties-panel-toggle-switch-entry" data-entry-id={ id }>
       <ToggleSwitch id={ id } label={ label } value={ value } onInput={ setValue } switcherLabel={ switcherLabel } />
       { description && <div class="bio-properties-panel-description">{ description }</div> }
     </div>

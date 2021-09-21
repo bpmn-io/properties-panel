@@ -45,7 +45,7 @@ export default function CheckboxEntry(props) {
   const value = getValue(element);
 
   return (
-    <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <div class="bio-properties-panel-entry bio-properties-panel-checkbox-entry" data-entry-id={ id }>
       <Checkbox id={ id } label={ label } onChange={ setValue } value={ value } />
     </div>
   );
