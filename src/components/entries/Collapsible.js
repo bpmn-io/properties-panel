@@ -5,8 +5,8 @@ import {
 import classnames from 'classnames';
 
 import {
-  ListArrowIcon,
-  ListDeleteIcon,
+  ArrowIcon,
+  DeleteIcon,
 } from '../icons';
 
 
@@ -41,16 +41,19 @@ export default function CollapsibleEntry(props) {
           ) }>
           { label || placeholderLabel }
         </div>
-        <div class="bio-properties-panel-collapsible-entry-arrow">
-          <ListArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
-        </div>
+        <button
+          title="Toggle list item"
+          class="bio-properties-panel-arrow  bio-properties-panel-collapsible-entry-arrow"
+        >
+          <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
+        </button>
         {
           RemoveContainer
             ?
             (
               <RemoveContainer>
-                <button class="bio-properties-panel-remove-entry">
-                  <ListDeleteIcon />
+                <button title="Delete item" class="bio-properties-panel-remove-entry">
+                  <DeleteIcon />
                 </button>
               </RemoveContainer>
             )
