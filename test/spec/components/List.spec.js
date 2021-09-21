@@ -881,10 +881,10 @@ describe('<List>', function() {
 
       const header = domQuery('.bio-properties-panel-list-entry-header', container);
 
-      const title = domQuery('.bio-properties-panel-list-entry-header-title', header);
+      const badge = domQuery('.bio-properties-panel-list-badge', header);
 
       // then
-      expect(domAttr(title, 'title')).to.eql('List (2 items)');
+      expect(domAttr(badge, 'title')).to.eql('List contains 2 items');
     });
 
   });

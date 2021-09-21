@@ -35,6 +35,7 @@ export default function CollapsibleEntry(props) {
       ) }>
       <div class="bio-properties-panel-collapsible-entry-header" onClick={ toggleOpen }>
         <div
+          title={ label || placeholderLabel }
           class={ classnames(
             'bio-properties-panel-collapsible-entry-header-title',
             !label && 'empty'

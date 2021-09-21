@@ -90,11 +90,12 @@ export default function List(props) {
       class={ classnames(
         'bio-properties-panel-entry',
         'bio-properties-panel-list-entry',
+        hasItems ? '' : 'empty',
         open ? 'open' : ''
       ) }>
       <div class="bio-properties-panel-list-entry-header" onClick={ toggleOpen }>
         <div
-          title={ getTitle(label, items) }
+          title={ label }
           class={ classnames(
             'bio-properties-panel-list-entry-header-title',
             open && 'open'
