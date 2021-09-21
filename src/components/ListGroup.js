@@ -157,6 +157,12 @@ export default function ListGroup(props) {
                   class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
                 >
                   <CreateIcon />
+                  {
+                    !hasItems ? (
+                      <div class="bio-properties-panel-add-entry-label">Create</div>
+                    )
+                      : null
+                  }
                 </button>
               </AddContainer>
             )

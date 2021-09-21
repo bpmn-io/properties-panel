@@ -111,6 +111,12 @@ export default function List(props) {
             class="bio-properties-panel-add-entry"
           >
             <CreateIcon />
+            {
+              !hasItems ? (
+                <div class="bio-properties-panel-add-entry-label">Create</div>
+              )
+                : null
+            }
           </button>
           {
             hasItems && (
