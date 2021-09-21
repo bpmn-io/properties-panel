@@ -93,13 +93,6 @@ export default function Group(props) {
 
 function DataMarker() {
   return (
-    <div class="bio-properties-panel-dot">
-      <svg
-        aria-label="edited" role="img" xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 100 100"
-      >
-        <circle fill="currentColor" cx="50" cy="50" r="50" />
-      </svg>
-    </div>
+    <div title="Section contains data" class="bio-properties-panel-dot"></div>
   );
 }
