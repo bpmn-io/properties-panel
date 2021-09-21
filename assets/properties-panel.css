@@ -292,63 +292,13 @@ textarea.bio-properties-panel-input,
 
 .bio-properties-panel-input[type="checkbox"], .bio-properties-panel-input[type="radio"] {
   margin: 0;
+  vertical-align: middle;
 }
 
-.bio-properties-panel-input[type="checkbox"] + label::after,
-.bio-properties-panel-input[type="radio"] + label::after {
-  -webkit-transform: scale(0);
-  -ms-transform: scale(0);
-  -o-transform: scale(0);
-  transform: scale(0);
-}
-
-.bio-properties-panel-input[type="checkbox"]:checked + label::after,
-.bio-properties-panel-input[type="radio"]:checked + label::after {
-  -webkit-transform: scale(1);
-  -ms-transform: scale(1);
-  -o-transform: scale(1);
-  transform: scale(1);
-}
-
-.bio-properties-panel-checkbox {
-  margin-top: 12px;
-  margin-bottom: 6px;
-}
-
-.bio-properties-panel-checkbox .bio-properties-panel-input {
-  position: absolute;
-  opacity: 0;
-  z-index: -1;
-}
-
-.bio-properties-panel-checkbox .bio-properties-panel-label {
-  position: relative;
+.bio-properties-panel-checkbox > .bio-properties-panel-label {
   display: inline-block;
-  padding: 0 0 0 24px;
-}
-
-.bio-properties-panel-checkbox .bio-properties-panel-label::before,
-.bio-properties-panel-checkbox .bio-properties-panel-label::after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 16px;
-  height: 16px;
-}
-
-.bio-properties-panel-checkbox .bio-properties-panel-label::before {
-  content: " ";
-  border: 1px solid var(--color-input-border);
-  border-radius: 3px;
-  background-color:var(--color-000000-opacity-5);
-}
-
-.bio-properties-panel-checkbox .bio-properties-panel-label::after {
-  content: "\2714";
-  color: var(--color-text-base);
-  line-height: 1.5;
-  text-align: center;
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
 textarea.bio-properties-panel-input {
