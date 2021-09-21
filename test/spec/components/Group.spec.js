@@ -169,10 +169,10 @@ describe('<Group>', function() {
 
       const header = domQuery('.bio-properties-panel-group-header', result.container);
 
-      const title = domQuery('.bio-properties-panel-group-header-title', header);
+      const dataMarker = domQuery('.bio-properties-panel-dot', header);
 
       // then
-      expect(domAttr(title, 'title')).to.eql('Group (edited)');
+      expect(domAttr(dataMarker, 'title')).to.eql('Section contains data');
     });
 
   });

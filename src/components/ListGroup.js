@@ -137,10 +137,14 @@ export default function ListGroup(props) {
     <div
       class={ classnames(
         'bio-properties-panel-group-header',
-        hasItems ? '' : 'empty'
+        hasItems ? '' : 'empty',
+        (hasItems && open) ? 'open' : ''
       ) }
       onClick={ hasItems ? toggleOpen : noop }>
-      <div title={ getTitleAttribute(label, items) } class="bio-properties-panel-group-header-title">
+      <div
+        title={ label }
+        class="bio-properties-panel-group-header-title"
+      >
         { label }
       </div>
       <div class="bio-properties-panel-group-header-buttons">
@@ -161,7 +165,10 @@ export default function ListGroup(props) {
         {
           hasItems
             ? (
-              <div class="bio-properties-panel-list-badge">
+              <div
+                title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
+                class="bio-properties-panel-list-badge"
+              >
                 { items.length }
               </div>
             )
@@ -223,10 +230,4 @@ function getItem(items, id) {
 
 function createOrdering(items) {
   return items.map(i => i.id);
-}
-
-function getTitleAttribute(label, items) {
-  const count = items.length;
-
-  return label + (count ? ` (${count} item${count != 1 ? 's' : ''})` : '');
 }

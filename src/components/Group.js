@@ -65,7 +65,7 @@ export default function Group(props) {
       edited ? '' : 'empty',
       open? 'open' : ''
     ) } onClick={ toggleOpen }>
-      <div title={ getTitleAttribute(label, edited) } class="bio-properties-panel-group-header-title">
+      <div title={ label } class="bio-properties-panel-group-header-title">
         { label }
       </div>
       <div class="bio-properties-panel-group-header-buttons">
@@ -102,11 +102,4 @@ function DataMarker() {
       </svg>
     </div>
   );
-}
-
-
-// helper //////////////
-
-function getTitleAttribute(label, edited) {
-  return label + (edited ? ' (edited)' : '');
 }
