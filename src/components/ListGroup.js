@@ -1,6 +1,6 @@
 import {
-  useState,
-  useEffect
+  useEffect,
+  useState
 } from 'preact/hooks';
 
 import classnames from 'classnames';
@@ -11,6 +11,7 @@ import {
 } from 'min-dash';
 
 import {
+  useLayoutState,
   usePrevious
 } from '../hooks';
 
@@ -36,7 +37,12 @@ export default function ListGroup(props) {
     shouldSort = true
   } = props;
 
-  const [ open, setOpen ] = useState(false);
+
+  const [ open, setOpen ] = useLayoutState(
+    [ 'groups', id, 'open' ],
+    false
+  );
+
   const [ ordering, setOrdering ] = useState([]);
   const [ newItemAdded, setNewItemAdded ] = useState(false);
 
@@ -77,7 +83,7 @@ export default function ListGroup(props) {
       // sort + open if closed
       if (!open) {
         newOrdering = createOrdering(sortItems(items));
-        setOpen(true);
+        toggleOpen();
       }
 
       // add new items on top

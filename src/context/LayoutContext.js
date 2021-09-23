@@ -5,6 +5,7 @@ import {
 const LayoutContext = createContext({
   layout: {},
   setLayout: () => {},
+  getLayoutForKey: () => {},
   setLayoutForKey: () => {}
 });
 

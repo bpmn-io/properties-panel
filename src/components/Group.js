@@ -13,6 +13,10 @@ import {
   isFunction
 } from 'min-dash';
 
+import {
+  useLayoutState
+} from '../hooks';
+
 import { GroupArrowIcon } from './icons';
 
 /**
@@ -25,8 +29,10 @@ export default function Group(props) {
     label
   } = props;
 
-  const [ open, setOpen ] = useState(false);
-
+  const [ open, setOpen ] = useLayoutState(
+    [ 'groups', id, 'open' ],
+    false
+  );
   const toggleOpen = () => setOpen(!open);
 
   const [ edited, setEdited ] = useState(false);

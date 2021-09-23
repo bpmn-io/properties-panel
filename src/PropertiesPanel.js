@@ -3,6 +3,11 @@ import {
   useEffect
 } from 'preact/hooks';
 
+import {
+  get,
+  set
+} from 'min-dash';
+
 import classnames from 'classnames';
 
 import Header from './components/Header';
@@ -82,16 +87,18 @@ export default function PropertiesPanel(props) {
     }
   }, [ layout, layoutChanged ]);
 
+  const getLayoutForKey = (key, defaultValue) => {
+    return get(layout, key, defaultValue);
+  };
+
   const setLayoutForKey = (key, config) => {
-    setLayout({
-      ...layout,
-      [key]: config
-    });
+    setLayout(set(layout, key, config));
   };
 
   const layoutContext = {
     layout,
     setLayout,
+    getLayoutForKey,
     setLayoutForKey
   };
 
