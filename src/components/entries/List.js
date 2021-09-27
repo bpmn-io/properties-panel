@@ -8,6 +8,8 @@ import {
   query as domQuery
 } from 'min-dom';
 
+import { isFunction } from 'min-dash';
+
 import {
   useKeyFactory,
   usePrevious
@@ -159,7 +161,13 @@ function ItemsList(props) {
       const focusableInput = domQuery('.bio-properties-panel-input', entry);
 
       if (focusableInput) {
-        focusableInput.focus();
+
+        if (isFunction(focusableInput.select)) {
+          focusableInput.select();
+        } else if (isFunction(focusableInput.focus)) {
+          focusableInput.focus();
+        }
+
       }
     }
   }, [ newItem, autoFocusEntry, id ]);

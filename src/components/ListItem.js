@@ -6,6 +6,8 @@ import {
   query as domQuery
 } from 'min-dom';
 
+import { isFunction } from 'min-dash';
+
 import CollapsibleEntry from './entries/Collapsible';
 
 /**
@@ -25,7 +27,13 @@ export default function ListItem(props) {
       const focusableInput = domQuery('.bio-properties-panel-input', entry);
 
       if (focusableInput) {
-        focusableInput.select();
+
+        if (isFunction(focusableInput.select)) {
+          focusableInput.select();
+        } else if (isFunction(focusableInput.focus)) {
+          focusableInput.focus();
+        }
+
       }
     }
   }, [ autoOpen, autoFocusEntry ]);

@@ -15,6 +15,9 @@ import {
 
 import ListItem from 'src/components/ListItem';
 
+import TextFieldEntry from 'src/components/entries/TextField';
+import SelectEntry from 'src/components/entries/Select';
+
 insertCoreStyles();
 
 
@@ -62,6 +65,58 @@ describe('<ListItem>', function() {
 
     // then
     expect(domClasses(collapsibleEntry).has('open')).to.be.true;
+  });
+
+
+  describe('auto-focus', function() {
+
+    it('should auto-focus input on list item created', function() {
+
+      // given
+      const entries = [
+        {
+          id: 'foo',
+          component: <TextFieldEntry debounce={ () => {} } id="foo" getValue={ () => {} } />
+        }
+      ];
+
+      const result = createListItem({
+        autoFocusEntry: 'foo',
+        autoOpen: true,
+        container: parentContainer,
+        entries
+      });
+
+      const input = domQuery('#bio-properties-panel-foo', result.container);
+
+      // then
+      expect(document.activeElement).to.equal(input);
+    });
+
+
+    it('should auto-focus select on list item created', function() {
+
+      // given
+      const entries = [
+        {
+          id: 'foo',
+          component: <SelectEntry id="foo" getOptions={ () => [] } getValue={ () => {} } />
+        }
+      ];
+
+      const result = createListItem({
+        autoFocusEntry: 'foo',
+        autoOpen: true,
+        container: parentContainer,
+        entries
+      });
+
+      const select = domQuery('#bio-properties-panel-foo', result.container);
+
+      // then
+      expect(document.activeElement).to.equal(select);
+    });
+
   });
 
 });

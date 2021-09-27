@@ -154,28 +154,34 @@ describe('<List>', function() {
   });
 
 
-  describe('autofocus', function() {
+  describe('auto-focus', function() {
 
-    it('should focus first input when entry is added', async function() {
+    it('should auto-focus first input entry added', async function() {
 
       // given
-      const renderItem = item => <input class="bio-properties-panel-input" data-id={ item.id } />;
+      const renderItem = item => {
+        return <input class="bio-properties-panel-input" data-id={ item.id } />;
+      };
+
       const items = [
         {
           id: 'item-1',
           label: 'Item 1'
         }
       ];
+
       const onAdd = () => items.push({
         id: 'item-2',
         label: 'Item 2'
       });
+
       const options = {
+        autoFocusEntry: true,
         container: parentContainer,
-        items, onAdd,
-        renderItem,
+        items,
+        onAdd,
         open: true,
-        autoFocusEntry: true
+        renderItem
       };
 
       const {
@@ -187,12 +193,63 @@ describe('<List>', function() {
       await act(() => {
         domQuery('.bio-properties-panel-add-entry', container).click();
       });
+
       createListEntry(options, rerender);
 
       // then
       const input = domQuery('[data-id="item-2"]', container);
 
       expect(document.activeElement).to.eql(input);
+    });
+
+
+    it('should auto-focus first select on entry added', async function() {
+
+      // given
+      const renderItem = item => {
+        return <select class="bio-properties-panel-input" data-id={ item.id }>
+          <option value="foo">Foo</option>
+          <option value="bar">Bar</option>
+        </select>;
+      };
+
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        }
+      ];
+
+      const onAdd = () => items.push({
+        id: 'item-2',
+        label: 'Item 2'
+      });
+
+      const options = {
+        autoFocusEntry: true,
+        container: parentContainer,
+        items,
+        onAdd,
+        open: true,
+        renderItem
+      };
+
+      const {
+        container,
+        rerender
+      } = createListEntry(options);
+
+      // when
+      await act(() => {
+        domQuery('.bio-properties-panel-add-entry', container).click();
+      });
+
+      createListEntry(options, rerender);
+
+      // then
+      const select = domQuery('[data-id="item-2"]', container);
+
+      expect(document.activeElement).to.eql(select);
     });
 
   });
