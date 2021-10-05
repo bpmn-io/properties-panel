@@ -238,18 +238,28 @@
   margin-right: 0;
 }
 
+.bio-properties-panel-add-container {
+  pointer-events: none;
+}
+
 .bio-properties-panel-add-entry {
+  pointer-events: all;
   fill: var(--add-entry-fill-color);
   border-radius: 11px;
 }
 
 .bio-properties-panel-group-header.empty .bio-properties-panel-add-entry {
   fill: var(--add-entry-empty-fill-color);
-  margin-right: 19px;
+  margin-right: 69px;
   padding-left: 6px;
 }
 
+.bio-properties-panel-group-header.empty .bio-properties-panel-add-entry:hover {
+  margin-right: 19px;
+}
+
 .bio-properties-panel-group-header.empty .bio-properties-panel-add-entry-label {
+  display: none;
   color: var(--add-entry-label-color);
   padding: 4px 6px 3px 2px;
 }
@@ -257,6 +267,10 @@
 .bio-properties-panel-group-header-button.bio-properties-panel-add-entry:hover {
   background-color: var(--add-entry-hover-background-color);
   fill: var(--add-entry-hover-fill-color);
+}
+
+.bio-properties-panel-group-header-button.bio-properties-panel-add-entry:hover .bio-properties-panel-add-entry-label {
+  display: block;
 }
 
 .bio-properties-panel-group-entries {
@@ -559,7 +573,12 @@ textarea.bio-properties-panel-input {
   align-self: center;
 }
 
+.bio-properties-panel-remove-container {
+  pointer-events: none;
+}
+
 .bio-properties-panel-remove-entry {
+  pointer-events: all;
   display: flex;
   align-items: center;
   justify-content: center;
