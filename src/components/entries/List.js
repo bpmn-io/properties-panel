@@ -228,10 +228,12 @@ function useSortedItems(currentItems, compareFn, shouldReset = false) {
   } else {
     const items = itemsRef.current;
 
-    // (2) Move new items to the beginning of the list.
+    // (2) Add new item to the list.
     for (const item of currentItems) {
       if (!items.includes(item)) {
-        items.unshift(item);
+
+        // Unshift or push depending on whether we have a compareFn
+        compareFn ? items.unshift(item) : items.push(item);
       }
     }
 
