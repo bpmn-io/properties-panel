@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.4.2
+
+* `FIX`: make auto-focus work for select elements ([#101](https://github.com/bpmn-io/properties-panel/pull/101))
+
 ## 0.4.1
 
 * `CHORE`: unbuild custom checkbox component ([#97](https://github.com/bpmn-io/properties-panel/pull/97))
