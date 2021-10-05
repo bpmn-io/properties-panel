@@ -181,7 +181,8 @@ describe('<List>', function() {
         items,
         onAdd,
         open: true,
-        renderItem
+        renderItem,
+        compareFn: defaultCompareFn
       };
 
       const {
@@ -231,7 +232,8 @@ describe('<List>', function() {
         items,
         onAdd,
         open: true,
-        renderItem
+        renderItem,
+        compareFn: defaultCompareFn
       };
 
       const {
@@ -363,7 +365,7 @@ describe('<List>', function() {
       };
 
       // when
-      createListEntry({ element: newElement, items }, rerender);
+      createListEntry({ element: newElement, items, compareFn: defaultCompareFn }, rerender);
 
       // then
       expect(getListOrdering(list)).to.eql([
@@ -439,7 +441,11 @@ describe('<List>', function() {
         }
       ];
 
-      const { container } = createListEntry({ container: parentContainer, items });
+      const { container } = createListEntry({
+        container: parentContainer,
+        items,
+        compareFn: defaultCompareFn
+      });
 
       const header = domQuery('.bio-properties-panel-list-entry-header', container);
 
@@ -460,7 +466,7 @@ describe('<List>', function() {
     });
 
 
-    it('should add new items on top', function() {
+    it('should add new item on top given sorting is enabled', function() {
 
       // given
       const items = [
@@ -494,7 +500,7 @@ describe('<List>', function() {
       ];
 
       // when
-      createListEntry({ items: newItems }, rerender);
+      createListEntry({ items: newItems, compareFn: defaultCompareFn }, rerender);
 
       // then
       expect(getListOrdering(list)).to.eql([
@@ -502,6 +508,52 @@ describe('<List>', function() {
         'item-1',
         'item-2',
         'item-3'
+      ]);
+    });
+
+
+    it('should add new item to bottom given sorting is disabled', function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        },
+        {
+          id: 'item-2',
+          label: 'Item 2'
+        },
+        {
+          id: 'item-3',
+          label: 'Item 3'
+        }
+      ];
+
+      const {
+        container,
+        rerender
+      } = createListEntry({ container: parentContainer, items, compareFn: false });
+
+      const list = domQuery('.bio-properties-panel-list-entry', container);
+
+      const newItems = [
+        ...items,
+        {
+          id: 'item-4',
+          label: 'Item 4'
+        }
+      ];
+
+      // when
+      createListEntry({ items: newItems, compareFn: false }, rerender);
+
+      // then
+      expect(getListOrdering(list)).to.eql([
+        'item-1',
+        'item-2',
+        'item-3',
+        'item-4'
       ]);
     });
 
@@ -574,7 +626,12 @@ describe('<List>', function() {
       const {
         container,
         rerender
-      } = createListEntry({ container: parentContainer, label: 'List', items });
+      } = createListEntry({
+        container: parentContainer,
+        label: 'List',
+        items,
+        compareFn: defaultCompareFn
+      });
 
       const newItems = [
         ...items,
@@ -593,7 +650,7 @@ describe('<List>', function() {
       ]);
 
       // when
-      createListEntry({ items: newItems }, rerender);
+      createListEntry({ items: newItems, compareFn: defaultCompareFn }, rerender);
 
       // then
       expect(getListOrdering(list)).to.eql([
@@ -625,7 +682,7 @@ describe('<List>', function() {
       const {
         container,
         rerender
-      } = createListEntry({ container: parentContainer, items });
+      } = createListEntry({ container: parentContainer, items, compareFn: defaultCompareFn });
 
       const header = domQuery('.bio-properties-panel-list-entry-header', container);
 
@@ -645,7 +702,7 @@ describe('<List>', function() {
       items[2].label = 'aaa';
 
       // when
-      createListEntry({ items }, rerender);
+      createListEntry({ items, compareFn: defaultCompareFn }, rerender);
 
       // then
       expect(getListOrdering(list)).to.eql([
@@ -673,7 +730,7 @@ describe('<List>', function() {
       const {
         container,
         rerender
-      } = createListEntry({ container: parentContainer, items });
+      } = createListEntry({ container: parentContainer, items, compareFn: defaultCompareFn });
 
       const header = domQuery('.bio-properties-panel-list-entry-header', container);
 
@@ -700,7 +757,7 @@ describe('<List>', function() {
         }
       ];
 
-      createListEntry({ items }, rerender);
+      createListEntry({ items, compareFn: defaultCompareFn }, rerender);
 
       expect(getListOrdering(list)).to.eql([
         'item-3',
@@ -711,7 +768,7 @@ describe('<List>', function() {
       // (3) change
       items[0].label = 'aaa';
 
-      createListEntry({ items }, rerender);
+      createListEntry({ items, compareFn: defaultCompareFn }, rerender);
 
       expect(getListOrdering(list)).to.eql([
         'item-3',
@@ -722,7 +779,7 @@ describe('<List>', function() {
       // (4) remove
       items.splice(1, 1);
 
-      createListEntry({ items }, rerender);
+      createListEntry({ items, compareFn: defaultCompareFn }, rerender);
 
       expect(getListOrdering(list)).to.eql([
         'item-3',
@@ -848,7 +905,7 @@ function createListEntry(options = {}, renderFn = render) {
     open,
     container,
     renderItem = defaultRenderItem,
-    compareFn = defaultCompareFn,
+    compareFn,
     autoFocusEntry = false
   } = options;
 
