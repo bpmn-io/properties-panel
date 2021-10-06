@@ -46,7 +46,8 @@ const DEFAULT_LAYOUT = {
  *    id: String,
  *    items: Array<ListItemDefinition>,
  *    label: String,
- *    shouldSort?: Boolean
+ *    shouldSort?: Boolean,
+ *    shouldOpen?: Boolean
  * } } ListGroupDefinition
  *
  * @typedef { {

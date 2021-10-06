@@ -34,7 +34,8 @@ export default function ListGroup(props) {
     items,
     label,
     add: AddContainer,
-    shouldSort = true
+    shouldSort = true,
+    shouldOpen = true
   } = props;
 
 
@@ -50,7 +51,7 @@ export default function ListGroup(props) {
   const prevElement = usePrevious(element);
 
   const elementChanged = element !== prevElement;
-  const shouldHandleEffects = !elementChanged && shouldSort;
+  const shouldHandleEffects = !elementChanged && (shouldSort || shouldOpen);
 
   // reset initial ordering when element changes (before first render)
   if (elementChanged) {
@@ -80,17 +81,23 @@ export default function ListGroup(props) {
 
       let newOrdering = ordering;
 
-      // sort + open if closed
-      if (!open) {
-        newOrdering = createOrdering(sortItems(items));
+      // open if not open and configured
+      if (!open && shouldOpen) {
         toggleOpen();
+
+        // if I opened and I should sort, then sort items
+        if (shouldSort) {
+          newOrdering = createOrdering(sortItems(items));
+        }
       }
 
-      // add new items on top
-      newOrdering = removeDuplicates([
-        ...add,
-        ...newOrdering
-      ]);
+      // add new items on top or bottom depending on sorting behavior
+      newOrdering = newOrdering.filter(item => !add.includes(item));
+      if (shouldSort) {
+        newOrdering.unshift(...add);
+      } else {
+        newOrdering.push(...add);
+      }
 
       setOrdering(newOrdering);
       setNewItemAdded(true);
@@ -99,14 +106,13 @@ export default function ListGroup(props) {
     }
   }, [ items, open, shouldHandleEffects ]);
 
-  // (2) sort items on open
+  // (2) sort items on open if shouldSort is set
   useEffect(() => {
 
-    // we already sorted as items were added
-    if (shouldHandleEffects && open && !newItemAdded) {
+    if (shouldSort && open && !newItemAdded) {
       setOrdering(createOrdering(sortItems(items)));
     }
-  }, [ open, shouldHandleEffects ]);
+  }, [ open, shouldSort ]);
 
   // (3) items were deleted
   useEffect(() => {
@@ -184,7 +190,9 @@ export default function ListGroup(props) {
           return (
             <ListItem
               key={ item.id }
-              autoOpen={ index === 0 && newItemAdded } // open first item when recently added
+
+              // if item was added, open first or last item based on ordering
+              autoOpen={ newItemAdded && (shouldSort ? index === 0 : index === ordering.length - 1) }
               { ...item } />
           );
         })
@@ -209,10 +217,6 @@ function getItem(items, id) {
 
 function createOrdering(items) {
   return items.map(i => i.id);
-}
-
-function removeDuplicates(items) {
-  return items.filter((i, index) => items.indexOf(i) === index);
 }
 
 function getTitleAttribute(label, items) {

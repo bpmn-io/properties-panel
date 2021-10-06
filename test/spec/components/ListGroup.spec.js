@@ -121,42 +121,6 @@ describe('<ListGroup>', function() {
   });
 
 
-  it('should open on adding new item', function() {
-
-    // given
-    const items = [
-      {
-        id: 'item-1',
-        label: 'Item 1'
-      }
-    ];
-
-    const {
-      container,
-      rerender
-    } = createListGroup({ container: parentContainer, items });
-
-    const list = domQuery('.bio-properties-panel-list', container);
-
-    // assume
-    expect(domClasses(list).has('open')).to.be.false;
-
-    const newItems = [
-      ...items,
-      {
-        id: 'item-2',
-        label: 'Item 2'
-      }
-    ];
-
-    // when
-    createListGroup({ items: newItems }, rerender);
-
-    // then
-    expect(domClasses(list).has('open')).to.be.true;
-  });
-
-
   it('should wrap add container', async function() {
 
     // given
@@ -190,494 +154,807 @@ describe('<ListGroup>', function() {
   });
 
 
-  describe('ordering', function() {
+  describe('behaviors', function() {
 
-    it('should create initial ordering from items', function() {
+    describe('sorting', function() {
 
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'Item 1'
-        },
-        {
-          id: 'item-2',
-          label: 'Item 2'
-        },
-        {
-          id: 'item-3',
-          label: 'Item 2'
-        }
-      ];
+      it('should sort per default', async function() {
 
-      const { container } = createListGroup({ container: parentContainer, items });
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'ab'
+          },
+          {
+            id: 'item-3',
+            label: 'def03'
+          },
+          {
+            id: 'item-4',
+            label: 'def04'
+          }
+        ];
 
-      const list = domQuery('.bio-properties-panel-list', container);
+        const { container } = createListGroup({ container: parentContainer, items });
 
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-1',
-        'item-2',
-        'item-3'
-      ]);
-    });
+        const header = domQuery('.bio-properties-panel-group-header', container);
 
+        const list = domQuery('.bio-properties-panel-list', container);
 
-    it('should re-iniate ordering when element changed (unsorted)', async function() {
+        // when
+        waitFor(async () => {
+          await header.click();
+        });
 
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'xyz'
-        },
-        {
-          id: 'item-2',
-          label: 'ab'
-        },
-        {
-          id: 'item-3',
-          label: 'def03'
-        }
-      ];
-
-      const {
-        container,
-        rerender
-      } = createListGroup({ container: parentContainer, items, shouldSort: false });
-
-      const list = domQuery('.bio-properties-panel-list', container);
-
-      // when
-      const newElement = {
-        ...noopElement,
-        id: 'bar'
-      };
-
-      // when
-      createListGroup({ element: newElement, items, shouldSort: false }, rerender);
-
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-1',
-        'item-2',
-        'item-3'
-      ]);
-    });
-
-
-    it('should re-iniate ordering when element changed (sorted)', async function() {
-
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'xyz'
-        },
-        {
-          id: 'item-2',
-          label: 'ab'
-        },
-        {
-          id: 'item-3',
-          label: 'def03'
-        }
-      ];
-
-      const {
-        container,
-        rerender
-      } = createListGroup({ container: parentContainer, items });
-
-      const list = domQuery('.bio-properties-panel-list', container);
-
-      // when
-      const newElement = {
-        ...noopElement,
-        id: 'bar'
-      };
-
-      // when
-      createListGroup({ element: newElement, items }, rerender);
-
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-2',
-        'item-3',
-        'item-1'
-      ]);
-    });
-
-
-    it('should NOT sort if configured', async function() {
-
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'xyz'
-        },
-        {
-          id: 'item-2',
-          label: 'ab'
-        },
-        {
-          id: 'item-3',
-          label: 'def03'
-        },
-        {
-          id: 'item-4',
-          label: 'def04'
-        }
-      ];
-
-      const { container } = createListGroup({ container: parentContainer, items, shouldSort: false });
-
-      const header = domQuery('.bio-properties-panel-group-header', container);
-
-      const list = domQuery('.bio-properties-panel-list', container);
-
-      // when
-      waitFor(async () => {
-        await header.click();
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-2',
+          'item-3',
+          'item-4',
+          'item-1'
+        ]);
       });
 
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-1',
-        'item-2',
-        'item-3',
-        'item-4'
-      ]);
-    });
 
+      it('should create initial sorting from items', function() {
 
-    it('should order alphanumeric on open (label)', async function() {
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          },
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          },
+          {
+            id: 'item-3',
+            label: 'Item 2'
+          }
+        ];
 
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'xyz'
-        },
-        {
-          id: 'item-2',
-          label: 'ab'
-        },
-        {
-          id: 'item-3',
-          label: 'def03'
-        },
-        {
-          id: 'item-4',
-          label: 'def04'
-        }
-      ];
+        const { container } = createListGroup({ container: parentContainer, items });
 
-      const { container } = createListGroup({ container: parentContainer, items });
+        const list = domQuery('.bio-properties-panel-list', container);
 
-      const header = domQuery('.bio-properties-panel-group-header', container);
-
-      const list = domQuery('.bio-properties-panel-list', container);
-
-      // when
-      waitFor(async () => {
-        await header.click();
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-1',
+          'item-2',
+          'item-3'
+        ]);
       });
 
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-2',
-        'item-3',
-        'item-4',
-        'item-1'
-      ]);
-    });
 
+      it('should re-iniate sorting when element changed (unsorted)', async function() {
 
-    it('should add new items on top', function() {
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'ab'
+          },
+          {
+            id: 'item-3',
+            label: 'def03'
+          }
+        ];
 
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'Item 1'
-        },
-        {
-          id: 'item-2',
-          label: 'Item 2'
-        },
-        {
-          id: 'item-3',
-          label: 'Item 3'
-        }
-      ];
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items, shouldSort: false });
 
-      const {
-        container,
-        rerender
-      } = createListGroup({ container: parentContainer, items });
+        const list = domQuery('.bio-properties-panel-list', container);
 
-      const list = domQuery('.bio-properties-panel-list', container);
+        // when
+        const newElement = {
+          ...noopElement,
+          id: 'bar'
+        };
 
-      const newItems = [
-        ...items,
-        {
-          id: 'item-4',
-          label: 'Item 4'
-        }
-      ];
+        // when
+        createListGroup({ element: newElement, items, shouldSort: false }, rerender);
 
-      // when
-      createListGroup({ items: newItems }, rerender);
-
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-4',
-        'item-1',
-        'item-2',
-        'item-3'
-      ]);
-    });
-
-
-    it('should NOT add new items on top - element changed', function() {
-
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'Item 1'
-        },
-        {
-          id: 'item-2',
-          label: 'Item 2'
-        },
-        {
-          id: 'item-3',
-          label: 'Item 3'
-        }
-      ];
-
-      const {
-        container,
-        rerender
-      } = createListGroup({ container: parentContainer, items });
-
-      const list = domQuery('.bio-properties-panel-list', container);
-
-      const newItems = [
-        ...items,
-        {
-          id: 'item-4',
-          label: 'Item 4'
-        }
-      ];
-
-      const newElement = {
-        ...noopElement,
-        id: 'bar'
-      };
-
-      // when
-      createListGroup({ element: newElement, items: newItems }, rerender);
-
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-1',
-        'item-2',
-        'item-3',
-        'item-4'
-      ]);
-    });
-
-
-    it('should sort items - closed + added new one', function() {
-
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'xyz'
-        },
-        {
-          id: 'item-2',
-          label: 'ab'
-        }
-      ];
-
-      const {
-        container,
-        rerender
-      } = createListGroup({ container: parentContainer, label: 'List', items });
-
-      const newItems = [
-        ...items,
-        {
-          id: 'item-3',
-          label: 'foo'
-        }
-      ];
-
-      const list = domQuery('.bio-properties-panel-list', container);
-
-      // assume
-      expect(getListOrdering(list)).to.eql([
-        'item-1',
-        'item-2'
-      ]);
-
-      // when
-      createListGroup({ items: newItems }, rerender);
-
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-3',
-        'item-2',
-        'item-1'
-      ]);
-    });
-
-
-    it('should keep ordering when items count did not change', async function() {
-
-      // given
-      const items = [
-        {
-          id: 'item-1',
-          label: 'xyz'
-        },
-        {
-          id: 'item-2',
-          label: 'abc'
-        },
-        {
-          id: 'item-3',
-          label: 'foo'
-        }
-      ];
-
-      const {
-        container,
-        rerender
-      } = createListGroup({ container: parentContainer, items });
-
-      const header = domQuery('.bio-properties-panel-group-header', container);
-
-      const list = domQuery('.bio-properties-panel-list', container);
-
-      waitFor(async () => {
-        await header.click();
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-1',
+          'item-2',
+          'item-3'
+        ]);
       });
 
-      // assume
-      expect(getListOrdering(list)).to.eql([
-        'item-2',
-        'item-3',
-        'item-1'
-      ]);
 
-      items[2].label = 'aaa';
+      it('should re-iniate sorting when element changed (sorted)', async function() {
 
-      // when
-      createListGroup({ items }, rerender);
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'ab'
+          },
+          {
+            id: 'item-3',
+            label: 'def03'
+          }
+        ];
 
-      // then
-      expect(getListOrdering(list)).to.eql([
-        'item-2',
-        'item-3',
-        'item-1'
-      ]);
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // when
+        const newElement = {
+          ...noopElement,
+          id: 'bar'
+        };
+
+        // when
+        createListGroup({ element: newElement, items }, rerender);
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-2',
+          'item-3',
+          'item-1'
+        ]);
+      });
+
+
+      it('should NOT sort if configured', async function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'ab'
+          },
+          {
+            id: 'item-3',
+            label: 'def03'
+          },
+          {
+            id: 'item-4',
+            label: 'def04'
+          }
+        ];
+
+        const { container } = createListGroup({ container: parentContainer, items, shouldSort: false });
+
+        const header = domQuery('.bio-properties-panel-group-header', container);
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // when
+        waitFor(async () => {
+          await header.click();
+        });
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-1',
+          'item-2',
+          'item-3',
+          'item-4'
+        ]);
+      });
+
+
+      it('should order alphanumeric on open (label)', async function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'ab'
+          },
+          {
+            id: 'item-3',
+            label: 'def03'
+          },
+          {
+            id: 'item-4',
+            label: 'def04'
+          }
+        ];
+
+        const { container } = createListGroup({ container: parentContainer, items });
+
+        const header = domQuery('.bio-properties-panel-group-header', container);
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // when
+        waitFor(async () => {
+          await header.click();
+        });
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-2',
+          'item-3',
+          'item-4',
+          'item-1'
+        ]);
+      });
+
+
+      it('should NOT add new items on top - element changed', function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          },
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          },
+          {
+            id: 'item-3',
+            label: 'Item 3'
+          }
+        ];
+
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        const newItems = [
+          ...items,
+          {
+            id: 'item-4',
+            label: 'Item 4'
+          }
+        ];
+
+        const newElement = {
+          ...noopElement,
+          id: 'bar'
+        };
+
+        // when
+        createListGroup({ element: newElement, items: newItems }, rerender);
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-1',
+          'item-2',
+          'item-3',
+          'item-4'
+        ]);
+      });
+
+
+      it('should sort items - closed + added new one', function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'ab'
+          }
+        ];
+
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, label: 'List', items });
+
+        const newItems = [
+          ...items,
+          {
+            id: 'item-3',
+            label: 'foo'
+          }
+        ];
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // assume
+        expect(getListOrdering(list)).to.eql([
+          'item-1',
+          'item-2'
+        ]);
+
+        // when
+        createListGroup({ items: newItems }, rerender);
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-3',
+          'item-2',
+          'item-1'
+        ]);
+      });
+
+
+      it('should keep sorting when items count did not change', async function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'abc'
+          },
+          {
+            id: 'item-3',
+            label: 'foo'
+          }
+        ];
+
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
+
+        const header = domQuery('.bio-properties-panel-group-header', container);
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        waitFor(async () => {
+          await header.click();
+        });
+
+        // assume
+        expect(getListOrdering(list)).to.eql([
+          'item-2',
+          'item-3',
+          'item-1'
+        ]);
+
+        items[2].label = 'aaa';
+
+        // when
+        createListGroup({ items }, rerender);
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-2',
+          'item-3',
+          'item-1'
+        ]);
+      });
+
+
+      it('should NOT sort when open on adding items', async function() {
+
+        // given
+        let items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'abc'
+          }
+        ];
+
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
+
+        const header = domQuery('.bio-properties-panel-group-header', container);
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // assume
+        // (1) open
+        waitFor(async () => {
+          await header.click();
+        });
+
+        expect(getListOrdering(list)).to.eql([
+          'item-2',
+          'item-1'
+        ]);
+
+        // (1) when
+        // add
+        items = [
+          ...items,
+          {
+            id: 'item-3',
+            label: 'foo'
+          }
+        ];
+
+        createListGroup({ items }, rerender);
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-3',
+          'item-2',
+          'item-1'
+        ]);
+
+        // (2) when
+        // add
+        items = [
+          ...items,
+          {
+            id: 'item-4',
+            label: 'goo'
+          }
+        ];
+
+        createListGroup({ items }, rerender);
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-4',
+          'item-3',
+          'item-2',
+          'item-1'
+        ]);
+
+
+        // (5) when
+        // close + open
+        waitFor(async () => {
+          await header.click();
+        });
+
+        waitFor(async () => {
+          await header.click();
+        });
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-2',
+          'item-3',
+          'item-4',
+          'item-1'
+        ]);
+      });
+
+
+      it('complex (open -> add -> change -> remove -> close -> open)', async function() {
+
+        // given
+        let items = [
+          {
+            id: 'item-1',
+            label: 'xyz'
+          },
+          {
+            id: 'item-2',
+            label: 'abc'
+          }
+        ];
+
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
+
+        const header = domQuery('.bio-properties-panel-group-header', container);
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // when
+
+        // (1) open
+        waitFor(async () => {
+          await header.click();
+        });
+
+        expect(getListOrdering(list)).to.eql([
+          'item-2',
+          'item-1'
+        ]);
+
+        // (2) add
+        items = [
+          ...items,
+          {
+            id: 'item-3',
+            label: 'foo'
+          }
+        ];
+
+        createListGroup({ items }, rerender);
+
+        expect(getListOrdering(list)).to.eql([
+          'item-3',
+          'item-2',
+          'item-1'
+        ]);
+
+        // (3) change
+        items[0].label = 'aaa';
+
+        createListGroup({ items }, rerender);
+
+        expect(getListOrdering(list)).to.eql([
+          'item-3',
+          'item-2',
+          'item-1'
+        ]);
+
+        // (4) remove
+        items.splice(1, 1);
+
+        createListGroup({ items }, rerender);
+
+        expect(getListOrdering(list)).to.eql([
+          'item-3',
+          'item-1'
+        ]);
+
+        // (5) close + open
+        waitFor(async () => {
+          await header.click();
+        });
+
+        waitFor(async () => {
+          await header.click();
+        });
+
+        expect(getListOrdering(list)).to.eql([
+          'item-1',
+          'item-3'
+        ]);
+      });
+
     });
 
 
-    it('complex (open -> add -> change -> remove -> close -> open)', async function() {
+    describe('insert top vs bottom', function() {
 
-      // given
-      let items = [
-        {
-          id: 'item-1',
-          label: 'xyz'
-        },
-        {
-          id: 'item-2',
-          label: 'abc'
-        }
-      ];
+      it('should insert new items to top given sorting enabled', function() {
 
-      const {
-        container,
-        rerender
-      } = createListGroup({ container: parentContainer, items });
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          },
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          },
+          {
+            id: 'item-3',
+            label: 'Item 3'
+          }
+        ];
 
-      const header = domQuery('.bio-properties-panel-group-header', container);
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
 
-      const list = domQuery('.bio-properties-panel-list', container);
+        const list = domQuery('.bio-properties-panel-list', container);
 
-      // when
+        const newItems = [
+          ...items,
+          {
+            id: 'item-4',
+            label: 'Item 4'
+          }
+        ];
 
-      // (1) open
-      waitFor(async () => {
-        await header.click();
+        // when
+        createListGroup({ items: newItems }, rerender);
+
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-4',
+          'item-1',
+          'item-2',
+          'item-3'
+        ]);
       });
 
-      expect(getListOrdering(list)).to.eql([
-        'item-2',
-        'item-1'
-      ]);
 
-      // (2) add
-      items = [
-        ...items,
-        {
-          id: 'item-3',
-          label: 'foo'
-        }
-      ];
+      it('should insert new items to bottom given sorting disabled', function() {
 
-      createListGroup({ items }, rerender);
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          },
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          },
+          {
+            id: 'item-3',
+            label: 'Item 3'
+          }
+        ];
 
-      expect(getListOrdering(list)).to.eql([
-        'item-3',
-        'item-2',
-        'item-1'
-      ]);
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items, shouldSort: false });
 
-      // (3) change
-      items[0].label = 'aaa';
+        const list = domQuery('.bio-properties-panel-list', container);
 
-      createListGroup({ items }, rerender);
+        const newItems = [
+          ...items,
+          {
+            id: 'item-4',
+            label: 'Item 4'
+          }
+        ];
 
-      expect(getListOrdering(list)).to.eql([
-        'item-3',
-        'item-2',
-        'item-1'
-      ]);
+        // when
+        createListGroup({ items: newItems, shouldSort: false }, rerender);
 
-      // (4) remove
-      items.splice(1, 1);
-
-      createListGroup({ items }, rerender);
-
-      expect(getListOrdering(list)).to.eql([
-        'item-3',
-        'item-1'
-      ]);
-
-      // (5) close + open
-      waitFor(async () => {
-        await header.click();
+        // then
+        expect(getListOrdering(list)).to.eql([
+          'item-1',
+          'item-2',
+          'item-3',
+          'item-4'
+        ]);
       });
 
-      waitFor(async () => {
-        await header.click();
-      });
-
-      expect(getListOrdering(list)).to.eql([
-        'item-1',
-        'item-3'
-      ]);
     });
+
+
+    describe('open', function() {
+
+      it('should open on adding new item per default', function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          }
+        ];
+
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // assume
+        expect(domClasses(list).has('open')).to.be.false;
+
+        const newItems = [
+          ...items,
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          }
+        ];
+
+        // when
+        createListGroup({ items: newItems }, rerender);
+
+        // then
+        const newItem = domQuery('[data-entry-id="item-2"]', container);
+        const oldItem = domQuery('[data-entry-id="item-1"]', container);
+
+        expect(domClasses(newItem).has('open')).to.be.true;
+        expect(domClasses(oldItem).has('open')).to.be.false;
+      });
+
+
+      it('should open on adding new item per default given no sorting', function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          }
+        ];
+
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // assume
+        expect(domClasses(list).has('open')).to.be.false;
+
+        const newItems = [
+          ...items,
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          }
+        ];
+
+        // when
+        createListGroup({ items: newItems, shouldSort: false }, rerender);
+
+        // then
+        const newItem = domQuery('[data-entry-id="item-2"]', container);
+        const oldItem = domQuery('[data-entry-id="item-1"]', container);
+
+        expect(domClasses(newItem).has('open')).to.be.true;
+        expect(domClasses(oldItem).has('open')).to.be.false;
+        expect(domClasses(list).has('open')).to.be.true;
+      });
+
+
+      it('should NOT open on adding new item given disabled', function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          }
+        ];
+
+        const {
+          container,
+          rerender
+        } = createListGroup({ container: parentContainer, items });
+
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        // assume
+        expect(domClasses(list).has('open')).to.be.false;
+
+        const newItems = [
+          ...items,
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          }
+        ];
+
+        // when
+        createListGroup({ items: newItems, shouldOpen: false }, rerender);
+
+        // then
+        expect(domClasses(list).has('open')).to.be.false;
+      });
+
+    });
+
   });
 
 
@@ -774,6 +1051,7 @@ function createListGroup(options = {}, renderFn = render) {
     items = [],
     add,
     shouldSort,
+    shouldOpen,
     container
   } = options;
 
@@ -784,7 +1062,8 @@ function createListGroup(options = {}, renderFn = render) {
       label={ label }
       items={ items }
       add={ add }
-      shouldSort={ shouldSort } />,
+      shouldSort={ shouldSort }
+      shouldOpen={ shouldOpen } />,
     {
       container
     }
