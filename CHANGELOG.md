@@ -6,6 +6,13 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.4.3
+
+* `FEAT`: for `List` component, insert new items to bottom given there is no `compareFn` ([#104](https://github.com/bpmn-io/properties-panel/pull/104))
+* `FEAT`: for `ListGroup` component, offer `shouldOpen` parameter ([#106](https://github.com/bpmn-io/properties-panel/pull/106))
+* `FEAT`: for `ListGroup` component, insert new items to bottom given `shouldSort` is false ([#106](https://github.com/bpmn-io/properties-panel/pull/106))
+* `FEAT`: add `useLayoutState` hook ([#99](https://github.com/bpmn-io/properties-panel/pull/99))
+
 ## 0.4.2
 
 * `FIX`: make auto-focus work for select elements ([#101](https://github.com/bpmn-io/properties-panel/pull/101))
