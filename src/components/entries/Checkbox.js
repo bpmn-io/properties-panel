@@ -29,6 +29,7 @@ function Checkbox(props) {
  * @param {Object} props
  * @param {Object} props.element
  * @param {String} props.id
+ * @param {String} props.description
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
@@ -37,6 +38,7 @@ export default function CheckboxEntry(props) {
   const {
     element,
     id,
+    description,
     label,
     getValue,
     setValue
@@ -47,6 +49,7 @@ export default function CheckboxEntry(props) {
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-checkbox-entry" data-entry-id={ id }>
       <Checkbox id={ id } label={ label } onChange={ setValue } value={ value } />
+      { description && <div class="bio-properties-panel-description">{ description }</div> }
     </div>
   );
 }
