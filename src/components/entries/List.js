@@ -1,7 +1,6 @@
 import {
   useEffect,
-  useRef,
-  useState
+  useRef
 } from 'preact/hooks';
 
 import {
@@ -12,6 +11,7 @@ import { isFunction } from 'min-dash';
 
 import {
   useKeyFactory,
+  useLayoutState,
   usePrevious
 } from '../../hooks';
 
@@ -54,7 +54,10 @@ export default function List(props) {
     compareFn
   } = props;
 
-  const [ open, setOpen ] = useState(!!shouldOpen);
+  const [ open, setOpen ] = useLayoutState(
+    [ 'listEntries', id, 'open' ],
+    !!shouldOpen
+  );
 
   const hasItems = !!items.length;
   const toggleOpen = () => hasItems && setOpen(!open);

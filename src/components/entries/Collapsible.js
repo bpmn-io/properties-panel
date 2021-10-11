@@ -1,8 +1,9 @@
-import {
-  useState
-} from 'preact/hooks';
-
 import classnames from 'classnames';
+
+import {
+  useLayoutState
+} from '../../hooks';
+
 
 import {
   ListArrowIcon,
@@ -19,7 +20,10 @@ export default function CollapsibleEntry(props) {
     open: shouldOpen
   } = props;
 
-  const [ open, setOpen ] = useState(shouldOpen);
+  const [ open, setOpen ] = useLayoutState(
+    [ 'collapsibles', id, 'open' ],
+    !!shouldOpen
+  );
 
   const toggleOpen = () => setOpen(!open);
 
