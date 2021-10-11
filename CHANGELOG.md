@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.5.0
+
+* `FEAT`: add various design improvements ([#105](https://github.com/bpmn-io/properties-panel/pull/105))
+* `FEAT`: add description for check boxes ([`f515016c`](https://github.com/bpmn-io/properties-panel/commit/f515016c3fedf59c9e629454a6a5e2fbbf2bfb79))
+
 ## 0.4.3
 
 * `FEAT`: for `List` component, insert new items to bottom given there is no `compareFn` ([#104](https://github.com/bpmn-io/properties-panel/pull/104))
