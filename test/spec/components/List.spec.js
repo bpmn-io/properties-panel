@@ -254,6 +254,54 @@ describe('<List>', function() {
       expect(document.activeElement).to.eql(select);
     });
 
+
+    it('should focus custom input once new input was added given selector', async function() {
+
+      // given
+      const renderItem = item => {
+        return <input class="bio-properties-panel-input" data-id={ item.id } />;
+      };
+
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        }
+      ];
+
+      const onAdd = () => items.push({
+        id: 'item-2',
+        label: 'Item 2'
+      });
+
+      const options = {
+        autoFocusEntry: '[data-id="item-1"]',
+        container: parentContainer,
+        items,
+        onAdd,
+        open: true,
+        renderItem,
+        compareFn: defaultCompareFn
+      };
+
+      const {
+        container,
+        rerender
+      } = createListEntry(options);
+
+      // when
+      await act(() => {
+        domQuery('.bio-properties-panel-add-entry', container).click();
+      });
+
+      createListEntry(options, rerender);
+
+      // then
+      const input = domQuery('[data-id="item-1"]', container);
+
+      expect(document.activeElement).to.eql(input);
+    });
+
   });
 
 
