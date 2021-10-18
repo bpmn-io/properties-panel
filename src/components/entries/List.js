@@ -36,7 +36,7 @@ import {
  * @param {Function} [props.onRemove]
  * @param {Item[]} [props.items]
  * @param {boolean} [props.open]
- * @param {string} [props.autoFocusEntry]
+ * @param {string|boolean} [props.autoFocusEntry] either a custom selector string or true to focus the first input
  * @param {(a: Item, b: Item) => -1 | 0 | 1} [props.compareFn]
  * @returns
  */
@@ -157,9 +157,17 @@ function ItemsList(props) {
 
   useEffect(() => {
     if (newItem && autoFocusEntry) {
-      const entry = domQuery(`[data-entry-id="${id}"]`);
-      const focusableInput = domQuery('.bio-properties-panel-input', entry);
 
+      // (0) select the parent entry (containing all list items)
+      const entry = domQuery(`[data-entry-id="${id}"]`);
+
+      // (1) select the first input or a custom element to be focussed
+      const selector = typeof(autoFocusEntry) === 'boolean' ?
+        '.bio-properties-panel-input' :
+        autoFocusEntry;
+      const focusableInput = domQuery(selector, entry);
+
+      // (2) set focus
       if (focusableInput) {
 
         if (isFunction(focusableInput.select)) {
