@@ -91,6 +91,7 @@
   --line-height-condensed: 17px;
 
   --font-family: sans-serif;
+  --font-family-monospace: monospace;
 
   display: none;
   position: relative;
@@ -394,7 +395,7 @@ select.bio-properties-panel-input {
 }
 
 .bio-properties-panel-input-monospace {
-  font-family: monospace;
+  font-family: var(--font-family-monospace);
 }
 
 .bio-properties-panel-input[type="checkbox"], .bio-properties-panel-input[type="radio"] {
