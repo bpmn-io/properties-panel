@@ -9,8 +9,8 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 0.5.1
 
-* `FEAT`: allow custom selector for `ListEntry#autoFocusEntry` (['4afae1'](https://github.com/bpmn-io/properties-panel/commit/4afae1ec0215417d961b176840f19e51ba8b9043))
-* `FEAT`: add variable for monospace font (['354fc9'](https://github.com/bpmn-io/properties-panel/commit/354fc99c8e54c1eb3c8cb2bca20630172e7fad7b))
+* `FIX`: allow custom selector for `ListEntry#autoFocusEntry` ([`4afae1`](https://github.com/bpmn-io/properties-panel/commit/4afae1ec0215417d961b176840f19e51ba8b9043))
+* `CHORE`: add variable for monospace font ([`354fc9`](https://github.com/bpmn-io/properties-panel/commit/354fc99c8e54c1eb3c8cb2bca20630172e7fad7b))
 
 ## 0.5.0
 
