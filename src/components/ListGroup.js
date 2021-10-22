@@ -159,7 +159,7 @@ export default function ListGroup(props) {
                   <CreateIcon />
                   {
                     !hasItems ? (
-                      <div class="bio-properties-panel-add-entry-label">Create</div>
+                      <span class="bio-properties-panel-add-entry-label">Create</span>
                     )
                       : null
                   }
