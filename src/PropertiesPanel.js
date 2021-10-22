@@ -36,11 +36,11 @@ const DEFAULT_LAYOUT = {
  *    entries: Array<EntryDefinition>,
  *    id: String,
  *    label: String,
- *    remove: import('preact').Component
+ *    remove: (event: MouseEvent) => void
  * } } ListItemDefinition
  *
  * @typedef { {
- *    add: import('preact').Component,
+ *    add: (event: MouseEvent) => void,
  *    component: import('preact').Component,
  *    element: Object,
  *    id: String,

@@ -15,7 +15,7 @@ export default function CollapsibleEntry(props) {
     id,
     entries = [],
     label,
-    remove: RemoveContainer,
+    remove,
     open: shouldOpen
   } = props;
 
@@ -49,14 +49,12 @@ export default function CollapsibleEntry(props) {
           <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
         </button>
         {
-          RemoveContainer
+          remove
             ?
             (
-              <RemoveContainer>
-                <button title="Delete item" class="bio-properties-panel-remove-entry">
-                  <DeleteIcon />
-                </button>
-              </RemoveContainer>
+              <button title="Delete item" class="bio-properties-panel-remove-entry" onClick={ remove }>
+                <DeleteIcon />
+              </button>
             )
             : null
         }

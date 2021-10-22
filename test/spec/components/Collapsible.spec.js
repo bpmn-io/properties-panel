@@ -1,4 +1,5 @@
 import {
+  act,
   render
 } from '@testing-library/preact/pure';
 
@@ -111,26 +112,26 @@ describe('<Collapsible>', function() {
   });
 
 
-  it('should wrap delete container', async function() {
+  it('should bind remove callback', async function() {
 
     // given
-    const spy = sinon.spy();
-
-    const remove = ({ children }) => <span class="delete" onClick={ spy }>{ children }</span>;
+    const remove = sinon.spy();
 
     const { container } = createCollapsible({ container: parentContainer, remove });
 
     const removeEntry = domQuery('.bio-properties-panel-remove-entry', container);
 
     // when
-    await removeEntry.parentNode.click();
+    await act(() => {
+      removeEntry.click();
+    });
 
     // then
-    expect(spy).to.have.been.called;
+    expect(remove).to.have.been.called;
   });
 
 
-  it('should NOT wrap empty delete container', async function() {
+  it('should NOT display remove button when no callback was passed', async function() {
 
     // when
     const { container } = createCollapsible({ container: parentContainer });

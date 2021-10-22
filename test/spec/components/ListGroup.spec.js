@@ -121,12 +121,10 @@ describe('<ListGroup>', function() {
   });
 
 
-  it('should wrap add container', async function() {
+  it('should bind add callback', async function() {
 
     // given
-    const spy = sinon.spy();
-
-    const add = ({ children }) => <span class="add" onClick={ spy }>{ children }</span>;
+    const add = sinon.spy();
 
     const { container } = createListGroup({ container: parentContainer, add });
 
@@ -134,15 +132,15 @@ describe('<ListGroup>', function() {
 
     // when
     await act(() => {
-      addEntry.parentNode.click();
+      addEntry.click();
     });
 
     // then
-    expect(spy).to.have.been.called;
+    expect(add).to.have.been.called;
   });
 
 
-  it('should NOT wrap empty add container', async function() {
+  it('should NOT display add button if no callback was passed', async function() {
 
     // when
     const { container } = createListGroup({ container: parentContainer });
