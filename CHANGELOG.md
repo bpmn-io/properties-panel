@@ -6,7 +6,13 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: accept callbacks instead of containers for `add` and `remove` props ([#108](https://github.com/bpmn-io/properties-panel/issues/108))
 * `FIX`: use valid HTML in add/remove buttons ([#111](https://github.com/bpmn-io/properties-panel/pull/111))
+
+### BREAKING CHANGES
+
+* `ListGroup#add` changed to function instead of Preact component
+* `Collapsible#remove` changed to function instead of Preact component
 
 ## 0.5.1
 

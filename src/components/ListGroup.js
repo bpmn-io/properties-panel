@@ -33,7 +33,7 @@ export default function ListGroup(props) {
     id,
     items,
     label,
-    add: AddContainer,
+    add,
     shouldSort = true,
     shouldOpen = true
   } = props;
@@ -149,22 +149,21 @@ export default function ListGroup(props) {
       </div>
       <div class="bio-properties-panel-group-header-buttons">
         {
-          AddContainer
+          add
             ? (
-              <AddContainer>
-                <button
-                  title="Create new list item"
-                  class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
-                >
-                  <CreateIcon />
-                  {
-                    !hasItems ? (
-                      <span class="bio-properties-panel-add-entry-label">Create</span>
-                    )
-                      : null
-                  }
-                </button>
-              </AddContainer>
+              <button
+                title="Create new list item"
+                class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
+                onClick={ add }
+              >
+                <CreateIcon />
+                {
+                  !hasItems ? (
+                    <span class="bio-properties-panel-add-entry-label">Create</span>
+                  )
+                    : null
+                }
+              </button>
             )
             : null
         }
