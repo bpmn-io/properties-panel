@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.6.0
+
 * `FEAT`: accept callbacks instead of containers for `add` and `remove` props ([#108](https://github.com/bpmn-io/properties-panel/issues/108))
 * `FIX`: use valid HTML in add/remove buttons ([#111](https://github.com/bpmn-io/properties-panel/pull/111))
 
