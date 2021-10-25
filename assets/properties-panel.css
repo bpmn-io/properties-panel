@@ -240,7 +240,6 @@
 }
 
 .bio-properties-panel-add-entry {
-  pointer-events: all;
   fill: var(--add-entry-fill-color);
   border-radius: 11px;
 }
@@ -571,7 +570,6 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-remove-entry {
-  pointer-events: all;
   display: flex;
   align-items: center;
   justify-content: center;
