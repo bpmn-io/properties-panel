@@ -385,6 +385,12 @@ textarea.bio-properties-panel-input,
   border: 1px solid var(--input-focus-border-color);
 }
 
+.bio-properties-panel-input:disabled {
+  border-color: var(--color-grey-225-10-90);
+  background-color: var(--color-grey-225-10-97);
+  color: var(--color-grey-225-10-55);
+}
+
 select.bio-properties-panel-input {
   padding: 4px 6px;
 }
