@@ -1,6 +1,6 @@
 {
   "name": "@bpmn-io/properties-panel",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Library for creating bpmn-io properties panels.",
   "main": "lib/index.js",
   "files": [
