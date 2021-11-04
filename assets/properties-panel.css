@@ -68,6 +68,10 @@
   --input-error-border-color: var(--color-red-360-100-45);
   --input-error-focus-border-color: var(--color-red-360-100-45);
 
+  --input-disabled-color: var(--color-grey-225-10-55);
+  --input-disabled-background-color: var(--color-grey-225-10-97);
+  --input-disabled-border-color: var(--color-grey-225-10-90);
+
   --toggle-switch-on-background-color: var(--color-blue-205-100-50);
   --toggle-switch-off-background-color: var(--color-grey-225-10-75);
   --toggle-switch-switcher-background-color: var(--color-white);
@@ -386,9 +390,9 @@ textarea.bio-properties-panel-input,
 }
 
 .bio-properties-panel-input:disabled {
-  border-color: var(--color-grey-225-10-90);
-  background-color: var(--color-grey-225-10-97);
-  color: var(--color-grey-225-10-55);
+  border-color: var(--input-disabled-border-color);
+  background-color: var(--input-disabled-background-color);
+  color: var(--input-disabled-color);
 }
 
 select.bio-properties-panel-input {
