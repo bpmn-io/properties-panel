@@ -83,6 +83,10 @@
   --list-entry-add-entry-label-color: var(--color-white);
   --list-entry-add-entry-background-color: var(--color-blue-205-100-50);
   --list-entry-add-entry-fill-color: var(--color-white);
+  
+  --dropdown-item-background-color: var(--color-white);
+  --dropdown-item-hover-background-color: var(--color-grey-225-10-95);
+  --dropdown-separator-background-color: var(--color-grey-225-10-75);
 
   --text-size-base: 14px;
   --text-size-small: 13px;
@@ -796,7 +800,7 @@ textarea.bio-properties-panel-input {
   right: var(--dropdown-button-margin);
   z-index: 101;
 
-  background-color: var(--color-white);
+  background-color: var(--dropdown-item-background-color);
 
   padding: 8px 0;
 
@@ -822,7 +826,7 @@ textarea.bio-properties-panel-input {
   padding: 0;
   margin: 8px 0;
 
-  background-color: var(--color-grey-225-10-75);
+  background-color: var(--dropdown-separator-background-color);
 }
 
 .bio-properties-panel-dropdown-button__menu-item--actionable {
@@ -830,6 +834,5 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-dropdown-button__menu-item--actionable:hover {
-  background-color: var(--color-grey-225-10-95);
+  background-color: var(--dropdown-item-hover-background-color);
 }
-
