@@ -6,6 +6,15 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.7.0
+
+* `FEAT`: add dropdown button ([#116](https://github.com/bpmn-io/properties-panel/pull/116))
+* `FEAT`: add header button ([#116](https://github.com/bpmn-io/properties-panel/pull/116))
+
+## 0.6.1
+
+* `FIX`: style disabled inputs ([#115](https://github.com/bpmn-io/properties-panel/pull/115))
+
 ## 0.6.0
 
 * `FEAT`: accept callbacks instead of containers for `add` and `remove` props ([#108](https://github.com/bpmn-io/properties-panel/issues/108))
