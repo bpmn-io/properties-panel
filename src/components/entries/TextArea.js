@@ -13,6 +13,7 @@ function TextArea(props) {
     debounce,
     onInput,
     value = '',
+    disabled,
     monospace
   } = props;
 
@@ -35,22 +36,24 @@ function TextArea(props) {
         onFocus={ props.onFocus }
         onBlur={ props.onBlur }
         rows={ rows }
-        value={ value } />
+        value={ value }
+        disabled={ disabled } />
     </div>
   );
 }
 
 /**
- * @param {Object} props
- * @param {Object} props.element
- * @param {String} props.id
- * @param {String} props.description
- * @param {Boolean} props.debounce
- * @param {String} props.label
+ * @param {object} props
+ * @param {object} props.element
+ * @param {string} props.id
+ * @param {string} props.description
+ * @param {boolean} props.debounce
+ * @param {string} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
- * @param {Number} props.rows
- * @param {Boolean} props.monospace
+ * @param {number} props.rows
+ * @param {boolean} props.monospace
+ * @param {boolean} [props.disabled]
  */
 export default function TextAreaEntry(props) {
   const {
@@ -62,7 +65,8 @@ export default function TextAreaEntry(props) {
     getValue,
     setValue,
     rows,
-    monospace
+    monospace,
+    disabled
   } = props;
 
   const value = getValue(element);
@@ -75,7 +79,8 @@ export default function TextAreaEntry(props) {
         onInput={ setValue }
         rows={ rows }
         debounce={ debounce }
-        monospace={ monospace } />
+        monospace={ monospace }
+        disabled={ disabled } />
       { description && <div class="bio-properties-panel-description">{ description }</div> }
     </div>
   );

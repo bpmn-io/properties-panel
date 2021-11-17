@@ -39,6 +39,18 @@ describe('<Checkbox>', function() {
   });
 
 
+  it('should render disabled', function() {
+
+    // given
+    const result = createCheckbox({ container, disabled: true });
+
+    // then
+    expect(
+      domQuery('.bio-properties-panel-checkbox input', result.container)
+    ).to.have.property('disabled', true);
+  });
+
+
   it('should update', function() {
 
     // given
@@ -119,11 +131,13 @@ function createCheckbox(options = {}) {
     label,
     getValue = noop,
     setValue = noop,
-    container
+    container,
+    ...rest
   } = options;
 
   return render(
     <Checkbox
+      { ...rest }
       element={ element }
       id={ id }
       label={ label }
