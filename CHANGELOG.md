@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.8.0
+
+* `FEAT`: allow to disable textarea, select, and checkbox ([#118](https://github.com/bpmn-io/properties-panel/pull/118))
+
 ## 0.7.0
 
 * `FEAT`: add dropdown button ([#116](https://github.com/bpmn-io/properties-panel/pull/116))
