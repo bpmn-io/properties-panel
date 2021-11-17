@@ -3,6 +3,7 @@ function Checkbox(props) {
     id,
     label,
     onChange,
+    disabled,
     value = false
   } = props;
 
@@ -18,7 +19,8 @@ function Checkbox(props) {
         type="checkbox"
         class="bio-properties-panel-input"
         onChange={ handleChange }
-        checked={ value } />
+        checked={ value }
+        disabled={ disabled } />
       <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
     </div>
   );
@@ -33,6 +35,7 @@ function Checkbox(props) {
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {boolean} [props.disabled]
  */
 export default function CheckboxEntry(props) {
   const {
@@ -41,14 +44,15 @@ export default function CheckboxEntry(props) {
     description,
     label,
     getValue,
-    setValue
+    setValue,
+    disabled
   } = props;
 
   const value = getValue(element);
 
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-checkbox-entry" data-entry-id={ id }>
-      <Checkbox id={ id } label={ label } onChange={ setValue } value={ value } />
+      <Checkbox id={ id } label={ label } onChange={ setValue } value={ value } disabled={ disabled } />
       { description && <div class="bio-properties-panel-description">{ description }</div> }
     </div>
   );

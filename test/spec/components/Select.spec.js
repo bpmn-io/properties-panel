@@ -56,6 +56,18 @@ describe('<Select>', function() {
   });
 
 
+  it('should render disabled', function() {
+
+    // given
+    const result = createSelect({ container, disabled: true });
+
+    // then
+    expect(
+      domQuery('.bio-properties-panel-select select', result.container)
+    ).to.have.property('disabled', true);
+  });
+
+
   it('should update', function() {
 
     // given
@@ -201,11 +213,13 @@ function createSelect(options = {}) {
     getValue = noop,
     setValue = noop,
     getOptions = noop,
-    container
+    container,
+    ...rest
   } = options;
 
   return render(
     <Select
+      { ...rest }
       element={ element }
       id={ id }
       label={ label }

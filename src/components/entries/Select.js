@@ -1,16 +1,17 @@
 /**
- * @typedef { { value: String, label: String } } Option
+ * @typedef { { value: string, label: string, disabled: boolean } } Option
  */
 
 /**
  * Provides basic select input.
  *
- * @param {Object} props
- * @param {String} props.id
- * @param {String} props.label
+ * @param {object} props
+ * @param {string} props.id
+ * @param {string} props.label
  * @param {Function} props.onChange
  * @param {Array<Option>} [props.options]
- * @param {String} props.value
+ * @param {string} props.value
+ * @param {boolean} [props.disabled]
  */
 function Select(props) {
   const {
@@ -18,7 +19,8 @@ function Select(props) {
     label,
     onChange,
     options = [],
-    value
+    value,
+    disabled
   } = props;
 
   const handleChange = ({ target }) => {
@@ -28,7 +30,14 @@ function Select(props) {
   return (
     <div class="bio-properties-panel-select">
       <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
-      <select id={ prefixId(id) } name={ id } class="bio-properties-panel-input" onInput={ handleChange } value={ value }>
+      <select
+        id={ prefixId(id) }
+        name={ id }
+        class="bio-properties-panel-input"
+        onInput={ handleChange }
+        value={ value }
+        disabled={ disabled }
+      >
         {
           options.map((option, idx) => {
             return (
@@ -47,14 +56,15 @@ function Select(props) {
 }
 
 /**
- * @param {Object} props
- * @param {Object} props.element
- * @param {String} props.id
- * @param {String} [props.description]
- * @param {String} props.label
+ * @param {object} props
+ * @param {object} props.element
+ * @param {string} props.id
+ * @param {string} [props.description]
+ * @param {string} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.getOptions
+ * @param {boolean} [props.disabled]
  */
 export default function SelectEntry(props) {
   const {
@@ -64,7 +74,8 @@ export default function SelectEntry(props) {
     label,
     getValue,
     setValue,
-    getOptions
+    getOptions,
+    disabled
   } = props;
 
   const value = getValue(element);
@@ -77,7 +88,8 @@ export default function SelectEntry(props) {
         label={ label }
         value={ value }
         onChange={ setValue }
-        options={ options } />
+        options={ options }
+        disabled={ disabled } />
       { description && <div class="bio-properties-panel-description">{ description }</div> }
     </div>
   );

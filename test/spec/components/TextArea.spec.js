@@ -52,6 +52,18 @@ describe('<TextArea>', function() {
   });
 
 
+  it('should render disabled', function() {
+
+    // given
+    const result = createTextArea({ container, disabled: true });
+
+    // then
+    expect(
+      domQuery('.bio-properties-panel-textarea textarea', result.container)
+    ).to.have.property('disabled', true);
+  });
+
+
   it('should update', function() {
 
     // given
@@ -136,11 +148,13 @@ function createTextArea(options = {}) {
     setValue = noop,
     rows,
     monospace,
-    container
+    container,
+    ...rest
   } = options;
 
   return render(
     <TextArea
+      { ...rest }
       element={ element }
       id={ id }
       label={ label }
