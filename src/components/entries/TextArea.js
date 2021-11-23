@@ -1,4 +1,8 @@
 import {
+  useDescriptionContext
+} from '../../hooks';
+
+import {
   useMemo
 } from 'preact/hooks';
 
@@ -69,6 +73,8 @@ export default function TextAreaEntry(props) {
     disabled
   } = props;
 
+  const contextDescription = useDescriptionContext(id, element);
+
   const value = getValue(element);
   return (
     <div class="bio-properties-panel-entry" data-entry-id={ id }>
@@ -81,7 +87,10 @@ export default function TextAreaEntry(props) {
         debounce={ debounce }
         monospace={ monospace }
         disabled={ disabled } />
-      { description && <div class="bio-properties-panel-description">{ description }</div> }
+      { (description || contextDescription) &&
+      <div class="bio-properties-panel-description">
+        { description || contextDescription }
+      </div> }
     </div>
   );
 }

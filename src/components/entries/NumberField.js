@@ -2,6 +2,10 @@ import {
   useMemo
 } from 'preact/hooks';
 
+import {
+  useDescriptionContext
+} from '../../hooks';
+
 function NumberField(props) {
 
   const {
@@ -79,6 +83,8 @@ export default function NumberFieldEntry(props) {
     step
   } = props;
 
+  const contextDescription = useDescriptionContext(id, element);
+
   const value = getValue(element);
   return (
     <div class="bio-properties-panel-entry" data-entry-id={ id }>
@@ -92,7 +98,10 @@ export default function NumberFieldEntry(props) {
         min={ min }
         step={ step }
         value={ value } />
-      { description && <div class="bio-properties-panel-description">{ description }</div> }
+      { (description || contextDescription) &&
+        <div class="bio-properties-panel-description">
+          { description || contextDescription }
+        </div> }
     </div>
   );
 }

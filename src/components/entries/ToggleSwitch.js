@@ -34,6 +34,7 @@ function ToggleSwitch(props) {
   );
 }
 
+// TODO: fix API -> element is missing
 /**
  * @param {Object} props
  * @param {String} props.id
