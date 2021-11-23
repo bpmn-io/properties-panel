@@ -1,4 +1,8 @@
 import {
+  useDescriptionContext
+} from '../../hooks';
+
+import {
   useEffect,
   useMemo,
   useState
@@ -70,6 +74,8 @@ export default function TextfieldEntry(props) {
     validate
   } = props;
 
+  const contextDescription = useDescriptionContext(id, element);
+
   const [ error, setError ] = useState(null);
   const [ invalidValueCache, setInvalidValueCache ] = useState(null);
 
@@ -106,7 +112,10 @@ export default function TextfieldEntry(props) {
       error ? 'has-error' : '')
     } data-entry-id={ id }>
       <Textfield id={ id } label={ label } value={ value } onInput={ handleChange } debounce={ debounce } disabled={ disabled } />
-      { description && <div class="bio-properties-panel-description">{ description }</div> }
+      { (description || contextDescription) &&
+      <div class="bio-properties-panel-description">
+        { description || contextDescription }
+      </div> }
       { error && <div class="bio-properties-panel-error">{ error }</div> }
     </div>
   );

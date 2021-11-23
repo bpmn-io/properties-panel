@@ -16,6 +16,10 @@ import {
 
 import Select, { isEdited } from 'src/components/entries/Select';
 
+import {
+  DescriptionContext
+} from 'src/context';
+
 insertCoreStyles();
 
 const noop = () => {};
@@ -199,6 +203,89 @@ describe('<Select>', function() {
 
   });
 
+
+  describe('description', function() {
+
+    it('should render without description per default', function() {
+
+      // given
+      const result = createSelect({
+        container,
+        id: 'noDescriptionSelect'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="noDescriptionSelect"] .bio-properties-panel-description',
+        result.container);
+      expect(description).not.to.exist;
+    });
+
+
+    it('should render with description if set per props', function() {
+
+      // given
+      const result = createSelect({
+        container,
+        id: 'descriptionSelect',
+        label: 'someLabel',
+        description: 'my description'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionSelect"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('my description');
+    });
+
+
+    it('should render with description if set per context', function() {
+
+      // given
+      const descriptionConfig = { descriptionSelect: (element) => 'myContextDesc' };
+
+      const result = createSelect({
+        container,
+        id: 'descriptionSelect',
+        label: 'someLabel',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionSelect"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myContextDesc');
+    });
+
+
+    it('should render description set per props over context', function() {
+
+      // given
+      const descriptionConfig = { descriptionSelect: (element) => 'myContextDesc' };
+
+      const result = createSelect({
+        container,
+        id: 'descriptionSelect',
+        label: 'someLabel',
+        description: 'myExplicitDescription',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionSelect"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myExplicitDescription');
+    });
+
+  });
+
 });
 
 
@@ -213,20 +300,29 @@ function createSelect(options = {}) {
     getValue = noop,
     setValue = noop,
     getOptions = noop,
+    descriptionConfig = {},
+    getDescriptionForId = noop,
     container,
     ...rest
   } = options;
 
+  const context = {
+    description: descriptionConfig,
+    getDescriptionForId
+  };
+
   return render(
-    <Select
-      { ...rest }
-      element={ element }
-      id={ id }
-      label={ label }
-      description={ description }
-      getValue={ getValue }
-      setValue={ setValue }
-      getOptions={ getOptions } />,
+    <DescriptionContext.Provider value={ context }>
+      <Select
+        { ...rest }
+        element={ element }
+        id={ id }
+        label={ label }
+        description={ description }
+        getValue={ getValue }
+        setValue={ setValue }
+        getOptions={ getOptions } />
+    </DescriptionContext.Provider>,
     {
       container
     }

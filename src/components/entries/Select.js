@@ -1,3 +1,7 @@
+import {
+  useDescriptionContext
+} from '../../hooks';
+
 /**
  * @typedef { { value: string, label: string, disabled: boolean } } Option
  */
@@ -78,6 +82,8 @@ export default function SelectEntry(props) {
     disabled
   } = props;
 
+  const contextDescription = useDescriptionContext(id, element);
+
   const value = getValue(element);
   const options = getOptions(element);
 
@@ -90,7 +96,10 @@ export default function SelectEntry(props) {
         onChange={ setValue }
         options={ options }
         disabled={ disabled } />
-      { description && <div class="bio-properties-panel-description">{ description }</div> }
+      { (description || contextDescription) &&
+        <div class="bio-properties-panel-description">
+          { description || contextDescription }
+        </div> }
     </div>
   );
 }

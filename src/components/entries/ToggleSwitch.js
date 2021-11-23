@@ -1,3 +1,7 @@
+import {
+  useDescriptionContext
+} from '../../hooks';
+
 function ToggleSwitch(props) {
   const {
     id,
@@ -36,6 +40,7 @@ function ToggleSwitch(props) {
 
 /**
  * @param {Object} props
+ * @param {Object} props.element
  * @param {String} props.id
  * @param {String} props.description
  * @param {String} props.label
@@ -45,6 +50,7 @@ function ToggleSwitch(props) {
  */
 export default function ToggleSwitchEntry(props) {
   const {
+    element,
     id,
     description,
     label,
@@ -53,11 +59,14 @@ export default function ToggleSwitchEntry(props) {
     setValue
   } = props;
 
-  const value = getValue();
+  const contextDescription = useDescriptionContext(id, element);
+
+  const value = getValue(element);
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-toggle-switch-entry" data-entry-id={ id }>
       <ToggleSwitch id={ id } label={ label } value={ value } onInput={ setValue } switcherLabel={ switcherLabel } />
-      { description && <div class="bio-properties-panel-description">{ description }</div> }
+      { (description || contextDescription) &&
+      <div class="bio-properties-panel-description">{ description || contextDescription }</div> }
     </div>
   );
 }

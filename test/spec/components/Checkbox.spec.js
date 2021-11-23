@@ -13,6 +13,10 @@ import {
   clickInput
 } from 'test/TestHelper';
 
+import {
+  DescriptionContext
+} from 'src/context';
+
 import Checkbox, { isEdited } from 'src/components/entries/Checkbox';
 
 insertCoreStyles();
@@ -119,6 +123,89 @@ describe('<Checkbox>', function() {
 
   });
 
+
+  describe('description', function() {
+
+    it('should render without description per default', function() {
+
+      // given
+      const result = createCheckbox({
+        container,
+        id: 'noDescriptionCheckbox'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="noDescriptionCheckbox"] .bio-properties-panel-description',
+        result.container);
+      expect(description).not.to.exist;
+    });
+
+
+    it('should render with description if set per props', function() {
+
+      // given
+      const result = createCheckbox({
+        container,
+        id: 'descriptionCheckbox',
+        label: 'someLabel',
+        description: 'my description'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionCheckbox"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('my description');
+    });
+
+
+    it('should render with description if set per context', function() {
+
+      // given
+      const descriptionConfig = { descriptionCheckbox: (element) => 'myContextDesc' };
+
+      const result = createCheckbox({
+        container,
+        id: 'descriptionCheckbox',
+        label: 'someLabel',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionCheckbox"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myContextDesc');
+    });
+
+
+    it('should render description set per props over context', function() {
+
+      // given
+      const descriptionConfig = { descriptionCheckbox: (element) => 'myContextDesc' };
+
+      const result = createCheckbox({
+        container,
+        id: 'descriptionCheckbox',
+        label: 'someLabel',
+        description: 'myExplicitDescription',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionCheckbox"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myExplicitDescription');
+    });
+
+  });
+
 });
 
 
@@ -132,17 +219,26 @@ function createCheckbox(options = {}) {
     getValue = noop,
     setValue = noop,
     container,
+    descriptionConfig = {},
+    getDescriptionForId = noop,
     ...rest
   } = options;
 
+  const context = {
+    description: descriptionConfig,
+    getDescriptionForId
+  };
+
   return render(
-    <Checkbox
-      { ...rest }
-      element={ element }
-      id={ id }
-      label={ label }
-      getValue={ getValue }
-      setValue={ setValue } />,
+    <DescriptionContext.Provider value={ context }>
+      <Checkbox
+        { ...rest }
+        element={ element }
+        id={ id }
+        label={ label }
+        getValue={ getValue }
+        setValue={ setValue } />
+    </DescriptionContext.Provider>,
     {
       container
     }

@@ -15,6 +15,10 @@ import {
 
 import NumberField, { isEdited } from 'src/components/entries/NumberField';
 
+import {
+  DescriptionContext
+} from 'src/context';
+
 insertCoreStyles();
 
 const noop = () => {};
@@ -203,6 +207,89 @@ describe('<NumberField>', function() {
 
   });
 
+
+  describe('description', function() {
+
+    it('should render without description per default', function() {
+
+      // given
+      const result = createNumberField({
+        container,
+        id: 'noDescriptionNumberField'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="noDescriptionNumberField"] .bio-properties-panel-description',
+        result.container);
+      expect(description).not.to.exist;
+    });
+
+
+    it('should render with description if set per props', function() {
+
+      // given
+      const result = createNumberField({
+        container,
+        id: 'descriptionNumberField',
+        label: 'someLabel',
+        description: 'my description'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('my description');
+    });
+
+
+    it('should render with description if set per context', function() {
+
+      // given
+      const descriptionConfig = { descriptionNumberField: (element) => 'myContextDesc' };
+
+      const result = createNumberField({
+        container,
+        id: 'descriptionNumberField',
+        label: 'someLabel',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myContextDesc');
+    });
+
+
+    it('should render description set per props over context', function() {
+
+      // given
+      const descriptionConfig = { descriptionNumberField: (element) => 'myContextDesc' };
+
+      const result = createNumberField({
+        container,
+        id: 'descriptionNumberField',
+        label: 'someLabel',
+        description: 'myExplicitDescription',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myExplicitDescription');
+    });
+
+  });
+
 });
 
 
@@ -221,22 +308,31 @@ function createNumberField(options = {}) {
     min,
     setValue = noop,
     step,
+    descriptionConfig = {},
+    getDescriptionForId = noop,
     container
   } = options;
 
+  const context = {
+    description: descriptionConfig,
+    getDescriptionForId
+  };
+
   return render(
-    <NumberField
-      element={ element }
-      debounce={ debounce }
-      description={ description }
-      disabled={ disabled }
-      getValue={ getValue }
-      id={ id }
-      label={ label }
-      max={ max }
-      min={ min }
-      setValue={ setValue }
-      step={ step } />,
+    <DescriptionContext.Provider value={ context }>
+      <NumberField
+        element={ element }
+        debounce={ debounce }
+        description={ description }
+        disabled={ disabled }
+        getValue={ getValue }
+        id={ id }
+        label={ label }
+        max={ max }
+        min={ min }
+        setValue={ setValue }
+        step={ step } />
+    </DescriptionContext.Provider>,
     {
       container
     }

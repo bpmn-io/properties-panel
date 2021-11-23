@@ -14,6 +14,10 @@ import {
   changeInput
 } from 'test/TestHelper';
 
+import {
+  DescriptionContext
+} from 'src/context';
+
 import TextField, { isEdited } from 'src/components/entries/TextField';
 
 insertCoreStyles();
@@ -265,22 +269,67 @@ describe('<TextField>', function() {
     });
 
 
-    it('should render with description if set', function() {
+    it('should render with description if set per props', function() {
 
       // given
       const result = createTextField({
         container,
-        id: 'noDescriptionTextField',
+        id: 'descriptionTextField',
         label: 'someLabel',
         description: 'my description'
       });
 
       // then
-      const description = domQuery('[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
+      const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
         result.container);
 
       expect(description).to.exist;
       expect(description.innerText).to.equal('my description');
+    });
+
+
+    it('should render with description if set per context', function() {
+
+      // given
+      const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+
+      const result = createTextField({
+        container,
+        id: 'descriptionTextField',
+        label: 'someLabel',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myContextDesc');
+    });
+
+
+    it('should render description set per props over context', function() {
+
+      // given
+      const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+
+      const result = createTextField({
+        container,
+        id: 'descriptionTextField',
+        label: 'someLabel',
+        description: 'myExplicitDescription',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myExplicitDescription');
     });
 
   });
@@ -301,20 +350,29 @@ function createTextField(options = {}) {
     getValue = noop,
     setValue = noop,
     validate = noop,
+    descriptionConfig = {},
+    getDescriptionForId = noop,
     container
   } = options;
 
+  const context = {
+    description: descriptionConfig,
+    getDescriptionForId
+  };
+
   return render(
-    <TextField
-      element={ element }
-      id={ id }
-      label={ label }
-      description={ description }
-      disabled={ disabled }
-      getValue={ getValue }
-      setValue={ setValue }
-      debounce={ debounce }
-      validate={ validate } />,
+    <DescriptionContext.Provider value={ context }>
+      <TextField
+        element={ element }
+        id={ id }
+        label={ label }
+        description={ description }
+        disabled={ disabled }
+        getValue={ getValue }
+        setValue={ setValue }
+        debounce={ debounce }
+        validate={ validate } />
+    </DescriptionContext.Provider>,
     {
       container
     }
