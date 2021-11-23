@@ -410,6 +410,11 @@ select.bio-properties-panel-input {
   vertical-align: middle;
 }
 
+.bio-properties-panel-input[type="checkbox"]:focus {
+  outline: 1px solid var(--input-focus-border-color);
+  outline-offset: 0;
+}
+
 .bio-properties-panel-checkbox > .bio-properties-panel-label {
   display: inline-block;
   font-size: var(--text-size-base);
