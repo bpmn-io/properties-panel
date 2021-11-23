@@ -236,6 +236,49 @@ describe('<PropertiesPanel>', function() {
 
   });
 
+
+  describe('description context', function() {
+
+    it('should notify on description loaded', function() {
+
+      // given
+      const descriptionConfig = {
+        input1: (element, translate) => undefined
+      };
+
+      const descriptionLoadedSpy = sinon.spy();
+
+      // when
+      createPropertiesPanel({
+        container,
+        element: noopElement,
+        descriptionConfig,
+        descriptionLoaded: descriptionLoadedSpy
+      });
+
+      // then
+      expect(descriptionLoadedSpy).to.have.been.calledWith(descriptionConfig);
+    });
+
+
+    it('should use default config, given no config provided', function() {
+
+      // given
+      const descriptionLoadedSpy = sinon.spy();
+
+      // when
+      createPropertiesPanel({
+        container,
+        element: noopElement,
+        descriptionLoaded: descriptionLoadedSpy
+      });
+
+      // then
+      expect(descriptionLoadedSpy).to.have.been.calledWith({});
+    });
+
+  });
+
 });
 
 
@@ -249,7 +292,9 @@ function createPropertiesPanel(options = {}) {
     headerProvider = HeaderProvider,
     groups = [],
     layoutConfig,
-    layoutChanged = noop
+    layoutChanged = noop,
+    descriptionConfig,
+    descriptionLoaded = noop
   } = options;
 
   return render(
@@ -259,6 +304,8 @@ function createPropertiesPanel(options = {}) {
       groups={ groups }
       layoutConfig={ layoutConfig }
       layoutChanged={ layoutChanged }
+      descriptionConfig={ descriptionConfig }
+      descriptionLoaded={ descriptionLoaded }
     />,
     {
       container

@@ -15,6 +15,10 @@ import {
 
 import ToggleSwitch, { isEdited } from 'src/components/entries/ToggleSwitch';
 
+import {
+  DescriptionContext
+} from 'src/context';
+
 insertCoreStyles();
 
 const noop = () => {};
@@ -96,26 +100,22 @@ describe('<TextField>', function() {
   });
 
 
-  it('should set labels and description', function() {
+  it('should set labels', function() {
 
     // given
     const result = createToggleSwitch({
       container,
-      description: 'myDescription',
       label: 'myLabel',
       switcherLabel: 'mySwitcherLabel'
     });
 
     // then
     const label = domQuery(`.bio-properties-panel-label[for="bio-properties-panel-${TEST_TOGGLE_ID}"]`, result.container),
-          switchLabel = domQuery('.bio-properties-panel-toggle-switch__label', result.container),
-          description = domQuery('.bio-properties-panel-description', result.container);
+          switchLabel = domQuery('.bio-properties-panel-toggle-switch__label', result.container);
 
     expect(label.innerHTML).to.equal('myLabel');
     expect(switchLabel.innerHTML).to.equal('mySwitcherLabel');
-    expect(description.innerHTML).to.equal('myDescription');
   });
-
 
 
   describe('#isEdited', function() {
@@ -169,6 +169,89 @@ describe('<TextField>', function() {
 
   });
 
+
+  describe('description', function() {
+
+    it('should render without description per default', function() {
+
+      // given
+      const result = createToggleSwitch({
+        container,
+        id: 'noDescriptionToggleSwitch'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="noDescriptionToggleSwitch"] .bio-properties-panel-description',
+        result.container);
+      expect(description).not.to.exist;
+    });
+
+
+    it('should render with description if set per props', function() {
+
+      // given
+      const result = createToggleSwitch({
+        container,
+        id: 'descriptionTextArea',
+        label: 'someLabel',
+        description: 'my description'
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionTextArea"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('my description');
+    });
+
+
+    it('should render with description if set per context', function() {
+
+      // given
+      const descriptionConfig = { descriptionTextArea: (element) => 'myContextDesc' };
+
+      const result = createToggleSwitch({
+        container,
+        id: 'descriptionTextArea',
+        label: 'someLabel',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionTextArea"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myContextDesc');
+    });
+
+
+    it('should render description set per props over context', function() {
+
+      // given
+      const descriptionConfig = { descriptionTextArea: (element) => 'myContextDesc' };
+
+      const result = createToggleSwitch({
+        container,
+        id: 'descriptionTextArea',
+        label: 'someLabel',
+        description: 'myExplicitDescription',
+        descriptionConfig,
+        getDescriptionForId: (id, element) => descriptionConfig[id](element)
+      });
+
+      // then
+      const description = domQuery('[data-entry-id="descriptionTextArea"] .bio-properties-panel-description',
+        result.container);
+
+      expect(description).to.exist;
+      expect(description.innerText).to.equal('myExplicitDescription');
+    });
+
+  });
+
 });
 
 
@@ -176,23 +259,34 @@ describe('<TextField>', function() {
 
 function createToggleSwitch(options = {}) {
   const {
+    element,
     id=TEST_TOGGLE_ID,
     label,
     description,
     switcherLabel,
     getValue = () => false,
     setValue = noop,
+    descriptionConfig = {},
+    getDescriptionForId = noop,
     container
   } = options;
 
+  const context = {
+    description: descriptionConfig,
+    getDescriptionForId
+  };
+
   return render(
-    <ToggleSwitch
-      id={ id }
-      label={ label }
-      description={ description }
-      getValue={ getValue }
-      setValue={ setValue }
-      switcherLabel={ switcherLabel } />,
+    <DescriptionContext.Provider value={ context }>
+      <ToggleSwitch
+        element={ element }
+        id={ id }
+        label={ label }
+        description={ description }
+        getValue={ getValue }
+        setValue={ setValue }
+        switcherLabel={ switcherLabel } />
+    </DescriptionContext.Provider>,
     {
       container
     }

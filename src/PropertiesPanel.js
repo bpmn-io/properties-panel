@@ -15,12 +15,15 @@ import Header from './components/Header';
 import Group from './components/Group';
 
 import {
-  LayoutContext
+  LayoutContext,
+  DescriptionContext
 } from './context';
 
 const DEFAULT_LAYOUT = {
   open: true
 };
+
+const DEFAULT_DESCRIPTION = {};
 
 
 /**
@@ -57,6 +60,16 @@ const DEFAULT_LAYOUT = {
  *    label: String
  * } } GroupDefinition
  *
+ *  @typedef { {
+ *    [id: String]: GetDescriptionFunction
+ * } } DescriptionConfig
+ *
+ * @callback { {
+ * @param {string} id
+ * @param {djs.model.base} element
+ * @returns {string}
+ * } } GetDescriptionFunction
+ *
  */
 
 
@@ -70,6 +83,8 @@ const DEFAULT_LAYOUT = {
  * @param {Array<GroupDefinition|ListGroupDefinition>} props.groups
  * @param {Object} [props.layoutConfig]
  * @param {Function} [props.layoutChanged]
+ * @param {DescriptionConfig} [props.descriptionConfig]
+ * @param {Function} [props.descriptionLoaded]
  */
 export default function PropertiesPanel(props) {
   const {
@@ -77,9 +92,12 @@ export default function PropertiesPanel(props) {
     headerProvider,
     groups,
     layoutConfig = {},
-    layoutChanged
+    layoutChanged,
+    descriptionConfig = {},
+    descriptionLoaded
   } = props;
 
+  // set-up layout context
   const [ layout, setLayout ] = useState(createLayoutContext(layoutConfig));
 
   useEffect(() => {
@@ -103,37 +121,55 @@ export default function PropertiesPanel(props) {
     setLayoutForKey
   };
 
+  // set-up description context
+  const description = createDescriptionContext(descriptionConfig);
+
+  if (typeof descriptionLoaded === 'function') {
+    descriptionLoaded(description);
+  }
+
+  const getDescriptionForId = (id, element) => {
+    return description[id] && description[id](element);
+  };
+
+  const descriptionContext = {
+    description,
+    getDescriptionForId
+  };
+
   if (!element) {
     return <div class="bio-properties-panel-placeholder">Select an element to edit its properties.</div>;
   }
 
-  return <LayoutContext.Provider value={ layoutContext }>
-    <div
-      class={ classnames(
-        'bio-properties-panel',
-        layout.open ? 'open' : '')
-      }>
-      <Header
-        element={ element }
-        headerProvider={ headerProvider } />
-      <div class="bio-properties-panel-scroll-container">
-        {
-          groups.map(group => {
+  return <DescriptionContext.Provider value={ descriptionContext }>
+    <LayoutContext.Provider value={ layoutContext }>
+      <div
+        class={ classnames(
+          'bio-properties-panel',
+          layout.open ? 'open' : '')
+        }>
+        <Header
+          element={ element }
+          headerProvider={ headerProvider } />
+        <div class="bio-properties-panel-scroll-container">
+          {
+            groups.map(group => {
 
-            const {
-              component: GroupComponent = Group,
-              id
-            } = group;
+              const {
+                component: GroupComponent = Group,
+                id
+              } = group;
 
-            return <GroupComponent
-              key={ id }
-              element={ element }
-              { ...group } />;
-          })
-        }
+              return <GroupComponent
+                key={ id }
+                element={ element }
+                { ...group } />;
+            })
+          }
+        </div>
       </div>
-    </div>
-  </LayoutContext.Provider>;
+    </LayoutContext.Provider>
+  </DescriptionContext.Provider>;
 }
 
 
@@ -142,6 +178,13 @@ export default function PropertiesPanel(props) {
 function createLayoutContext(overrides) {
   return {
     ...DEFAULT_LAYOUT,
+    ...overrides
+  };
+}
+
+function createDescriptionContext(overrides) {
+  return {
+    ...DEFAULT_DESCRIPTION,
     ...overrides
   };
 }
