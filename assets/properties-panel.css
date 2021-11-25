@@ -29,7 +29,12 @@
 
   --text-base-color: var(--color-grey-225-10-15);
   --text-error-color: var(--color-red-360-100-45);
+  --link-color: var(--color-blue-205-100-50);
+
   --description-color: var(--color-grey-225-10-35);
+  --description-code-background-color: var(--color-grey-225-10-97);
+  --description-code-border-color: var(--color-grey-225-10-85);
+  --description-list-item-color: var(--color-grey-225-10-35);
 
   --placeholder-color: var(--color-grey-225-10-75);
 
@@ -359,13 +364,44 @@
   margin: 2px 0 1px;
 }
 
-.bio-properties-panel-description {
+.bio-properties-panel-description, 
+.bio-properties-panel-description p,
+.bio-properties-panel-description span,
+.bio-properties-panel-description div {
   color: var(--description-color);
   display: block;
   margin: 2px 0 4px;
   line-height: var(--line-height-condensed);
   font-weight: 400;
   font-size: var(--text-size-small);
+}
+
+.bio-properties-panel-description code {
+  color: var(--description-color);
+  font-family: var(--font-family);
+  font-size: var(--text-size-small);
+  line-height: var(--line-height-condensed);
+  padding: 0 2px;
+  background-color: var(--description-code-background-color);
+  border: 1px solid var(--description-code-border-color);
+  border-radius: 3px;
+}
+
+.bio-properties-panel-description ul {
+  padding: 0;
+  margin: 0 0 0 12px;
+  list-style-type: disc;
+}
+
+.bio-properties-panel-description li {
+  color: var(--description-list-item-color);
+  margin: 0 0 0 12px;
+}
+
+.bio-properties-panel-description a {
+  color: var(--link-color);
+  font-size: var(--text-size-small);
+  text-decoration: underline;
 }
 
 .bio-properties-panel-input {
