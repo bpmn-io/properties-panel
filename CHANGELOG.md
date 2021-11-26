@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.8.1
+
+* `CHORE`: add outline to checkboxes ([#120](https://github.com/bpmn-io/properties-panel/pull/120))
+* `CHORE`: add missing description styles ([#121](https://github.com/bpmn-io/properties-panel/pull/121))
+
 ## 0.8.0
 
 * `FEAT`: allow to disable textarea, select, and checkbox ([#118](https://github.com/bpmn-io/properties-panel/pull/118))
