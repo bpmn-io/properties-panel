@@ -1,6 +1,8 @@
 const path = require('path');
 const { DefinePlugin } = require('webpack');
 
+const babelConfig = require('./.babelrc');
+
 const basePath = '.';
 
 // configures browsers to run test against
@@ -64,14 +66,7 @@ module.exports = function(karma) {
             exclude: /node_modules/,
             use: {
               loader: 'babel-loader',
-              options: {
-                plugins: [
-                  [ '@babel/plugin-transform-react-jsx', {
-                    'importSource': 'preact',
-                    'runtime': 'automatic'
-                  } ]
-                ]
-              }
+              options: babelConfig
             }
           },
           {
@@ -105,8 +100,9 @@ module.exports = function(karma) {
           'main'
         ],
         alias: {
-          'react': 'preact/compat',
-          'react-dom': 'preact/compat'
+          'preact': '/preact',
+          'react': '/preact/compat',
+          'react-dom': '/preact/compat'
         },
         modules: [
           'node_modules',
