@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.9.0
+
+* `FEAT`: add `DescriptionContext` and `useDescriptionContext` hook ([#122](https://github.com/bpmn-io/properties-panel/pull/122))
+* `FEAT`: add seperate `Description` entry ([#122](https://github.com/bpmn-io/properties-panel/pull/122))
+
 ## 0.8.1
 
 * `CHORE`: add outline to checkboxes ([#120](https://github.com/bpmn-io/properties-panel/pull/120))
