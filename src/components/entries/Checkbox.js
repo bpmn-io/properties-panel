@@ -1,6 +1,4 @@
-import {
-  useDescriptionContext
-} from '../../hooks';
+import Description from './Description';
 
 function Checkbox(props) {
   const {
@@ -52,17 +50,12 @@ export default function CheckboxEntry(props) {
     disabled
   } = props;
 
-  const contextDescription = useDescriptionContext(id, element);
-
   const value = getValue(element);
 
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-checkbox-entry" data-entry-id={ id }>
       <Checkbox id={ id } label={ label } onChange={ setValue } value={ value } disabled={ disabled } />
-      { (description || contextDescription) &&
-        <div class="bio-properties-panel-description">
-          { description || contextDescription }
-        </div> }
+      <Description forId={ id } element={ element } value={ description } />
     </div>
   );
 }
