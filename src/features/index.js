@@ -1,0 +1,1 @@
+export { default as DebounceInputModule } from './debounce-input';
