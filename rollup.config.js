@@ -1,8 +1,4 @@
-import { parse as parsePath, relative as relativePath } from 'path';
-import { replaceInFile } from 'replace-in-file';
-
 import babel from '@rollup/plugin-babel';
-import copy from 'rollup-plugin-copy';
 import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
 
@@ -27,48 +23,12 @@ export default [
     external: [
       'classnames',
       'min-dash',
-      'min-dom',
-
-      // exclude local preact copy to share it with extensions
-      /\.\/preact/
+      /^preact/
     ],
     plugins: [
-      copy({
-
-        // hook name provided to make sure next plugin has files to replace
-        hook: 'buildStart',
-        targets: [
-          { src: 'node_modules/preact', dest: '.' }
-        ]
-      }),
-      rewirePreactSubpackages(),
       babel({ ...babelConfig, babelHelpers: 'bundled' }),
       json(),
       resolve()
     ]
   }
 ];
-
-/**
- * Monkey-patch preact subpackages to import from the local package via relative path.
- */
-function rewirePreactSubpackages() {
-  return {
-    async buildEnd() {
-      await replaceInFile({
-        files: './preact/**/*.{js,mjs,js.map}',
-        from: [ /(import\s*['"])preact([/'"])/g, /(from\s*['"])preact([/'"])/g, /(require\(['"])preact([/'"])/g ],
-        to: function(...args) {
-          const importGroup = args[1],
-                afterImport = args[2],
-                filePath = args.pop();
-
-          const { dir } = parsePath(filePath);
-          const pathToPreact = relativePath(dir, './preact');
-
-          return `${importGroup}${pathToPreact}${afterImport}`;
-        }
-      });
-    }
-  };
-}
