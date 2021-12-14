@@ -1,4 +1,5 @@
 import {
+  act,
   render
 } from '@testing-library/preact/pure';
 
@@ -212,7 +213,7 @@ describe('<PropertiesPanel>', function() {
 
   describe('layout context', function() {
 
-    it('should notify on layout changes', function() {
+    it('should notify on initial layout loaded', function() {
 
       // given
       const layoutConfig = {
@@ -232,6 +233,44 @@ describe('<PropertiesPanel>', function() {
 
       // then
       expect(layoutChangedSpy).to.have.been.calledWith(layoutConfig);
+    });
+
+
+    it('should notify on layout changed', async function() {
+
+      // given
+      const groups = [
+        {
+          id: 'foo',
+          entries: []
+        }
+      ];
+
+      const layoutChangedSpy = sinon.spy();
+
+      // when
+      const result = createPropertiesPanel({
+        container,
+        element: noopElement,
+        groups,
+        layoutChanged: layoutChangedSpy
+      });
+
+      const group = domQuery('[data-group-id="group-foo"]', result.container);
+      const header = domQuery('.bio-properties-panel-group-header', group);
+
+      // when
+      await act(() => {
+        header.click();
+      });
+
+      // then
+      expect(layoutChangedSpy).to.have.been.calledWith({
+        open: true,
+        groups: {
+          [ groups[0].id ]: { open: true }
+        }
+      });
     });
 
   });

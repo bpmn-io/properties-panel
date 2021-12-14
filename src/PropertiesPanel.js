@@ -4,6 +4,7 @@ import {
 } from 'preact/hooks';
 
 import {
+  assign,
   get,
   set
 } from 'min-dash';
@@ -98,7 +99,7 @@ export default function PropertiesPanel(props) {
   } = props;
 
   // set-up layout context
-  const [ layout, setLayout ] = useState(createLayoutContext(layoutConfig));
+  const [ layout, setLayout ] = useState(createLayout(layoutConfig));
 
   useEffect(() => {
     if (typeof layoutChanged === 'function') {
@@ -111,7 +112,9 @@ export default function PropertiesPanel(props) {
   };
 
   const setLayoutForKey = (key, config) => {
-    setLayout(set(layout, key, config));
+    const newLayout = assign({}, layout);
+    set(newLayout, key, config);
+    setLayout(newLayout);
   };
 
   const layoutContext = {
@@ -175,7 +178,7 @@ export default function PropertiesPanel(props) {
 
 // helpers //////////////////
 
-function createLayoutContext(overrides) {
+function createLayout(overrides) {
   return {
     ...DEFAULT_LAYOUT,
     ...overrides
