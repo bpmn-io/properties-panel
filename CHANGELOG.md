@@ -6,6 +6,17 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.10.0
+
+* `FEAT`: reexport `preact` used in the package ([#124](https://github.com/bpmn-io/properties-panel/pull/124))
+* `FEAT`: bundle library and expose components from single place ([#124](https://github.com/bpmn-io/properties-panel/pull/124))
+
+### BREAKING CHANGES
+
+* Internal structure of the library is no longer exposed.
+  Use root exports instead. Note that names of some of the components have changed, e.g. `TextField` -> `TextFieldEntry`.
+* To extend the library, import the vendored instance of `preact`, i.e. `@bpmn-io/properties-panel/preact`.
+
 ## 0.9.0
 
 * `FEAT`: add `DescriptionContext` and `useDescriptionContext` hook ([#122](https://github.com/bpmn-io/properties-panel/pull/122))
