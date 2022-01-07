@@ -1,4 +1,4 @@
-import { parse as parsePath, relative as relativePath } from 'path';
+import path, { parse as parsePath, relative as relativePath } from 'path';
 import { replaceInFile } from 'replace-in-file';
 
 import babel from '@rollup/plugin-babel';
@@ -64,9 +64,8 @@ function rewirePreactSubpackages() {
                 filePath = args.pop();
 
           const { dir } = parsePath(filePath);
-          const pathToPreact = relativePath(dir, './preact');
-
-          return `${importGroup}${pathToPreact}${afterImport}`;
+          const posixPathToPreact = relativePath(dir, './preact').split(path.sep).join(path.posix.sep);
+          return `${importGroup}${posixPathToPreact}${afterImport}`;
         }
       });
     }
