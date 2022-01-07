@@ -642,7 +642,9 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-list-entry-item:hover .bio-properties-panel-remove-list-entry,
-.bio-properties-panel-collapsible-entry:hover > .bio-properties-panel-collapsible-entry-header .bio-properties-panel-remove-entry {
+.bio-properties-panel-collapsible-entry:hover > .bio-properties-panel-collapsible-entry-header .bio-properties-panel-remove-entry,
+.bio-properties-panel-collapsible-entry:focus-within > .bio-properties-panel-collapsible-entry-header .bio-properties-panel-remove-entry
+{
   visibility: visible;
 }
 
