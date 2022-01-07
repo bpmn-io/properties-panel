@@ -26,7 +26,7 @@ const noop = () => {};
 const TEST_TOGGLE_ID='checkbox1';
 
 
-describe('<TextField>', function() {
+describe('<ToggleSwitch>', function() {
 
   let container;
 
