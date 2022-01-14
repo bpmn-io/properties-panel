@@ -46,7 +46,6 @@
   --group-bottom-border-color: var(--color-grey-225-10-75);
 
   --add-entry-fill-color: var(--color-grey-225-10-35);
-  --add-entry-empty-fill-color: var(--color-grey-225-10-75);
   --add-entry-hover-fill-color: var(--color-white);
   --add-entry-hover-background-color: var(--color-blue-205-100-50);
   --add-entry-label-color: var(--color-white);
@@ -56,7 +55,6 @@
 
   --arrow-fill-color: var(--color-grey-225-10-35);
   --arrow-hover-background-color: var(--color-grey-225-10-95);
-  --arrow-empty-fill-color: var(--color-grey-225-10-75);
 
   --dot-color: var(--color-grey-225-10-35);
 
@@ -86,13 +84,12 @@
 
   --list-entry-dot-background-color: var(--color-grey-225-10-35);
   --list-entry-header-button-fill-color: var(--color-grey-225-10-35);
-  --list-entry-add-entry-empty-fill-color: var(--color-white);
   --list-entry-add-entry-empty-background-color: var(--color-blue-205-100-50);
   --list-entry-add-entry-empty-hover-background-color: var(--color-blue-205-100-45);
   --list-entry-add-entry-label-color: var(--color-white);
   --list-entry-add-entry-background-color: var(--color-blue-205-100-50);
   --list-entry-add-entry-fill-color: var(--color-white);
-  
+
   --dropdown-item-background-color: var(--color-white);
   --dropdown-item-hover-background-color: var(--color-grey-225-10-95);
   --dropdown-separator-background-color: var(--color-grey-225-10-75);
@@ -256,7 +253,6 @@
 }
 
 .bio-properties-panel-group-header.empty .bio-properties-panel-add-entry {
-  fill: var(--add-entry-empty-fill-color);
   margin-right: 69px;
   padding-left: 6px;
 }
@@ -305,10 +301,6 @@
 
 .bio-properties-panel-arrow-down {
   transform: rotate(90deg);
-}
-
-.bio-properties-panel-group-header.empty .bio-properties-panel-arrow {
-  fill: var(--arrow-empty-fill-color);
 }
 
 .bio-properties-panel-dot {
@@ -364,7 +356,7 @@
   margin: 2px 0 1px;
 }
 
-.bio-properties-panel-description, 
+.bio-properties-panel-description,
 .bio-properties-panel-description p,
 .bio-properties-panel-description span,
 .bio-properties-panel-description div {
@@ -799,14 +791,8 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-list-entry.empty .bio-properties-panel-add-entry {
-  fill: var(--list-entry-add-entry-empty-fill-color);
-  background-color: var(--list-entry-add-entry-empty-background-color);
   margin-right: 16px;
   padding-left: 6px;
-}
-
-.bio-properties-panel-list-entry.empty .bio-properties-panel-add-entry:hover {
-  background-color: var(--list-entry-add-entry-empty-hover-background-color);
 }
 
 .bio-properties-panel-list-entry.empty .bio-properties-panel-add-entry-label {
