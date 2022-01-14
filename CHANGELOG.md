@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.10.1
+
+* `FIX`: properly update layout ([#125](https://github.com/bpmn-io/properties-panel/pull/125))
+* `FIX`: delete button now shows on tabbing ([#505](https://github.com/bpmn-io/bpmn-js-properties-panel/issues/505))
+* `FIX`: use POSIX paths when re-exporting preact on Windows ([#127](https://github.com/bpmn-io/properties-panel/issues/127))
+
 ## 0.10.0
 
 * `FEAT`: reexport `preact` used in the package ([#124](https://github.com/bpmn-io/properties-panel/pull/124))
