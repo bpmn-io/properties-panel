@@ -17,7 +17,7 @@ import {
  * ```
  *
  * @param {string} id
- * @param {djs.model.Base} element
+ * @param {*} element
  *
  * @returns {string}
  */

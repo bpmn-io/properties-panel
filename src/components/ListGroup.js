@@ -25,7 +25,7 @@ import {
 const noop = () => {};
 
 /**
- * @param {import('../PropertiesPanel').ListGroupDefinition} props
+ * @param {import('../types').ListGroupProps} props
  */
 export default function ListGroup(props) {
   const {

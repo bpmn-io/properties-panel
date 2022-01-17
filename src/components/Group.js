@@ -20,7 +20,7 @@ import {
 import { ArrowIcon } from './icons';
 
 /**
- * @param {import('../PropertiesPanel').GroupDefinition} props
+ * @param {import('../types').EntriesGroupProps} props
  */
 export default function Group(props) {
   const {
@@ -39,18 +39,20 @@ export default function Group(props) {
 
   // set edited state depending on all entries
   useEffect(() => {
-    const hasOneEditedEntry = entries.find(entry => {
+    const hasOneEditedEntry = !!entries.find(entry => {
       const {
         id,
         isEdited
       } = entry;
 
+      /** @type {HTMLElement} */
       const entryNode = domQuery(`[data-entry-id="${id}"]`);
 
       if (!isFunction(isEdited) || !entryNode) {
         return false;
       }
 
+      /** @type {HTMLElement} */
       const inputNode = domQuery('.bio-properties-panel-input', entryNode);
 
       return isEdited(inputNode);

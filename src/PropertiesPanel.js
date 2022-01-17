@@ -28,63 +28,16 @@ const DEFAULT_DESCRIPTION = {};
 
 
 /**
- * @typedef { {
- *    component: import('preact').ComponentChild,
- *    id: String,
- *    isEdited?: Function
- * } } EntryDefinition
- *
- * @typedef { {
- *    autoFocusEntry: String,
- *    autoOpen?: Boolean,
- *    entries: Array<EntryDefinition>,
- *    id: String,
- *    label: String,
- *    remove: (event: MouseEvent) => void
- * } } ListItemDefinition
- *
- * @typedef { {
- *    add: (event: MouseEvent) => void,
- *    component: import('preact').Component,
- *    element: Object,
- *    id: String,
- *    items: Array<ListItemDefinition>,
- *    label: String,
- *    shouldSort?: Boolean,
- *    shouldOpen?: Boolean
- * } } ListGroupDefinition
- *
- * @typedef { {
- *    component?: import('preact').Component,
- *    entries: Array<EntryDefinition>,
- *    id: String,
- *    label: String
- * } } GroupDefinition
- *
- *  @typedef { {
- *    [id: String]: GetDescriptionFunction
- * } } DescriptionConfig
- *
- * @callback { {
- * @param {string} id
- * @param {djs.model.base} element
- * @returns {string}
- * } } GetDescriptionFunction
- *
- */
-
-
-/**
  * A basic properties panel component. Describes *how* content will be rendered, accepts
  * data from implementor to describe *what* will be rendered.
  *
  * @param {Object} props
  * @param {Object} props.element
  * @param {import('./components/Header').HeaderProvider} props.headerProvider
- * @param {Array<GroupDefinition|ListGroupDefinition>} props.groups
+ * @param {import('./types').GroupDefinition[]} props.groups
  * @param {Object} [props.layoutConfig]
  * @param {Function} [props.layoutChanged]
- * @param {DescriptionConfig} [props.descriptionConfig]
+ * @param {import('./types').DescriptionConfig} [props.descriptionConfig]
  * @param {Function} [props.descriptionLoaded]
  */
 export default function PropertiesPanel(props) {

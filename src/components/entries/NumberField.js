@@ -39,7 +39,7 @@ function NumberField(props) {
         id={ prefixId(id) }
         type="number"
         name={ id }
-        spellCheck="false"
+        spellcheck={ false }
         autoComplete="off"
         disabled={ disabled }
         class="bio-properties-panel-input"

@@ -2,6 +2,7 @@ import {
   createContext
 } from 'preact';
 
+/** @type {import('../types').LayoutContext} */
 const LayoutContext = createContext({
   layout: {},
   setLayout: () => {},

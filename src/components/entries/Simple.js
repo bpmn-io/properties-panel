@@ -9,8 +9,8 @@ import {
  * @param {Object} props.element
  * @param {Function} props.getValue
  * @param {String} props.id
- * @param {Function} [props.onBlur]
- * @param {Function} [props.onFocus]
+ * @param {(event: FocusEvent) => void} [props.onBlur]
+ * @param {(event: FocusEvent) => void} [props.onFocus]
  * @param {Function} props.setValue
  */
 export default function Simple(props) {
@@ -37,7 +37,7 @@ export default function Simple(props) {
         id={ prefixId(id) }
         type="text"
         name={ id }
-        spellCheck="false"
+        spellcheck={ false }
         autoComplete="off"
         disabled={ disabled }
         class="bio-properties-panel-input"

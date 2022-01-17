@@ -11,7 +11,7 @@ import { isFunction } from 'min-dash';
 import CollapsibleEntry from './entries/Collapsible';
 
 /**
- * @param {import('../PropertiesPanel').ListItemDefinition} props
+ * @param {import('../types').ListItemDefinition} props
  */
 export default function ListItem(props) {
   const {
@@ -22,8 +22,11 @@ export default function ListItem(props) {
   // focus specified entry on auto open
   useEffect(() => {
     if (autoOpen && autoFocusEntry) {
+
+      /** @type {HTMLElement} */
       const entry = domQuery(`[data-entry-id="${autoFocusEntry}"]`);
 
+      /** @type {HTMLInputElement} */
       const focusableInput = domQuery('.bio-properties-panel-input', entry);
 
       if (focusableInput) {

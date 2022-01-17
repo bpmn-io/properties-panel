@@ -11,6 +11,7 @@ import classnames from 'classnames';
  * @param {object} props
  * @param {string} [props.class]
  * @param {import('preact').Component[]} [props.menuItems]
+ * @param {import('preact').ComponentChildren} [props.children]
  * @returns
  */
 export function DropdownButton(props) {
@@ -94,7 +95,7 @@ function useGlobalClick(ignoredElements, callback) {
      * @param {MouseEvent} event
      */
     function listener(event) {
-      if (ignoredElements.some(element => element && element.contains(event.target))) {
+      if (ignoredElements.some(element => element && element.contains(/** @type {Node} */ (event.target)))) {
         return;
       }
 

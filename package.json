@@ -4,6 +4,7 @@
   "description": "Library for creating bpmn-io properties panels.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist",
     "assets",
@@ -11,13 +12,16 @@
   ],
   "scripts": {
     "all": "run-s lint build test",
-    "build": "del-cli preact dist && rollup -c",
+    "build": "del-cli preact dist && rollup -c && npm run generate-types",
     "build:watch": "rollup -c --watch",
-    "lint": "eslint .",
+    "lint": "run-p lint:*",
+    "lint:js": "eslint .",
+    "lint:types": "tsc --noEmit --emitDeclarationOnly false",
     "dev": "npm test -- --auto-watch --no-single-run",
     "test": "karma start karma.config.js",
     "prepublishOnly": "run-s build",
-    "prepare": "run-s build"
+    "prepare": "run-s build",
+    "generate-types": "tsc && cp src/*.d.ts dist/types"
   },
   "repository": {
     "type": "git",
@@ -82,6 +86,7 @@
     "sinon": "^11.1.1",
     "sinon-chai": "^3.7.0",
     "sirv-cli": "^1.0.12",
+    "typescript": "^4.5.4",
     "webpack": "^5.38.1"
   }
 }

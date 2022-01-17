@@ -31,7 +31,7 @@ import {
  * @param {string} props.id
  * @param {*} props.element
  * @param {Function} props.onAdd
- * @param {(item: Item, index: number, isNew: boolean) => JSX.Element} props.renderItem
+ * @param {(item: Item, index: number, isNew: boolean) => import('preact').JSX.Element} props.renderItem
  * @param {string} [props.label='<empty>']
  * @param {Function} [props.onRemove]
  * @param {Item[]} [props.items]
@@ -176,6 +176,7 @@ function ItemsList(props) {
     if (newItem && autoFocusEntry) {
 
       // (0) select the parent entry (containing all list items)
+      /** @type {HTMLElement} */
       const entry = domQuery(`[data-entry-id="${id}"]`);
 
       // (1) select the first input or a custom element to be focussed

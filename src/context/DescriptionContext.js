@@ -2,9 +2,10 @@ import {
   createContext
 } from 'preact';
 
+/** @type {import('../types').DescriptionContext} */
 const DescriptionContext = createContext({
   description: {},
-  getDescriptionForId: () => {}
+  getDescriptionForId: () => ''
 });
 
 export default DescriptionContext;

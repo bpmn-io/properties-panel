@@ -35,7 +35,7 @@ function Textfield(props) {
         id={ prefixId(id) }
         type="text"
         name={ id }
-        spellCheck="false"
+        spellcheck={ false }
         autoComplete="off"
         disabled={ disabled }
         class="bio-properties-panel-input"

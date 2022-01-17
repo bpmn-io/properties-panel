@@ -29,7 +29,7 @@ function TextArea(props) {
       <textarea
         id={ prefixId(id) }
         name={ id }
-        spellCheck="false"
+        spellcheck={ false }
         class={ classnames(
           'bio-properties-panel-input',
           monospace ? 'bio-properties-panel-input-monospace' : '')
