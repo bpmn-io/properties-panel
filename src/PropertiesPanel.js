@@ -101,6 +101,15 @@ export default function PropertiesPanel(props) {
   // set-up layout context
   const [ layout, setLayout ] = useState(createLayout(layoutConfig));
 
+  // react on downstream state changes
+  useEffect(() => {
+    setLayout(prevState => ({
+      ...prevState,
+      ...layoutConfig
+    }));
+  }, [ layoutConfig ]);
+
+  // notify interested parties once layout changes
   useEffect(() => {
     if (typeof layoutChanged === 'function') {
       layoutChanged(layout);

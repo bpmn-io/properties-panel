@@ -1,5 +1,6 @@
 import {
   useContext,
+  useEffect,
   useState
 } from 'preact/hooks';
 
@@ -30,6 +31,11 @@ export function useLayoutState(path, defaultValue) {
 
   const layoutForKey = getLayoutForKey(path, defaultValue);
   const [ value, set ] = useState(layoutForKey);
+
+  // react on global state changes
+  useEffect(() => {
+    set(layoutForKey);
+  }, [ layoutForKey ]);
 
   const setState = (newValue) => {
 
