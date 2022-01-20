@@ -11,7 +11,8 @@ import {
 } from 'min-dom';
 
 import {
-  insertCoreStyles,
+  expectNoViolations,
+  insertCoreStyles
 } from 'test/TestHelper';
 
 import Collapsible from 'src/components/entries/Collapsible';
@@ -140,6 +141,23 @@ describe('<Collapsible>', function() {
 
     // then
     expect(removeEntry).to.not.exist;
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const { container: node } = createCollapsible({
+        container: parentContainer,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
   });
 
 });

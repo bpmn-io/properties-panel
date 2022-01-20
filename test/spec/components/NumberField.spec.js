@@ -9,8 +9,9 @@ import {
 } from 'min-dom';
 
 import {
-  insertCoreStyles,
-  changeInput
+  changeInput,
+  expectNoViolations,
+  insertCoreStyles
 } from 'test/TestHelper';
 
 import NumberField, { isEdited } from 'src/components/entries/NumberField';
@@ -286,6 +287,23 @@ describe('<NumberField>', function() {
 
       expect(description).to.exist;
       expect(description.innerText).to.equal('myExplicitDescription');
+    });
+
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const { container: node } = createNumberField({
+        container,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
     });
 
   });

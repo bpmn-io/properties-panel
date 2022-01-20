@@ -9,6 +9,7 @@ import {
 } from 'min-dom';
 
 import {
+  expectNoViolations,
   insertCoreStyles
 } from 'test/TestHelper';
 
@@ -139,6 +140,26 @@ describe('<Header>', function() {
 
     // then
     expect(iconNode).to.exist;
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const provider = {
+        getElementLabel: () => 'name',
+        getTypeLabel: () => 'type',
+        getElementIcon: () => 'icon'
+      };
+
+      const { container: node } = render(<Header headerProvider={ provider } />, { container });
+
+      // then
+      await expectNoViolations(node);
+    });
+
   });
 
 });

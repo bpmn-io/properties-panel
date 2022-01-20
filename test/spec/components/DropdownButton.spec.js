@@ -2,6 +2,8 @@ import {
   render
 } from '@testing-library/preact/pure';
 
+import axe from 'axe-core';
+
 import TestContainer from 'mocha-test-container-support';
 
 import {
@@ -215,5 +217,30 @@ describe('<DropdownButton>', function() {
       // then
       expect(spy).to.have.been.calledOnce;
     });
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const menuItems = [
+        { entry: 'Click me' }
+      ];
+
+      const { container: node } = render(
+        <DropdownButton menuItems={ menuItems }>Click</DropdownButton>, { container });
+
+      // when
+      const results = await axe.run(node, {
+        runOnly: [ 'best-practice', 'wcag2a', 'wcag2aa' ]
+      });
+
+      // then
+      expect(results.passes).to.be.not.empty;
+      expect(results.violations).to.be.empty;
+    });
+
   });
 });
