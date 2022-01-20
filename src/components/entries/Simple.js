@@ -42,6 +42,7 @@ export default function Simple(props) {
         disabled={ disabled }
         class="bio-properties-panel-input"
         onInput={ handleInput }
+        aria-label={ value || '<empty>' }
         onFocus={ onFocus }
         onBlur={ onBlur }
         value={ value || '' } />
