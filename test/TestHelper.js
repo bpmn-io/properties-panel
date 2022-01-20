@@ -2,6 +2,18 @@ import {
   fireEvent
 } from '@testing-library/preact';
 
+import axe from 'axe-core';
+
+/**
+ * https://www.deque.com/axe/core-documentation/api-documentation/#axe-core-tags
+ */
+const DEFAULT_AXE_RULES = [
+  'best-practice',
+  'wcag2a',
+  'wcag2aa',
+  'cat.semantics'
+];
+
 
 export function insertCSS(name, css) {
   if (document.querySelector('[data-css-file="' + name + '"]')) {
@@ -41,4 +53,19 @@ export function insertCoreStyles() {
     'test.css',
     require('./test.css').default
   );
+}
+
+export async function expectNoViolations(node, options = {}) {
+  const {
+    rules,
+    ...rest
+  } = options;
+
+  const results = await axe.run(node, {
+    runOnly: rules || DEFAULT_AXE_RULES,
+    ...rest
+  });
+
+  expect(results.passes).to.be.not.empty;
+  expect(results.violations).to.be.empty;
 }
