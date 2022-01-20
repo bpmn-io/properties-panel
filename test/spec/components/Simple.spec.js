@@ -9,8 +9,9 @@ import {
 } from 'min-dom';
 
 import {
-  insertCoreStyles,
-  changeInput
+  changeInput,
+  expectNoViolations,
+  insertCoreStyles
 } from 'test/TestHelper';
 
 import Simple, { isEdited } from 'src/components/entries/Simple';
@@ -120,6 +121,59 @@ describe('<Simple>', function() {
 
       // then
       expect(isEdited(input)).to.be.true;
+    });
+
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const getValue = () => '';
+
+      const { container: node } = createSimple({
+        container,
+        getValue
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
+
+    it('should set aria label', async function() {
+
+      // given
+      const getValue = () => 'foo';
+
+      const { container: node } = createSimple({
+        container,
+        getValue
+      });
+
+      // then
+      await expectNoViolations(node, {
+        rules: [ 'label' ]
+      });
+    });
+
+
+    it('should set aria label (empty value)', async function() {
+
+      // given
+      const getValue = () => null;
+
+      const { container: node } = createSimple({
+        container,
+        getValue
+      });
+
+      // then
+      await expectNoViolations(node, {
+        rules: [ 'label' ]
+      });
     });
 
   });
