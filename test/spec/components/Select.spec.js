@@ -10,8 +10,9 @@ import {
 } from 'min-dom';
 
 import {
-  insertCoreStyles,
-  changeInput
+  expectNoViolations,
+  changeInput,
+  insertCoreStyles
 } from 'test/TestHelper';
 
 import Select, { isEdited } from 'src/components/entries/Select';
@@ -282,6 +283,23 @@ describe('<Select>', function() {
 
       expect(description).to.exist;
       expect(description.innerText).to.equal('myExplicitDescription');
+    });
+
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const { container: node } = createSelect({
+        container,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
     });
 
   });

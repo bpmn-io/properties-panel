@@ -10,6 +10,7 @@ import {
 } from 'min-dom';
 
 import {
+  expectNoViolations,
   insertCoreStyles,
 } from 'test/TestHelper';
 
@@ -115,6 +116,22 @@ describe('<ListItem>', function() {
 
       // then
       expect(document.activeElement).to.equal(select);
+    });
+
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const { container: node } = createListItem({
+        container: parentContainer
+      });
+
+      // then
+      await expectNoViolations(node);
     });
 
   });

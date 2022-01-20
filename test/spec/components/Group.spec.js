@@ -11,6 +11,7 @@ import {
 } from 'min-dom';
 
 import {
+  expectNoViolations,
   insertCoreStyles
 } from 'test/TestHelper';
 
@@ -173,6 +174,23 @@ describe('<Group>', function() {
 
       // then
       expect(domAttr(dataMarker, 'title')).to.eql('Section contains data');
+    });
+
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const { container: node } = createGroup({
+        container,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
     });
 
   });

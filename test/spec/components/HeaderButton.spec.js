@@ -9,6 +9,7 @@ import {
 } from 'min-dom';
 
 import {
+  expectNoViolations,
   insertCoreStyles
 } from 'test/TestHelper';
 
@@ -36,4 +37,19 @@ describe('<HeaderButton>', function() {
     // then
     expect(headerButtonNode).to.exist;
   });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const { container: node } = render(<HeaderButton>foo</HeaderButton>, { container });
+
+      // then
+      await expectNoViolations(node);
+    });
+
+  });
+
 });

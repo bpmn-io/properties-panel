@@ -14,6 +14,7 @@ import {
 } from 'min-dom';
 
 import {
+  expectNoViolations,
   insertCoreStyles
 } from 'test/TestHelper';
 
@@ -25,6 +26,8 @@ const noopElement = {
   id: 'foo',
   type: 'foo'
 };
+
+const noop = () => {};
 
 
 describe('<List>', function() {
@@ -933,6 +936,40 @@ describe('<List>', function() {
 
       // then
       expect(domAttr(badge, 'title')).to.eql('List contains 2 items');
+    });
+
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations', async function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        },
+        {
+          id: 'item-2',
+          label: 'Item 2'
+        },
+        {
+          id: 'item-3',
+          label: 'Item 3'
+        }
+      ];
+
+      const { container: node } = createListEntry({
+        container: parentContainer,
+        items,
+        onAdd: noop,
+        onRemove: noop
+      });
+
+      // then
+      await expectNoViolations(node);
     });
 
   });
