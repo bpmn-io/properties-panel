@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.10.2
+
+* `FIX`: add missing aria label for `simple` component ([67f374](https://github.com/bpmn-io/properties-panel/commit/67f37491ab8dc8493c8dd1e749d7418d11825125))
+* `CHORE`: add a11y tests ([0bdd6a](https://github.com/bpmn-io/properties-panel/commit/0bdd6a99a73047e9776da44ff834c524c66b9589) and [a2fc27](https://github.com/bpmn-io/properties-panel/commit/a2fc27530b2b5ec90f5d2e9ee0438a814e0f57e4))
+* `STYLE`: use consistent add/arrow fill color ([272d4b](https://github.com/bpmn-io/properties-panel/commit/272d4be6585ee89c7f7c55c3e2e2346ad92618db))
+
 ## 0.10.1
 
 * `FIX`: properly update layout ([#125](https://github.com/bpmn-io/properties-panel/pull/125))
