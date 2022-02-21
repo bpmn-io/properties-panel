@@ -12,11 +12,12 @@ import {
 
 export default function CollapsibleEntry(props) {
   const {
-    id,
+    element,
     entries = [],
+    id,
     label,
-    remove,
-    open: shouldOpen
+    open: shouldOpen,
+    remove
   } = props;
 
   const [ open, setOpen ] = useState(shouldOpen);
@@ -64,7 +65,17 @@ export default function CollapsibleEntry(props) {
         open ? 'open' : ''
       ) }>
         {
-          entries.map(e => e.component)
+          entries.map(entry => {
+            const {
+              component: Component,
+              id
+            } = entry;
+
+            return <Component
+              { ...entry }
+              key={ id }
+              element={ element } />;
+          })
         }
       </div>
     </div>

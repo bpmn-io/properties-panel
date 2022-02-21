@@ -29,13 +29,13 @@ const noop = () => {};
  */
 export default function ListGroup(props) {
   const {
+    add,
     element,
     id,
     items,
     label,
-    add,
-    shouldSort = true,
-    shouldOpen = true
+    shouldOpen = true,
+    shouldSort = true
   } = props;
 
 
@@ -205,13 +205,17 @@ export default function ListGroup(props) {
             return;
           }
 
+          const { id } = item;
+
           return (
             <ListItem
-              key={ item.id }
+              { ...item }
+              element={ element }
+              index={ index }
+              key={ id }
 
               // if item was added, open first or last item based on ordering
-              autoOpen={ newItemAdded && (shouldSort ? index === 0 : index === ordering.length - 1) }
-              { ...item } />
+              autoOpen={ newItemAdded && (shouldSort ? index === 0 : index === ordering.length - 1) } />
           );
         })
       }

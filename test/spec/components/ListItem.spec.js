@@ -16,9 +16,6 @@ import {
 
 import ListItem from 'src/components/ListItem';
 
-import TextFieldEntry from 'src/components/entries/TextField';
-import SelectEntry from 'src/components/entries/Select';
-
 insertCoreStyles();
 
 
@@ -74,21 +71,33 @@ describe('<ListItem>', function() {
     it('should auto-focus input on list item created', function() {
 
       // given
+      const Component = (props) => {
+        const { id } = props;
+
+        return <div class="bio-properties-panel-entry" data-entry-id={ id }>
+          <input id={ `bio-properties-panel-${ id }` } class="bio-properties-panel-input" />
+        </div>;
+      };
+
       const entries = [
         {
-          id: 'foo',
-          component: <TextFieldEntry debounce={ () => {} } id="foo" getValue={ () => {} } />
+          id: 'entry-1',
+          component: Component
+        },
+        {
+          id: 'entry-2',
+          component: Component
         }
       ];
 
       const result = createListItem({
-        autoFocusEntry: 'foo',
+        autoFocusEntry: 'entry-1',
         autoOpen: true,
         container: parentContainer,
         entries
       });
 
-      const input = domQuery('#bio-properties-panel-foo', result.container);
+      const input = domQuery('#bio-properties-panel-entry-1', result.container);
 
       // then
       expect(document.activeElement).to.equal(input);
@@ -98,21 +107,35 @@ describe('<ListItem>', function() {
     it('should auto-focus select on list item created', function() {
 
       // given
+      const Component = (props) => {
+        const { id } = props;
+
+        return <div class="bio-properties-panel-entry" data-entry-id={ id }>
+          <select id={ `bio-properties-panel-${ id }` } class="bio-properties-panel-input">
+            <option value="option-1">Option 1</option>
+          </select>
+        </div>;
+      };
+
       const entries = [
         {
-          id: 'foo',
-          component: <SelectEntry id="foo" getOptions={ () => [] } getValue={ () => {} } />
+          id: 'entry-1',
+          component: Component
+        },
+        {
+          id: 'entry-2',
+          component: Component
         }
       ];
 
       const result = createListItem({
-        autoFocusEntry: 'foo',
+        autoFocusEntry: 'entry-1',
         autoOpen: true,
         container: parentContainer,
         entries
       });
 
-      const select = domQuery('#bio-properties-panel-foo', result.container);
+      const select = domQuery('#bio-properties-panel-entry-1', result.container);
 
       // then
       expect(document.activeElement).to.equal(select);
@@ -143,21 +166,22 @@ describe('<ListItem>', function() {
 
 function createListItem(options = {}) {
   const {
-    id,
-    label = 'item',
-    entries = [],
-    autoOpen = false,
     autoFocusEntry,
-    container
+    autoOpen = false,
+    container,
+    entries = [],
+    id,
+    label = 'List item'
   } = options;
 
   return render(
     <ListItem
-      id={ id }
-      autoOpen={ autoOpen }
+      { ...options }
       autoFocusEntry={ autoFocusEntry }
-      label={ label }
-      entries={ entries } />,
+      autoOpen={ autoOpen }
+      entries={ entries }
+      id={ id }
+      label={ label } />,
     {
       container
     }

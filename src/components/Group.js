@@ -24,8 +24,9 @@ import { ArrowIcon } from './icons';
  */
 export default function Group(props) {
   const {
-    id,
+    element,
     entries = [],
+    id,
     label
   } = props;
 
@@ -85,7 +86,19 @@ export default function Group(props) {
       open ? 'open' : ''
     ) }>
       {
-        entries.map(e => e.component)
+        entries.map(entry => {
+          const {
+            component: Component,
+            id
+          } = entry;
+
+          return (
+            <Component
+              { ...entry }
+              key={ id }
+              element={ element } />
+          );
+        })
       }
     </div>
   </div>;
