@@ -84,8 +84,7 @@ describe('<Group>', function() {
 
       // given
       const entries = createEntries({
-        isEdited: (node) => !!node.value,
-        entryComponent: <TestEntry id="entry1" />,
+        isEdited: (node) => !!node.value
       });
 
       // when
@@ -104,8 +103,7 @@ describe('<Group>', function() {
 
       // given
       const entries = createEntries({
-        isEdited: () => false,
-        entryComponent: <TestEntry id="entry1" value="foo" />,
+        isEdited: () => false
       });
 
       // when
@@ -125,7 +123,7 @@ describe('<Group>', function() {
       // given
       const entries = createEntries({
         isEdited: (node) => !!node.value,
-        entryComponent: <TestEntry id="entry1" value="foo" />,
+        value: 'foo'
       });
 
       // when
@@ -162,8 +160,7 @@ describe('<Group>', function() {
 
       // given
       const entries = createEntries({
-        isEdited: () => true,
-        entryComponent: <TestEntry id="entry1" value="foo" />,
+        isEdited: () => true
       });
 
       const result = createGroup({ container, label: 'Group', entries });
@@ -198,14 +195,37 @@ describe('<Group>', function() {
 });
 
 
-// helpers ////////////////////
+// helpers ///////////
+
+function createEntries(options = {}) {
+  const {
+    component = TestEntry,
+    isEdited = noop,
+    value
+  } = options;
+
+  return [
+    {
+      id: 'entry-1',
+      component,
+      isEdited,
+      value
+    },
+    {
+      id: 'entry-2'
+    },
+    {
+      id: 'entry-3'
+    }
+  ];
+}
 
 function createGroup(options = {}) {
   const {
+    container,
+    entries = [],
     id,
     label,
-    entries = [],
-    container
   } = options;
 
   return render(
@@ -216,38 +236,13 @@ function createGroup(options = {}) {
   );
 }
 
-function createEntries(overrides = {}) {
-  const {
-    entries = [],
-    isEdited = noop,
-    entryComponent
-  } = overrides;
-
-  const newEntries = [
-    {
-      id: 'entry1',
-      component: entryComponent,
-      isEdited
-    },
-    {
-      id: 'entry2'
-    },
-    {
-      id: 'entry2'
-    },
-    ...entries
-  ];
-
-  return newEntries;
-}
-
-function TestEntry(props) {
+function TestEntry(props = {}) {
   const {
     id,
     value
   } = props;
 
-  return <div data-entry-id={ id }>
-    <input className="bio-properties-panel-input" value={ value }></input>
+  return <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <input class="bio-properties-panel-input" value={ value } />
   </div>;
 }

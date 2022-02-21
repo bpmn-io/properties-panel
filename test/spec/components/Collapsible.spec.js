@@ -34,8 +34,8 @@ describe('<Collapsible>', function() {
     // given
     const entries = [
       {
-        id: 'foo',
-        component: <div class="some-entry">bar</div>
+        id: 'entry-1',
+        component: TestEntry
       }
     ];
 
@@ -46,7 +46,7 @@ describe('<Collapsible>', function() {
 
     // then
     expect(domQuery('.bio-properties-panel-collapsible-entry', container)).to.exist;
-    expect(domQuery('.some-entry', entriesNode)).to.exist;
+    expect(domQuery('.bio-properties-panel-entry', entriesNode)).to.exist;
   });
 
 
@@ -163,7 +163,7 @@ describe('<Collapsible>', function() {
 });
 
 
-// helpers ////////////////////
+// helpers //////////
 
 function createCollapsible(options = {}) {
   const {
@@ -186,4 +186,15 @@ function createCollapsible(options = {}) {
       container
     }
   );
+}
+
+function TestEntry(props) {
+  const {
+    id = 'entry-1',
+    value = 'foo'
+  } = props;
+
+  return <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <input class="bio-properties-panel-input" value={ value } />
+  </div>;
 }

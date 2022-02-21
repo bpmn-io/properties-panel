@@ -29,7 +29,7 @@ const DEFAULT_DESCRIPTION = {};
 
 /**
  * @typedef { {
- *    component: import('preact').ComponentChild,
+ *    component: import('preact').Component,
  *    id: String,
  *    isEdited?: Function
  * } } EntryDefinition
@@ -157,16 +157,17 @@ export default function PropertiesPanel(props) {
         <div class="bio-properties-panel-scroll-container">
           {
             groups.map(group => {
-
               const {
-                component: GroupComponent = Group,
+                component: Component = Group,
                 id
               } = group;
 
-              return <GroupComponent
-                key={ id }
-                element={ element }
-                { ...group } />;
+              return (
+                <Component
+                  { ...group }
+                  key={ id }
+                  element={ element } />
+              );
             })
           }
         </div>

@@ -31,7 +31,7 @@ import {
  * @param {string} props.id
  * @param {*} props.element
  * @param {Function} props.onAdd
- * @param {(item: Item, index: number, isNew: boolean) => JSX.Element} props.renderItem
+ * @param {import('preact').Component} props.component
  * @param {string} [props.label='<empty>']
  * @param {Function} [props.onRemove]
  * @param {Item[]} [props.items]
@@ -45,7 +45,7 @@ export default function List(props) {
     id,
     element,
     items = [],
-    renderItem,
+    component,
     label = '<empty>',
     open: shouldOpen,
     onAdd,
@@ -144,12 +144,13 @@ export default function List(props) {
         hasItems && (
           <ItemsList
             autoFocusEntry={ autoFocusEntry }
+            component={ component }
+            element={ element }
             id={ id }
-            open={ open }
             items={ sortedItems }
             newItems={ newItems }
             onRemove={ onRemove }
-            renderItem={ renderItem }
+            open={ open }
           />
         )
       }
@@ -160,12 +161,13 @@ export default function List(props) {
 function ItemsList(props) {
   const {
     autoFocusEntry,
+    component: Component,
+    element,
     id,
     items,
     newItems,
-    open,
     onRemove,
-    renderItem
+    open
   } = props;
 
   const getKey = useKeyFactory();
@@ -207,7 +209,12 @@ function ItemsList(props) {
           const key = getKey(item);
 
           return (<li class="bio-properties-panel-list-entry-item" key={ key }>
-            { renderItem(item, index, item === newItem) }
+            <Component
+              element={ element }
+              id={ id }
+              index={ index }
+              item={ item }
+              open={ item === newItem } />
             {
               onRemove && (
                 <button

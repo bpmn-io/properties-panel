@@ -113,15 +113,15 @@ describe('<PropertiesPanel>', function() {
           entries: [
             {
               id: 'entry-1',
-              component: <TestEntryComponent value="one" />
+              component: TestEntry
             },
             {
               id: 'entry-2',
-              component: <TestEntryComponent value="two" />
+              component: TestEntry
             },
             {
               id: 'entry-3',
-              component: <TestEntryComponent value="three" />
+              component: TestEntry
             }
           ]
         }
@@ -154,15 +154,15 @@ describe('<PropertiesPanel>', function() {
               entries: [
                 {
                   id: 'entry-1',
-                  component: <TestEntryComponent value="one" />
+                  component: TestEntry
                 },
                 {
                   id: 'entry-2',
-                  component: <TestEntryComponent value="two" />
+                  component: TestEntry
                 },
                 {
                   id: 'entry-3',
-                  component: <TestEntryComponent value="three" />
+                  component: TestEntry
                 }
               ]
             },
@@ -197,7 +197,7 @@ describe('<PropertiesPanel>', function() {
           id: 'group-1',
           label: 'Group 1',
           entries: [],
-          component: TestGroupComponent
+          component: TestGroup
         }
       ];
 
@@ -321,7 +321,7 @@ describe('<PropertiesPanel>', function() {
 });
 
 
-// helpers /////////////////////////
+// helpers //////////
 
 function createPropertiesPanel(options = {}) {
 
@@ -352,16 +352,17 @@ function createPropertiesPanel(options = {}) {
   );
 }
 
-function TestEntryComponent(props) {
+function TestEntry(props) {
   const {
-    value
+    id = 'entry-1',
+    value = 'foo'
   } = props;
 
-  return <div class="bio-properties-panel-entry">
-    { value }
+  return <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <input class="bio-properties-panel-input" value={ value } />
   </div>;
 }
 
-function TestGroupComponent() {
+function TestGroup() {
   return <div class="foo-group">foo</div>;
 }

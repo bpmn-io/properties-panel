@@ -15,8 +15,8 @@ import CollapsibleEntry from './entries/Collapsible';
  */
 export default function ListItem(props) {
   const {
-    autoOpen,
-    autoFocusEntry
+    autoFocusEntry,
+    autoOpen
   } = props;
 
   // focus specified entry on auto open
@@ -41,7 +41,9 @@ export default function ListItem(props) {
 
   return (
     <div class="bio-properties-panel-list-item">
-      <CollapsibleEntry { ...props } open={ autoOpen } />
+      <CollapsibleEntry
+        { ...props }
+        open={ autoOpen } />
     </div>
   );
 

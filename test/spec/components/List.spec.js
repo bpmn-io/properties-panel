@@ -162,7 +162,9 @@ describe('<List>', function() {
     it('should auto-focus first input entry added', async function() {
 
       // given
-      const renderItem = item => {
+      const Component = (props) => {
+        const { item } = props;
+
         return <input class="bio-properties-panel-input" data-id={ item.id } />;
       };
 
@@ -184,7 +186,7 @@ describe('<List>', function() {
         items,
         onAdd,
         open: true,
-        renderItem,
+        component: Component,
         compareFn: defaultCompareFn
       };
 
@@ -210,7 +212,9 @@ describe('<List>', function() {
     it('should auto-focus first select on entry added', async function() {
 
       // given
-      const renderItem = item => {
+      const Component = (props) => {
+        const { item } = props;
+
         return <select class="bio-properties-panel-input" data-id={ item.id }>
           <option value="foo">Foo</option>
           <option value="bar">Bar</option>
@@ -235,7 +239,7 @@ describe('<List>', function() {
         items,
         onAdd,
         open: true,
-        renderItem,
+        component: Component,
         compareFn: defaultCompareFn
       };
 
@@ -261,7 +265,9 @@ describe('<List>', function() {
     it('should focus custom input once new input was added given selector', async function() {
 
       // given
-      const renderItem = item => {
+      const Component = (props) => {
+        const { item } = props;
+
         return <input class="bio-properties-panel-input" data-id={ item.id } />;
       };
 
@@ -283,7 +289,7 @@ describe('<List>', function() {
         items,
         onAdd,
         open: true,
-        renderItem,
+        component: Component,
         compareFn: defaultCompareFn
       };
 
@@ -989,7 +995,7 @@ function createListEntry(options = {}, renderFn = render) {
     onRemove,
     open,
     container,
-    renderItem = defaultRenderItem,
+    component = DefaultComponent,
     compareFn,
     autoFocusEntry = false
   } = options;
@@ -1003,7 +1009,7 @@ function createListEntry(options = {}, renderFn = render) {
       onAdd={ onAdd }
       onRemove={ onRemove }
       open={ open }
-      renderItem={ renderItem }
+      component={ component }
       compareFn={ compareFn }
       autoFocusEntry={ autoFocusEntry } />,
     {
@@ -1012,7 +1018,9 @@ function createListEntry(options = {}, renderFn = render) {
   );
 }
 
-function defaultRenderItem(item = {}) {
+function DefaultComponent(props) {
+  const { item = {} } = props;
+
   return <span data-entry-id={ item.id }>Item {item.id}</span>;
 }
 
