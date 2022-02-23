@@ -6,6 +6,14 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.11.0
+
+* `FEAT`: all group and entry components specified as `component` are actual components, not elements ([#134](https://github.com/bpmn-io/properties-panel/pull/134))
+
+### BREAKING CHANGES
+
+* `component` property of an entry must be an actual component, not an element
+
 ## 0.10.2
 
 * `FIX`: add missing aria label for `simple` component ([67f374](https://github.com/bpmn-io/properties-panel/commit/67f37491ab8dc8493c8dd1e749d7418d11825125))
