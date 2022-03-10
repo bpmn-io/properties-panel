@@ -875,3 +875,23 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-dropdown-button__menu-item--actionable:hover {
   background-color: var(--dropdown-item-hover-background-color);
 }
+
+.bio-properties-panel-feel-input {
+  position: relative;
+}
+
+.bio-properties-panel-feel-input input {
+  padding-right: 2em
+}
+
+.bio-properties-panel-feel-icon {
+  display: inline-block;
+  height: 16px;
+  vertical-align: text-bottom;
+  padding: 0 3px;
+}
+
+.bio-properties-panel-feel-icon svg {
+  width: 16px;
+  height: 16px;
+}

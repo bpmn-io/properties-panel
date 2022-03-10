@@ -11,6 +11,32 @@ import classnames from 'classnames';
 import {
   usePrevious
 } from '../../hooks';
+import { FeelOptionalIcon, FeelRequiredIcon } from '../icons';
+
+
+function FeelIcon(props) {
+
+  const {
+    label,
+    feel = false,
+  } = props;
+
+  const feelRequiredLabel = ' must be a FEEL expression';
+  const feelOptionalLabel = ' can optionally be a FEEL expression';
+
+  return (
+    <i
+      class="bio-properties-panel-feel-icon"
+      title={
+        label + (
+          feel === 'required' ? feelRequiredLabel : feelOptionalLabel
+        )
+      }
+    >
+      {feel === 'required' ? <FeelRequiredIcon /> : <FeelOptionalIcon />}
+    </i>
+  );
+}
 
 
 function Textfield(props) {
@@ -21,6 +47,7 @@ function Textfield(props) {
     id,
     label,
     onInput,
+    feel = false,
     value = ''
   } = props;
 
@@ -30,7 +57,10 @@ function Textfield(props) {
 
   return (
     <div class="bio-properties-panel-textfield">
-      <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
+      <label for={ prefixId(id) } class="bio-properties-panel-label">
+        { label }
+        {feel && <FeelIcon feel={ feel } label={ label } />}
+      </label>
       <input
         id={ prefixId(id) }
         type="text"
@@ -66,6 +96,7 @@ export default function TextfieldEntry(props) {
     description,
     debounce,
     disabled,
+    feel,
     label,
     getValue,
     setValue,
@@ -107,7 +138,7 @@ export default function TextfieldEntry(props) {
       'bio-properties-panel-entry',
       error ? 'has-error' : '')
     } data-entry-id={ id }>
-      <Textfield id={ id } label={ label } value={ value } onInput={ handleChange } debounce={ debounce } disabled={ disabled } />
+      <Textfield id={ id } label={ label } value={ value } onInput={ handleChange } debounce={ debounce } disabled={ disabled } feel={ feel } />
       <Description forId={ id } element={ element } value={ description } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
     </div>
