@@ -1,4 +1,5 @@
 import Description from './Description';
+import FeelIcon from './FeelIcon';
 
 import {
   useEffect,
@@ -11,32 +12,6 @@ import classnames from 'classnames';
 import {
   usePrevious
 } from '../../hooks';
-import { FeelOptionalIcon, FeelRequiredIcon } from '../icons';
-
-
-function FeelIcon(props) {
-
-  const {
-    label,
-    feel = false,
-  } = props;
-
-  const feelRequiredLabel = ' must be a FEEL expression';
-  const feelOptionalLabel = ' can optionally be a FEEL expression';
-
-  return (
-    <i
-      class="bio-properties-panel-feel-icon"
-      title={
-        label + (
-          feel === 'required' ? feelRequiredLabel : feelOptionalLabel
-        )
-      }
-    >
-      {feel === 'required' ? <FeelRequiredIcon /> : <FeelOptionalIcon />}
-    </i>
-  );
-}
 
 
 function Textfield(props) {
