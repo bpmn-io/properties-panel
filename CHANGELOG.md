@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.12.0
+
+* `FEAT`: allow addition of FEEL icon to TextFields and TextAreas ([#138](https://github.com/bpmn-io/properties-panel/pull/138))
+
 ## 0.11.0
 
 * `FEAT`: all group and entry components specified as `component` are actual components, not elements ([#134](https://github.com/bpmn-io/properties-panel/pull/134))
