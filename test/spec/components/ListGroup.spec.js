@@ -1,3 +1,5 @@
+import { useContext } from 'preact/hooks';
+
 import {
   act,
   render,
@@ -19,6 +21,8 @@ import {
 } from 'test/TestHelper';
 
 import ListGroup from 'src/components/ListGroup';
+
+import { PropertiesPanelContext } from 'src/context';
 
 insertCoreStyles();
 
@@ -54,11 +58,11 @@ describe('<ListGroup>', function() {
     // given
     const items = [
       {
-        id: 'foo',
+        id: 'item-1',
         label: 'Item 1'
       },
       {
-        id: 'bar',
+        id: 'item-2',
         label: 'Item 2'
       }
     ];
@@ -100,7 +104,7 @@ describe('<ListGroup>', function() {
     // given
     const items = [
       {
-        id: 'foo',
+        id: 'item-1',
         label: 'Item 1'
       }
     ];
@@ -118,6 +122,37 @@ describe('<ListGroup>', function() {
     await act(() => {
       header.click();
     });
+
+    // then
+    expect(domClasses(list).has('open')).to.be.true;
+  });
+
+
+  it('should provide onShow through context', async function() {
+
+    // given
+    const Entry = () => {
+      const { onShow } = useContext(PropertiesPanelContext);
+
+      onShow();
+    };
+
+    const items = [
+      {
+        id: 'item-1',
+        label: 'Item 1',
+        entries: [
+          {
+            id: 'entry-1',
+            component: Entry
+          }
+        ]
+      }
+    ];
+
+    const { container } = createListGroup({ container: parentContainer, items });
+
+    const list = domQuery('.bio-properties-panel-list', container);
 
     // then
     expect(domClasses(list).has('open')).to.be.true;
@@ -165,19 +200,19 @@ describe('<ListGroup>', function() {
         const items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item D'
           },
           {
             id: 'item-2',
-            label: 'ab'
+            label: 'Item A'
           },
           {
             id: 'item-3',
-            label: 'def03'
+            label: 'Item B'
           },
           {
             id: 'item-4',
-            label: 'def04'
+            label: 'Item C'
           }
         ];
 
@@ -208,15 +243,15 @@ describe('<ListGroup>', function() {
         const items = [
           {
             id: 'item-1',
-            label: 'Item 1'
+            label: 'Item A'
           },
           {
             id: 'item-2',
-            label: 'Item 2'
+            label: 'Item B'
           },
           {
             id: 'item-3',
-            label: 'Item 2'
+            label: 'Item C'
           }
         ];
 
@@ -239,15 +274,15 @@ describe('<ListGroup>', function() {
         const items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item 1'
           },
           {
             id: 'item-2',
-            label: 'ab'
+            label: 'Item 2'
           },
           {
             id: 'item-3',
-            label: 'def03'
+            label: 'Item 3'
           }
         ];
 
@@ -282,15 +317,15 @@ describe('<ListGroup>', function() {
         const items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item C'
           },
           {
             id: 'item-2',
-            label: 'ab'
+            label: 'Item A'
           },
           {
             id: 'item-3',
-            label: 'def03'
+            label: 'Item B'
           }
         ];
 
@@ -325,19 +360,19 @@ describe('<ListGroup>', function() {
         const items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item 1'
           },
           {
             id: 'item-2',
-            label: 'ab'
+            label: 'Item 2'
           },
           {
             id: 'item-3',
-            label: 'def03'
+            label: 'Item 3'
           },
           {
             id: 'item-4',
-            label: 'def04'
+            label: 'Item 4'
           }
         ];
 
@@ -368,19 +403,19 @@ describe('<ListGroup>', function() {
         const items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item D'
           },
           {
             id: 'item-2',
-            label: 'ab'
+            label: 'Item A'
           },
           {
             id: 'item-3',
-            label: 'def03'
+            label: 'Item B'
           },
           {
             id: 'item-4',
-            label: 'def04'
+            label: 'Item C'
           }
         ];
 
@@ -462,11 +497,11 @@ describe('<ListGroup>', function() {
         const items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item C'
           },
           {
             id: 'item-2',
-            label: 'ab'
+            label: 'Item A'
           }
         ];
 
@@ -479,7 +514,7 @@ describe('<ListGroup>', function() {
           ...items,
           {
             id: 'item-3',
-            label: 'foo'
+            label: 'Item B'
           }
         ];
 
@@ -509,15 +544,15 @@ describe('<ListGroup>', function() {
         const items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item C'
           },
           {
             id: 'item-2',
-            label: 'abc'
+            label: 'Item A'
           },
           {
             id: 'item-3',
-            label: 'foo'
+            label: 'Item B'
           }
         ];
 
@@ -561,11 +596,11 @@ describe('<ListGroup>', function() {
         let items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item D'
           },
           {
             id: 'item-2',
-            label: 'abc'
+            label: 'Item A'
           }
         ];
 
@@ -595,7 +630,7 @@ describe('<ListGroup>', function() {
           ...items,
           {
             id: 'item-3',
-            label: 'foo'
+            label: 'Item B'
           }
         ];
 
@@ -614,7 +649,7 @@ describe('<ListGroup>', function() {
           ...items,
           {
             id: 'item-4',
-            label: 'goo'
+            label: 'Item C'
           }
         ];
 
@@ -655,11 +690,11 @@ describe('<ListGroup>', function() {
         let items = [
           {
             id: 'item-1',
-            label: 'xyz'
+            label: 'Item C'
           },
           {
             id: 'item-2',
-            label: 'abc'
+            label: 'Item A'
           }
         ];
 
@@ -689,7 +724,7 @@ describe('<ListGroup>', function() {
           ...items,
           {
             id: 'item-3',
-            label: 'foo'
+            label: 'Item B'
           }
         ];
 
@@ -1018,11 +1053,11 @@ describe('<ListGroup>', function() {
       // given
       const items = [
         {
-          id: 'foo',
+          id: 'item-1',
           label: 'Item 1'
         },
         {
-          id: 'bar',
+          id: 'item-2',
           label: 'Item 2'
         }
       ];

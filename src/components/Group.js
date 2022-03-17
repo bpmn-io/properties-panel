@@ -1,4 +1,6 @@
 import {
+  useCallback,
+  useContext,
   useEffect,
   useState
 } from 'preact/hooks';
@@ -17,6 +19,8 @@ import {
   useLayoutState
 } from '../hooks';
 
+import { PropertiesPanelContext } from '../context';
+
 import { ArrowIcon } from './icons';
 
 /**
@@ -34,6 +38,9 @@ export default function Group(props) {
     [ 'groups', id, 'open' ],
     false
   );
+
+  const onShow = useCallback(() => setOpen(true), [ setOpen ]);
+
   const toggleOpen = () => setOpen(!open);
 
   const [ edited, setEdited ] = useState(false);
@@ -60,6 +67,11 @@ export default function Group(props) {
     setEdited(hasOneEditedEntry);
   }, [ entries ]);
 
+  const propertiesPanelContext = {
+    ...useContext(PropertiesPanelContext),
+    onShow
+  };
+
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id }>
     <div class={ classnames(
       'bio-properties-panel-group-header',
@@ -85,21 +97,23 @@ export default function Group(props) {
       'bio-properties-panel-group-entries',
       open ? 'open' : ''
     ) }>
-      {
-        entries.map(entry => {
-          const {
-            component: Component,
-            id
-          } = entry;
+      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+        {
+          entries.map(entry => {
+            const {
+              component: Component,
+              id
+            } = entry;
 
-          return (
-            <Component
-              { ...entry }
-              key={ id }
-              element={ element } />
-          );
-        })
-      }
+            return (
+              <Component
+                { ...entry }
+                element={ element }
+                key={ id } />
+            );
+          })
+        }
+      </PropertiesPanelContext.Provider>
     </div>
   </div>;
 }
