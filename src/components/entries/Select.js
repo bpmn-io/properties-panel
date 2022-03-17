@@ -1,4 +1,13 @@
+import classNames from 'classnames';
+
+import {
+  useShowEntryEvent,
+  useShowErrorEvent
+} from '../../hooks';
+
 import Description from './Description';
+
+const noop = () => {};
 
 /**
  * @typedef { { value: string, label: string, disabled: boolean } } Option
@@ -9,6 +18,7 @@ import Description from './Description';
  *
  * @param {object} props
  * @param {string} props.id
+ * @param {string[]} props.path
  * @param {string} props.label
  * @param {Function} props.onChange
  * @param {Array<Option>} [props.options]
@@ -22,8 +32,11 @@ function Select(props) {
     onChange,
     options = [],
     value,
-    disabled
+    disabled,
+    show = noop
   } = props;
+
+  const ref = useShowEntryEvent(show);
 
   const handleChange = ({ target }) => {
     onChange(target.value);
@@ -33,6 +46,7 @@ function Select(props) {
     <div class="bio-properties-panel-select">
       <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
       <select
+        ref={ ref }
         id={ prefixId(id) }
         name={ id }
         class="bio-properties-panel-input"
@@ -77,21 +91,31 @@ export default function SelectEntry(props) {
     getValue,
     setValue,
     getOptions,
-    disabled
+    disabled,
+    show = noop
   } = props;
 
   const value = getValue(element);
   const options = getOptions(element);
 
+  const error = useShowErrorEvent(show, [ element, value ]);
+
   return (
-    <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <div
+      class={ classNames(
+        'bio-properties-panel-entry',
+        error ? 'has-error' : '')
+      }
+      data-entry-id={ id }>
       <Select
         id={ id }
         label={ label }
         value={ value }
         onChange={ setValue }
         options={ options }
-        disabled={ disabled } />
+        disabled={ disabled }
+        show={ show } />
+      { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

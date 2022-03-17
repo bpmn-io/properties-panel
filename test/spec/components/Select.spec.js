@@ -1,3 +1,5 @@
+import { act } from 'preact/test-utils';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -9,6 +11,8 @@ import {
   queryAll as domQueryAll
 } from 'min-dom';
 
+import EventBus from 'diagram-js/lib/core/EventBus';
+
 import {
   expectNoViolations,
   changeInput,
@@ -18,7 +22,9 @@ import {
 import Select, { isEdited } from 'src/components/entries/Select';
 
 import {
-  DescriptionContext
+  DescriptionContext,
+  EventContext,
+  PropertiesPanelContext
 } from 'src/context';
 
 insertCoreStyles();
@@ -205,6 +211,50 @@ describe('<Select>', function() {
   });
 
 
+  describe('events', function() {
+
+    it('should show entry', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const onShowSpy = sinon.spy();
+
+      const show = () => true;
+
+      createSelect({ container, eventBus, onShow: onShowSpy, show });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.showEntry'));
+
+      // then
+      expect(onShowSpy).to.have.been.called;
+    });
+
+
+    it('should show error', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const onShowSpy = sinon.spy();
+
+      const show = () => true;
+
+      const result = createSelect({ container, eventBus, onShow: onShowSpy, show });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.showError', { error: 'foo' }));
+
+      // then
+      expect(onShowSpy).to.have.been.called;
+
+      expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
+    });
+
+  });
+
+
   describe('description', function() {
 
     it('should render without description per default', function() {
@@ -321,26 +371,42 @@ function createSelect(options = {}) {
     descriptionConfig = {},
     getDescriptionForId = noop,
     container,
+    eventBus = new EventBus(),
+    onShow = noop,
+    show,
     ...rest
   } = options;
 
-  const context = {
+  const eventContext = {
+    eventBus
+  };
+
+  const propertiesPanelContext = {
+    onShow
+  };
+
+  const decriptionContext = {
     description: descriptionConfig,
     getDescriptionForId
   };
 
   return render(
-    <DescriptionContext.Provider value={ context }>
-      <Select
-        { ...rest }
-        element={ element }
-        id={ id }
-        label={ label }
-        description={ description }
-        getValue={ getValue }
-        setValue={ setValue }
-        getOptions={ getOptions } />
-    </DescriptionContext.Provider>,
+    <EventContext.Provider value={ eventContext }>
+      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+        <DescriptionContext.Provider value={ decriptionContext }>
+          <Select
+            { ...rest }
+            element={ element }
+            id={ id }
+            label={ label }
+            description={ description }
+            getValue={ getValue }
+            setValue={ setValue }
+            getOptions={ getOptions }
+            show={ show } />
+        </DescriptionContext.Provider>
+      </PropertiesPanelContext.Provider>
+    </EventContext.Provider>,
     {
       container
     }

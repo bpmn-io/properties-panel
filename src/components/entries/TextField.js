@@ -9,10 +9,15 @@ import {
 
 import classnames from 'classnames';
 
+import { isFunction } from 'min-dash';
+
 import {
-  usePrevious
+  usePrevious,
+  useShowEntryEvent,
+  useShowErrorEvent
 } from '../../hooks';
 
+const noop = () => {};
 
 function Textfield(props) {
 
@@ -23,8 +28,11 @@ function Textfield(props) {
     label,
     onInput,
     feel = false,
-    value = ''
+    value = '',
+    show = noop
   } = props;
+
+  const ref = useShowEntryEvent(show);
 
   const handleInput = useMemo(() => {
     return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
@@ -37,6 +45,7 @@ function Textfield(props) {
         {feel && <FeelIcon feel={ feel } label={ label } />}
       </label>
       <input
+        ref={ ref }
         id={ prefixId(id) }
         type="text"
         name={ id }
@@ -75,47 +84,67 @@ export default function TextfieldEntry(props) {
     label,
     getValue,
     setValue,
-    validate
+    validate,
+    show = noop
   } = props;
 
-  const [ error, setError ] = useState(null);
-  const [ invalidValueCache, setInvalidValueCache ] = useState(null);
+  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
+  const [ validationError, setValidationError ] = useState(null);
 
   let value = getValue(element);
-  const prevValue = usePrevious(value);
 
-  // validate again when value prop changed
+  const previousValue = usePrevious(value);
+
   useEffect(() => {
-    const err = validate ? validate(value) : null;
-    setError(err);
+    if (isFunction(validate)) {
+      const newValidationError = validate(value) || null;
+
+      setValidationError(newValidationError);
+    }
   }, [ value ]);
 
-  // validate on change
-  const handleChange = (newValue) => {
-    const err = validate ? validate(newValue) : null;
+  const onInput = (newValue) => {
+    let newValidationError = null;
 
-    if (err) {
-      setInvalidValueCache(newValue);
+    if (isFunction(validate)) {
+      newValidationError = validate(newValue) || null;
+    }
+
+    if (newValidationError) {
+      setCachedInvalidValue(newValue);
     } else {
       setValue(newValue);
     }
 
-    setError(err);
+    setValidationError(newValidationError);
   };
 
-  // keep showing invalid value on errors, although it was not set
-  if (prevValue === value && error) {
-    value = invalidValueCache;
+  if (previousValue === value && validationError) {
+    value = cachedInvalidValue;
   }
 
+  const temporaryError = useShowErrorEvent(show, [ element, value ]);
+
+  const error = temporaryError || validationError;
+
   return (
-    <div class={ classnames(
-      'bio-properties-panel-entry',
-      error ? 'has-error' : '')
-    } data-entry-id={ id }>
-      <Textfield id={ id } label={ label } value={ value } onInput={ handleChange } debounce={ debounce } disabled={ disabled } feel={ feel } />
-      <Description forId={ id } element={ element } value={ description } />
+    <div
+      class={ classnames(
+        'bio-properties-panel-entry',
+        error ? 'has-error' : '')
+      }
+      data-entry-id={ id }>
+      <Textfield
+        debounce={ debounce }
+        disabled={ disabled }
+        feel={ feel }
+        id={ id }
+        label={ label }
+        onInput={ onInput }
+        show={ show }
+        value={ value } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <Description forId={ id } element={ element } value={ description } />
     </div>
   );
 }
