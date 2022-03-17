@@ -1,4 +1,6 @@
 import {
+  useCallback,
+  useContext,
   useEffect,
   useState
 } from 'preact/hooks';
@@ -22,6 +24,8 @@ import {
   CreateIcon
 } from './icons';
 
+import { PropertiesPanelContext } from '../context';
+
 const noop = () => {};
 
 /**
@@ -43,6 +47,8 @@ export default function ListGroup(props) {
     [ 'groups', id, 'open' ],
     false
   );
+
+  const onShow = useCallback(() => setOpen(true), [ setOpen ]);
 
   const [ ordering, setOrdering ] = useState([]);
   const [ newItemAdded, setNewItemAdded ] = useState(false);
@@ -133,6 +139,11 @@ export default function ListGroup(props) {
 
   const hasItems = !!items.length;
 
+  const propertiesPanelContext = {
+    ...useContext(PropertiesPanelContext),
+    onShow
+  };
+
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id }>
     <div
       class={ classnames(
@@ -197,28 +208,32 @@ export default function ListGroup(props) {
       'bio-properties-panel-list',
       open && hasItems ? 'open' : ''
     ) }>
-      {
-        ordering.map((o, index) => {
-          const item = getItem(items, o);
+      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
 
-          if (!item) {
-            return;
-          }
+        {
+          ordering.map((o, index) => {
+            const item = getItem(items, o);
 
-          const { id } = item;
+            if (!item) {
+              return;
+            }
 
-          return (
-            <ListItem
-              { ...item }
-              element={ element }
-              index={ index }
-              key={ id }
+            const { id } = item;
 
-              // if item was added, open first or last item based on ordering
-              autoOpen={ newItemAdded && (shouldSort ? index === 0 : index === ordering.length - 1) } />
-          );
-        })
-      }
+            // if item was added, open first or last item based on ordering
+            const autoOpen = newItemAdded && (shouldSort ? index === 0 : index === ordering.length - 1);
+
+            return (
+              <ListItem
+                { ...item }
+                autoOpen={ autoOpen }
+                element={ element }
+                index={ index }
+                key={ id } />
+            );
+          })
+        }
+      </PropertiesPanelContext.Provider>
     </div>
   </div>;
 }

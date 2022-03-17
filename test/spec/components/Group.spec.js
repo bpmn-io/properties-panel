@@ -1,3 +1,5 @@
+import { useContext } from 'preact/hooks';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -16,6 +18,8 @@ import {
 } from 'test/TestHelper';
 
 import Group from 'src/components/Group';
+
+import { PropertiesPanelContext } from 'src/context';
 
 insertCoreStyles();
 
@@ -55,6 +59,30 @@ describe('<Group>', function() {
 
     // when
     await header.click();
+
+    // then
+    expect(domClasses(entries).has('open')).to.be.true;
+  });
+
+
+  it('should provide onShow through context', async function() {
+
+    // given
+    const Entry = () => {
+      const { onShow } = useContext(PropertiesPanelContext);
+
+      onShow();
+    };
+
+    const result = createGroup({
+      container,
+      entries: createEntries({
+        component: Entry
+      }),
+      label: 'Group'
+    });
+
+    const entries = domQuery('.bio-properties-panel-group-entries', result.container);
 
     // then
     expect(domClasses(entries).has('open')).to.be.true;

@@ -1,3 +1,5 @@
+import { useContext } from 'preact/hooks';
+
 import {
   act,
   render
@@ -14,6 +16,8 @@ import {
   expectNoViolations,
   insertCoreStyles
 } from 'test/TestHelper';
+
+import { PropertiesPanelContext } from 'src/context';
 
 import Collapsible from 'src/components/entries/Collapsible';
 
@@ -107,6 +111,34 @@ describe('<Collapsible>', function() {
 
     // when
     await header.click();
+
+    // then
+    expect(domClasses(entries).has('open')).to.be.true;
+  });
+
+
+  it('should provide onShow through context', async function() {
+
+    // given
+    const Entry = () => {
+      const { onShow } = useContext(PropertiesPanelContext);
+
+      onShow();
+    };
+
+    const { container } = createCollapsible({
+      container: parentContainer,
+      entries: [
+        {
+          id: 'foo',
+          component: Entry
+        }
+      ]
+    });
+
+    const entry = domQuery('.bio-properties-panel-collapsible-entry', container);
+
+    const entries = domQuery('.bio-properties-panel-collapsible-entry-entries', entry);
 
     // then
     expect(domClasses(entries).has('open')).to.be.true;

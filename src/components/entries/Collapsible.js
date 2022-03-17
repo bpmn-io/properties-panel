@@ -1,13 +1,19 @@
 import {
+  useCallback,
+  useContext,
   useState
 } from 'preact/hooks';
 
 import classnames from 'classnames';
 
+import { isFunction } from 'min-dash';
+
 import {
   ArrowIcon,
   DeleteIcon,
 } from '../icons';
+
+import { PropertiesPanelContext } from '../../context';
 
 
 export default function CollapsibleEntry(props) {
@@ -23,6 +29,19 @@ export default function CollapsibleEntry(props) {
   const [ open, setOpen ] = useState(shouldOpen);
 
   const toggleOpen = () => setOpen(!open);
+
+  const { onShow } = useContext(PropertiesPanelContext);
+
+  const propertiesPanelContext = {
+    ...useContext(PropertiesPanelContext),
+    onShow: useCallback(() => {
+      setOpen(true);
+
+      if (isFunction(onShow)) {
+        onShow();
+      }
+    }, [ onShow, setOpen ])
+  };
 
   // todo(pinussilvestrus): translate once we have a translate mechanism for the core
   const placeholderLabel = '<empty>';
@@ -64,19 +83,21 @@ export default function CollapsibleEntry(props) {
         'bio-properties-panel-collapsible-entry-entries',
         open ? 'open' : ''
       ) }>
-        {
-          entries.map(entry => {
-            const {
-              component: Component,
-              id
-            } = entry;
+        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+          {
+            entries.map(entry => {
+              const {
+                component: Component,
+                id
+              } = entry;
 
-            return <Component
-              { ...entry }
-              key={ id }
-              element={ element } />;
-          })
-        }
+              return <Component
+                { ...entry }
+                element={ element }
+                key={ id } />;
+            })
+          }
+        </PropertiesPanelContext.Provider>
       </div>
     </div>
   );
