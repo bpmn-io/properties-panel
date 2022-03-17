@@ -1,3 +1,5 @@
+import { act } from 'preact/test-utils';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -9,6 +11,8 @@ import {
   query as domQuery
 } from 'min-dom';
 
+import EventBus from 'diagram-js/lib/core/EventBus';
+
 import {
   changeInput,
   expectNoViolations,
@@ -16,7 +20,9 @@ import {
 } from 'test/TestHelper';
 
 import {
-  DescriptionContext
+  DescriptionContext,
+  EventContext,
+  PropertiesPanelContext
 } from 'src/context';
 
 import TextField, { isEdited } from 'src/components/entries/TextField';
@@ -109,6 +115,50 @@ describe('<TextField>', function() {
 
       // then
       expect(isEdited(input)).to.be.true;
+    });
+
+  });
+
+
+  describe('events', function() {
+
+    it('should show entry', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const onShowSpy = sinon.spy();
+
+      const show = () => true;
+
+      createTextField({ container, eventBus, onShow: onShowSpy, show });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.showEntry'));
+
+      // then
+      expect(onShowSpy).to.have.been.called;
+    });
+
+
+    it('should show error', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const onShowSpy = sinon.spy();
+
+      const show = () => true;
+
+      const result = createTextField({ container, eventBus, onShow: onShowSpy, show });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.showError', { error: 'foo' }));
+
+      // then
+      expect(onShowSpy).to.have.been.called;
+
+      expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
     });
 
   });
@@ -422,28 +472,44 @@ function createTextField(options = {}) {
     validate = noop,
     descriptionConfig = {},
     getDescriptionForId = noop,
-    container
+    container,
+    eventBus = new EventBus(),
+    onShow = noop,
+    show
   } = options;
 
-  const context = {
+  const eventContext = {
+    eventBus
+  };
+
+  const propertiesPanelContext = {
+    onShow
+  };
+
+  const descriptionContext = {
     description: descriptionConfig,
     getDescriptionForId
   };
 
   return render(
-    <DescriptionContext.Provider value={ context }>
-      <TextField
-        element={ element }
-        id={ id }
-        label={ label }
-        description={ description }
-        disabled={ disabled }
-        getValue={ getValue }
-        setValue={ setValue }
-        debounce={ debounce }
-        validate={ validate }
-        feel={ feel } />
-    </DescriptionContext.Provider>,
+    <EventContext.Provider value={ eventContext }>
+      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+        <DescriptionContext.Provider value={ descriptionContext }>
+          <TextField
+            element={ element }
+            id={ id }
+            label={ label }
+            description={ description }
+            disabled={ disabled }
+            getValue={ getValue }
+            setValue={ setValue }
+            debounce={ debounce }
+            validate={ validate }
+            show={ show }
+            feel={ feel } />
+        </DescriptionContext.Provider>
+      </PropertiesPanelContext.Provider>
+    </EventContext.Provider>,
     {
       container
     }

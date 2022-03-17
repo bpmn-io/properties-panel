@@ -1,4 +1,11 @@
+import {
+  useShowEntryEvent,
+  useShowErrorEvent
+} from '../../hooks';
+
 import Description from './Description';
+
+const noop = () => {};
 
 function Checkbox(props) {
   const {
@@ -6,16 +13,20 @@ function Checkbox(props) {
     label,
     onChange,
     disabled,
-    value = false
+    value = false,
+    show = noop
   } = props;
 
   const handleChange = ({ target }) => {
     onChange(target.checked);
   };
 
+  const ref = useShowEntryEvent(show);
+
   return (
     <div class="bio-properties-panel-checkbox">
       <input
+        ref={ ref }
         id={ prefixId(id) }
         name={ id }
         type="checkbox"
@@ -47,14 +58,24 @@ export default function CheckboxEntry(props) {
     label,
     getValue,
     setValue,
-    disabled
+    disabled,
+    show = noop
   } = props;
 
   const value = getValue(element);
 
+  const error = useShowErrorEvent(show, [ element, value ]);
+
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-checkbox-entry" data-entry-id={ id }>
-      <Checkbox id={ id } label={ label } onChange={ setValue } value={ value } disabled={ disabled } />
+      <Checkbox
+        disabled={ disabled }
+        id={ id }
+        label={ label }
+        onChange={ setValue }
+        show={ show }
+        value={ value } />
+      { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

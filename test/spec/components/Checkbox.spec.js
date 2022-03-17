@@ -1,3 +1,5 @@
+import { act } from 'preact/test-utils';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -8,6 +10,8 @@ import {
   query as domQuery
 } from 'min-dom';
 
+import EventBus from 'diagram-js/lib/core/EventBus';
+
 import {
   clickInput,
   expectNoViolations,
@@ -15,7 +19,9 @@ import {
 } from 'test/TestHelper';
 
 import {
-  DescriptionContext
+  DescriptionContext,
+  EventContext,
+  PropertiesPanelContext
 } from 'src/context';
 
 import Checkbox, { isEdited } from 'src/components/entries/Checkbox';
@@ -120,6 +126,50 @@ describe('<Checkbox>', function() {
 
       // then
       expect(isEdited(input)).to.be.true;
+    });
+
+  });
+
+
+  describe('events', function() {
+
+    it('should show entry', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const onShowSpy = sinon.spy();
+
+      const show = () => true;
+
+      createCheckbox({ container, eventBus, onShow: onShowSpy, show });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.showEntry'));
+
+      // then
+      expect(onShowSpy).to.have.been.called;
+    });
+
+
+    it('should show error', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const onShowSpy = sinon.spy();
+
+      const show = () => true;
+
+      const result = createCheckbox({ container, eventBus, onShow: onShowSpy, show });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.showError', { error: 'foo' }));
+
+      // then
+      expect(onShowSpy).to.have.been.called;
+
+      expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
     });
 
   });
@@ -239,24 +289,40 @@ function createCheckbox(options = {}) {
     container,
     descriptionConfig = {},
     getDescriptionForId = noop,
+    eventBus = new EventBus(),
+    onShow = noop,
+    show,
     ...rest
   } = options;
 
-  const context = {
+  const eventContext = {
+    eventBus
+  };
+
+  const propertiesPanelContext = {
+    onShow
+  };
+
+  const decriptionContext = {
     description: descriptionConfig,
     getDescriptionForId
   };
 
   return render(
-    <DescriptionContext.Provider value={ context }>
-      <Checkbox
-        { ...rest }
-        element={ element }
-        id={ id }
-        label={ label }
-        getValue={ getValue }
-        setValue={ setValue } />
-    </DescriptionContext.Provider>,
+    <EventContext.Provider value={ eventContext }>
+      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+        <DescriptionContext.Provider value={ decriptionContext }>
+          <Checkbox
+            { ...rest }
+            element={ element }
+            id={ id }
+            label={ label }
+            getValue={ getValue }
+            setValue={ setValue }
+            show={ show } />
+        </DescriptionContext.Provider>
+      </PropertiesPanelContext.Provider>
+    </EventContext.Provider>,
     {
       container
     }
