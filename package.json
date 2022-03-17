@@ -36,6 +36,7 @@
   "license": "MIT",
   "dependencies": {
     "classnames": "^2.3.1",
+    "diagram-js": "^8.1.2",
     "min-dash": "^3.7.0",
     "min-dom": "^3.1.3"
   },
