@@ -18,7 +18,7 @@
  *
  * @example
  *
- * useEvent('propertiesPanel.showEntry', ({ error, focus = false, ...rest }) => {
+ * useEvent('propertiesPanel.showError', ({ error, focus = false, ...rest }) => {
  *   // ...
  * });
  *
