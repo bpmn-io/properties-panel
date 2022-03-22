@@ -67,7 +67,8 @@ const bufferedEvents = [
  *    component?: import('preact').Component,
  *    entries: Array<EntryDefinition>,
  *    id: String,
- *    label: String
+ *    label: String,
+ *    shouldOpen?: Boolean
  * } } GroupDefinition
  *
  *  @typedef { {

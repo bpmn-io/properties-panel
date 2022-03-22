@@ -45,23 +45,39 @@ describe('<Group>', function() {
   });
 
 
-  it('should toggle open', async function() {
+  describe('open', function() {
 
-    // given
-    const result = createGroup({ container, label: 'Group' });
+    it('should toggle open', async function() {
 
-    const header = domQuery('.bio-properties-panel-group-header', result.container);
+      // given
+      const result = createGroup({ container, label: 'Group' });
 
-    const entries = domQuery('.bio-properties-panel-group-entries', result.container);
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
 
-    // assume
-    expect(domClasses(entries).has('open')).to.be.false;
+      const entries = domQuery('.bio-properties-panel-group-entries', result.container);
 
-    // when
-    await header.click();
+      // assume
+      expect(domClasses(entries).has('open')).to.be.false;
 
-    // then
-    expect(domClasses(entries).has('open')).to.be.true;
+      // when
+      await header.click();
+
+      // then
+      expect(domClasses(entries).has('open')).to.be.true;
+    });
+
+
+    it('should allow initial configuration', async function() {
+
+      // given
+      const result = createGroup({ container, label: 'Group', shouldOpen: true });
+
+      const entries = domQuery('.bio-properties-panel-group-entries', result.container);
+
+      // then
+      expect(domClasses(entries).has('open')).to.be.true;
+    });
+
   });
 
 
@@ -250,14 +266,11 @@ function createEntries(options = {}) {
 
 function createGroup(options = {}) {
   const {
-    container,
-    entries = [],
-    id,
-    label,
+    container
   } = options;
 
   return render(
-    <Group id={ id } label={ label } entries={ entries } />,
+    <Group { ...options } />,
     {
       container
     }
