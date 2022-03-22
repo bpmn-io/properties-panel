@@ -142,6 +142,44 @@ describe('<Header>', function() {
     expect(iconNode).to.exist;
   });
 
+  it('should NOT render documentation ref', function() {
+
+    // given
+    const provider = {
+      getElementLabel: () => 'name',
+      getTypeLabel: () => 'type',
+      getElementIcon: () => 'icon'
+    };
+
+    // when
+    const result = render(<Header headerProvider={ provider } />, { container });
+
+    const documentationNode = domQuery('.bio-properties-panel-header-link', result.container);
+
+    // then
+    expect(documentationNode).to.not.exist;
+  });
+
+
+  it('should render documentation ref', function() {
+
+    // given
+    const provider = {
+      getElementLabel: () => 'name',
+      getTypeLabel: () => 'type',
+      getElementIcon: () => 'icon',
+      getDocumentationRef: () => 'https://example.com'
+    };
+
+    // when
+    const result = render(<Header headerProvider={ provider } />, { container });
+
+    const documentationNode = domQuery('.bio-properties-panel-header-link', result.container);
+
+    // then
+    expect(documentationNode).to.exist;
+  });
+
 
   describe('a11y', function() {
 

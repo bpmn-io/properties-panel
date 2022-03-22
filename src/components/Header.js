@@ -1,5 +1,12 @@
+import { ExternalLinkIcon } from './icons';
+
 /**
- * @typedef { { getElementLabel: Function, getTypeLabel: Function, getElementIcon: Function } } HeaderProvider
+ * @typedef { {
+ *  getElementLabel: (element: djs.model.base) => string,
+ *  getTypeLabel: (element: djs.model.base) => string,
+ *  getElementIcon: (element: djs.model.base) => import('preact').Component,
+ *  getDocumentationRef: (element: djs.model.base) => string
+ * } } HeaderProvider
  */
 
 /**
@@ -15,13 +22,16 @@ export default function Header(props) {
   } = props;
 
   const {
+    getElementIcon,
+    getDocumentationRef,
     getElementLabel,
     getTypeLabel,
-    getElementIcon
   } = headerProvider;
 
   const label = getElementLabel(element);
   const type = getTypeLabel(element);
+  const documentationRef = getDocumentationRef && getDocumentationRef(element);
+
   const ElementIcon = getElementIcon(element);
 
   return (<div class="bio-properties-panel-header">
@@ -30,8 +40,16 @@ export default function Header(props) {
     </div>
     <div class="bio-properties-panel-header-labels">
       <div title={ type } class="bio-properties-panel-header-type">{ type }</div>
-      { getElementLabel(element) ?
+      { label ?
         <div title={ label } class="bio-properties-panel-header-label">{ label }</div> :
+        null
+      }
+    </div>
+    <div class="bio-properties-panel-header-actions">
+      { documentationRef ?
+        <a rel="noopener" class="bio-properties-panel-header-link" href={ documentationRef } target="_blank">
+          <ExternalLinkIcon />
+        </a> :
         null
       }
     </div>
