@@ -185,6 +185,11 @@
   margin-top: -6px;
 }
 
+.bio-properties-panel-header-actions {
+  margin-left: auto;
+  margin-top: auto;
+}
+
 /**
  * Scroll container
  */
