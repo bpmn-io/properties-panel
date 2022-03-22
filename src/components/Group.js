@@ -27,12 +27,13 @@ export default function Group(props) {
     element,
     entries = [],
     id,
-    label
+    label,
+    shouldOpen = false,
   } = props;
 
   const [ open, setOpen ] = useLayoutState(
     [ 'groups', id, 'open' ],
-    false
+    shouldOpen
   );
   const toggleOpen = () => setOpen(!open);
 
