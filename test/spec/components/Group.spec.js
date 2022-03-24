@@ -15,6 +15,10 @@ import {
   insertCoreStyles
 } from 'test/TestHelper';
 
+import {
+  LayoutContext
+} from 'src/context';
+
 import Group from 'src/components/Group';
 
 insertCoreStyles();
@@ -241,8 +245,12 @@ function createGroup(options = {}) {
     container
   } = options;
 
+  var MockLayout = createLayout();
+
   return render(
-    <Group { ...options } />,
+    <MockLayout>
+      <Group { ...options } />
+    </MockLayout>,
     {
       container
     }
@@ -258,4 +266,20 @@ function TestEntry(props = {}) {
   return <div class="bio-properties-panel-entry" data-entry-id={ id }>
     <input class="bio-properties-panel-input" value={ value } />
   </div>;
+}
+
+function createLayout(props = {}) {
+  const {
+    layout = {},
+    getLayoutForKey = (key, defaultValue) => defaultValue,
+    setLayoutForKey = noop
+  } = props;
+
+  const context = {
+    layout,
+    getLayoutForKey,
+    setLayoutForKey
+  };
+
+  return ({ children }) => <LayoutContext.Provider value={ context }>{children}</LayoutContext.Provider>;
 }
