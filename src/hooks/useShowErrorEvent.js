@@ -1,7 +1,6 @@
 import {
   useCallback,
   useContext,
-  useEffect,
   useState
 } from 'preact/hooks';
 
@@ -11,20 +10,21 @@ import { useEvent } from './useEvent';
 
 /**
  * Subscribe to `propertiesPanel.showError`. On `propertiesPanel.showError` set
- * temporary error. Unset error on inputs change. Fire
- * `propertiesPanel.showEntry` for temporary error to be visible.
+ * temporary error. Fire `propertiesPanel.showEntry` for temporary error to be
+ * visible. Unset error on `propertiesPanel.updated`.
  *
  * @param {Function} show
- * @param {any[]} [inputs]
  *
  * @returns {import('preact').Ref}
  */
-export function useShowErrorEvent(show, inputs = []) {
+export function useShowErrorEvent(show) {
   const { eventBus } = useContext(EventContext);
 
   const [ temporaryError, setTemporaryError ] = useState(null);
 
-  useEffect(() => setTemporaryError(null), inputs);
+  const onPropertiesPanelUpdated = useCallback(() => setTemporaryError(null), []);
+
+  useEvent('propertiesPanel.updated', onPropertiesPanelUpdated);
 
   const onShowError = useCallback((event) => {
     setTemporaryError(null);

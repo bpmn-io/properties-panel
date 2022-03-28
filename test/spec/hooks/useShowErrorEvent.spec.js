@@ -30,7 +30,7 @@ describe('hooks/useShowErrorEvent', function() {
     let temporaryError;
 
     renderHook(() => {
-      temporaryError = useShowErrorEvent(show, []);
+      temporaryError = useShowErrorEvent(show);
     }, { wrapper: WithEventContext(eventBus, onShowSpy) });
 
     // when
@@ -51,7 +51,7 @@ describe('hooks/useShowErrorEvent', function() {
     eventBus.on('propertiesPanel.showEntry', showEntrySpy);
 
     renderHook(() => {
-      useShowErrorEvent(show, []);
+      useShowErrorEvent(show);
     }, { wrapper: WithEventContext(eventBus, noop) });
 
     // when
@@ -63,7 +63,7 @@ describe('hooks/useShowErrorEvent', function() {
   });
 
 
-  it('should unset temporary error on inputs changed', function() {
+  it('should unset temporary error on propertiesPanel.updated', function() {
 
     // given
     const show = () => true;
@@ -72,21 +72,16 @@ describe('hooks/useShowErrorEvent', function() {
 
     let temporaryError;
 
-    const { rerender } = renderHook(({ inputs }) => {
-      temporaryError = useShowErrorEvent(show, inputs);
-    }, {
-      initialProps: {
-        inputs: [ 'foo' ]
-      },
-      wrapper: WithEventContext(eventBus, onShowSpy)
-    });
+    renderHook(() => {
+      temporaryError = useShowErrorEvent(show);
+    }, { wrapper: WithEventContext(eventBus, onShowSpy) });
 
     act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
 
     expect(temporaryError).to.have.equal('foo');
 
     // when
-    act(() => rerender({ inputs: [ 'bar' ] }));
+    act(() => eventBus.fire('propertiesPanel.updated'));
 
     // then
     expect(temporaryError).to.be.null;
