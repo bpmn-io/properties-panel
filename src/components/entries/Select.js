@@ -98,7 +98,7 @@ export default function SelectEntry(props) {
   const value = getValue(element);
   const options = getOptions(element);
 
-  const error = useShowErrorEvent(show, [ element, value ]);
+  const error = useShowErrorEvent(show);
 
   return (
     <div

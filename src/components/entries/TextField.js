@@ -123,7 +123,7 @@ export default function TextfieldEntry(props) {
     value = cachedInvalidValue;
   }
 
-  const temporaryError = useShowErrorEvent(show, [ element, value ]);
+  const temporaryError = useShowErrorEvent(show);
 
   const error = temporaryError || validationError;
 
