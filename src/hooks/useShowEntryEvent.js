@@ -32,7 +32,7 @@ export function useShowEntryEvent(show) {
         onShow();
       }
 
-      if (event.focus) {
+      if (event.focus && !focus) {
         setFocus(true);
       }
     }
