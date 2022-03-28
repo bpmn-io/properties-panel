@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.13.0
+
+* `FEAT`: allow showing entries and errors through events ([#137](https://github.com/bpmn-io/properties-panel/pull/137))
+* `FEAT`: allow opening groups per default ([#139](https://github.com/bpmn-io/properties-panel/pull/139))
+* `FEAT`: add documentation ref ([#141](https://github.com/bpmn-io/properties-panel/pull/141))
+
 ## 0.12.0
 
 * `FEAT`: allow addition of FEEL icon to TextFields and TextAreas ([#138](https://github.com/bpmn-io/properties-panel/pull/138))
