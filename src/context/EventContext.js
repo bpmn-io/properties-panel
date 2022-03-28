@@ -18,12 +18,12 @@
  *
  * @example
  *
- * useEvent('propertiesPanel.showError', ({ error, focus = false, ...rest }) => {
+ * useEvent('propertiesPanel.showError', ({ focus = false, message, ...rest }) => {
  *   // ...
  * });
  *
  * @param {Object} context
- * @param {string} context.error
+ * @param {string} context.message
  * @param {boolean} [context.focus]
  *
  * @returns void

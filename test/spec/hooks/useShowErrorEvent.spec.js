@@ -34,7 +34,7 @@ describe('hooks/useShowErrorEvent', function() {
     }, { wrapper: WithEventContext(eventBus, onShowSpy) });
 
     // when
-    act(() => eventBus.fire('propertiesPanel.showError', { error: 'foo' }));
+    act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
 
     // then
     expect(temporaryError).to.have.equal('foo');
@@ -55,11 +55,11 @@ describe('hooks/useShowErrorEvent', function() {
     }, { wrapper: WithEventContext(eventBus, noop) });
 
     // when
-    act(() => eventBus.fire('propertiesPanel.showError', { error: 'foo' }));
+    act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
 
     // then
     expect(showEntrySpy).to.have.been.calledOnce;
-    expect(showEntrySpy).to.have.been.calledWithMatch({ error: 'foo' });
+    expect(showEntrySpy).to.have.been.calledWithMatch({ message: 'foo' });
   });
 
 
@@ -81,7 +81,7 @@ describe('hooks/useShowErrorEvent', function() {
       wrapper: WithEventContext(eventBus, onShowSpy)
     });
 
-    act(() => eventBus.fire('propertiesPanel.showError', { error: 'foo' }));
+    act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
 
     expect(temporaryError).to.have.equal('foo');
 
