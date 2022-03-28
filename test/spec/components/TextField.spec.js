@@ -153,7 +153,7 @@ describe('<TextField>', function() {
       const result = createTextField({ container, eventBus, onShow: onShowSpy, show });
 
       // when
-      act(() => eventBus.fire('propertiesPanel.showError', { error: 'foo' }));
+      act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
 
       // then
       expect(onShowSpy).to.have.been.called;
