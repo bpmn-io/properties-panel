@@ -18,8 +18,12 @@ export function useEvent(event, callback, priority = DEFAULT_PRIORITY) {
   const { eventBus } = useContext(EventContext);
 
   useEffect(() => {
+    if (!eventBus) {
+      return;
+    }
+
     eventBus.on(event, priority, callback);
 
     return () => eventBus.off(event, callback);
-  }, [ event, eventBus, callback, priority ]);
+  }, [ callback, event, eventBus, priority ]);
 }

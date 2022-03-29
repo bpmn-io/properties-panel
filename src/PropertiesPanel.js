@@ -96,6 +96,7 @@ const bufferedEvents = [
  * @param {Function} [props.layoutChanged]
  * @param {DescriptionConfig} [props.descriptionConfig]
  * @param {Function} [props.descriptionLoaded]
+ * @param {Object} [props.eventBus]
  */
 export default function PropertiesPanel(props) {
   const {

@@ -31,10 +31,6 @@
 
 import { createContext } from 'preact';
 
-import EventBus from 'diagram-js/lib/core/EventBus';
-
-const eventBus = new EventBus();
-
-const EventContext = createContext({ eventBus });
+const EventContext = createContext({ eventBus: null });
 
 export default EventContext;

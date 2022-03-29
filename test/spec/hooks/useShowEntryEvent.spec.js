@@ -43,6 +43,28 @@ describe('hooks/useShowEntryEvent', function() {
   });
 
 
+  it('should not call onShow (no event bus)', function() {
+
+    // given
+    const show = () => true;
+
+    const onShowSpy = sinon.spy();
+
+    renderHook(() => {
+      const ref = useShowEntryEvent(show);
+
+      return <input id="foo" ref={ ref } />;
+    });
+
+    // when
+
+    eventBus.fire('propertiesPanel.showEntry');
+
+    // then
+    expect(onShowSpy).not.to.have.been.called;
+  });
+
+
   it('should call focus', function() {
 
     // given

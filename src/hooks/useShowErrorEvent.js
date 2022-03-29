@@ -30,7 +30,9 @@ export function useShowErrorEvent(show) {
     setTemporaryError(null);
 
     if (show(event)) {
-      eventBus.fire('propertiesPanel.showEntry', event);
+      if (eventBus) {
+        eventBus.fire('propertiesPanel.showEntry', event);
+      }
 
       setTemporaryError(event.message);
     }
