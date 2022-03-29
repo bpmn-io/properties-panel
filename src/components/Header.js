@@ -47,7 +47,12 @@ export default function Header(props) {
     </div>
     <div class="bio-properties-panel-header-actions">
       { documentationRef ?
-        <a rel="noopener" class="bio-properties-panel-header-link" href={ documentationRef } target="_blank">
+        <a
+          rel="noopener"
+          class="bio-properties-panel-header-link"
+          href={ documentationRef }
+          title="Open documentation"
+          target="_blank">
           <ExternalLinkIcon />
         </a> :
         null
