@@ -8,8 +8,6 @@ import { EventContext } from 'src/context';
 
 import { useShowErrorEvent } from 'src/hooks';
 
-const noop = () => {};
-
 
 describe('hooks/useShowErrorEvent', function() {
 
@@ -25,19 +23,36 @@ describe('hooks/useShowErrorEvent', function() {
     // given
     const show = () => true;
 
-    const onShowSpy = sinon.spy();
-
     let temporaryError;
 
     renderHook(() => {
       temporaryError = useShowErrorEvent(show);
-    }, { wrapper: WithEventContext(eventBus, onShowSpy) });
+    }, { wrapper: WithEventContext(eventBus) });
 
     // when
     act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
 
     // then
-    expect(temporaryError).to.have.equal('foo');
+    expect(temporaryError).to.equal('foo');
+  });
+
+
+  it('should not set temporary error (no event bus)', function() {
+
+    // given
+    const show = () => true;
+
+    let temporaryError;
+
+    renderHook(() => {
+      temporaryError = useShowErrorEvent(show);
+    });
+
+    // when
+    act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
+
+    // then
+    expect(temporaryError).to.be.null;
   });
 
 
@@ -52,7 +67,7 @@ describe('hooks/useShowErrorEvent', function() {
 
     renderHook(() => {
       useShowErrorEvent(show);
-    }, { wrapper: WithEventContext(eventBus, noop) });
+    }, { wrapper: WithEventContext(eventBus) });
 
     // when
     act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
@@ -68,13 +83,11 @@ describe('hooks/useShowErrorEvent', function() {
     // given
     const show = () => true;
 
-    const onShowSpy = sinon.spy();
-
     let temporaryError;
 
     renderHook(() => {
       temporaryError = useShowErrorEvent(show);
-    }, { wrapper: WithEventContext(eventBus, onShowSpy) });
+    }, { wrapper: WithEventContext(eventBus) });
 
     act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
 

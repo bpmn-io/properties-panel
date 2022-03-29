@@ -33,6 +33,19 @@ describe('hooks/useEvent', function() {
   });
 
 
+  it('should not subscribe (no event bus)', function() {
+
+    // given
+    const onSpy = sinon.spy(eventBus, 'on');
+
+    // when
+    renderHook(() => useEvent('foo', noop));
+
+    // then
+    expect(onSpy).not.to.have.been.called;
+  });
+
+
   it('should call callback', function() {
 
     // given
