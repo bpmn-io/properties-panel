@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.13.1
+
+* `FIX`: add accessible title for documentation ref ([#144](https://github.com/bpmn-io/properties-panel/pull/144))
+* `FIX`: make event bus prop optional ([#143](https://github.com/bpmn-io/properties-panel/pull/143))
+
 ## 0.13.0
 
 * `FEAT`: allow showing entries and errors through events ([#137](https://github.com/bpmn-io/properties-panel/pull/137))
