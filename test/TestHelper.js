@@ -36,6 +36,8 @@ export function insertCSS(name, css) {
 }
 
 export function changeInput(input, value) {
+  input.focus();
+
   fireEvent.input(input, { target: { value } });
 }
 

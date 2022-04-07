@@ -12,6 +12,7 @@ import classnames from 'classnames';
 import { isFunction } from 'min-dash';
 
 import {
+  useLocalValue,
   usePrevious,
   useShowEntryEvent,
   useShowErrorEvent
@@ -34,9 +35,16 @@ function Textfield(props) {
 
   const ref = useShowEntryEvent(show);
 
-  const handleInput = useMemo(() => {
-    return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
-  }, [ onInput, debounce ]);
+  const debouncedOnInput = useMemo(() => {
+    return debounce((value) => onInput(value.length ? value : undefined));
+  }, [ debounce, onInput ]);
+
+  const [
+    localValue,
+    localOnInput,
+    onFocus,
+    onBlur
+  ] = useLocalValue(value, debouncedOnInput);
 
   return (
     <div class="bio-properties-panel-textfield">
@@ -53,10 +61,10 @@ function Textfield(props) {
         autoComplete="off"
         disabled={ disabled }
         class="bio-properties-panel-input"
-        onInput={ handleInput }
-        onFocus={ props.onFocus }
-        onBlur={ props.onBlur }
-        value={ value || '' } />
+        onInput={ localOnInput }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
+        value={ localValue || '' } />
     </div>
   );
 }

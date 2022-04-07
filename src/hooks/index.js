@@ -1,3 +1,4 @@
+export { useLocalValue } from './useLocalValue';
 export { useDescriptionContext } from './useDescriptionContext';
 export { useEvent } from './useEvent';
 export { useEventBuffer } from './useEventBuffer';

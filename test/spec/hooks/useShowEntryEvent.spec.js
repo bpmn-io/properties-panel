@@ -35,7 +35,6 @@ describe('hooks/useShowEntryEvent', function() {
     }, { wrapper: WithContext(eventBus, onShowSpy) });
 
     // when
-
     eventBus.fire('propertiesPanel.showEntry');
 
     // then
@@ -57,7 +56,6 @@ describe('hooks/useShowEntryEvent', function() {
     });
 
     // when
-
     eventBus.fire('propertiesPanel.showEntry');
 
     // then
