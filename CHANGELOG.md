@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.13.2
+
+* `FIX`: remove unnecessary scroll padding ([#145](https://github.com/bpmn-io/properties-panel/pull/145))
+
 ## 0.13.1
 
 * `FIX`: add accessible title for documentation ref ([#144](https://github.com/bpmn-io/properties-panel/pull/144))
