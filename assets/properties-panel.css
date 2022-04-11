@@ -258,7 +258,6 @@
 
 .bio-properties-panel-group-header.empty .bio-properties-panel-add-entry {
   margin-right: 69px;
-  padding-left: 6px;
 }
 
 .bio-properties-panel-group-header.empty .bio-properties-panel-add-entry:hover {
@@ -268,7 +267,7 @@
 .bio-properties-panel-group-header.empty .bio-properties-panel-add-entry-label {
   display: none;
   color: var(--add-entry-label-color);
-  padding: 4px 6px 3px 2px;
+  padding: 0 6px 0 2px;
 }
 
 .bio-properties-panel-group-header-button.bio-properties-panel-add-entry:hover {
