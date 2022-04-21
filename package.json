@@ -35,8 +35,11 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@codemirror/view": "^0.19.48",
     "classnames": "^2.3.1",
+    "codemirror": "^5.65.2",
     "diagram-js": "^8.1.2",
+    "feelin": "^0.24.0",
     "min-dash": "^3.7.0",
     "min-dom": "^3.1.3"
   },

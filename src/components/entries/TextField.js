@@ -17,7 +17,56 @@ import {
   useShowErrorEvent
 } from '../../hooks';
 
+import CodeEditor from './CodeEditor';
+
 const noop = () => {};
+
+
+
+function FeelTextfield(props) {
+  const {
+    debounce,
+    disabled = false,
+    id,
+    label,
+    onInput,
+    feel = false,
+    value = '',
+    show = noop
+  } = props;
+
+
+  const ref = useShowEntryEvent(show);
+
+  const handleInput = useMemo(() => {
+    return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
+  }, [ onInput, debounce ]);
+
+  return (
+    <div class="bio-properties-panel-textfield">
+      <label for={ prefixId(id) } class="bio-properties-panel-label">
+        { label }
+        {feel && <FeelIcon feel={ feel } label={ label } />}
+      </label>
+
+      <CodeEditor
+        ref={ ref }
+        id={ prefixId(id) }
+        type="text"
+        name={ id }
+        spellCheck="false"
+        autoComplete="off"
+        disabled={ disabled }
+        class="bio-properties-panel-input"
+        onInput={ handleInput }
+        onFocus={ props.onFocus }
+        onBlur={ props.onBlur }
+        value={ value || '' }
+      />
+    </div>
+  );
+}
+
 
 function Textfield(props) {
 
@@ -134,15 +183,26 @@ export default function TextfieldEntry(props) {
         error ? 'has-error' : '')
       }
       data-entry-id={ id }>
-      <Textfield
-        debounce={ debounce }
-        disabled={ disabled }
-        feel={ feel }
-        id={ id }
-        label={ label }
-        onInput={ onInput }
-        show={ show }
-        value={ value } />
+      {feel ?
+        <FeelTextfield
+          debounce={ debounce }
+          disabled={ disabled }
+          feel={ feel }
+          id={ id }
+          label={ label }
+          onInput={ onInput }
+          show={ show }
+          value={ value } /> :
+        <Textfield
+          debounce={ debounce }
+          disabled={ disabled }
+          feel={ feel }
+          id={ id }
+          label={ label }
+          onInput={ onInput }
+          show={ show }
+          value={ value } />
+      }
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
@@ -158,4 +218,72 @@ export function isEdited(node) {
 
 function prefixId(id) {
   return `bio-properties-panel-${ id }`;
+}
+
+
+
+function getTokenType(node) {
+
+  const {
+    name,
+    error
+  } = node;
+
+  if (error) {
+    return 'error';
+  }
+
+  if (name === 'BuiltInFunctionName') {
+    return 'builtin';
+  }
+
+  if (
+    name === 'BuiltInType' ||
+    name === 'ListType' ||
+    name === 'ContextType' ||
+    name === 'FunctionType'
+  ) {
+    return 'builtin';
+  }
+
+  if (name === 'BlockComment' || name === 'LineComment') {
+    return 'comment';
+  }
+
+  if (name === 'Parameters') {
+    return 'parameters';
+  }
+
+  if (name === 'List') {
+    return 'list';
+  }
+
+  if (name === 'Context') {
+    return 'context';
+  }
+
+  if (name === 'Interval') {
+    return 'interval';
+  }
+
+  if (name === 'StringLiteral') {
+    return 'string';
+  }
+
+  if (name === 'NumericLiteral') {
+    return 'number';
+  }
+
+  if (name === 'BooleanLiteral') {
+    return 'boolean';
+  }
+
+  if (name === 'QualifiedName') {
+    return 'qname';
+  }
+
+  if (name === 'Name') {
+    return 'name';
+  }
+
 }
