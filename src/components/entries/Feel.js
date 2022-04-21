@@ -1,4 +1,5 @@
 import Description from './Description';
+import FeelIcon from './FeelIcon';
 
 import {
   useEffect,
@@ -16,21 +17,22 @@ import {
   useShowErrorEvent
 } from '../../hooks';
 
+import CodeEditor from './util/CodeEditor';
 
 const noop = () => {};
 
-
-function Textfield(props) {
-
+function FeelTextfield(props) {
   const {
     debounce,
     disabled = false,
     id,
     label,
     onInput,
+    feel = false,
     value = '',
     show = noop
   } = props;
+
 
   const ref = useShowEntryEvent(show);
 
@@ -42,8 +44,10 @@ function Textfield(props) {
     <div class="bio-properties-panel-textfield">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
         { label }
+        <FeelIcon feel={ feel } label={ label } />
       </label>
-      <input
+
+      <CodeEditor
         ref={ ref }
         id={ prefixId(id) }
         type="text"
@@ -52,13 +56,16 @@ function Textfield(props) {
         autoComplete="off"
         disabled={ disabled }
         class="bio-properties-panel-input"
+        variables={ props.variables }
         onInput={ handleInput }
         onFocus={ props.onFocus }
         onBlur={ props.onBlur }
-        value={ value || '' } />
+        value={ value || '' }
+      />
     </div>
   );
 }
+
 
 /**
  * @param {Object} props
@@ -72,13 +79,14 @@ function Textfield(props) {
  * @param {Function} props.setValue
  * @param {Function} props.validate
  */
-export default function TextfieldEntry(props) {
+export default function FeelEntry(props) {
   const {
     element,
     id,
     description,
     debounce,
     disabled,
+    feel,
     label,
     getValue,
     setValue,
@@ -132,14 +140,16 @@ export default function TextfieldEntry(props) {
         error ? 'has-error' : '')
       }
       data-entry-id={ id }>
-      <Textfield
+      <FeelTextfield
         debounce={ debounce }
         disabled={ disabled }
+        feel={ feel }
         id={ id }
         label={ label }
         onInput={ onInput }
         show={ show }
-        value={ value } />
+        value={ value }
+        variables={ props.variables } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>

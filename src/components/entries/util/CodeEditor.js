@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { getTokenType, parseFeel } from './util/CodeEditorUtil';
+import { getTokenType, parseFeel } from './CodeEditorUtil';
 
 function highlight(string, node) {
   if (!string) {
