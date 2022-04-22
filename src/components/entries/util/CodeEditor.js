@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { getTokenType, parseFeel } from './CodeEditorUtil';
+import { parseFeel } from './CodeEditorUtil';
 
 
 function highlight(context) {
@@ -8,15 +8,12 @@ function highlight(context) {
     renderTree
   } = context;
 
-
   function render({ children, content, type }) {
 
     return <>
       <span class={ 'feel-' + type }>
         { content }
-        {
-          children && children.map(render)
-        }
+        { children && children.map(render) }
       </span>
     </>;
   }
@@ -29,6 +26,12 @@ const createRenderTree = ({ syntaxTree, expression }) => {
 
   function _createRenderTree(node) {
     const children = node.children;
+
+    if (!children.length) {
+      node.content = expression.slice(node.start, node.end);
+      return;
+    }
+
     const orderedTokens = children
       .sort((a, b) => a.start - b.start)
       .reduce((acc, current) => {
@@ -45,16 +48,7 @@ const createRenderTree = ({ syntaxTree, expression }) => {
         return acc;
       }, []);
 
-    if (!orderedTokens.length) {
-      orderedTokens.push(
-        {
-          start: node.start,
-          end: node.end,
-          type: 'text'
-        }
-      );
-    }
-    else if (orderedTokens[orderedTokens.length - 1].end < node.end) {
+    if (orderedTokens[orderedTokens.length - 1].end < node.end) {
       orderedTokens.push({
         start: orderedTokens[orderedTokens.length - 1].end,
         end: node.end,
@@ -78,6 +72,7 @@ const createRenderTree = ({ syntaxTree, expression }) => {
   };
 };
 
+
 export default function CodeEditor(props) {
 
   const {
@@ -93,34 +88,49 @@ export default function CodeEditor(props) {
   const [value, setValue] = useState(persistedValue || '');
   const [highlighted, setHighlighted] = useState(value);
   const [feelActive, setFeelActive] = useState(persistedValue || '');
-  const carretPostion = inputRef.current?.selectionStart;
+  const [autoComplete, setAutoComplete] = useState('');
+
+  const addPrediction = useMemo(() => ({ renderTree, pointer }) => {
+    function _addPridiciton(node) {
+      const children = node.children || [];
+      for (const i in children) {
+        const child = children[i];
+
+        if (child.type === 'variable' && child.end === pointer) {
+          const content = child.content;
+
+          // Do code prediction
+          const candidate = variables.find(variable => variable.name.startsWith(content));
+
+          if (candidate) {
+            const newNode = {
+              type: 'prediction',
+              content: candidate.name.slice(child.end - child.start)
+            };
+            children.push(newNode);
+            return newNode;
+          }
+        }
+
+        const prediction = _addPridiciton(child);
+        if (prediction) {
+          return prediction;
+        }
+      }
+    }
+
+    const prediction = _addPridiciton(renderTree);
+    if (prediction) {
+      setAutoComplete(prediction.content);
+    } else {
+      setAutoComplete('');
+    }
+  }, [variables]);
+
+  const handleCodeChanged = useMemo(() => e => {
+    const carretPostion = e.target.selectionStart;
 
 
-  // const addPrediction = ({ tree, pointer }) => {
-
-  //   function _addPridiciton(node) {
-
-  //     const children = node.children;
-  //     if (node.type === 'variable' && node.end === pointer) {
-
-  //       // Do code prediction
-  //       const candidate = variables.find(variable => variable.name.startsWith(content));
-
-  //       if (candidate) {
-  //         children.push({
-  //           type: 'prediction',
-
-  //         });
-
-  //         // return <>{ content }<span class="code-prediction">{candidate.name.slice(node.end - node.start)}</span></>;
-  //       }
-  //     }
-  //   }
-
-  //   addPrediction(tree);
-  // };
-
-  const handleCodeChanged = (e) => {
     const newValue = e.target.value;
 
     const expression = newValue.slice(1);
@@ -134,16 +144,41 @@ export default function CodeEditor(props) {
     };
 
     // handleTab
-    // todo
+    // handleTab(context);
 
     context.syntaxTree = parseFeel(expression);
     context.renderTree = createRenderTree(context);
-    console.log(context);
 
     // add preiction
-    // addPrediction(context);
+    addPrediction(context);
 
     setHighlighted(highlight(context));
+  }, [addPrediction]);
+
+  const handleAutoComplete = (e) => {
+    const input = inputRef.current;
+    const carretPostion = input.selectionStart;
+    const value = input.value;
+    const newValue = value.slice(0, carretPostion) + autoComplete + value.slice(carretPostion);
+    input.value = newValue;
+  };
+
+  const handleKeyDown = e => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+
+      if (autoComplete) {
+        handleAutoComplete(e);
+      } else {
+
+        // Add Tabs
+      }
+    }
+
+    if (e.key === 'Enter') {
+
+      // Auto-Intent
+    }
   };
 
   const handleInput = useMemo(() => e => {
@@ -189,6 +224,8 @@ export default function CodeEditor(props) {
       disabled={ disabled }
       class="bio-properties-panel-code-input bio-properties-panel-input"
       onInput={ handleInput }
+      onKeyDown={ handleKeyDown }
+      onSelectionChange={ handleCodeChanged }
       onFocus={ props.onFocus }
       onBlur={ props.onBlur }
       value={ value } />
