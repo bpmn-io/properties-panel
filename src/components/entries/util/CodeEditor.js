@@ -2,85 +2,168 @@ import classNames from 'classnames';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { getTokenType, parseFeel } from './CodeEditorUtil';
 
-function highlight(string, node) {
-  if (!string) {
-    return null;
+
+function highlight(context) {
+  const {
+    renderTree
+  } = context;
+
+
+  function render({ children, content, type }) {
+
+    return <>
+      <span class={ 'feel-' + type }>
+        { content }
+        {
+          children && children.map(render)
+        }
+      </span>
+    </>;
   }
 
-  if (!node) {
-    node = parseFeel(string);
-  }
 
-  const children = node.children;
-  const orderedTokens = children
-    .sort((a, b) => a.start - b.start)
-    .reduce((acc, current) => {
-      const previousEnd = acc[acc.length - 1]?.end || node.start;
-      if (current.start > previousEnd) {
-        acc.push({
-          type: 'text',
-          start: previousEnd,
-          end: current.start
-        });
-      }
+  return <>={render(renderTree)}</>;
+}
 
-      acc.push(current);
-      return acc;
-    }, []);
+const createRenderTree = ({ syntaxTree, expression }) => {
 
-  if (!orderedTokens.length) {
-    orderedTokens.push(
-      {
-        start: node.start,
+  function _createRenderTree(node) {
+    const children = node.children;
+    const orderedTokens = children
+      .sort((a, b) => a.start - b.start)
+      .reduce((acc, current) => {
+        const previousEnd = acc[acc.length - 1]?.end || node.start;
+        if (current.start > previousEnd) {
+          acc.push({
+            type: 'text',
+            start: previousEnd,
+            end: current.start
+          });
+        }
+
+        acc.push(current);
+        return acc;
+      }, []);
+
+    if (!orderedTokens.length) {
+      orderedTokens.push(
+        {
+          start: node.start,
+          end: node.end,
+          type: 'text'
+        }
+      );
+    }
+    else if (orderedTokens[orderedTokens.length - 1].end < node.end) {
+      orderedTokens.push({
+        start: orderedTokens[orderedTokens.length - 1].end,
         end: node.end,
         type: 'text'
+      });
+    }
+
+    return orderedTokens.map(token => {
+      if (token.type === 'text') {
+        token.content = expression.slice(token.start, token.end);
+      } else {
+        token.children = _createRenderTree(token);
       }
-    );
-  }
-  else if (orderedTokens[orderedTokens.length - 1].end < node.end) {
-    orderedTokens.push({
-      start: orderedTokens[orderedTokens.length - 1].end,
-      end: node.end,
-      type: 'text'
+      return token;
     });
   }
 
-  return <>
-    <span class={ 'feel-' + getTokenType(node) }>
-      {
-        orderedTokens.map(token => {
-          if (token.type === 'text') {
-            return string.slice(token.start, token.end);
-          }
-          return highlight(string, token);
-        })
-      }
-    </span>
-  </>;
-}
-
+  return {
+    type: 'root',
+    children: _createRenderTree(syntaxTree)
+  };
+};
 
 export default function CodeEditor(props) {
 
   const {
-    value,
+    value: persistedValue,
     id,
     disabled,
-    onInput
+    onInput,
+    variables
   } = props;
 
   const inputRef = useRef();
   const highlightRef = useRef();
-  const [code, setCode] = useState(value || '');
+  const [value, setValue] = useState(persistedValue || '');
+  const [highlighted, setHighlighted] = useState(value);
+  const [feelActive, setFeelActive] = useState(persistedValue || '');
+  const carretPostion = inputRef.current?.selectionStart;
+
+
+  // const addPrediction = ({ tree, pointer }) => {
+
+  //   function _addPridiciton(node) {
+
+  //     const children = node.children;
+  //     if (node.type === 'variable' && node.end === pointer) {
+
+  //       // Do code prediction
+  //       const candidate = variables.find(variable => variable.name.startsWith(content));
+
+  //       if (candidate) {
+  //         children.push({
+  //           type: 'prediction',
+
+  //         });
+
+  //         // return <>{ content }<span class="code-prediction">{candidate.name.slice(node.end - node.start)}</span></>;
+  //       }
+  //     }
+  //   }
+
+  //   addPrediction(tree);
+  // };
+
+  const handleCodeChanged = (e) => {
+    const newValue = e.target.value;
+
+    const expression = newValue.slice(1);
+    const pointer = carretPostion - 1;
+
+    // remove = sign
+    const context = {
+      expression,
+      pointer,
+      event: e
+    };
+
+    // handleTab
+    // todo
+
+    context.syntaxTree = parseFeel(expression);
+    context.renderTree = createRenderTree(context);
+    console.log(context);
+
+    // add preiction
+    // addPrediction(context);
+
+    setHighlighted(highlight(context));
+  };
 
   const handleInput = useMemo(() => e => {
     onInput(e);
-    setCode(e.target.value);
+
+    const newValue = e.target.value;
+    const newFeelActive = newValue.startsWith('=');
+    setFeelActive(newFeelActive);
+    setValue(newValue);
+
+    if (!newFeelActive) {
+      setHighlighted(newValue);
+      return;
+    }
+
+    handleCodeChanged(e);
   }, [onInput]);
 
   useEffect(() => {
     const handleScroll = e => {
-      console.log('handleScroll', e);
       const {
         scrollTop,
         scrollLeft
@@ -95,10 +178,8 @@ export default function CodeEditor(props) {
     };
   }, []);
 
-  const feelActive = code.startsWith('=');
-
   return <div class={ classNames('code-input-container', feelActive && 'active') }>
-    <input
+    <textarea
       ref={ inputRef }
       id={ id }
       type="text"
@@ -110,9 +191,9 @@ export default function CodeEditor(props) {
       onInput={ handleInput }
       onFocus={ props.onFocus }
       onBlur={ props.onBlur }
-      value={ code } />
+      value={ value } />
     <div class="bio-properties-panel-code-highlight" ref={ highlightRef }>
-      {feelActive ? <>={highlight(code.slice(1))}</> : code}
+      {highlighted}
     </div>
   </div>;
 }

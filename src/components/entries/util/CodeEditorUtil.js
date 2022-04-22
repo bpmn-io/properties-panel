@@ -7,8 +7,6 @@ export function getTokenType(node) {
     error
   } = node;
 
-  console.log(node, name, error);
-
   if (error || name === '⚠') {
     return 'error';
   }
@@ -99,7 +97,8 @@ export function parseFeel(value) {
         end,
         children: [],
         error,
-        skip
+        skip,
+        type: getTokenType(node)
       };
       stack.push(_node);
     },
