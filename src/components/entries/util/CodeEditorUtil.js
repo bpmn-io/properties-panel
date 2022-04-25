@@ -113,6 +113,8 @@ export function parseFeel(value) {
       const parent = stack[stack.length - 1];
       parent.children.push(current);
 
+      current.parent = parent;
+
       if (current.tokenType || current.error) {
         tokens.push(current);
       }

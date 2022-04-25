@@ -8,10 +8,10 @@ function highlight(context) {
     renderTree
   } = context;
 
-  function render({ children, content, type }) {
+  function render({ children, content, type, errorText }) {
 
     return <>
-      <span class={ 'feel-' + type }>
+      <span class={ 'feel-' + type } title={ errorText }>
         { content }
         { children && children.map(render) }
       </span>
@@ -25,6 +25,7 @@ function highlight(context) {
 const createRenderTree = ({ syntaxTree, expression }) => {
 
   function _createRenderTree(node) {
+    console.log(node);
     const children = node.children;
 
     if (!children.length) {
@@ -56,7 +57,21 @@ const createRenderTree = ({ syntaxTree, expression }) => {
       });
     }
 
-    return orderedTokens.map(token => {
+    return orderedTokens.map((token, idx) => {
+      if (token.type === 'error') {
+        const next = orderedTokens[idx + 1];
+
+        if (token.start !== token.end) {
+          token.errorText = 'Unexpected token: ' + expression.slice(token.start, token.end);
+        } else if (next) {
+          token.errorText = 'Unexpected token: ' + expression.slice(next.start, next.start);
+        } else {
+          console.log(token);
+          token.errorText = 'Unexpected end of ' + token.parent.name;
+        }
+
+      }
+
       if (token.type === 'text') {
         token.content = expression.slice(token.start, token.end);
       } else {
@@ -66,10 +81,13 @@ const createRenderTree = ({ syntaxTree, expression }) => {
     });
   }
 
-  return {
+  const renderTree = {
     type: 'root',
-    children: _createRenderTree(syntaxTree)
+    children: [syntaxTree]
   };
+  _createRenderTree(renderTree);
+
+  return renderTree;
 };
 
 
@@ -80,7 +98,8 @@ export default function CodeEditor(props) {
     id,
     disabled,
     onInput,
-    variables
+    variables,
+    example = ''
   } = props;
 
   const inputRef = useRef();
@@ -90,14 +109,13 @@ export default function CodeEditor(props) {
   const [feelActive, setFeelActive] = useState(persistedValue || '');
   const [autoComplete, setAutoComplete] = useState('');
 
-  const addPrediction = useMemo(() => ({ renderTree, pointer, event }) => {
+  const addPrediction = useMemo(() => ({ renderTree, pointer, event, expression }) => {
     console.log(event);
 
     if (event.key && event.key === 'ArrowUp'||
     event.key === 'ArrowDown' ||
     event.key === 'ArrowLeft' ||
     event.key === 'ArrowRight') {
-      console.log('no prediction');
       setAutoComplete('');
       return;
     }
@@ -118,7 +136,11 @@ export default function CodeEditor(props) {
               type: 'prediction',
               content: candidate.name.slice(child.end - child.start)
             };
-            children.push(newNode);
+
+            children.splice(children.indexOf(child) + 1, 0, newNode);
+
+            console.log(children, children.indexOf(child));
+
             return newNode;
           }
         }
@@ -130,13 +152,27 @@ export default function CodeEditor(props) {
       }
     }
 
-    const prediction = _addPridiciton(renderTree);
+    let prediction = _addPridiciton(renderTree);
+
+    if (!prediction && expression.length === pointer && example.startsWith(expression)) {
+      const newNode = {
+        type: 'prediction',
+        content: example.slice(pointer)
+      };
+
+      prediction = newNode;
+      !renderTree.children && (renderTree.children = []);
+      renderTree.children.push(newNode);
+    }
+
+
+
     if (prediction) {
       setAutoComplete(prediction.content);
     } else {
       setAutoComplete('');
     }
-  }, [variables]);
+  }, [variables, example]);
 
   const handleCodeChanged = useMemo(() => e => {
     const carretPostion = e.target.selectionStart;
@@ -158,6 +194,8 @@ export default function CodeEditor(props) {
     context.syntaxTree = parseFeel(expression);
     context.renderTree = createRenderTree(context);
 
+    console.log(context.renderTree);
+
     // add preiction
     addPrediction(context);
 
@@ -169,6 +207,7 @@ export default function CodeEditor(props) {
     const carretPostion = input.selectionStart;
     const value = input.value;
     const newValue = value.slice(0, carretPostion) + autoComplete + value.slice(carretPostion);
+    console.log(autoComplete, newValue);
     input.value = newValue;
   };
 
@@ -245,6 +284,7 @@ export default function CodeEditor(props) {
       onKeyDown={ handleKeyDown }
       onFocus={ props.onFocus }
       onBlur={ props.onBlur }
+      wrap="off"
       value={ value } />
     <div class="bio-properties-panel-code-highlight" ref={ highlightRef }>
       {highlighted}

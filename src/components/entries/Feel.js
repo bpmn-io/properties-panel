@@ -56,6 +56,7 @@ function FeelTextfield(props) {
         autoComplete="off"
         disabled={ disabled }
         class="bio-properties-panel-input"
+        example={ props.example }
         variables={ props.variables }
         onInput={ handleInput }
         onFocus={ props.onFocus }
@@ -147,6 +148,7 @@ export default function FeelEntry(props) {
         id={ id }
         label={ label }
         onInput={ onInput }
+        example={ props.example }
         show={ show }
         value={ value }
         variables={ props.variables } />
