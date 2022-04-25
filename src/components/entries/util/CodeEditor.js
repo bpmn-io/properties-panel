@@ -90,7 +90,18 @@ export default function CodeEditor(props) {
   const [feelActive, setFeelActive] = useState(persistedValue || '');
   const [autoComplete, setAutoComplete] = useState('');
 
-  const addPrediction = useMemo(() => ({ renderTree, pointer }) => {
+  const addPrediction = useMemo(() => ({ renderTree, pointer, event }) => {
+    console.log(event);
+
+    if (event.key && event.key === 'ArrowUp'||
+    event.key === 'ArrowDown' ||
+    event.key === 'ArrowLeft' ||
+    event.key === 'ArrowRight') {
+      console.log('no prediction');
+      setAutoComplete('');
+      return;
+    }
+
     function _addPridiciton(node) {
       const children = node.children || [];
       for (const i in children) {
@@ -129,8 +140,6 @@ export default function CodeEditor(props) {
 
   const handleCodeChanged = useMemo(() => e => {
     const carretPostion = e.target.selectionStart;
-
-
     const newValue = e.target.value;
 
     const expression = newValue.slice(1);
@@ -173,11 +182,20 @@ export default function CodeEditor(props) {
 
         // Add Tabs
       }
+
+      handleInput(e);
     }
 
     if (e.key === 'Enter') {
 
       // Auto-Intent
+    }
+
+    if (e.key === 'ArrowUp'||
+        e.key === 'ArrowDown' ||
+        e.key === 'ArrowLeft' ||
+        e.key === 'ArrowRight') {
+      handleCodeChanged(e);
     }
   };
 
@@ -225,7 +243,6 @@ export default function CodeEditor(props) {
       class="bio-properties-panel-code-input bio-properties-panel-input"
       onInput={ handleInput }
       onKeyDown={ handleKeyDown }
-      onSelectionChange={ handleCodeChanged }
       onFocus={ props.onFocus }
       onBlur={ props.onBlur }
       value={ value } />
