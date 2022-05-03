@@ -982,3 +982,50 @@ textarea.bio-properties-panel-input {
 .feel-name {
   color: #05a;
 }
+
+
+.Typeahead {
+  position: fixed;
+  border: 1px solid var(--color-grey-225-10-85);
+  width: 256px;
+  background-color: white;
+  max-height: 300px;
+  /* height: 300px; */
+  /* overflow: scroll; */
+  z-index: 10000000000;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+.Typeahead .name {
+  font-weight: bold;
+  font-size: small;
+}
+
+.Typeahead .description {
+  font-size: small;
+}
+
+.Typeahead ul {
+  list-style-type: none;
+  padding: 0 0 0 5px;
+  margin: 0;
+}
+
+.Typeahead li {
+  /* padding: 10px; */
+  cursor: pointer;
+}
+
+.Typeahead li:nth-child(2n) {
+  background: #eee;
+}
+
+.Typeahead li:hover {
+  background: #fafafa;
+}
+
+.section-header {
+  padding: 5px 0;
+}

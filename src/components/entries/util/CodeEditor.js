@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { parseFeel } from './CodeEditorUtil';
+import Typeahead from './Typeahead';
 
 
 function highlight(context) {
@@ -108,6 +109,7 @@ export default function CodeEditor(props) {
   const [highlighted, setHighlighted] = useState(value);
   const [feelActive, setFeelActive] = useState(persistedValue || '');
   const [autoComplete, setAutoComplete] = useState('');
+  const [prediction, setPrediction] = useState({});
 
   const addPrediction = useMemo(() => ({ renderTree, pointer, event, expression }) => {
     console.log(event);
@@ -128,21 +130,26 @@ export default function CodeEditor(props) {
         if (child.type === 'variable' && child.end === pointer) {
           const content = child.content;
 
+          const newNode = {
+            type: 'prediction',
+            search: content,
+            originalNode: child,
+            content: ''
+          };
+
           // Do code prediction
           const candidate = variables.find(variable => variable.name.startsWith(content));
 
           if (candidate) {
-            const newNode = {
-              type: 'prediction',
-              content: candidate.name.slice(child.end - child.start)
-            };
 
-            children.splice(children.indexOf(child) + 1, 0, newNode);
 
-            console.log(children, children.indexOf(child));
+            // children.splice(children.indexOf(child) + 1, 0, newNode);
 
-            return newNode;
+            newNode.content = candidate.name;
+
           }
+          return newNode;
+
         }
 
         const prediction = _addPridiciton(child);
@@ -154,23 +161,26 @@ export default function CodeEditor(props) {
 
     let prediction = _addPridiciton(renderTree);
 
-    if (!prediction && expression.length === pointer && example.startsWith(expression)) {
-      const newNode = {
-        type: 'prediction',
-        content: example.slice(pointer)
-      };
+    // if (!prediction && expression.length === pointer && example.startsWith(expression)) {
+    //   const newNode = {
+    //     type: 'prediction',
+    //     content: example.slice(pointer)
+    //   };
 
-      prediction = newNode;
-      !renderTree.children && (renderTree.children = []);
-      renderTree.children.push(newNode);
-    }
+    //   prediction = newNode;
+    //   !renderTree.children && (renderTree.children = []);
+    //   renderTree.children.push(newNode);
+    // }
 
 
 
     if (prediction) {
-      setAutoComplete(prediction.content);
+
+      // setAutoComplete(prediction.content);
+      setPrediction(prediction);
     } else {
       setAutoComplete('');
+      setPrediction({});
     }
   }, [variables, example]);
 
@@ -270,8 +280,28 @@ export default function CodeEditor(props) {
     };
   }, []);
 
+  const handleTypeahead = function(e) {
+    const input = inputRef.current;
+    const value = input.value;
+    const carretPostion = input.selectionStart;
+
+    let newValue;
+    if (prediction.originalNode) {
+      newValue = value.slice(0, prediction.originalNode.start + 1) + e + value.slice(prediction.originalNode.end + 1);
+    } else {
+      newValue = value.slice(0, carretPostion) + e + value.slice(carretPostion);
+    }
+
+
+    // value.splice(prediction.originalNode.start + 1, prediction.originalNode.end - prediction.originalNode.start, e);
+
+    input.value = newValue;
+    setValue(newValue);
+    handleCodeChanged({ target: input });
+  };
+
   return <div class={ classNames('code-input-container', feelActive && 'active') }>
-    <textarea
+    <input
       ref={ inputRef }
       id={ id }
       type="text"
@@ -289,5 +319,11 @@ export default function CodeEditor(props) {
     <div class="bio-properties-panel-code-highlight" ref={ highlightRef }>
       {highlighted}
     </div>
+    <Typeahead
+      onClick={ handleTypeahead }
+      search={ prediction.search }
+      feelActive={ feelActive }
+      variables={ variables }
+    />
   </div>;
 }
