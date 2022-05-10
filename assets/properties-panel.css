@@ -901,11 +901,15 @@ textarea.bio-properties-panel-input {
 
 .code-input-container {
   position: relative;
-  overflow: hidden;
 }
 
 .code-input-container.active {
   font-family: var(--font-family-monospace);
+}
+
+.codeInputField {
+  overflow: hidden;
+  position: relative;
 }
 
 
@@ -985,9 +989,9 @@ textarea.bio-properties-panel-input {
 
 
 .Typeahead {
-  position: fixed;
+  position: absolute;
   border: 1px solid var(--color-grey-225-10-85);
-  width: 256px;
+  /* width: 100%; */
   background-color: white;
   max-height: 300px;
   /* height: 300px; */
@@ -995,6 +999,9 @@ textarea.bio-properties-panel-input {
   z-index: 10000000000;
   overflow-x: hidden;
   overflow-y: auto;
+  width: 100%;
+
+  /* margin: 0 32px 0 0; */
 }
 
 
@@ -1019,11 +1026,20 @@ textarea.bio-properties-panel-input {
 }
 
 .Typeahead li:nth-child(2n) {
-  background: #eee;
+  background: #F5F5F5;
 }
 
 .Typeahead li:hover {
-  background: #fafafa;
+  background: #fefefe;
+}
+
+.Typeahead li.parameter {
+  cursor: default;
+  background: #fff;
+}
+
+.Typeahead li.parameter.active {
+  background: #eee;
 }
 
 .section-header {

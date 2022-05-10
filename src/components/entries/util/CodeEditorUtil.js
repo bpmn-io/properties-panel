@@ -90,8 +90,6 @@ export function parseFeel(value) {
         name
       } = node;
 
-      console.log(node);
-
       const skip = name === parsedInput.slice(start, end);
       const error = node.prop('error');
       const _node = {
@@ -101,7 +99,8 @@ export function parseFeel(value) {
         children: [],
         error,
         skip,
-        type: getTokenType(node)
+        type: getTokenType(node),
+        value: parsedInput.slice(start, end)
       };
       stack.push(_node);
     },

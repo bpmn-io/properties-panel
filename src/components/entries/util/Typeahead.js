@@ -1,74 +1,26 @@
-import { useMemo } from 'preact/hooks';
+import classNames from 'classnames';
+import { useEffect, useMemo } from 'preact/hooks';
 
-const config = [
-  {
-    name: 'Absolute',
-    value: 'abs()',
-    descritpion: 'Returns the absolute value of a number.',
-  },
-  {
-    name: 'Minimum',
-    value: 'min()',
-    descritpion: 'Returns the lowest value in a set of values.',
-  },
-  {
-    name: 'Maximum',
-    value: 'max()',
-    descritpion: 'Returns the highest value in a set of values.',
-  },
-  {
-    name: 'Round',
-    value: 'round()',
-    descritpion: 'Rounds a number to the nearest integer.',
-  },
-  {
-    name: 'Floor',
-    value: 'floor()',
-    descritpion: 'Rounds a number down to the nearest integer.',
-  },
-  {
-    name: 'Ceil',
-    value: 'ceil()',
-    descritpion: 'Rounds a number up to the nearest integer.',
-  },
-  {
-    name: 'Sum',
-    value: 'sum()',
-    descritpion: 'Returns the sum of a set of values.',
-  },
-  {
-    name: 'Date',
-    value: 'date()',
-    descritpion: 'Returns a date value.',
-  },
-  {
-    name: 'Date and Time',
-    value: 'date and time()',
-    descritpion: 'Returns a date-time value.',
-  },
-];
+import builtIns from './builtIns';
 
+const preventInputBlur = e => {
+  console.log('preventInputBlur', e);
+  e.preventDefault();
+};
 
-
-export default function Typeahead({ feelActive, search, variables, onClick }) {
-
-
+export default function Typeahead({ feelActive, search, variables, onClick, activeNode, editingActive, setAutoComplete }) {
 
   const filteredValues = useMemo(() => {
     if (!search) {
-      return config;
+      return builtIns;
     }
 
-    // console.log(search, config);
-    return config.filter(f => {
+    return builtIns.filter(f => {
       return f.name.toLowerCase().includes(search.toLowerCase()) ||
                               f.value.toLowerCase().includes(search.toLowerCase()) ||
-                              f.descritpion.toLowerCase().includes(search.toLowerCase());}
+                              f.description.toLowerCase().includes(search.toLowerCase());}
     );
   }, [search]);
-
-
-  console.log(variables);
 
   const filteredVariables = useMemo(() => {
     if (!search) {
@@ -81,18 +33,25 @@ export default function Typeahead({ feelActive, search, variables, onClick }) {
   }, [search, variables]);
 
 
+  useEffect(() => {
+    const filtered = filteredValues[0]?.value || filteredVariables[0]?.name || '';
+    setAutoComplete(filtered);
+  }, [filteredValues, filteredVariables, setAutoComplete]);
 
-  if (!feelActive || !search) {
+
+  if (!feelActive || (!search && !activeNode) || !editingActive) {
     return;
   }
 
-  return <div class="Typeahead">
+
+  return <div class="Typeahead" onMouseDown={ preventInputBlur }>
+    <ContextualHelp activeNode={ activeNode } />
     {!!filteredValues.length && <>
       <span class="section-header">Functions:</span>
       <ul>
         {filteredValues.map(f => <li onClick={ () => onClick(f.value) }>
           <b class="name">{f.name}</b>
-          <div class="description">{f.descritpion}</div>
+          <div class="description">{f.description}</div>
         </li>)}
       </ul>
     </>
@@ -107,8 +66,70 @@ export default function Typeahead({ feelActive, search, variables, onClick }) {
       </ul>
     </>
     }
-
-
-
   </div>;
+}
+
+
+function ContextualHelp({ activeNode }) {
+  let closestFunctionIvocation = getClosest('PositionalParameters', activeNode)?.parent;
+
+  if (!closestFunctionIvocation || !closestFunctionIvocation.value || closestFunctionIvocation === activeNode) {
+    return null;
+  }
+
+  const functionName = closestFunctionIvocation.value.replace(/(?<=\()(.*)(?=\))/, '');
+  const res = builtIns.find(b => {
+    if (b.value === functionName) {
+      return true;
+    }
+  });
+
+  if (!res) {
+    return null;
+  }
+
+  const position = getParameterPosition(activeNode);
+
+  return <>
+    <span class="section-header">{res.name}</span>
+    <div>{res.description}</div>
+    <ul>
+      {res.parameters?.map((p, idx) =>
+        <li class={ classNames('parameter', idx === position && 'active') }>{p.name}{p.optional ? '?' : ''}:{'<'}{p.type}{'>'} </li>
+      )}
+    </ul>
+    <hr></hr>
+  </>;
+}
+
+
+function getClosest(type, node) {
+
+  while (node && node.type !== type) {
+    node = node.parent;
+  }
+
+  return node;
+}
+
+
+function getParameterPosition(node) {
+  const type = 'PositionalParameters';
+
+  while (node && node.type !== type) {
+    const parent = node.parent;
+
+    if (parent && parent.type === type) {
+      return parent.children.indexOf(node);
+    }
+    node = node.parent;
+  }
+
+  console.log('No parameter position found', node);
+
+  if (!node.children || !node.children.length) {
+    return 0;
+  }
+
+  return -1;
 }

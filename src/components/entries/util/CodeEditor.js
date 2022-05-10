@@ -26,7 +26,6 @@ function highlight(context) {
 const createRenderTree = ({ syntaxTree, expression }) => {
 
   function _createRenderTree(node) {
-    console.log(node);
     const children = node.children;
 
     if (!children.length) {
@@ -46,7 +45,11 @@ const createRenderTree = ({ syntaxTree, expression }) => {
           });
         }
 
-        acc.push(current);
+        acc.push(
+          {
+            ...current,
+            parent: node
+          });
         return acc;
       }, []);
 
@@ -67,7 +70,6 @@ const createRenderTree = ({ syntaxTree, expression }) => {
         } else if (next) {
           token.errorText = 'Unexpected token: ' + expression.slice(next.start, next.start);
         } else {
-          console.log(token);
           token.errorText = 'Unexpected end of ' + token.parent.name;
         }
 
@@ -84,11 +86,11 @@ const createRenderTree = ({ syntaxTree, expression }) => {
 
   const renderTree = {
     type: 'root',
-    children: [syntaxTree]
+    children: [{ ...syntaxTree }]
   };
-  _createRenderTree(renderTree);
-
-  return renderTree;
+  const root = _createRenderTree(renderTree)[0];
+  console.log(root);
+  return root;
 };
 
 
@@ -100,20 +102,25 @@ export default function CodeEditor(props) {
     disabled,
     onInput,
     variables,
-    example = ''
+    example = '',
+    onFocus = () => {},
+    onBlur = () => {},
   } = props;
 
   const inputRef = useRef();
   const highlightRef = useRef();
+  const containerRef = useRef();
   const [value, setValue] = useState(persistedValue || '');
   const [highlighted, setHighlighted] = useState(value);
   const [feelActive, setFeelActive] = useState(persistedValue || '');
   const [autoComplete, setAutoComplete] = useState('');
   const [prediction, setPrediction] = useState({});
+  const [syntaxTree, setSyntaxTree] = useState({});
+  const [activeNode, setActiveNode] = useState(null);
+  const [editingActive, setEditingActive] = useState(false);
+
 
   const addPrediction = useMemo(() => ({ renderTree, pointer, event, expression }) => {
-    console.log(event);
-
     if (event.key && event.key === 'ArrowUp'||
     event.key === 'ArrowDown' ||
     event.key === 'ArrowLeft' ||
@@ -141,10 +148,6 @@ export default function CodeEditor(props) {
           const candidate = variables.find(variable => variable.name.startsWith(content));
 
           if (candidate) {
-
-
-            // children.splice(children.indexOf(child) + 1, 0, newNode);
-
             newNode.content = candidate.name;
 
           }
@@ -161,22 +164,8 @@ export default function CodeEditor(props) {
 
     let prediction = _addPridiciton(renderTree);
 
-    // if (!prediction && expression.length === pointer && example.startsWith(expression)) {
-    //   const newNode = {
-    //     type: 'prediction',
-    //     content: example.slice(pointer)
-    //   };
-
-    //   prediction = newNode;
-    //   !renderTree.children && (renderTree.children = []);
-    //   renderTree.children.push(newNode);
-    // }
-
-
 
     if (prediction) {
-
-      // setAutoComplete(prediction.content);
       setPrediction(prediction);
     } else {
       setAutoComplete('');
@@ -185,8 +174,10 @@ export default function CodeEditor(props) {
   }, [variables, example]);
 
   const handleCodeChanged = useMemo(() => e => {
-    const carretPostion = e.target.selectionStart;
-    const newValue = e.target.value;
+    const inputField = inputRef.current;
+
+    const carretPostion = inputField.selectionStart;
+    const newValue = inputField.value;
 
     const expression = newValue.slice(1);
     const pointer = carretPostion - 1;
@@ -198,35 +189,35 @@ export default function CodeEditor(props) {
       event: e
     };
 
-    // handleTab
-    // handleTab(context);
-
     context.syntaxTree = parseFeel(expression);
     context.renderTree = createRenderTree(context);
 
-    console.log(context.renderTree);
+    setSyntaxTree(context.syntaxTree);
+
+    setActiveNode(getActiveNode(context.syntaxTree, pointer));
 
     // add preiction
     addPrediction(context);
 
     setHighlighted(highlight(context));
+
+    // inputField.focus();
   }, [addPrediction]);
 
-  const handleAutoComplete = (e) => {
-    const input = inputRef.current;
-    const carretPostion = input.selectionStart;
-    const value = input.value;
-    const newValue = value.slice(0, carretPostion) + autoComplete + value.slice(carretPostion);
-    console.log(autoComplete, newValue);
-    input.value = newValue;
-  };
+  // const handleAutoComplete = (e) => {
+  //   const input = inputRef.current;
+  //   const carretPostion = input.selectionStart;
+  //   const value = input.value;
+  //   const newValue = value.slice(0, carretPostion) + autoComplete + value.slice(carretPostion);
+  //   input.value = newValue;
+  // };
 
   const handleKeyDown = e => {
     if (e.key === 'Tab') {
       e.preventDefault();
 
       if (autoComplete) {
-        handleAutoComplete(e);
+        handleTypeahead(autoComplete);
       } else {
 
         // Add Tabs
@@ -239,7 +230,10 @@ export default function CodeEditor(props) {
 
       // Auto-Intent
     }
+  };
 
+
+  const handleKeyUp = e => {
     if (e.key === 'ArrowUp'||
         e.key === 'ArrowDown' ||
         e.key === 'ArrowLeft' ||
@@ -280,50 +274,99 @@ export default function CodeEditor(props) {
     };
   }, []);
 
-  const handleTypeahead = function(e) {
+  const handleTypeahead = function(replaceValue) {
     const input = inputRef.current;
     const value = input.value;
     const carretPostion = input.selectionStart;
 
     let newValue;
     if (prediction.originalNode) {
-      newValue = value.slice(0, prediction.originalNode.start + 1) + e + value.slice(prediction.originalNode.end + 1);
+      newValue = value.slice(0, prediction.originalNode.start + 1) + replaceValue + value.slice(prediction.originalNode.end + 1);
     } else {
-      newValue = value.slice(0, carretPostion) + e + value.slice(carretPostion);
+      newValue = value.slice(0, carretPostion) + replaceValue + value.slice(carretPostion);
     }
-
-
-    // value.splice(prediction.originalNode.start + 1, prediction.originalNode.end - prediction.originalNode.start, e);
 
     input.value = newValue;
     setValue(newValue);
     handleCodeChanged({ target: input });
   };
 
-  return <div class={ classNames('code-input-container', feelActive && 'active') }>
-    <input
-      ref={ inputRef }
-      id={ id }
-      type="text"
-      name={ id }
-      spellCheck="false"
-      autoComplete="off"
-      disabled={ disabled }
-      class="bio-properties-panel-code-input bio-properties-panel-input"
-      onInput={ handleInput }
-      onKeyDown={ handleKeyDown }
-      onFocus={ props.onFocus }
-      onBlur={ props.onBlur }
-      wrap="off"
-      value={ value } />
-    <div class="bio-properties-panel-code-highlight" ref={ highlightRef }>
-      {highlighted}
+  const handleBlur = function(e) {
+    console.log('blur', e, e.relatedTarget);
+    onBlur(e);
+
+    setEditingActive(false);
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    container.addEventListener('blur', handleBlur, true);
+    return () => container.removeEventListener('blur', handleBlur, true);
+  }, [containerRef]);
+
+  const handleFocus = e => {
+    onFocus(e);
+    handleCodeChanged(e);
+    setEditingActive(true);
+  };
+
+
+  return <div class={ classNames('code-input-container', feelActive && 'active') } ref={ containerRef }>
+    <div class="codeInputField">
+      <input
+        ref={ inputRef }
+        id={ id }
+        type="text"
+        name={ id }
+        spellCheck="false"
+        autoComplete="off"
+        disabled={ disabled }
+        class="bio-properties-panel-code-input bio-properties-panel-input"
+        onInput={ handleInput }
+        onClick={ handleCodeChanged }
+        onKeyDown={ handleKeyDown }
+        onKeyUp={ handleKeyUp }
+        onFocus={ handleFocus }
+
+        // onBlur={ handleBlur }
+        wrap="off"
+        value={ value } />
+      <div class="bio-properties-panel-code-highlight" ref={ highlightRef }>
+        {highlighted}
+      </div>
     </div>
     <Typeahead
       onClick={ handleTypeahead }
       search={ prediction.search }
       feelActive={ feelActive }
       variables={ variables }
+      activeNode={ activeNode }
+      editingActive={ editingActive }
+      setAutoComplete={ setAutoComplete }
     />
   </div>;
+}
+
+
+function getActiveNode(node, caretPostion) {
+
+  console.log('getActiveNode', node, caretPostion);
+  if (!node) {
+    return;
+  }
+
+  const children = node.children || [];
+
+  if (!children.length) {
+    return node;
+  }
+
+  for (const i in children) {
+    const child = children[i];
+    if (child.start <= caretPostion && child.end >= caretPostion) {
+      return getActiveNode(child, caretPostion);
+    }
+  }
+
+  return children[children.length - 1];
 }
