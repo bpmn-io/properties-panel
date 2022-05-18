@@ -46,6 +46,9 @@
   --group-background-color: var(--color-white);
   --group-bottom-border-color: var(--color-grey-225-10-75);
 
+  --sticky-group-background-color: var(--color-grey-225-10-95);
+  --sticky-group-bottom-border-color: var(--color-grey-225-10-75);
+
   --add-entry-fill-color: var(--color-grey-225-10-35);
   --add-entry-hover-fill-color: var(--color-white);
   --add-entry-hover-background-color: var(--color-blue-205-100-50);
@@ -161,7 +164,6 @@
   align-items: center;
   font-size: var(--text-size-base);
   padding: 16px 10px;
-  margin-bottom: 2px;
   background-color: var(--header-background-color);
   border-bottom: 1px solid var(--header-bottom-border-color);
   width: 100%;
@@ -222,10 +224,10 @@
 .bio-properties-panel-group {
   background-color: var(--group-background-color);
   border-bottom: 1px solid var(--group-bottom-border-color);
+  position: relative;
 }
 
 .bio-properties-panel-group-header {
-  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -233,6 +235,10 @@
   height: 32px;
   user-select: none;
   justify-content: space-between;
+  position: -webkit-sticky;  /* for safari */
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .bio-properties-panel-group-header .bio-properties-panel-group-header-title {
@@ -244,6 +250,12 @@
 
 .bio-properties-panel-group-header.open .bio-properties-panel-group-header-title {
   font-weight: 500;
+}
+
+.bio-properties-panel-group-header.sticky {
+  background-color: var(--sticky-group-background-color);
+  border-bottom: 1px solid var(--sticky-group-bottom-border-color);
+  margin-bottom: -1px;
 }
 
 .bio-properties-panel-group-header-buttons {
