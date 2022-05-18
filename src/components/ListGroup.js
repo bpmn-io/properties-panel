@@ -2,6 +2,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState
 } from 'preact/hooks';
 
@@ -26,6 +27,8 @@ import {
 
 import { PropertiesPanelContext } from '../context';
 
+import { useStickyIntersectionObserver } from '../hooks';
+
 const noop = () => {};
 
 /**
@@ -43,10 +46,14 @@ export default function ListGroup(props) {
   } = props;
 
 
+  const groupRef = useRef(null);
+
   const [ open, setOpen ] = useLayoutState(
     [ 'groups', id, 'open' ],
     false
   );
+
+  const [ sticky, setSticky ] = useState(false);
 
   const onShow = useCallback(() => setOpen(true), [ setOpen ]);
 
@@ -135,6 +142,9 @@ export default function ListGroup(props) {
     }
   }, [ items, shouldHandleEffects ]);
 
+  // set css class when group is sticky to top
+  useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
+
   const toggleOpen = () => setOpen(!open);
 
   const hasItems = !!items.length;
@@ -144,12 +154,13 @@ export default function ListGroup(props) {
     onShow
   };
 
-  return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id }>
+  return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
     <div
       class={ classnames(
         'bio-properties-panel-group-header',
         hasItems ? '' : 'empty',
-        (hasItems && open) ? 'open' : ''
+        (hasItems && open) ? 'open' : '',
+        (sticky && open) ? 'sticky' : ''
       ) }
       onClick={ hasItems ? toggleOpen : noop }>
       <div

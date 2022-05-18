@@ -2,6 +2,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState
 } from 'preact/hooks';
 
@@ -21,6 +22,8 @@ import {
 
 import { PropertiesPanelContext } from '../context';
 
+import { useStickyIntersectionObserver } from '../hooks';
+
 import { ArrowIcon } from './icons';
 
 /**
@@ -35,6 +38,8 @@ export default function Group(props) {
     shouldOpen = false,
   } = props;
 
+  const groupRef = useRef(null);
+
   const [ open, setOpen ] = useLayoutState(
     [ 'groups', id, 'open' ],
     shouldOpen
@@ -45,6 +50,8 @@ export default function Group(props) {
   const toggleOpen = () => setOpen(!open);
 
   const [ edited, setEdited ] = useState(false);
+
+  const [ sticky, setSticky ] = useState(false);
 
   // set edited state depending on all entries
   useEffect(() => {
@@ -68,16 +75,20 @@ export default function Group(props) {
     setEdited(hasOneEditedEntry);
   }, [ entries ]);
 
+  // set css class when group is sticky to top
+  useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
+
   const propertiesPanelContext = {
     ...useContext(PropertiesPanelContext),
     onShow
   };
 
-  return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id }>
+  return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
     <div class={ classnames(
       'bio-properties-panel-group-header',
       edited ? '' : 'empty',
-      open? 'open' : ''
+      open ? 'open' : '',
+      (sticky && open) ? 'sticky' : ''
     ) } onClick={ toggleOpen }>
       <div title={ label } class="bio-properties-panel-group-header-title">
         { label }
