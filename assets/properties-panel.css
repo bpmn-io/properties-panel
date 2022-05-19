@@ -36,7 +36,8 @@
   --description-code-border-color: var(--color-grey-225-10-85);
   --description-list-item-color: var(--color-grey-225-10-35);
 
-  --placeholder-color: var(--color-grey-225-10-75);
+  --placeholder-color: var(--color-grey-225-10-35);
+  --placeholder-background-color: var(--color-grey-225-10-95);
 
   --header-background-color: var(--color-grey-225-10-95);
   --header-icon-fill-color: var(--color-grey-225-10-15);
@@ -128,11 +129,27 @@
   flex: 1;
 }
 
+/**
+ * Placeholder (empty, multi select, ...)
+ */
 .bio-properties-panel-placeholder {
-  padding: 10px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--placeholder-background-color);
+}
+
+.bio-properties-panel-placeholder-text {
   color: var(--placeholder-color);
   font-size: var(--text-size-base);
   text-align: center;
+  margin: 12px 48px;
 }
 
 /**

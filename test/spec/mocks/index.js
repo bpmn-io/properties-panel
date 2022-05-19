@@ -12,3 +12,20 @@ export class HeaderProvider {
     return 'type';
   }
 }
+
+export class PlaceholderProvider {
+
+  static getEmpty(element) {
+    return {
+      text: 'empty',
+      icon: 'empty-icon'
+    };
+  }
+
+  static getMultiple(element) {
+    return {
+      text: 'multiple',
+      icon: 'multiple-icon'
+    };
+  }
+}

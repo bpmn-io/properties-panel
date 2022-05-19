@@ -6,6 +6,7 @@ import {
 import {
   assign,
   get,
+  isArray,
   set
 } from 'min-dash';
 
@@ -14,6 +15,8 @@ import classnames from 'classnames';
 import Header from './components/Header';
 
 import Group from './components/Group';
+
+import Placeholder from './components/Placeholder';
 
 import {
   DescriptionContext,
@@ -81,6 +84,11 @@ const bufferedEvents = [
  * @returns {string}
  * } } GetDescriptionFunction
  *
+ * @typedef { {
+ *  getEmpty: (element: object) => import('./components/Placeholder').PlaceholderDefinition,
+ *  getMultiple: (element: Object) => import('./components/Placeholder').PlaceholderDefinition
+ * } } PlaceholderProvider
+ *
  */
 
 
@@ -89,8 +97,9 @@ const bufferedEvents = [
  * data from implementor to describe *what* will be rendered.
  *
  * @param {Object} props
- * @param {Object} props.element
+ * @param {Object|Array} props.element
  * @param {import('./components/Header').HeaderProvider} props.headerProvider
+ * @param {PlaceholderProvider} [props.placeholderProvider]
  * @param {Array<GroupDefinition|ListGroupDefinition>} props.groups
  * @param {Object} [props.layoutConfig]
  * @param {Function} [props.layoutChanged]
@@ -102,6 +111,7 @@ export default function PropertiesPanel(props) {
   const {
     element,
     headerProvider,
+    placeholderProvider,
     groups,
     layoutConfig = {},
     layoutChanged,
@@ -162,8 +172,14 @@ export default function PropertiesPanel(props) {
     element
   };
 
-  if (!element) {
-    return <div class="bio-properties-panel-placeholder">Select an element to edit its properties.</div>;
+  // empty state
+  if (placeholderProvider && !element) {
+    return <Placeholder { ...placeholderProvider.getEmpty() } />;
+  }
+
+  // multiple state
+  if (placeholderProvider && isArray(element)) {
+    return <Placeholder { ...placeholderProvider.getMultiple() } />;
   }
 
   return (
