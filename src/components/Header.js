@@ -2,10 +2,10 @@ import { ExternalLinkIcon } from './icons';
 
 /**
  * @typedef { {
- *  getElementLabel: (element: djs.model.base) => string,
- *  getTypeLabel: (element: djs.model.base) => string,
- *  getElementIcon: (element: djs.model.base) => import('preact').Component,
- *  getDocumentationRef: (element: djs.model.base) => string
+ *  getElementLabel: (element: object) => string,
+ *  getTypeLabel: (element: object) => string,
+ *  getElementIcon: (element: object) => import('preact').Component,
+ *  getDocumentationRef: (element: object) => string
  * } } HeaderProvider
  */
 

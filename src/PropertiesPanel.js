@@ -77,7 +77,7 @@ const bufferedEvents = [
  *
  * @callback { {
  * @param {string} id
- * @param {djs.model.base} element
+ * @param {Object} element
  * @returns {string}
  * } } GetDescriptionFunction
  *
