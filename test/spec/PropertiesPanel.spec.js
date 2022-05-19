@@ -19,7 +19,8 @@ import PropertiesPanel from 'src/PropertiesPanel';
 import ListGroup from 'src/components/ListGroup';
 
 import {
-  HeaderProvider
+  HeaderProvider,
+  PlaceholderProvider
 } from './mocks';
 
 insertCoreStyles();
@@ -57,7 +58,47 @@ describe('<PropertiesPanel>', function() {
     const result = createPropertiesPanel({ container });
 
     // then
-    expect(domQuery('.bio-properties-panel-placeholder', result.container)).to.exist;
+    const placeholder = domQuery('.bio-properties-panel-placeholder', result.container);
+    const placeholderIcon = domQuery('.bio-properties-panel-placeholder', result.container);
+    const placeholderText = domQuery('.bio-properties-panel-placeholder-text', placeholder);
+
+    expect(placeholder).to.exist;
+    expect(placeholderIcon).to.exist;
+    expect(placeholderText.innerText).to.eql('empty');
+  });
+
+
+  it('should render (multiple elements)', function() {
+
+    // given
+    const result = createPropertiesPanel({
+      container,
+      element: [ noopElement, noopElement ]
+    });
+
+    // then
+    const placeholder = domQuery('.bio-properties-panel-placeholder', result.container);
+    const placeholderIcon = domQuery('.bio-properties-panel-placeholder', result.container);
+    const placeholderText = domQuery('.bio-properties-panel-placeholder-text', placeholder);
+
+    expect(placeholder).to.exist;
+    expect(placeholderIcon).to.exist;
+    expect(placeholderText.innerText).to.eql('multiple');
+  });
+
+
+  it('should not throw - no placeholder provider', function() {
+
+    // when
+    const result = createPropertiesPanel({
+      container,
+      placeholderProvider: null
+    });
+
+    // then
+    const placeholder = domQuery('.bio-properties-panel-placeholder', result.container);
+
+    expect(placeholder).to.not.exist;
   });
 
 
@@ -329,6 +370,7 @@ function createPropertiesPanel(options = {}) {
     container,
     element,
     headerProvider = HeaderProvider,
+    placeholderProvider = PlaceholderProvider,
     groups = [],
     layoutConfig,
     layoutChanged = noop,
@@ -340,6 +382,7 @@ function createPropertiesPanel(options = {}) {
     <PropertiesPanel
       element={ element }
       headerProvider={ headerProvider }
+      placeholderProvider={ placeholderProvider }
       groups={ groups }
       layoutConfig={ layoutConfig }
       layoutChanged={ layoutChanged }
