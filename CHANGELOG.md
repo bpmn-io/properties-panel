@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.14.0
+
+* `FEAT`: enable multiple and empty state ([#69](https://github.com/bpmn-io/properties-panel/issues/69))
+* `FEAT`: make group headers sticky ([#151](https://github.com/bpmn-io/properties-panel/pull/151))
+* `FIX`: fix outline on header buttons ([#148](https://github.com/bpmn-io/properties-panel/pull/148)) 
+
 ## 0.13.2
 
 * `FIX`: remove unnecessary scroll padding ([#145](https://github.com/bpmn-io/properties-panel/pull/145))
