@@ -235,6 +235,7 @@
   height: 32px;
   user-select: none;
   justify-content: space-between;
+  margin-bottom: -1px; /* avoid double borders */
   position: relative;  /* browsers not supporting sticky */
   position: -webkit-sticky;  /* for safari */
   position: sticky;
@@ -256,7 +257,6 @@
 .bio-properties-panel-group-header.sticky {
   background-color: var(--sticky-group-background-color);
   border-bottom: 1px solid var(--sticky-group-bottom-border-color);
-  margin-bottom: -1px;
 }
 
 .bio-properties-panel-group-header-buttons {
