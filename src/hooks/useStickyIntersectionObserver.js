@@ -24,6 +24,12 @@ import {
  */
 export function useStickyIntersectionObserver(ref, scrollContainerSelector, setSticky) {
   useEffect(() => {
+
+    // return early if IntersectionObserver is not available
+    if (!IntersectionObserver) {
+      return;
+    }
+
     let observer;
 
     if (ref.current) {

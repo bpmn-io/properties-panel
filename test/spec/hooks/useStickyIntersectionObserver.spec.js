@@ -80,6 +80,29 @@ describe('hooks/userStickyIntersectionObserver', function() {
     expect(unobserveSpy).to.have.been.calledOnce;
   });
 
+
+  it('should NOT crash when IntersectionObserver is not available', async function() {
+
+    // given
+    global.IntersectionObserver = null;
+
+    const domObject = <div></div>;
+
+    const ref = { current: domObject };
+
+    // when
+    try {
+      await renderHook(() => {
+        useStickyIntersectionObserver(ref, 'div', () => {});
+
+        return domObject;
+      });
+    } catch (error) {
+
+      // then
+      expect(error).not.to.exist;
+    }
+  });
 });
 
 
