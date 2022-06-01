@@ -32,11 +32,26 @@ function Textfield(props) {
     show = noop
   } = props;
 
+  const [ localValue, setLocalValue ] = useState(value || '');
+
   const ref = useShowEntryEvent(show);
 
-  const handleInput = useMemo(() => {
+  const handleInputCallback = useMemo(() => {
     return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
   }, [ onInput, debounce ]);
+
+  const handleInput = e => {
+    handleInputCallback(e);
+    setLocalValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value === localValue) {
+      return;
+    }
+
+    setLocalValue(value);
+  }, [ value ]);
 
   return (
     <div class="bio-properties-panel-textfield">
@@ -56,7 +71,7 @@ function Textfield(props) {
         onInput={ handleInput }
         onFocus={ props.onFocus }
         onBlur={ props.onBlur }
-        value={ value || '' } />
+        value={ localValue } />
     </div>
   );
 }
