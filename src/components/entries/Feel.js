@@ -37,7 +37,9 @@ function FeelTextfield(props) {
   const ref = useShowEntryEvent(show);
 
   const handleInput = useMemo(() => {
-    return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
+    return debounce((value) => {
+      onInput('=' + value);
+    });
   }, [ onInput, debounce ]);
 
   return (
