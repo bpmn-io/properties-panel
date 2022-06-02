@@ -907,6 +907,44 @@ textarea.bio-properties-panel-input {
   font-family: var(--font-family-monospace);
 }
 
-.code-input-container {
-  font-family: unset;
+.bio-icon-left {
+  position: relative;
+}
+
+.bio-icon-left .code-input-container>div,
+.bio-icon-left input {
+  position: static;
+  padding-left: 2.4em !important;
+}
+
+.bio-icon-left .code-input-container>div {
+  min-height: 28px;
+}
+
+.bio-icon-left button {
+  position: absolute;
+  right: auto;
+  border: 1px solid var(--input-border-color);
+  border-radius: 2px 0 0 2px;
+  background-color: var(--input-background-color);
+  z-index: 100;
+  height: 100%;
+  width: 2em;
+}
+
+
+.bio-icon-left button.active:not(.disabled) {
+  background-color: var(--color-grey-225-10-90);
+  box-shadow: 0 0 1px;
+  box-shadow: 0px 0px 10px var(--color-grey-225-10-80) inset;
+}
+
+.bio-icon-left button.disabled {
+  background-color: var(--color-grey-225-10-90);
+  border-right: 0px;
+}
+
+.bio-icon-left button:hover:not(.disabled) {
+  cursor: pointer;
+  background-color: var(--color-grey-225-10-95);
 }

@@ -9,15 +9,17 @@ import {
 
 import classnames from 'classnames';
 
-import { isFunction } from 'min-dash';
+import { isFunction, isString } from 'min-dash';
 
 import {
   usePrevious,
   useShowEntryEvent,
-  useShowErrorEvent
+  useShowErrorEvent,
+  useStaticCallback
 } from '../../hooks';
 
 import CodeEditor from './util/CodeEditor';
+import { FeelToggle } from './util/FeelToogle';
 
 const noop = () => {};
 
@@ -28,43 +30,112 @@ function FeelTextfield(props) {
     id,
     label,
     onInput,
-    feel = false,
+    feel,
     value = '',
     show = noop
   } = props;
 
+  const feelActive = value.startsWith('=') || feel === 'required';
+  const feelOnlyValue = value.substring(1);
+
+  const [setFocus, setSetFocus] = useState();
 
   const ref = useShowEntryEvent(show);
 
-  const handleInput = useMemo(() => {
-    return debounce((value) => {
-      onInput('=' + value);
+  const handleFeelInput = useMemo(() => {
+    return debounce((newValue) => {
+      onInput('=' + newValue);
     });
   }, [ onInput, debounce ]);
+
+
+  const handleTextInput = useMemo(() => {
+    return debounce((newValue) => {
+      onInput(newValue);
+    });
+  }, [ onInput, debounce ]);
+
+
+  const handleFeelToggle = useStaticCallback(() => {
+    setSetFocus(true);
+    if (!feelActive) {
+      onInput('=' + value);
+    } else {
+      onInput(feelOnlyValue);
+    }
+  });
+
+  const handleLocalInput = (newValue) => {
+    if (!isString(newValue)) {
+      newValue = newValue.target.value;
+    }
+
+    if (newValue === feelOnlyValue) {
+      return;
+    }
+
+    var f = feelActive ? handleFeelInput : handleTextInput;
+
+    f(newValue);
+
+    if (!feelActive && newValue.startsWith('=')) {
+      setSetFocus(true);
+      f.flush();
+    }
+  };
+
+  useEffect(() => {
+    if (setFocus) {
+      ref.current?.setSelectionRange?.(0, 0);
+      ref.current?.focus?.();
+      setSetFocus(false);
+    }
+  }, [ setFocus ]);
 
   return (
     <div class="bio-properties-panel-textfield">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
         { label }
-        <FeelIcon feel={ feel } label={ label } />
       </label>
 
-      <CodeEditor
-        ref={ ref }
-        id={ prefixId(id) }
-        type="text"
-        name={ id }
-        spellCheck="false"
-        autoComplete="off"
-        disabled={ disabled }
-        class="bio-properties-panel-input"
-        example={ props.example }
-        variables={ props.variables }
-        onInput={ handleInput }
-        onFocus={ props.onFocus }
-        onBlur={ props.onBlur }
-        value={ value || '' }
-      />
+      <div class="bio-icon-left">
+        <FeelToggle
+          active={ feelActive }
+          disabled={ feel !== 'optional' }
+          onClick={ handleFeelToggle }
+        />
+        {feelActive ? <CodeEditor
+          ref={ ref }
+          id={ prefixId(id) }
+          type="text"
+          name={ id }
+          spellCheck="false"
+          autoComplete="off"
+          disabled={ disabled }
+          class="bio-properties-panel-input"
+          example={ props.example }
+          variables={ props.variables }
+          onInput={ handleLocalInput }
+          onDisable={ handleFeelToggle }
+          onFocus={ props.onFocus }
+          onBlur={ props.onBlur }
+          value={ feelOnlyValue }
+          focus={ setFocus }
+        /> : <input
+          ref={ ref }
+          id={ prefixId(id) }
+          type="text"
+          name={ id }
+          spellCheck="false"
+          autoComplete="off"
+          disabled={ disabled }
+          class="bio-properties-panel-input"
+          onInput={ handleLocalInput }
+          onFocus={ props.onFocus }
+          onBlur={ props.onBlur }
+          value={ value || '' } />
+        }
+      </div>
     </div>
   );
 }

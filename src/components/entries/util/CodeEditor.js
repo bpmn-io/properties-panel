@@ -6,28 +6,60 @@ import { FeelEditor } from '@bpmn-io/feel-editor';
 export default function CodeEditor(props) {
 
   const {
+    focus,
     value,
-    onInput
+    onInput,
+    onDisable
   } = props;
 
   const containerRef = useRef();
   const inputRef = useRef();
   const [editor, setEditor] = useState();
-  const [localValue, setLocalValue] = useState((value || '').substring(1));
+  const [localValue, setLocalValue] = useState(value || '');
 
   const handleInput = newValue => {
-    console.log(newValue);
+    if (newValue === localValue) {
+      return;
+    }
+
     onInput(newValue);
     setLocalValue(newValue);
   };
 
   useEffect(() => {
+
+    let editor;
+
+    const onKeyDown = e => {
+
+      if (e.key !== 'Backspace' || !editor) {
+        return;
+      }
+
+      const selection = editor.getSelection();
+
+      console.log('selection');
+      const range = selection.ranges[selection.mainIndex];
+
+      console.log('range', range);
+
+      if (range.from === 0 && range.to === 0) {
+
+        console.log('disable');
+        onDisable();
+      }
+    };
+
+    editor = new FeelEditor({
+      container: inputRef.current,
+      onChange: handleInput,
+      onKeyDown: onKeyDown,
+      value: localValue,
+      focus
+    });
+
     setEditor(
-      new FeelEditor({
-        container: inputRef.current,
-        onChange: handleInput,
-        value: props.value.substring(1)
-      })
+      editor
     );
   }, []);
 
@@ -40,8 +72,17 @@ export default function CodeEditor(props) {
       return;
     }
 
-    editor.setValue(localValue);
+    editor.setValue(value);
+    setLocalValue(value);
   }, [ value ]);
+
+  useEffect(() => {
+    if (!focus || !editor) {
+      return;
+    }
+
+    editor.editor.focus();
+  }, [focus, editor]);
 
   return <div class={ classNames('code-input-container', 'active') } ref={ containerRef }>
     <div class="bio-properties-panel-input" ref={ inputRef }></div>
