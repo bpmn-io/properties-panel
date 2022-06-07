@@ -2,7 +2,9 @@ import Description from './Description';
 import FeelIcon from './FeelIcon';
 
 import {
-  useMemo
+  useEffect,
+  useMemo,
+  useState
 } from 'preact/hooks';
 
 import classnames from 'classnames';
@@ -21,9 +23,24 @@ function TextArea(props) {
     monospace
   } = props;
 
-  const handleInput = useMemo(() => {
+  const [localValue, setLocalValue] = useState(value);
+
+  const handleInputCallback = useMemo(() => {
     return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
   }, [ onInput, debounce ]);
+
+  const handleInput = e => {
+    handleInputCallback(e);
+    setLocalValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value === localValue) {
+      return;
+    }
+
+    setLocalValue(value);
+  }, [value]);
 
   return (
     <div class="bio-properties-panel-textarea">
@@ -43,7 +60,7 @@ function TextArea(props) {
         onFocus={ props.onFocus }
         onBlur={ props.onBlur }
         rows={ rows }
-        value={ value }
+        value={ localValue }
         disabled={ disabled } />
     </div>
   );
