@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { FeelEditor } from '@bpmn-io/feel-editor';
+import { useStaticCallback } from '../../../hooks';
 
 export default function CodeEditor(props) {
 
@@ -17,35 +18,28 @@ export default function CodeEditor(props) {
   const [editor, setEditor] = useState();
   const [localValue, setLocalValue] = useState(value || '');
 
-  const handleInput = newValue => {
+  const handleInput = useStaticCallback(newValue => {
     if (newValue === localValue) {
       return;
     }
 
     onInput(newValue);
     setLocalValue(newValue);
-  };
+  });
 
   useEffect(() => {
 
     let editor;
 
     const onKeyDown = e => {
-
       if (e.key !== 'Backspace' || !editor) {
         return;
       }
 
       const selection = editor.getSelection();
-
-      console.log('selection');
       const range = selection.ranges[selection.mainIndex];
 
-      console.log('range', range);
-
       if (range.from === 0 && range.to === 0) {
-
-        console.log('disable');
         onDisable();
       }
     };

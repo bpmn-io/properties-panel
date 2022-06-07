@@ -11,9 +11,23 @@ export function FeelToggle(props) {
     onClick
   } = props;
 
-  return <button
-    disabled={ disabled }
-    onClick={ onClick }
-    ref={ ref }
-    class={ classNames(disabled && 'disabled', active && 'active') }>=</button>;
+  let dataText;
+
+  if (disabled) {
+    dataText = 'Property must be a Feel expression';
+  } else if (active) {
+    dataText = 'Property is a FEEL expression, click to disable FEEL';
+  } else {
+    dataText = 'Property can be a Feel expression, click to enable FEEL';
+  }
+
+  return <span class="FeelToggle tooltip">
+    <div class="tooltip-container"><span class="tooltip-content">{ dataText }</span></div>
+    <button
+      disabled={ disabled }
+      onClick={ onClick }
+      ref={ ref }
+      class={ classNames(disabled && 'disabled', active && 'active') }
+    >=</button>
+  </span>;
 }

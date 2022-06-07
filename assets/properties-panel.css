@@ -416,10 +416,17 @@ textarea.bio-properties-panel-input,
   width: 100%;
 }
 
-.bio-properties-panel-input:focus {
+.bio-properties-panel-input:focus,
+.bio-properties-panel-input:focus-within {
   outline: none;
   background-color: var(--input-focus-background-color);
   border: 1px solid var(--input-focus-border-color);
+
+}
+
+.bio-properties-panel-textfield:focus-within {
+  --input-background-color: var(--input-focus-background-color);
+  --input-border-color: var(--input-focus-border-color);
 }
 
 .bio-properties-panel-input:disabled {
@@ -942,9 +949,73 @@ textarea.bio-properties-panel-input {
 .bio-icon-left button.disabled {
   background-color: var(--color-grey-225-10-90);
   border-right: 0px;
+  cursor: not-allowed;
 }
 
 .bio-icon-left button:hover:not(.disabled) {
   cursor: pointer;
   background-color: var(--color-grey-225-10-95);
+}
+
+.cm-scroller {
+  overflow-x: hidden !important;
+}
+
+.tooltip {
+  position: relative;
+  /* making the .tooltip span a container for the tooltip text */
+}
+
+
+.tooltip-container {
+  font-size: x-small;
+  position: absolute;
+  top: -8px;
+  transform: translateY(-100%);
+  left: 0%;
+  width: 50000px;
+  display: none;
+}
+
+.tooltip-content {
+  width: 100%;
+  background: #000;
+  color: #fff;
+  padding: 2px 10px;
+  font-size: 11px;
+  border-radius: 10px;
+  margin-left: -8px;
+}
+
+.tooltip:hover:before {
+  display: block;
+}
+
+.tooltip:after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  border: 10px solid #000;
+  border-color: black transparent transparent transparent;
+  display: none;
+}
+
+.tooltip:hover:before,
+.tooltip:hover:after {
+  display: block;
+}
+
+.FeelToggle {
+  position: absolute;
+  height: 100%;
+  width: 2em;
+}
+
+.tooltip:hover>.tooltip-container {
+  position: absolute;
+  display: inline-block;
+}
+
+.tooltip-container {
+  display: none;
 }

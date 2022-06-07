@@ -1,9 +1,9 @@
 import Description from './Description';
-import FeelIcon from './FeelIcon';
 
 import {
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'preact/hooks';
 
@@ -26,7 +26,6 @@ const noop = () => {};
 function FeelTextfield(props) {
   const {
     debounce,
-    disabled = false,
     id,
     label,
     onInput,
@@ -35,33 +34,30 @@ function FeelTextfield(props) {
     show = noop
   } = props;
 
-  const feelActive = value.startsWith('=') || feel === 'required';
-  const feelOnlyValue = value.substring(1);
+  const [localValue, setLocalValue] = useState(value);
 
-  const [setFocus, setSetFocus] = useState();
+  const feelActive = localValue.startsWith('=') || feel === 'required';
+  const feelOnlyValue = localValue.substring(1);
+
+  const [focus, setFocus] = useState();
 
   const ref = useShowEntryEvent(show);
 
-  const handleFeelInput = useMemo(() => {
-    return debounce((newValue) => {
-      onInput('=' + newValue);
-    });
+  const handleInputCallback = useMemo(() => {
+    return debounce(onInput);
   }, [ onInput, debounce ]);
-
-
-  const handleTextInput = useMemo(() => {
-    return debounce((newValue) => {
-      onInput(newValue);
-    });
-  }, [ onInput, debounce ]);
-
 
   const handleFeelToggle = useStaticCallback(() => {
-    setSetFocus(true);
+    if (feel === 'required') {
+      return;
+    }
+
+    setFocus(true);
+
     if (!feelActive) {
-      onInput('=' + value);
+      setLocalValue('=' + localValue);
     } else {
-      onInput(feelOnlyValue);
+      setLocalValue(feelOnlyValue);
     }
   });
 
@@ -74,23 +70,36 @@ function FeelTextfield(props) {
       return;
     }
 
-    var f = feelActive ? handleFeelInput : handleTextInput;
+    if (feelActive) {
+      newValue = '=' + newValue;
+    }
 
-    f(newValue);
+    setLocalValue(newValue);
 
     if (!feelActive && newValue.startsWith('=')) {
-      setSetFocus(true);
-      f.flush();
+      setFocus(true);
     }
   };
 
   useEffect(() => {
-    if (setFocus) {
+    if (focus) {
       ref.current?.setSelectionRange?.(0, 0);
       ref.current?.focus?.();
-      setSetFocus(false);
+      setFocus(false);
     }
-  }, [ setFocus ]);
+  }, [ focus ]);
+
+  useEffect(() => {
+    if (value === localValue) {
+      return;
+    }
+
+    setLocalValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    handleInputCallback(localValue);
+  }, [localValue]);
 
   return (
     <div class="bio-properties-panel-textfield">
@@ -104,40 +113,55 @@ function FeelTextfield(props) {
           disabled={ feel !== 'optional' }
           onClick={ handleFeelToggle }
         />
-        {feelActive ? <CodeEditor
-          ref={ ref }
-          id={ prefixId(id) }
-          type="text"
-          name={ id }
-          spellCheck="false"
-          autoComplete="off"
-          disabled={ disabled }
-          class="bio-properties-panel-input"
-          example={ props.example }
-          variables={ props.variables }
-          onInput={ handleLocalInput }
-          onDisable={ handleFeelToggle }
-          onFocus={ props.onFocus }
-          onBlur={ props.onBlur }
-          value={ feelOnlyValue }
-          focus={ setFocus }
-        /> : <input
-          ref={ ref }
-          id={ prefixId(id) }
-          type="text"
-          name={ id }
-          spellCheck="false"
-          autoComplete="off"
-          disabled={ disabled }
-          class="bio-properties-panel-input"
-          onInput={ handleLocalInput }
-          onFocus={ props.onFocus }
-          onBlur={ props.onBlur }
-          value={ value || '' } />
+        {feelActive ?
+          <CodeEditor
+            onInput={ handleLocalInput }
+            onDisable={ handleFeelToggle }
+            value={ feelOnlyValue }
+            focus={ focus }
+          /> :
+          <OptionalFeelInput
+            onInput={ handleLocalInput }
+            value={ localValue }
+            focus={ focus }
+            { ...props }
+          />
         }
       </div>
     </div>
   );
+}
+
+function OptionalFeelInput(props) {
+  const {
+    id,
+    disabled,
+    onInput,
+    value,
+    focus
+  } = props;
+
+  const ref = useRef();
+
+  useEffect(() => {
+    if (focus && ref.current) {
+      ref.current.focus();
+    }
+  }, [ref, focus]);
+
+  return <input
+    ref={ ref }
+    id={ prefixId(id) }
+    type="text"
+    name={ id }
+    spellCheck="false"
+    autoComplete="off"
+    disabled={ disabled }
+    class="bio-properties-panel-input"
+    onInput={ onInput }
+    onFocus={ props.onFocus }
+    onBlur={ props.onBlur }
+    value={ value || '' } />;
 }
 
 
