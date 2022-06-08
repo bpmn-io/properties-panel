@@ -21,6 +21,10 @@ export function FeelToggle(props) {
     dataText = 'Property can be a Feel expression, click to enable FEEL';
   }
 
+  // if (!active) {
+  //   return null;
+  // }
+
   return <span class="FeelToggle tooltip">
     <div class="tooltip-container"><span class="tooltip-content">{ dataText }</span></div>
     <button

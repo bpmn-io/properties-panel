@@ -20,6 +20,7 @@ import {
 
 import CodeEditor from './util/CodeEditor';
 import { FeelToggle } from './util/FeelToogle';
+import FeelIcon from './FeelIcon';
 
 const noop = () => {};
 
@@ -66,12 +67,12 @@ function FeelTextfield(props) {
       newValue = newValue.target.value;
     }
 
-    if (newValue === feelOnlyValue) {
-      return;
-    }
-
     if (feelActive) {
       newValue = '=' + newValue;
+    }
+
+    if (newValue === localValue) {
+      return;
     }
 
     setLocalValue(newValue);
@@ -105,6 +106,9 @@ function FeelTextfield(props) {
     <div class="bio-properties-panel-textfield">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
         { label }
+        <FeelIcon
+          label={ label }
+          feel={ feel }></FeelIcon>
       </label>
 
       <div class="bio-icon-left">
@@ -121,10 +125,10 @@ function FeelTextfield(props) {
             focus={ focus }
           /> :
           <OptionalFeelInput
+            { ...props }
             onInput={ handleLocalInput }
             value={ localValue }
             focus={ focus }
-            { ...props }
           />
         }
       </div>

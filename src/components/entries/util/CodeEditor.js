@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { FeelEditor } from '@bpmn-io/feel-editor';
+import FeelEditor from '@bpmn-io/feel-editor';
 import { useStaticCallback } from '../../../hooks';
 
 export default function CodeEditor(props) {
@@ -48,9 +48,12 @@ export default function CodeEditor(props) {
       container: inputRef.current,
       onChange: handleInput,
       onKeyDown: onKeyDown,
-      value: localValue,
-      focus
+      value: localValue
     });
+
+    if (focus) {
+      editor.focus();
+    }
 
     setEditor(
       editor
