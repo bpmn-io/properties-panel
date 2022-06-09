@@ -41,4 +41,4 @@ jobs:
       run: npm run all
     - name: Upload coverage
       if: matrix.os == 'ubuntu-latest'
-      run: npx codecov
+      uses: codecov/codecov-action@v2
