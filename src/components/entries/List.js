@@ -51,7 +51,8 @@ export default function List(props) {
     onAdd,
     onRemove,
     autoFocusEntry,
-    compareFn
+    compareFn,
+    ...restProps
   } = props;
 
   const [ open, setOpen ] = useState(!!shouldOpen);
@@ -143,6 +144,7 @@ export default function List(props) {
       {
         hasItems && (
           <ItemsList
+            { ...restProps }
             autoFocusEntry={ autoFocusEntry }
             component={ component }
             element={ element }
@@ -167,7 +169,8 @@ function ItemsList(props) {
     items,
     newItems,
     onRemove,
-    open
+    open,
+    ...restProps
   } = props;
 
   const getKey = useKeyFactory();
@@ -210,6 +213,7 @@ function ItemsList(props) {
 
           return (<li class="bio-properties-panel-list-entry-item" key={ key }>
             <Component
+              { ...restProps }
               element={ element }
               id={ id }
               index={ index }

@@ -157,6 +157,48 @@ describe('<List>', function() {
   });
 
 
+  it('should pass props', async function() {
+
+    // given
+    const foo = 'bar';
+
+    const Component = (props) => {
+
+      const { foo } = props;
+
+      expect(foo).to.exist;
+
+      return <span class="foo-entry">{ foo }</span>;
+    };
+
+    const items = [
+      {
+        id: 'item-1',
+        label: 'Item 1'
+      }
+    ];
+
+    const options = {
+      container: parentContainer,
+      items,
+      open: true,
+      component: Component,
+      foo,
+      compareFn: defaultCompareFn
+    };
+
+    // when
+    const {
+      container
+    } = createListEntry(options);
+
+    // then
+    const node = domQuery('.foo-entry', container);
+
+    expect(node.innerText).to.eql(foo);
+  });
+
+
   describe('auto-focus', function() {
 
     it('should auto-focus first input entry added', async function() {
@@ -997,11 +1039,13 @@ function createListEntry(options = {}, renderFn = render) {
     container,
     component = DefaultComponent,
     compareFn,
-    autoFocusEntry = false
+    autoFocusEntry = false,
+    ...restProps
   } = options;
 
   return renderFn(
     <List
+      { ...restProps }
       element={ element }
       id={ id }
       label={ label }
