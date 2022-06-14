@@ -1,5 +1,4 @@
 import Description from './Description';
-import FeelIcon from './FeelIcon';
 
 import {
   useEffect,
@@ -25,7 +24,6 @@ function Textfield(props) {
     id,
     label,
     onInput,
-    feel = false,
     value = ''
   } = props;
 
@@ -54,7 +52,6 @@ function Textfield(props) {
     <div class="bio-properties-panel-textfield">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
         { label }
-        {feel && <FeelIcon feel={ feel } label={ label } />}
       </label>
       <input
         ref={ ref }
@@ -92,7 +89,6 @@ export default function TextfieldEntry(props) {
     description,
     debounce,
     disabled,
-    feel,
     label,
     getValue,
     setValue,
@@ -147,7 +143,6 @@ export default function TextfieldEntry(props) {
       <Textfield
         debounce={ debounce }
         disabled={ disabled }
-        feel={ feel }
         id={ id }
         label={ label }
         onInput={ onInput }

@@ -288,57 +288,6 @@ describe('<TextArea>', function() {
 
   });
 
-
-  describe('feel', function() {
-
-    it('should render without feel icon', function() {
-
-      // given
-      const result = createTextArea({
-        container,
-        id: 'noFeelTextArea'
-      });
-
-      // then
-      const icon = domQuery('[data-entry-id="noFeelTextArea"] .bio-properties-panel-feel-icon',
-        result.container);
-      expect(icon).not.to.exist;
-    });
-
-
-    it('should render optional feel icon', function() {
-
-      // given
-      const result = createTextArea({
-        container,
-        id: 'requiredFeelTextArea',
-        feel: 'optional'
-      });
-
-      // then
-      const icon = domQuery('[data-entry-id="requiredFeelTextArea"] .bio-properties-panel-feel-icon',
-        result.container);
-      expect(icon).to.exist;
-    });
-
-
-    it('should render required feel icon', function() {
-
-      // given
-      const result = createTextArea({
-        container,
-        id: 'requiredFeelTextArea',
-        feel: 'required'
-      });
-
-      // then
-      const icon = domQuery('[data-entry-id="requiredFeelTextArea"] .bio-properties-panel-feel-icon',
-        result.container);
-      expect(icon).to.exist;
-    });
-
-  });
-
 });
 
 
@@ -350,7 +299,6 @@ function createTextArea(options = {}) {
     id,
     description,
     debounce = fn => fn,
-    feel,
     label,
     getValue = noop,
     setValue = noop,
@@ -397,8 +345,7 @@ function createTextArea(options = {}) {
               setValue={ setValue }
               debounce={ debounce }
               rows={ rows }
-              monospace={ monospace }
-              feel={ feel } />
+              monospace={ monospace } />
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>

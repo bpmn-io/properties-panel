@@ -12,6 +12,7 @@
   --color-grey-225-10-95: hsl(225, 10%, 95%);
   --color-grey-225-10-97: hsl(225, 10%, 97%);
 
+  --color-blue-205-100-35: hsl(205, 100%, 35%);
   --color-blue-205-100-45: hsl(205, 100%, 45%);
   --color-blue-205-100-50: hsl(205, 100%, 50%);
   --color-blue-205-100-95: hsl(205, 100%, 95%);
@@ -97,6 +98,10 @@
   --dropdown-item-background-color: var(--color-white);
   --dropdown-item-hover-background-color: var(--color-grey-225-10-95);
   --dropdown-separator-background-color: var(--color-grey-225-10-75);
+
+  --svg-stroke-color: var(--color-grey-225-10-35);
+
+  --feel-indicator-background-color: var(--color-grey-225-10-90);
 
   --text-size-base: 14px;
   --text-size-small: 13px;
@@ -446,10 +451,17 @@ textarea.bio-properties-panel-input,
   width: 100%;
 }
 
-.bio-properties-panel-input:focus {
+.bio-properties-panel-input:focus,
+.bio-properties-panel-input:focus-within {
   outline: none;
   background-color: var(--input-focus-background-color);
   border: 1px solid var(--input-focus-border-color);
+}
+
+.bio-properties-panel-textfield:focus-within,
+.bio-properties-panel-feel-entry:focus-within {
+  --input-background-color: var(--input-focus-background-color);
+  --input-border-color: var(--input-focus-border-color);
 }
 
 .bio-properties-panel-input:disabled {
@@ -920,11 +932,67 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-feel-icon {
   display: inline-block;
   height: 16px;
+  border-radius: 8px;
   vertical-align: text-bottom;
-  padding: 0 3px;
+  padding: 0;
+  margin: 0 3px;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  border: none;
+  background: none;
+}
+
+.bio-properties-panel-feel-icon.optional {
+  cursor: pointer;
+}
+
+.bio-properties-panel-feel-icon.active {
+  color: var(--add-entry-hover-background-color);
+  --svg-stroke-color: var(--color-blue-205-100-35);
 }
 
 .bio-properties-panel-feel-icon svg {
   width: 16px;
   height: 16px;
+}
+
+.feel-editor-container {
+  position: relative;
+}
+
+.feel-editor-container.active {
+  font-family: var(--font-family-monospace);
+}
+
+.bio-properties-panel-feel-container {
+  position: relative;
+}
+
+.bio-properties-panel-feel-container .feel-editor-container>div {
+  position: static;
+  padding-left: 2.4em !important;
+  min-height: 28px;
+}
+
+.cm-scroller {
+  overflow-x: hidden !important;
+}
+
+.FeelIndicator {
+  position: absolute;
+  height: 100%;
+  width: 2em;
+}
+
+.FeelIndicator button {
+  position: absolute;
+  right: auto;
+  border: 1px solid var(--input-border-color);
+  background-color: var(--feel-indicator-background-color);
+  border-right: 0px;
+  border-radius: 2px 0 0 2px;
+  z-index: 100;
+  height: 100%;
+  width: 2em;
 }

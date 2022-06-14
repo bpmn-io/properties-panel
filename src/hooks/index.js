@@ -7,3 +7,4 @@ export { useLayoutState } from './useLayoutState';
 export { usePrevious } from './usePrevious';
 export { useShowEntryEvent } from './useShowEntryEvent';
 export { useStickyIntersectionObserver } from './useStickyIntersectionObserver';
+export { useStaticCallback } from './useStaticCallback';
