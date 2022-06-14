@@ -387,57 +387,6 @@ describe('<TextField>', function() {
   });
 
 
-  describe('feel', function() {
-
-    it('should render without feel icon', function() {
-
-      // given
-      const result = createTextField({
-        container,
-        id: 'noFeelTextField'
-      });
-
-      // then
-      const icon = domQuery('[data-entry-id="noFeelTextField"] .bio-properties-panel-feel-icon',
-        result.container);
-      expect(icon).not.to.exist;
-    });
-
-
-    it('should render optional feel icon', function() {
-
-      // given
-      const result = createTextField({
-        container,
-        id: 'requiredFeelTextField',
-        feel: 'optional'
-      });
-
-      // then
-      const icon = domQuery('[data-entry-id="requiredFeelTextField"] .bio-properties-panel-feel-icon',
-        result.container);
-      expect(icon).to.exist;
-    });
-
-
-    it('should render required feel icon', function() {
-
-      // given
-      const result = createTextField({
-        container,
-        id: 'requiredFeelTextField',
-        feel: 'required'
-      });
-
-      // then
-      const icon = domQuery('[data-entry-id="requiredFeelTextField"] .bio-properties-panel-feel-icon',
-        result.container);
-      expect(icon).to.exist;
-    });
-
-  });
-
-
   describe('a11y', function() {
 
     it('should have no violations', async function() {
@@ -466,7 +415,6 @@ function createTextField(options = {}) {
     description,
     debounce = fn => fn,
     disabled,
-    feel,
     label,
     getValue = noop,
     setValue = noop,
@@ -510,8 +458,7 @@ function createTextField(options = {}) {
               getValue={ getValue }
               setValue={ setValue }
               debounce={ debounce }
-              validate={ validate }
-              feel={ feel } />
+              validate={ validate } />
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>

@@ -1,5 +1,4 @@
 import Description from './Description';
-import FeelIcon from './FeelIcon';
 
 import {
   useEffect,
@@ -21,7 +20,6 @@ function TextArea(props) {
     label,
     rows = 2,
     debounce,
-    feel,
     onInput,
     value = '',
     disabled,
@@ -53,7 +51,6 @@ function TextArea(props) {
     <div class="bio-properties-panel-textarea">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
         { label }
-        {feel && <FeelIcon feel={ feel } label={ label } />}
       </label>
       <textarea
         ref={ ref }
@@ -93,7 +90,6 @@ export default function TextAreaEntry(props) {
     id,
     description,
     debounce,
-    feel,
     label,
     getValue,
     setValue,
@@ -116,7 +112,6 @@ export default function TextAreaEntry(props) {
         rows={ rows }
         debounce={ debounce }
         monospace={ monospace }
-        feel={ feel }
         disabled={ disabled } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
