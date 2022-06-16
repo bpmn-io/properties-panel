@@ -35,7 +35,8 @@ function FeelTextfield(props) {
     feel,
     value = '',
     disabled = false,
-    show = noop
+    show = noop,
+    OptionalComponent = OptionalFeelInput
   } = props;
 
   const [localValue, _setLocalValue] = useState(value);
@@ -133,13 +134,14 @@ function FeelTextfield(props) {
         {feelActive ?
           <CodeEditor
             id={ prefixId(id) }
+            name={ id }
             onInput={ handleLocalInput }
             disabled={ disabled }
             onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
             value={ feelOnlyValue }
             ref={ ref }
           /> :
-          <OptionalFeelInput
+          <OptionalComponent
             { ...props }
             onInput={ handleLocalInput }
             value={ localValue }
@@ -190,6 +192,45 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     value={ value || '' } />;
 });
 
+
+const OptionalFeelTextArea = forwardRef((props, ref) => {
+  const {
+    id,
+    disabled,
+    onInput,
+    value
+  } = props;
+
+  const inputRef = useRef();
+
+  // To be consistent with the FEEL editor, set focus at start of input
+  // this ensures clean editing experience when switching with the keyboard
+  ref.current = {
+    focus: () => {
+      const input = inputRef.current;
+      if (!input) {
+        return;
+      }
+
+      input.focus();
+      input.setSelectionRange(0, 0);
+    }
+  };
+
+  return <textarea
+    id={ prefixId(id) }
+    type="text"
+    ref={ inputRef }
+    name={ id }
+    spellCheck="false"
+    autoComplete="off"
+    disabled={ disabled }
+    class="bio-properties-panel-input"
+    onInput={ e => onInput(e.target.value) }
+    onFocus={ props.onFocus }
+    onBlur={ props.onBlur }
+    value={ value || '' } />;
+});
 
 /**
  * @param {Object} props
@@ -264,6 +305,7 @@ export default function FeelEntry(props) {
   return (
     <div
       class={ classnames(
+        props.class,
         'bio-properties-panel-entry',
         error ? 'has-error' : '')
       }
@@ -278,11 +320,29 @@ export default function FeelEntry(props) {
         example={ props.example }
         show={ show }
         value={ value }
-        variables={ props.variables } />
+        variables={ props.variables }
+        OptionalComponent={ props.OptionalComponent } />
       {error && <div class="bio-properties-panel-error">{error}</div>}
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
+}
+
+
+/**
+ * @param {Object} props
+ * @param {Object} props.element
+ * @param {String} props.id
+ * @param {String} props.description
+ * @param {Boolean} props.debounce
+ * @param {Boolean} props.disabled
+ * @param {String} props.label
+ * @param {Function} props.getValue
+ * @param {Function} props.setValue
+ * @param {Function} props.validate
+ */
+export function FeelTextArea(props) {
+  return <FeelEntry class="bio-properties-panel-feel-textarea" OptionalComponent={ OptionalFeelTextArea } { ...props } />;
 }
 
 export function isEdited(node) {

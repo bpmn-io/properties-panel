@@ -25,7 +25,7 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
-import FeelField, { isEdited } from 'src/components/entries/FEEL/index';
+import FeelField, { FeelTextArea, isEdited } from 'src/components/entries/FEEL';
 
 insertCoreStyles();
 
@@ -39,7 +39,7 @@ describe('<FeelField>', function() {
     container = TestContainer.get(this);
   });
 
-  describe('FEEL disabled', function() {
+  describe('FEEL disabled (TextInput)', function() {
 
     it('should render', function() {
 
@@ -426,7 +426,7 @@ describe('<FeelField>', function() {
 
         // then
         expect(updateSpy).to.have.been.calledWith('=foo');
-        expect(domQuery('.feel-editor-container', field.container)).to.exist;
+        expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
 
       });
 
@@ -447,7 +447,425 @@ describe('<FeelField>', function() {
 
         // then
         expect(updateSpy).to.have.been.calledWith('=foo');
-        expect(domQuery('.feel-editor-container', container)).to.exist;
+        expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
+
+      });
+
+
+    });
+
+  });
+
+
+  describe('FEEL disabled (TextArea)', function() {
+
+    it('should render', function() {
+
+      // given
+      const result = createFeelTextArea({ container });
+
+      // then
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+    });
+
+
+    it('should update', function() {
+
+      // given
+      const updateSpy = sinon.spy();
+
+      const result = createFeelTextArea({ container, setValue: updateSpy });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      changeInput(input, 'foo');
+
+      // then
+      expect(updateSpy).to.have.been.calledWith('foo');
+    });
+
+
+    describe('#isEdited', function() {
+
+      it('should NOT be edited', function() {
+
+        // given
+        const result = createFeelTextArea({ container });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        const edited = isEdited(input);
+
+        // then
+        expect(edited).to.be.false;
+      });
+
+
+      it('should be edited', function() {
+
+        // given
+        const result = createFeelTextArea({ container, getValue: () => 'foo' });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        const edited = isEdited(input);
+
+        // then
+        expect(edited).to.be.true;
+      });
+
+
+      it('should be edited after update', function() {
+
+        // given
+        const result = createFeelTextArea({ container });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // assume
+        expect(isEdited(input)).to.be.false;
+
+        // when
+        changeInput(input, 'foo');
+
+        // then
+        expect(isEdited(input)).to.be.true;
+      });
+
+    });
+
+
+    describe('events', function() {
+
+      it('should show entry', function() {
+
+        // given
+        const eventBus = new EventBus();
+
+        const onShowSpy = sinon.spy();
+
+        const show = () => true;
+
+        createFeelTextArea({ container, eventBus, onShow: onShowSpy, show });
+
+        // when
+        act(() => eventBus.fire('propertiesPanel.showEntry'));
+
+        // then
+        expect(onShowSpy).to.have.been.called;
+      });
+
+
+      it('should show error', function() {
+
+        // given
+        const eventBus = new EventBus();
+
+        const onShowSpy = sinon.spy();
+
+        const show = () => true;
+
+        const result = createFeelTextArea({ container, eventBus, onShow: onShowSpy, show });
+
+        // when
+        act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
+
+        // then
+        expect(onShowSpy).to.have.been.called;
+
+        expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
+      });
+
+    });
+
+
+    describe('validation', function() {
+
+      it('should set valid', function() {
+
+        // given
+        const validate = (v) => {
+          if (v === 'bar') {
+            return 'error';
+          }
+        };
+
+        const result = createFeelTextArea({ container, validate });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 'foo');
+
+        // then
+        expect(isValid(entry)).to.be.true;
+      });
+
+
+      it('should set invalid', function() {
+
+        // given
+        const validate = (v) => {
+          if (v === 'bar') {
+            return 'error';
+          }
+        };
+
+        const result = createFeelTextArea({ container, validate });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 'bar');
+
+        // then
+        expect(isValid(entry)).to.be.false;
+      });
+
+
+      it('should keep showing invalid value', function() {
+
+        // given
+        const validate = (v) => {
+          if (v === 'bar') {
+            return 'error';
+          }
+        };
+
+        const result = createFeelTextArea({ container, validate });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 'bar');
+
+        // then
+        expect(input.value).to.eql('bar');
+      });
+
+
+      it('should show error message', function() {
+
+        // given
+        const validate = (v) => {
+          if (v === 'bar') {
+            return 'error';
+          }
+        };
+
+        const result = createFeelTextArea({ container, validate });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 'bar');
+
+        const error = domQuery('.bio-properties-panel-error', entry);
+
+        // then
+        expect(error).to.exist;
+        expect(error.innerText).to.eql('error');
+      });
+
+    });
+
+
+    describe('disabled', function() {
+
+      it('should render enabled per default', function() {
+
+        // given
+        const result = createFeelTextArea({ container });
+
+        // then
+        const textInput = domQuery('.bio-properties-panel-feel-entry textarea', result.container);
+        expect(textInput.disabled).to.be.false;
+      });
+
+
+      it('should render enabled if set', function() {
+
+        // given
+        const result = createFeelTextArea({
+          container,
+          disabled: false
+        });
+
+        // then
+        const textInput = domQuery('.bio-properties-panel-feel-entry textarea', result.container);
+        expect(textInput.disabled).to.be.false;
+      });
+
+
+      it('should render disabled if set', function() {
+
+        // given
+        const result = createFeelTextArea({
+          container,
+          disabled: true
+        });
+
+        // then
+        const textInput = domQuery('.bio-properties-panel-feel-entry textarea', result.container);
+        expect(textInput.disabled).to.be.true;
+      });
+
+    });
+
+
+    describe('description', function() {
+
+      it('should render without description per default', function() {
+
+        // given
+        const result = createFeelTextArea({
+          container,
+          id: 'noDescriptionTextField'
+        });
+
+        // then
+        const description = domQuery('[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
+          result.container);
+        expect(description).not.to.exist;
+      });
+
+
+      it('should render with description if set per props', function() {
+
+        // given
+        const result = createFeelTextArea({
+          container,
+          id: 'descriptionTextField',
+          label: 'someLabel',
+          description: 'my description'
+        });
+
+        // then
+        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container);
+
+        expect(description).to.exist;
+        expect(description.innerText).to.equal('my description');
+      });
+
+
+      it('should render with description if set per context', function() {
+
+        // given
+        const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+
+        const result = createFeelTextArea({
+          container,
+          id: 'descriptionTextField',
+          label: 'someLabel',
+          descriptionConfig,
+          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+        });
+
+        // then
+        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container);
+
+        expect(description).to.exist;
+        expect(description.innerText).to.equal('myContextDesc');
+      });
+
+
+      it('should render description set per props over context', function() {
+
+        // given
+        const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+
+        const result = createFeelTextArea({
+          container,
+          id: 'descriptionTextField',
+          label: 'someLabel',
+          description: 'myExplicitDescription',
+          descriptionConfig,
+          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+        });
+
+        // then
+        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container);
+
+        expect(description).to.exist;
+        expect(description.innerText).to.equal('myExplicitDescription');
+      });
+
+    });
+
+
+    it('should render optional feel icon', function() {
+
+      // given
+      const field = createFeelTextArea({
+        container,
+        id: 'feelField',
+        feel: 'optional'
+      });
+
+      // then
+      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container);
+      expect(icon).to.exist;
+    });
+
+
+    describe('toggle', function() {
+
+      it('should toggle feel active', async function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const field = createFeelTextArea({
+          container,
+          id: 'feelField',
+          feel: 'optional',
+          getValue: () => 'foo',
+          setValue: updateSpy
+        });
+
+        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container);
+
+        // when
+        icon.click();
+        await flushPromises();
+
+        // then
+        expect(updateSpy).to.have.been.calledWith('=foo');
+        expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+
+      });
+
+
+      it('should toggle on input', function() {
+        const updateSpy = sinon.spy();
+
+        const result = createFeelTextArea({
+          container,
+          getValue: () => 'foo',
+          setValue: updateSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        changeInput(input, '=foo');
+
+        // then
+        expect(updateSpy).to.have.been.calledWith('=foo');
+        expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
 
       });
 
@@ -505,8 +923,8 @@ describe('<FeelField>', function() {
       changeInput(input, '=');
 
       // then
-      expect(updateSpy).to.have.been.calledWith(null);
-      expect(domQuery('.feel-editor-container', container)).to.exist;
+      expect(updateSpy).to.have.been.calledWith(undefined);
+      expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
     });
 
 
@@ -716,7 +1134,7 @@ describe('<FeelField>', function() {
         const result = createFeelField({ container, feel: 'required' });
 
         // then
-        const editorContainer = domQuery('.feel-editor-container', result.container);
+        const editorContainer = domQuery('.bio-properties-panel-feel-editor-container', result.container);
         expect(editorContainer.classList.contains('disabled')).to.be.false;
       });
 
@@ -731,7 +1149,7 @@ describe('<FeelField>', function() {
         });
 
         // then
-        const editorContainer = domQuery('.feel-editor-container', result.container);
+        const editorContainer = domQuery('.bio-properties-panel-feel-editor-container', result.container);
         expect(editorContainer.classList.contains('disabled')).to.be.false;
       });
 
@@ -746,7 +1164,7 @@ describe('<FeelField>', function() {
         });
 
         // then
-        const editorContainer = domQuery('.feel-editor-container', result.container);
+        const editorContainer = domQuery('.bio-properties-panel-feel-editor-container', result.container);
         expect(editorContainer.classList.contains('disabled')).to.be.true;
       });
 
@@ -968,6 +1386,65 @@ function createFeelField(options = {}) {
       <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
         <DescriptionContext.Provider value={ descriptionContext }>
           <FeelField
+            element={ element }
+            id={ id }
+            label={ label }
+            description={ description }
+            disabled={ disabled }
+            getValue={ getValue }
+            setValue={ setValue }
+            debounce={ debounce }
+            validate={ validate }
+            show={ show }
+            feel={ feel } />
+        </DescriptionContext.Provider>
+      </PropertiesPanelContext.Provider>
+    </EventContext.Provider>,
+    {
+      container
+    }
+  );
+}
+
+
+function createFeelTextArea(options = {}) {
+  const {
+    element,
+    id,
+    description,
+    debounce = fn => fn,
+    disabled,
+    feel = 'optional',
+    label,
+    getValue = noop,
+    setValue = noop,
+    validate = noop,
+    descriptionConfig = {},
+    getDescriptionForId = noop,
+    container,
+    eventBus = new EventBus(),
+    onShow = noop,
+    show
+  } = options;
+
+  const eventContext = {
+    eventBus
+  };
+
+  const propertiesPanelContext = {
+    onShow
+  };
+
+  const descriptionContext = {
+    description: descriptionConfig,
+    getDescriptionForId
+  };
+
+  return render(
+    <EventContext.Provider value={ eventContext }>
+      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+        <DescriptionContext.Provider value={ descriptionContext }>
+          <FeelTextArea
             element={ element }
             id={ id }
             label={ label }

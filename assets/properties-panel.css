@@ -957,11 +957,11 @@ textarea.bio-properties-panel-input {
   height: 16px;
 }
 
-.feel-editor-container {
+.bio-properties-panel-feel-editor-container {
   position: relative;
 }
 
-.feel-editor-container.active {
+.bio-properties-panel-feel-editor-container.active {
   font-family: var(--font-family-monospace);
 }
 
@@ -969,14 +969,14 @@ textarea.bio-properties-panel-input {
   position: relative;
 }
 
-.bio-properties-panel-feel-container .feel-editor-container>div {
+.bio-properties-panel-feel-container .bio-properties-panel-feel-editor-container>div {
   position: static;
   padding-left: 2.4em !important;
   min-height: 28px;
 }
 
 .cm-scroller {
-  overflow-x: hidden !important;
+  overflow: hidden !important;
 }
 
 .FeelIndicator {
@@ -995,4 +995,16 @@ textarea.bio-properties-panel-input {
   z-index: 100;
   height: 100%;
   width: 2em;
+}
+
+.bio-properties-panel-feel-editor-container .bio-properties-panel-input {
+  resize: vertical;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.bio-properties-panel-feel-editor-container,
+.bio-properties-panel-feel-editor-container .bio-properties-panel-input,
+.cm-editor {
+  min-height: 100%;
 }
