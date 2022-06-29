@@ -13,7 +13,7 @@ import {
 const noop = () => {};
 
 
-describe('hooks/useDescriptionState', function() {
+describe('hooks/useDescriptionContext', function() {
 
   it('should get from description context', function() {
 
