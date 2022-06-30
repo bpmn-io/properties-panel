@@ -1,9 +1,6 @@
 import classNames from 'classnames';
 
-import {
-  useShowEntryEvent,
-  useShowErrorEvent
-} from '../../hooks';
+import { useShowEntryEvent } from '../../hooks';
 
 import {
   useEffect,
@@ -11,8 +8,6 @@ import {
 } from 'preact/hooks';
 
 import Description from './Description';
-
-const noop = () => {};
 
 /**
  * @typedef { { value: string, label: string, disabled: boolean } } Option
@@ -37,11 +32,10 @@ function Select(props) {
     onChange,
     options = [],
     value,
-    disabled,
-    show = noop
+    disabled
   } = props;
 
-  const ref = useShowEntryEvent(show);
+  const ref = useShowEntryEvent(id);
 
   const [localValue, setLocalValue] = useState(value);
 
@@ -111,14 +105,13 @@ export default function SelectEntry(props) {
     getValue,
     setValue,
     getOptions,
-    disabled,
-    show = noop
+    disabled
   } = props;
 
   const value = getValue(element);
   const options = getOptions(element);
 
-  const error = useShowErrorEvent(show);
+  const error = null;
 
   return (
     <div
@@ -133,8 +126,7 @@ export default function SelectEntry(props) {
         value={ value }
         onChange={ setValue }
         options={ options }
-        disabled={ disabled }
-        show={ show } />
+        disabled={ disabled } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>

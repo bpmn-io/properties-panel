@@ -24,19 +24,17 @@ describe('hooks/useShowEntryEvent', function() {
   it('should call onShow', function() {
 
     // given
-    const show = () => true;
-
     const onShowSpy = sinon.spy();
 
     renderHook(() => {
-      const ref = useShowEntryEvent(show);
+      const ref = useShowEntryEvent('foo');
 
       return <input id="foo" ref={ ref } />;
     }, { wrapper: WithContext(eventBus, onShowSpy) });
 
     // when
 
-    eventBus.fire('propertiesPanel.showEntry');
+    eventBus.fire('propertiesPanel.showEntry', { id: 'foo' });
 
     // then
     expect(onShowSpy).to.have.been.called;
@@ -46,18 +44,15 @@ describe('hooks/useShowEntryEvent', function() {
   it('should not call onShow (no event bus)', function() {
 
     // given
-    const show = () => true;
-
     const onShowSpy = sinon.spy();
 
     renderHook(() => {
-      const ref = useShowEntryEvent(show);
+      const ref = useShowEntryEvent('foo');
 
       return <input id="foo" ref={ ref } />;
     });
 
     // when
-
     eventBus.fire('propertiesPanel.showEntry');
 
     // then
@@ -68,18 +63,16 @@ describe('hooks/useShowEntryEvent', function() {
   it('should call focus', function() {
 
     // given
-    const show = () => true;
-
     const focusSpy = sinon.spy();
 
     const { rerender } = renderHook(() => {
-      const ref = useShowEntryEvent(show);
+      const ref = useShowEntryEvent('foo');
 
       ref.current = { focus: focusSpy };
     }, { wrapper: WithContext(eventBus, noop) });
 
     // when
-    eventBus.fire('propertiesPanel.showEntry', { focus: true });
+    eventBus.fire('propertiesPanel.showEntry', { id: 'foo' });
 
     rerender();
 
@@ -91,18 +84,16 @@ describe('hooks/useShowEntryEvent', function() {
   it('should call select', function() {
 
     // given
-    const show = () => true;
-
     const selectSpy = sinon.spy();
 
     const { rerender } = renderHook(() => {
-      const ref = useShowEntryEvent(show);
+      const ref = useShowEntryEvent('foo');
 
       ref.current = { select: selectSpy };
     }, { wrapper: WithContext(eventBus, noop) });
 
     // when
-    eventBus.fire('propertiesPanel.showEntry', { focus: true });
+    eventBus.fire('propertiesPanel.showEntry', { id: 'foo' });
 
     rerender();
 

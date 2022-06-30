@@ -140,36 +140,18 @@ describe('<Checkbox>', function() {
 
       const onShowSpy = sinon.spy();
 
-      const show = () => true;
-
-      createCheckbox({ container, eventBus, onShow: onShowSpy, show });
+      createCheckbox({
+        container,
+        eventBus,
+        id: 'foo',
+        onShow: onShowSpy
+      });
 
       // when
-      act(() => eventBus.fire('propertiesPanel.showEntry'));
+      act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
 
       // then
       expect(onShowSpy).to.have.been.called;
-    });
-
-
-    it('should show error', function() {
-
-      // given
-      const eventBus = new EventBus();
-
-      const onShowSpy = sinon.spy();
-
-      const show = () => true;
-
-      const result = createCheckbox({ container, eventBus, onShow: onShowSpy, show });
-
-      // when
-      act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
-
-      // then
-      expect(onShowSpy).to.have.been.called;
-
-      expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
     });
 
   });
@@ -291,7 +273,6 @@ function createCheckbox(options = {}) {
     getDescriptionForId = noop,
     eventBus = new EventBus(),
     onShow = noop,
-    show,
     ...rest
   } = options;
 
@@ -318,8 +299,7 @@ function createCheckbox(options = {}) {
             id={ id }
             label={ label }
             getValue={ getValue }
-            setValue={ setValue }
-            show={ show } />
+            setValue={ setValue } />
         </DescriptionContext.Provider>
       </PropertiesPanelContext.Provider>
     </EventContext.Provider>,

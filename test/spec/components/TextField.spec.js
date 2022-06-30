@@ -129,36 +129,18 @@ describe('<TextField>', function() {
 
       const onShowSpy = sinon.spy();
 
-      const show = () => true;
-
-      createTextField({ container, eventBus, onShow: onShowSpy, show });
+      createTextField({
+        container,
+        eventBus,
+        id: 'foo',
+        onShow: onShowSpy
+      });
 
       // when
-      act(() => eventBus.fire('propertiesPanel.showEntry'));
+      act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
 
       // then
       expect(onShowSpy).to.have.been.called;
-    });
-
-
-    it('should show error', function() {
-
-      // given
-      const eventBus = new EventBus();
-
-      const onShowSpy = sinon.spy();
-
-      const show = () => true;
-
-      const result = createTextField({ container, eventBus, onShow: onShowSpy, show });
-
-      // when
-      act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
-
-      // then
-      expect(onShowSpy).to.have.been.called;
-
-      expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
     });
 
   });
@@ -474,8 +456,7 @@ function createTextField(options = {}) {
     getDescriptionForId = noop,
     container,
     eventBus = new EventBus(),
-    onShow = noop,
-    show
+    onShow = noop
   } = options;
 
   const eventContext = {
@@ -505,7 +486,6 @@ function createTextField(options = {}) {
             setValue={ setValue }
             debounce={ debounce }
             validate={ validate }
-            show={ show }
             feel={ feel } />
         </DescriptionContext.Provider>
       </PropertiesPanelContext.Provider>

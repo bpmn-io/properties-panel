@@ -1,7 +1,4 @@
-import {
-  useShowEntryEvent,
-  useShowErrorEvent
-} from '../../hooks';
+import { useShowEntryEvent } from '../../hooks';
 
 import {
   useEffect,
@@ -10,16 +7,13 @@ import {
 
 import Description from './Description';
 
-const noop = () => {};
-
 function Checkbox(props) {
   const {
     id,
     label,
     onChange,
     disabled,
-    value = false,
-    show = noop
+    value = false
   } = props;
 
   const [localValue, setLocalValue] = useState(value);
@@ -41,7 +35,7 @@ function Checkbox(props) {
     setLocalValue(value);
   }, [value]);
 
-  const ref = useShowEntryEvent(show);
+  const ref = useShowEntryEvent(id);
 
   return (
     <div class="bio-properties-panel-checkbox">
@@ -78,13 +72,12 @@ export default function CheckboxEntry(props) {
     label,
     getValue,
     setValue,
-    disabled,
-    show = noop
+    disabled
   } = props;
 
   const value = getValue(element);
 
-  const error = useShowErrorEvent(show);
+  const error = null;
 
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-checkbox-entry" data-entry-id={ id }>
@@ -93,7 +86,6 @@ export default function CheckboxEntry(props) {
         id={ id }
         label={ label }
         onChange={ setValue }
-        show={ show }
         value={ value } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />

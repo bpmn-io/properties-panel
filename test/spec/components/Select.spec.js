@@ -220,36 +220,18 @@ describe('<Select>', function() {
 
       const onShowSpy = sinon.spy();
 
-      const show = () => true;
-
-      createSelect({ container, eventBus, onShow: onShowSpy, show });
+      createSelect({
+        container,
+        eventBus,
+        id: 'foo',
+        onShow: onShowSpy
+      });
 
       // when
-      act(() => eventBus.fire('propertiesPanel.showEntry'));
+      act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
 
       // then
       expect(onShowSpy).to.have.been.called;
-    });
-
-
-    it('should show error', function() {
-
-      // given
-      const eventBus = new EventBus();
-
-      const onShowSpy = sinon.spy();
-
-      const show = () => true;
-
-      const result = createSelect({ container, eventBus, onShow: onShowSpy, show });
-
-      // when
-      act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
-
-      // then
-      expect(onShowSpy).to.have.been.called;
-
-      expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
     });
 
   });
@@ -373,7 +355,6 @@ function createSelect(options = {}) {
     container,
     eventBus = new EventBus(),
     onShow = noop,
-    show,
     ...rest
   } = options;
 
@@ -402,8 +383,7 @@ function createSelect(options = {}) {
             description={ description }
             getValue={ getValue }
             setValue={ setValue }
-            getOptions={ getOptions }
-            show={ show } />
+            getOptions={ getOptions } />
         </DescriptionContext.Provider>
       </PropertiesPanelContext.Provider>
     </EventContext.Provider>,

@@ -2,8 +2,7 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useRef,
-  useState
+  useRef
 } from 'preact/hooks';
 
 import { isFunction } from 'min-dash';
@@ -15,31 +14,29 @@ import { useEvent } from './useEvent';
 /**
  * Subscribe to `propertiesPanel.showEntry`.
  *
- * @param {Function} show
+ * @param {string} id
  *
  * @returns {import('preact').Ref}
  */
-export function useShowEntryEvent(show) {
+export function useShowEntryEvent(id) {
   const { onShow } = useContext(PropertiesPanelContext);
 
   const ref = useRef();
 
-  const [ focus, setFocus ] = useState(false);
+  const focus = useRef(false);
 
   const onShowEntry = useCallback((event) => {
-    if (show(event)) {
-      if (isFunction(onShow)) {
-        onShow();
-      }
+    if (event.id === id) {
+      onShow();
 
-      if (event.focus && !focus) {
-        setFocus(true);
+      if (!focus.current) {
+        focus.current = true;
       }
     }
-  }, [ show ]);
+  }, [ id ]);
 
   useEffect(() => {
-    if (focus && ref.current) {
+    if (focus.current && ref.current) {
       if (isFunction(ref.current.focus)) {
         ref.current.focus();
       }
@@ -48,9 +45,9 @@ export function useShowEntryEvent(show) {
         ref.current.select();
       }
 
-      setFocus(false);
+      focus.current = false;
     }
-  }, [ focus ]);
+  });
 
   useEvent('propertiesPanel.showEntry', onShowEntry);
 
