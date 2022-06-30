@@ -13,11 +13,8 @@ import { isFunction } from 'min-dash';
 
 import {
   usePrevious,
-  useShowEntryEvent,
-  useShowErrorEvent
+  useShowEntryEvent
 } from '../../hooks';
-
-const noop = () => {};
 
 function Textfield(props) {
 
@@ -28,13 +25,12 @@ function Textfield(props) {
     label,
     onInput,
     feel = false,
-    value = '',
-    show = noop
+    value = ''
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value || '');
 
-  const ref = useShowEntryEvent(show);
+  const ref = useShowEntryEvent(id);
 
   const handleInputCallback = useMemo(() => {
     return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
@@ -99,12 +95,11 @@ export default function TextfieldEntry(props) {
     label,
     getValue,
     setValue,
-    validate,
-    show = noop
+    validate
   } = props;
 
   const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
-  const [ validationError, setValidationError ] = useState(null);
+  const [ error, setError ] = useState(null);
 
   let value = getValue(element);
 
@@ -114,7 +109,7 @@ export default function TextfieldEntry(props) {
     if (isFunction(validate)) {
       const newValidationError = validate(value) || null;
 
-      setValidationError(newValidationError);
+      setError(newValidationError);
     }
   }, [ value ]);
 
@@ -131,16 +126,12 @@ export default function TextfieldEntry(props) {
       setValue(newValue);
     }
 
-    setValidationError(newValidationError);
+    setError(newValidationError);
   };
 
-  if (previousValue === value && validationError) {
+  if (previousValue === value && error) {
     value = cachedInvalidValue;
   }
-
-  const temporaryError = useShowErrorEvent(show);
-
-  const error = temporaryError || validationError;
 
   return (
     <div
@@ -156,7 +147,6 @@ export default function TextfieldEntry(props) {
         id={ id }
         label={ label }
         onInput={ onInput }
-        show={ show }
         value={ value } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />

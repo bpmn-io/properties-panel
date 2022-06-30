@@ -5,5 +5,4 @@ export { useKeyFactory } from './useKeyFactory';
 export { useLayoutState } from './useLayoutState';
 export { usePrevious } from './usePrevious';
 export { useShowEntryEvent } from './useShowEntryEvent';
-export { useShowErrorEvent } from './useShowErrorEvent';
 export { useStickyIntersectionObserver } from './useStickyIntersectionObserver';
