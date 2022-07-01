@@ -3,6 +3,11 @@ import {
   useShowErrorEvent
 } from '../../hooks';
 
+import {
+  useEffect,
+  useState
+} from 'preact/hooks';
+
 import Description from './Description';
 
 const noop = () => {};
@@ -17,9 +22,24 @@ function Checkbox(props) {
     show = noop
   } = props;
 
-  const handleChange = ({ target }) => {
+  const [localValue, setLocalValue] = useState(value);
+
+  const handleChangeCallback = ({ target }) => {
     onChange(target.checked);
   };
+
+  const handleChange = e => {
+    handleChangeCallback(e);
+    setLocalValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value === localValue) {
+      return;
+    }
+
+    setLocalValue(value);
+  }, [value]);
 
   const ref = useShowEntryEvent(show);
 
@@ -32,7 +52,7 @@ function Checkbox(props) {
         type="checkbox"
         class="bio-properties-panel-input"
         onChange={ handleChange }
-        checked={ value }
+        checked={ localValue }
         disabled={ disabled } />
       <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
     </div>

@@ -5,6 +5,11 @@ import {
   useShowErrorEvent
 } from '../../hooks';
 
+import {
+  useEffect,
+  useState
+} from 'preact/hooks';
+
 import Description from './Description';
 
 const noop = () => {};
@@ -38,9 +43,24 @@ function Select(props) {
 
   const ref = useShowEntryEvent(show);
 
-  const handleChange = ({ target }) => {
+  const [localValue, setLocalValue] = useState(value);
+
+  const handleChangeCallback = ({ target }) => {
     onChange(target.value);
   };
+
+  const handleChange = e => {
+    handleChangeCallback(e);
+    setLocalValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value === localValue) {
+      return;
+    }
+
+    setLocalValue(value);
+  }, [value]);
 
   return (
     <div class="bio-properties-panel-select">
@@ -51,7 +71,7 @@ function Select(props) {
         name={ id }
         class="bio-properties-panel-input"
         onInput={ handleChange }
-        value={ value }
+        value={ localValue }
         disabled={ disabled }
       >
         {
