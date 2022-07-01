@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.15.0
+
+* `FEAT`: pass props to `List` entries ([#157](https://github.com/bpmn-io/properties-panel/pull/157))
+* `FIX`: correct curser jumping on update ([#146](https://github.com/bpmn-io/properties-panel/issues/146))
+* `CHORE`: use controlled inputs ([#155](https://github.com/bpmn-io/properties-panel/issues/155))
+
 ## 0.14.0
 
 * `FEAT`: enable multiple and empty state ([#69](https://github.com/bpmn-io/properties-panel/issues/69))
