@@ -1,5 +1,10 @@
 import Description from './Description';
 
+import {
+  useEffect,
+  useState
+} from 'preact/hooks';
+
 function ToggleSwitch(props) {
   const {
     id,
@@ -9,9 +14,24 @@ function ToggleSwitch(props) {
     switcherLabel
   } = props;
 
-  const handleInput = async () => {
+  const [localValue, setLocalValue] = useState(value);
+
+  const handleInputCallback = async () => {
     onInput(!value);
   };
+
+  const handleInput = e => {
+    handleInputCallback(e);
+    setLocalValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value === localValue) {
+      return;
+    }
+
+    setLocalValue(value);
+  }, [value]);
 
   return (
     <div class="bio-properties-panel-toggle-switch">
@@ -27,7 +47,7 @@ function ToggleSwitch(props) {
             type="checkbox"
             name={ id }
             onInput={ handleInput }
-            checked={ value } />
+            checked={ localValue } />
           <span class="bio-properties-panel-toggle-switch__slider" />
         </label>
         <p class="bio-properties-panel-toggle-switch__label">{ switcherLabel }</p>

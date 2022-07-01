@@ -1,5 +1,7 @@
 import {
-  useMemo
+  useEffect,
+  useMemo,
+  useState
 } from 'preact/hooks';
 
 import Description from './Description';
@@ -18,7 +20,9 @@ function NumberField(props) {
     value = ''
   } = props;
 
-  const handleInput = useMemo(() => {
+  const [localValue, setLocalValue] = useState(value);
+
+  const handleInputCallback = useMemo(() => {
     return debounce(event => {
 
       const {
@@ -31,6 +35,19 @@ function NumberField(props) {
       }
     });
   }, [ onInput, debounce ]);
+
+  const handleInput = e => {
+    handleInputCallback(e);
+    setLocalValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value === localValue) {
+      return;
+    }
+
+    setLocalValue(value);
+  }, [value]);
 
   return (
     <div class="bio-properties-panel-numberfield">
@@ -47,7 +64,7 @@ function NumberField(props) {
         min={ min }
         onInput={ handleInput }
         step={ step }
-        value={ value } />
+        value={ localValue } />
     </div>
   );
 }

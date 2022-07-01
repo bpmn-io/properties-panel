@@ -1,5 +1,7 @@
 import {
-  useMemo
+  useMemo,
+  useEffect,
+  useState
 } from 'preact/hooks';
 
 /**
@@ -25,11 +27,27 @@ export default function Simple(props) {
     setValue
   } = props;
 
-  const handleInput = useMemo(() => {
+  const value = getValue(element);
+
+  const [localValue, setLocalValue] = useState(value);
+
+  const handleInputCallback = useMemo(() => {
     return debounce(({ target }) => setValue(target.value.length ? target.value : undefined));
   }, [ setValue, debounce ]);
 
-  const value = getValue(element);
+  const handleInput = e => {
+    handleInputCallback(e);
+    setLocalValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (value === localValue) {
+      return;
+    }
+
+    setLocalValue(value);
+  }, [value]);
+
 
   return (
     <div class="bio-properties-panel-simple">
@@ -42,10 +60,10 @@ export default function Simple(props) {
         disabled={ disabled }
         class="bio-properties-panel-input"
         onInput={ handleInput }
-        aria-label={ value || '<empty>' }
+        aria-label={ localValue || '<empty>' }
         onFocus={ onFocus }
         onBlur={ onBlur }
-        value={ value || '' } />
+        value={ localValue } />
     </div>
   );
 }
