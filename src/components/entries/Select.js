@@ -1,6 +1,9 @@
 import classNames from 'classnames';
 
-import { useShowEntryEvent } from '../../hooks';
+import {
+  useError,
+  useShowEntryEvent
+} from '../../hooks';
 
 import {
   useEffect,
@@ -111,7 +114,7 @@ export default function SelectEntry(props) {
   const value = getValue(element);
   const options = getOptions(element);
 
-  const error = null;
+  const error = useError(id);
 
   return (
     <div

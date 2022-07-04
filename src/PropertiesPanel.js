@@ -20,12 +20,16 @@ import Placeholder from './components/Placeholder';
 
 import {
   DescriptionContext,
+  ErrorsContext,
   EventContext,
   LayoutContext,
   PropertiesPanelContext
 } from './context';
 
-import { useEventBuffer } from './hooks';
+import {
+  useEvent,
+  useEventBuffer
+} from './hooks';
 
 const DEFAULT_LAYOUT = {
   open: true
@@ -35,7 +39,7 @@ const DEFAULT_DESCRIPTION = {};
 
 const bufferedEvents = [
   'propertiesPanel.showEntry',
-  'propertiesPanel.showError'
+  'propertiesPanel.setErrors'
 ];
 
 
@@ -164,6 +168,16 @@ export default function PropertiesPanel(props) {
 
   useEventBuffer(bufferedEvents, eventBus);
 
+  const [ errors, setErrors ] = useState({});
+
+  const onSetErrors = ({ errors }) => setErrors(errors);
+
+  useEvent('propertiesPanel.setErrors', onSetErrors, eventBus);
+
+  const errorsContext = {
+    errors
+  };
+
   const eventContext = {
     eventBus
   };
@@ -184,39 +198,40 @@ export default function PropertiesPanel(props) {
 
   return (
     <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+      <ErrorsContext.Provider value={ errorsContext }>
+        <DescriptionContext.Provider value={ descriptionContext }>
+          <LayoutContext.Provider value={ layoutContext }>
+            <EventContext.Provider value={ eventContext }>
+              <div
+                class={ classnames(
+                  'bio-properties-panel',
+                  layout.open ? 'open' : '')
+                }>
+                <Header
+                  element={ element }
+                  headerProvider={ headerProvider } />
+                <div class="bio-properties-panel-scroll-container">
+                  {
+                    groups.map(group => {
+                      const {
+                        component: Component = Group,
+                        id
+                      } = group;
 
-      <DescriptionContext.Provider value={ descriptionContext }>
-        <LayoutContext.Provider value={ layoutContext }>
-          <EventContext.Provider value={ eventContext }>
-            <div
-              class={ classnames(
-                'bio-properties-panel',
-                layout.open ? 'open' : '')
-              }>
-              <Header
-                element={ element }
-                headerProvider={ headerProvider } />
-              <div class="bio-properties-panel-scroll-container">
-                {
-                  groups.map(group => {
-                    const {
-                      component: Component = Group,
-                      id
-                    } = group;
-
-                    return (
-                      <Component
-                        { ...group }
-                        key={ id }
-                        element={ element } />
-                    );
-                  })
-                }
+                      return (
+                        <Component
+                          { ...group }
+                          key={ id }
+                          element={ element } />
+                      );
+                    })
+                  }
+                </div>
               </div>
-            </div>
-          </EventContext.Provider>
-        </LayoutContext.Provider>
-      </DescriptionContext.Provider>
+            </EventContext.Provider>
+          </LayoutContext.Provider>
+        </DescriptionContext.Provider>
+      </ErrorsContext.Provider>
     </PropertiesPanelContext.Provider>
   );
 }

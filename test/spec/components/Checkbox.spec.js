@@ -20,6 +20,7 @@ import {
 
 import {
   DescriptionContext,
+  ErrorsContext,
   EventContext,
   PropertiesPanelContext
 } from 'src/context';
@@ -157,6 +158,24 @@ describe('<Checkbox>', function() {
   });
 
 
+  describe('errors', function() {
+
+    it('should get error', function() {
+
+      // given
+      const errors = {
+        foo: 'bar'
+      };
+
+      const result = createCheckbox({ container, errors, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+    });
+
+  });
+
+
   describe('description', function() {
 
     it('should render without description per default', function() {
@@ -273,8 +292,13 @@ function createCheckbox(options = {}) {
     getDescriptionForId = noop,
     eventBus = new EventBus(),
     onShow = noop,
+    errors = {},
     ...rest
   } = options;
+
+  const errorsContext = {
+    errors
+  };
 
   const eventContext = {
     eventBus
@@ -290,19 +314,21 @@ function createCheckbox(options = {}) {
   };
 
   return render(
-    <EventContext.Provider value={ eventContext }>
-      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-        <DescriptionContext.Provider value={ decriptionContext }>
-          <Checkbox
-            { ...rest }
-            element={ element }
-            id={ id }
-            label={ label }
-            getValue={ getValue }
-            setValue={ setValue } />
-        </DescriptionContext.Provider>
-      </PropertiesPanelContext.Provider>
-    </EventContext.Provider>,
+    <ErrorsContext.Provider value={ errorsContext }>
+      <EventContext.Provider value={ eventContext }>
+        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+          <DescriptionContext.Provider value={ decriptionContext }>
+            <Checkbox
+              { ...rest }
+              element={ element }
+              id={ id }
+              label={ label }
+              getValue={ getValue }
+              setValue={ setValue } />
+          </DescriptionContext.Provider>
+        </PropertiesPanelContext.Provider>
+      </EventContext.Provider>
+    </ErrorsContext.Provider>,
     {
       container
     }

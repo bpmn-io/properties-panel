@@ -23,6 +23,7 @@ import Select, { isEdited } from 'src/components/entries/Select';
 
 import {
   DescriptionContext,
+  ErrorsContext,
   EventContext,
   PropertiesPanelContext
 } from 'src/context';
@@ -237,6 +238,24 @@ describe('<Select>', function() {
   });
 
 
+  describe('errors', function() {
+
+    it('should get error', function() {
+
+      // given
+      const errors = {
+        foo: 'bar'
+      };
+
+      const result = createSelect({ container, errors, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+    });
+
+  });
+
+
   describe('description', function() {
 
     it('should render without description per default', function() {
@@ -355,8 +374,13 @@ function createSelect(options = {}) {
     container,
     eventBus = new EventBus(),
     onShow = noop,
+    errors = {},
     ...rest
   } = options;
+
+  const errorsContext = {
+    errors
+  };
 
   const eventContext = {
     eventBus
@@ -372,21 +396,23 @@ function createSelect(options = {}) {
   };
 
   return render(
-    <EventContext.Provider value={ eventContext }>
-      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-        <DescriptionContext.Provider value={ decriptionContext }>
-          <Select
-            { ...rest }
-            element={ element }
-            id={ id }
-            label={ label }
-            description={ description }
-            getValue={ getValue }
-            setValue={ setValue }
-            getOptions={ getOptions } />
-        </DescriptionContext.Provider>
-      </PropertiesPanelContext.Provider>
-    </EventContext.Provider>,
+    <ErrorsContext.Provider value={ errorsContext }>
+      <EventContext.Provider value={ eventContext }>
+        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+          <DescriptionContext.Provider value={ decriptionContext }>
+            <Select
+              { ...rest }
+              element={ element }
+              id={ id }
+              label={ label }
+              description={ description }
+              getValue={ getValue }
+              setValue={ setValue }
+              getOptions={ getOptions } />
+          </DescriptionContext.Provider>
+        </PropertiesPanelContext.Provider>
+      </EventContext.Provider>
+    </ErrorsContext.Provider>,
     {
       container
     }
