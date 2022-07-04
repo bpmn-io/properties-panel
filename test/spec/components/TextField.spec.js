@@ -21,6 +21,7 @@ import {
 
 import {
   DescriptionContext,
+  ErrorsContext,
   EventContext,
   PropertiesPanelContext
 } from 'src/context';
@@ -141,6 +142,24 @@ describe('<TextField>', function() {
 
       // then
       expect(onShowSpy).to.have.been.called;
+    });
+
+  });
+
+
+  describe('errors', function() {
+
+    it('should get error', function() {
+
+      // given
+      const errors = {
+        foo: 'bar'
+      };
+
+      const result = createTextField({ container, errors, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
     });
 
   });
@@ -456,8 +475,13 @@ function createTextField(options = {}) {
     getDescriptionForId = noop,
     container,
     eventBus = new EventBus(),
-    onShow = noop
+    onShow = noop,
+    errors = {}
   } = options;
+
+  const errorsContext = {
+    errors
+  };
 
   const eventContext = {
     eventBus
@@ -473,23 +497,25 @@ function createTextField(options = {}) {
   };
 
   return render(
-    <EventContext.Provider value={ eventContext }>
-      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-        <DescriptionContext.Provider value={ descriptionContext }>
-          <TextField
-            element={ element }
-            id={ id }
-            label={ label }
-            description={ description }
-            disabled={ disabled }
-            getValue={ getValue }
-            setValue={ setValue }
-            debounce={ debounce }
-            validate={ validate }
-            feel={ feel } />
-        </DescriptionContext.Provider>
-      </PropertiesPanelContext.Provider>
-    </EventContext.Provider>,
+    <ErrorsContext.Provider value={ errorsContext }>
+      <EventContext.Provider value={ eventContext }>
+        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+          <DescriptionContext.Provider value={ descriptionContext }>
+            <TextField
+              element={ element }
+              id={ id }
+              label={ label }
+              description={ description }
+              disabled={ disabled }
+              getValue={ getValue }
+              setValue={ setValue }
+              debounce={ debounce }
+              validate={ validate }
+              feel={ feel } />
+          </DescriptionContext.Provider>
+        </PropertiesPanelContext.Provider>
+      </EventContext.Provider>
+    </ErrorsContext.Provider>,
     {
       container
     }

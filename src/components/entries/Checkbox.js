@@ -1,4 +1,7 @@
-import { useShowEntryEvent } from '../../hooks';
+import {
+  useError,
+  useShowEntryEvent
+} from '../../hooks';
 
 import {
   useEffect,
@@ -77,7 +80,7 @@ export default function CheckboxEntry(props) {
 
   const value = getValue(element);
 
-  const error = null;
+  const error = useError(id);
 
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-checkbox-entry" data-entry-id={ id }>

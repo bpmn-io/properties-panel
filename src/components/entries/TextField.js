@@ -12,6 +12,7 @@ import classnames from 'classnames';
 import { isFunction } from 'min-dash';
 
 import {
+  useError,
   usePrevious,
   useShowEntryEvent
 } from '../../hooks';
@@ -99,7 +100,8 @@ export default function TextfieldEntry(props) {
   } = props;
 
   const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
-  const [ error, setError ] = useState(null);
+  const globalError = useError(id);
+  const [ localError, setLocalError ] = useState(null);
 
   let value = getValue(element);
 
@@ -109,7 +111,7 @@ export default function TextfieldEntry(props) {
     if (isFunction(validate)) {
       const newValidationError = validate(value) || null;
 
-      setError(newValidationError);
+      setLocalError(newValidationError);
     }
   }, [ value ]);
 
@@ -126,12 +128,14 @@ export default function TextfieldEntry(props) {
       setValue(newValue);
     }
 
-    setError(newValidationError);
+    setLocalError(newValidationError);
   };
 
-  if (previousValue === value && error) {
+  if (previousValue === value && localError) {
     value = cachedInvalidValue;
   }
+
+  const error = globalError || localError;
 
   return (
     <div
