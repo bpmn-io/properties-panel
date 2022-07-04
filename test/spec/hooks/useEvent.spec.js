@@ -8,8 +8,6 @@ import { useEvent } from 'src/hooks';
 
 const noop = () => {};
 
-const DEFAULT_PRIORITY = 1000;
-
 
 describe('hooks/useEvent', function() {
 
@@ -20,7 +18,7 @@ describe('hooks/useEvent', function() {
   });
 
 
-  it('should subscribe', function() {
+  it('should subscribe (event bus through context)', function() {
 
     // given
     const onSpy = sinon.spy(eventBus, 'on');
@@ -29,7 +27,20 @@ describe('hooks/useEvent', function() {
     renderHook(() => useEvent('foo', noop), { wrapper: WithEventContext(eventBus) });
 
     // then
-    expect(onSpy).to.have.been.calledOnceWith('foo', DEFAULT_PRIORITY, noop);
+    expect(onSpy).to.have.been.calledOnceWith('foo', noop);
+  });
+
+
+  it('should subscribe (event but through input)', function() {
+
+    // given
+    const onSpy = sinon.spy(eventBus, 'on');
+
+    // when
+    renderHook(() => useEvent('foo', noop, eventBus));
+
+    // then
+    expect(onSpy).to.have.been.calledOnceWith('foo', noop);
   });
 
 
@@ -61,7 +72,7 @@ describe('hooks/useEvent', function() {
     eventBus.fire('foo', event);
 
     // then
-    expect(onSpy).to.have.been.calledOnceWith('foo', DEFAULT_PRIORITY, callbackSpy);
+    expect(onSpy).to.have.been.calledOnceWith('foo', callbackSpy);
 
     expect(callbackSpy).to.have.been.calledOnce;
     expect(callbackSpy).to.have.been.always.calledWithMatch(event);
@@ -86,7 +97,7 @@ describe('hooks/useEvent', function() {
     eventBus.fire('foo', event);
 
     // then
-    expect(onSpy).to.have.been.calledOnceWith('foo', DEFAULT_PRIORITY, callbackSpy);
+    expect(onSpy).to.have.been.calledOnceWith('foo', callbackSpy);
     expect(offSpy).to.have.been.calledOnceWith('foo', callbackSpy);
 
     expect(callbackSpy).not.to.have.been.called;

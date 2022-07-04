@@ -1,29 +1,40 @@
-import { useContext, useEffect } from 'preact/hooks';
+import { useContext, useEffect, useRef } from 'preact/hooks';
 
 import { EventContext } from '../context';
 
-const DEFAULT_PRIORITY = 1000;
-
 
 /**
- * Subscribe to an event.
+ * Subscribe to an event immediately. Update subscription after inputs changed.
  *
  * @param {string} event
  * @param {Function} callback
- * @param {number} [priority]
- *
- * @returns {import('preact').Ref}
  */
-export function useEvent(event, callback, priority = DEFAULT_PRIORITY) {
-  const { eventBus } = useContext(EventContext);
+export function useEvent(event, callback, eventBus) {
+  const eventContext = useContext(EventContext);
 
+  if (!eventBus) {
+    ({ eventBus } = eventContext);
+  }
+
+  const didMount = useRef(false);
+
+  // (1) subscribe immediately
+  if (eventBus && !didMount.current) {
+    eventBus.on(event, callback);
+  }
+
+  // (2) update subscription after inputs changed
   useEffect(() => {
-    if (!eventBus) {
-      return;
+    if (eventBus && didMount.current) {
+      eventBus.on(event, callback);
     }
 
-    eventBus.on(event, priority, callback);
+    didMount.current = true;
 
-    return () => eventBus.off(event, callback);
-  }, [ callback, event, eventBus, priority ]);
+    return () => {
+      if (eventBus) {
+        eventBus.off(event, callback);
+      }
+    };
+  }, [ callback, event, eventBus ]);
 }
