@@ -9,6 +9,11 @@ import {
 
 import classnames from 'classnames';
 
+import {
+  useError,
+  useShowEntryEvent
+} from '../../hooks';
+
 function TextArea(props) {
 
   const {
@@ -24,6 +29,8 @@ function TextArea(props) {
   } = props;
 
   const [localValue, setLocalValue] = useState(value);
+
+  const ref = useShowEntryEvent(id);
 
   const handleInputCallback = useMemo(() => {
     return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
@@ -49,6 +56,7 @@ function TextArea(props) {
         {feel && <FeelIcon feel={ feel } label={ label } />}
       </label>
       <textarea
+        ref={ ref }
         id={ prefixId(id) }
         name={ id }
         spellCheck="false"
@@ -95,6 +103,9 @@ export default function TextAreaEntry(props) {
   } = props;
 
   const value = getValue(element);
+
+  const error = useError(id);
+
   return (
     <div class="bio-properties-panel-entry" data-entry-id={ id }>
       <TextArea
@@ -107,6 +118,7 @@ export default function TextAreaEntry(props) {
         monospace={ monospace }
         feel={ feel }
         disabled={ disabled } />
+      { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

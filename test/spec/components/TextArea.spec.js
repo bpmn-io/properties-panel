@@ -1,3 +1,5 @@
+import { act } from 'preact/test-utils';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -9,17 +11,22 @@ import {
   query as domQuery
 } from 'min-dom';
 
+import EventBus from 'diagram-js/lib/core/EventBus';
+
 import {
   changeInput,
   expectNoViolations,
   insertCoreStyles
 } from 'test/TestHelper';
 
-import TextArea, { isEdited } from 'src/components/entries/TextArea';
-
 import {
-  DescriptionContext
+  DescriptionContext,
+  ErrorsContext,
+  EventContext,
+  PropertiesPanelContext
 } from 'src/context';
+
+import TextArea, { isEdited } from 'src/components/entries/TextArea';
 
 insertCoreStyles();
 
@@ -83,6 +90,50 @@ describe('<TextArea>', function() {
 
     // then
     expect(updateSpy).to.have.been.calledWith('foo');
+  });
+
+
+  describe('events', function() {
+
+    it('should show entry', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const onShowSpy = sinon.spy();
+
+      createTextArea({
+        container,
+        eventBus,
+        id: 'foo',
+        onShow: onShowSpy
+      });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
+
+      // then
+      expect(onShowSpy).to.have.been.called;
+    });
+
+  });
+
+
+  describe('errors', function() {
+
+    it('should get error', function() {
+
+      // given
+      const errors = {
+        foo: 'bar'
+      };
+
+      const result = createTextArea({ container, errors, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+    });
+
   });
 
 
@@ -308,28 +359,49 @@ function createTextArea(options = {}) {
     descriptionConfig = {},
     getDescriptionForId = noop,
     container,
+    eventBus = new EventBus(),
+    onShow = noop,
+    errors = {},
     ...rest
   } = options;
 
-  const context = {
+  const errorsContext = {
+    errors
+  };
+
+  const eventContext = {
+    eventBus
+  };
+
+  const propertiesPanelContext = {
+    onShow
+  };
+
+  const descriptionContext = {
     description: descriptionConfig,
     getDescriptionForId
   };
 
   return render(
-    <DescriptionContext.Provider value={ context }>
-      <TextArea
-        { ...rest }
-        element={ element }
-        id={ id }
-        label={ label }
-        description={ description }
-        getValue={ getValue }
-        setValue={ setValue }
-        debounce={ debounce }
-        rows={ rows }
-        monospace={ monospace }
-        feel={ feel } />
-    </DescriptionContext.Provider>,
+    <ErrorsContext.Provider value={ errorsContext }>
+      <EventContext.Provider value={ eventContext }>
+        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+          <DescriptionContext.Provider value={ descriptionContext }>
+            <TextArea
+              { ...rest }
+              element={ element }
+              id={ id }
+              label={ label }
+              description={ description }
+              getValue={ getValue }
+              setValue={ setValue }
+              debounce={ debounce }
+              rows={ rows }
+              monospace={ monospace }
+              feel={ feel } />
+          </DescriptionContext.Provider>
+        </PropertiesPanelContext.Provider>
+      </EventContext.Provider>
+    </ErrorsContext.Provider>,
     { container });
 }
