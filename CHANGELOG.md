@@ -6,10 +6,22 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.16.0
+
+* `FEAT`: set errors through context ([#160](https://github.com/bpmn-io/properties-panel/pull/160))
+* `FEAT`: useShowEntryEvent hook uses ID ([#160](https://github.com/bpmn-io/properties-panel/pull/160))
+* `FEAT`: useEvent hook subscribes immediately ([#160](https://github.com/bpmn-io/properties-panel/pull/160))
+* `FEAT`: add focus and error to text area ([#160](https://github.com/bpmn-io/properties-panel/pull/160))
+
+### BREAKING CHANGES
+
+* useShowEntryEvent hook uses ID instead of callback
+* useShowErrorEvent hook removed, add errors through context instead
+
 ## 0.15.0
 
 * `FEAT`: pass props to `List` entries ([#157](https://github.com/bpmn-io/properties-panel/pull/157))
-* `FIX`: correct curser jumping on update ([#146](https://github.com/bpmn-io/properties-panel/issues/146))
+* `FIX`: correct cursor jumping on update ([#146](https://github.com/bpmn-io/properties-panel/issues/146))
 * `CHORE`: use controlled inputs ([#155](https://github.com/bpmn-io/properties-panel/issues/155))
 
 ## 0.14.0
