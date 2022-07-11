@@ -16,7 +16,7 @@ import { isFunction } from 'min-dash';
 import {
   usePrevious,
   useShowEntryEvent,
-  useShowErrorEvent,
+  useError,
   useStaticCallback
 } from '../../../hooks';
 
@@ -35,13 +35,12 @@ function FeelTextfield(props) {
     feel,
     value = '',
     disabled = false,
-    show = noop,
     OptionalComponent = OptionalFeelInput
   } = props;
 
   const [localValue, _setLocalValue] = useState(value);
 
-  const ref = useShowEntryEvent(show);
+  const ref = useShowEntryEvent(id);
 
   const feelActive = localValue.startsWith('=') || feel === 'required';
   const feelOnlyValue = localValue.substring(1);
@@ -298,7 +297,7 @@ export default function FeelEntry(props) {
     value = cachedInvalidValue;
   }
 
-  const temporaryError = useShowErrorEvent(show);
+  const temporaryError = useError(id);
 
   const error = temporaryError || validationError;
 

@@ -21,6 +21,7 @@ import {
 
 import {
   DescriptionContext,
+  ErrorsContext,
   EventContext,
   PropertiesPanelContext
 } from 'src/context';
@@ -129,40 +130,34 @@ describe('<FeelField>', function() {
 
         const onShowSpy = sinon.spy();
 
-        const show = () => true;
-
-        createFeelField({ container, eventBus, onShow: onShowSpy, show });
+        createFeelField({ id: 'foo', container, eventBus, onShow: onShowSpy });
 
         // when
-        act(() => eventBus.fire('propertiesPanel.showEntry'));
+        act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
 
         // then
         expect(onShowSpy).to.have.been.called;
-      });
-
-
-      it('should show error', function() {
-
-        // given
-        const eventBus = new EventBus();
-
-        const onShowSpy = sinon.spy();
-
-        const show = () => true;
-
-        const result = createFeelField({ container, eventBus, onShow: onShowSpy, show });
-
-        // when
-        act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
-
-        // then
-        expect(onShowSpy).to.have.been.called;
-
-        expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
       });
 
     });
 
+
+    describe('errors', function() {
+
+      it('should get error', function() {
+
+        // given
+        const errors = {
+          foo: 'bar'
+        };
+
+        const result = createFeelField({ container, errors, id: 'foo' });
+
+        // then
+        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+      });
+
+    });
 
     describe('validation', function() {
 
@@ -547,36 +542,31 @@ describe('<FeelField>', function() {
 
         const onShowSpy = sinon.spy();
 
-        const show = () => true;
-
-        createFeelTextArea({ container, eventBus, onShow: onShowSpy, show });
+        createFeelTextArea({ id: 'foo', container, eventBus, onShow: onShowSpy });
 
         // when
-        act(() => eventBus.fire('propertiesPanel.showEntry'));
+        act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
 
         // then
         expect(onShowSpy).to.have.been.called;
       });
 
+    });
 
-      it('should show error', function() {
+
+    describe('errors', function() {
+
+      it('should get error', function() {
 
         // given
-        const eventBus = new EventBus();
+        const errors = {
+          foo: 'bar'
+        };
 
-        const onShowSpy = sinon.spy();
-
-        const show = () => true;
-
-        const result = createFeelTextArea({ container, eventBus, onShow: onShowSpy, show });
-
-        // when
-        act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
+        const result = createFeelTextArea({ container, errors, id: 'foo' });
 
         // then
-        expect(onShowSpy).to.have.been.called;
-
-        expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
+        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
       });
 
     });
@@ -991,39 +981,37 @@ describe('<FeelField>', function() {
 
         const onShowSpy = sinon.spy();
 
-        const show = () => true;
 
-        createFeelField({ container, eventBus, onShow: onShowSpy, show, feel: 'required' });
+        createFeelField({ id: 'foo', container, eventBus, onShow: onShowSpy, feel: 'required' });
 
         // when
-        act(() => eventBus.fire('propertiesPanel.showEntry'));
+        act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
 
         // then
         expect(onShowSpy).to.have.been.called;
-      });
-
-
-      it('should show error', function() {
-
-        // given
-        const eventBus = new EventBus();
-
-        const onShowSpy = sinon.spy();
-
-        const show = () => true;
-
-        const result = createFeelField({ container, eventBus, onShow: onShowSpy, show, feel: 'required' });
-
-        // when
-        act(() => eventBus.fire('propertiesPanel.showError', { message: 'foo' }));
-
-        // then
-        expect(onShowSpy).to.have.been.called;
-
-        expect(domQuery('.bio-properties-panel-error'), result.container).to.exist;
       });
 
     });
+
+
+
+    describe('errors', function() {
+
+      it('should get error', function() {
+
+        // given
+        const errors = {
+          foo: 'bar'
+        };
+
+        const result = createFeelField({ container, errors, id: 'foo', feel: 'required' });
+
+        // then
+        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+      });
+
+    });
+
 
 
     describe('validation', function() {
@@ -1365,8 +1353,12 @@ function createFeelField(options = {}) {
     container,
     eventBus = new EventBus(),
     onShow = noop,
-    show
+    errors = {}
   } = options;
+
+  const errorsContext = {
+    errors
+  };
 
   const eventContext = {
     eventBus
@@ -1382,24 +1374,25 @@ function createFeelField(options = {}) {
   };
 
   return render(
-    <EventContext.Provider value={ eventContext }>
-      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-        <DescriptionContext.Provider value={ descriptionContext }>
-          <FeelField
-            element={ element }
-            id={ id }
-            label={ label }
-            description={ description }
-            disabled={ disabled }
-            getValue={ getValue }
-            setValue={ setValue }
-            debounce={ debounce }
-            validate={ validate }
-            show={ show }
-            feel={ feel } />
-        </DescriptionContext.Provider>
-      </PropertiesPanelContext.Provider>
-    </EventContext.Provider>,
+    <ErrorsContext.Provider value={ errorsContext }>
+      <EventContext.Provider value={ eventContext }>
+        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+          <DescriptionContext.Provider value={ descriptionContext }>
+            <FeelField
+              element={ element }
+              id={ id }
+              label={ label }
+              description={ description }
+              disabled={ disabled }
+              getValue={ getValue }
+              setValue={ setValue }
+              debounce={ debounce }
+              validate={ validate }
+              feel={ feel } />
+          </DescriptionContext.Provider>
+        </PropertiesPanelContext.Provider>
+      </EventContext.Provider>
+    </ErrorsContext.Provider>,
     {
       container
     }
@@ -1424,8 +1417,12 @@ function createFeelTextArea(options = {}) {
     container,
     eventBus = new EventBus(),
     onShow = noop,
-    show
+    errors = {}
   } = options;
+
+  const errorsContext = {
+    errors
+  };
 
   const eventContext = {
     eventBus
@@ -1441,24 +1438,25 @@ function createFeelTextArea(options = {}) {
   };
 
   return render(
-    <EventContext.Provider value={ eventContext }>
-      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-        <DescriptionContext.Provider value={ descriptionContext }>
-          <FeelTextArea
-            element={ element }
-            id={ id }
-            label={ label }
-            description={ description }
-            disabled={ disabled }
-            getValue={ getValue }
-            setValue={ setValue }
-            debounce={ debounce }
-            validate={ validate }
-            show={ show }
-            feel={ feel } />
-        </DescriptionContext.Provider>
-      </PropertiesPanelContext.Provider>
-    </EventContext.Provider>,
+    <ErrorsContext.Provider value={ errorsContext }>
+      <EventContext.Provider value={ eventContext }>
+        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+          <DescriptionContext.Provider value={ descriptionContext }>
+            <FeelTextArea
+              element={ element }
+              id={ id }
+              label={ label }
+              description={ description }
+              disabled={ disabled }
+              getValue={ getValue }
+              setValue={ setValue }
+              debounce={ debounce }
+              validate={ validate }
+              feel={ feel } />
+          </DescriptionContext.Provider>
+        </PropertiesPanelContext.Provider>
+      </EventContext.Provider>
+    </ErrorsContext.Provider>,
     {
       container
     }
