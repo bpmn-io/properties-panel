@@ -7,7 +7,7 @@ export function FeelIndicator(props) {
     return null;
   }
 
-  return <span class="FeelIndicator">
+  return <span class="bio-properties-panel-feel-indicator">
     <button disabled>=</button>
   </span>;
 }
