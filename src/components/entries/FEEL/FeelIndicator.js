@@ -8,6 +8,6 @@ export function FeelIndicator(props) {
   }
 
   return <span class="bio-properties-panel-feel-indicator">
-    <button disabled>=</button>
+    =
   </span>;
 }
