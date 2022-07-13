@@ -6,6 +6,15 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.17.0
+
+* `FEAT`: add `FeelEntry` component ([#158](https://github.com/bpmn-io/properties-panel/pull/158))
+
+### BREAKING CHANGES
+
+* `TextFieldEntry` and `TextAreaEntry` no longer support the `feel` prop. 
+  Use `FeelEntry` or `FeelTextAreaEntry` instead.
+
 ## 0.16.0
 
 * `FEAT`: set errors through context ([#160](https://github.com/bpmn-io/properties-panel/pull/160))
