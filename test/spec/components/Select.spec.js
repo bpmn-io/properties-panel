@@ -7,6 +7,7 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
+  classes as domClasses,
   query as domQuery,
   queryAll as domQueryAll
 } from 'min-dom';
@@ -250,6 +251,7 @@ describe('<Select>', function() {
       const result = createSelect({ container, errors, id: 'foo' });
 
       // then
+      expect(isValid(domQuery('.bio-properties-panel-entry', result.container))).to.be.false;
       expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
     });
 
@@ -446,4 +448,8 @@ function createOptions(overrides = {}) {
   ];
 
   return newOptions;
+}
+
+function isValid(node) {
+  return !domClasses(node).has('has-error');
 }

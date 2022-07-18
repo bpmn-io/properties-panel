@@ -131,6 +131,7 @@ describe('<TextArea>', function() {
       const result = createTextArea({ container, errors, id: 'foo' });
 
       // then
+      expect(isValid(domQuery('.bio-properties-panel-entry', result.container))).to.be.false;
       expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
     });
 
@@ -351,4 +352,8 @@ function createTextArea(options = {}) {
       </EventContext.Provider>
     </ErrorsContext.Provider>,
     { container });
+}
+
+function isValid(node) {
+  return !domClasses(node).has('has-error');
 }
