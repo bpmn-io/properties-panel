@@ -264,6 +264,8 @@ describe('<Checkbox>', function() {
     it('should have no violations', async function() {
 
       // given
+      this.timeout(5000);
+
       const { container: node } = createCheckbox({
         container,
         label: 'foo'

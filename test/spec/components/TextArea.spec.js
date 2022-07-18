@@ -278,6 +278,8 @@ describe('<TextArea>', function() {
     it('should have no violations', async function() {
 
       // given
+      this.timeout(5000);
+
       const { container: node } = createTextArea({
         container,
         label: 'foo'

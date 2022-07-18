@@ -131,6 +131,8 @@ describe('<Simple>', function() {
     it('should have no violations', async function() {
 
       // given
+      this.timeout(5000);
+
       const getValue = () => '';
 
       const { container: node } = createSimple({
@@ -146,6 +148,8 @@ describe('<Simple>', function() {
     it('should set aria label', async function() {
 
       // given
+      this.timeout(5000);
+
       const getValue = () => 'foo';
 
       const { container: node } = createSimple({
@@ -163,6 +167,8 @@ describe('<Simple>', function() {
     it('should set aria label (empty value)', async function() {
 
       // given
+      this.timeout(5000);
+
       const getValue = () => null;
 
       const { container: node } = createSimple({

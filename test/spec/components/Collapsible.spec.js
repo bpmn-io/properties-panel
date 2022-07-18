@@ -181,6 +181,8 @@ describe('<Collapsible>', function() {
     it('should have no violations', async function() {
 
       // given
+      this.timeout(5000);
+
       const { container: node } = createCollapsible({
         container: parentContainer,
         label: 'foo'
