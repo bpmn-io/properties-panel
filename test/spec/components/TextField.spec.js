@@ -159,6 +159,7 @@ describe('<TextField>', function() {
       const result = createTextField({ container, errors, id: 'foo' });
 
       // then
+      expect(isValid(domQuery('.bio-properties-panel-entry', result.container))).to.be.false;
       expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
     });
 

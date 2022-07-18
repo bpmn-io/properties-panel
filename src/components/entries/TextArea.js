@@ -103,7 +103,12 @@ export default function TextAreaEntry(props) {
   const error = useError(id);
 
   return (
-    <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <div
+      class={ classnames(
+        'bio-properties-panel-entry',
+        error ? 'has-error' : '')
+      }
+      data-entry-id={ id }>
       <TextArea
         id={ id }
         label={ label }
