@@ -1080,6 +1080,8 @@ describe('<ListGroup>', function() {
     it('should have no violations', async function() {
 
       // given
+      this.timeout(5000);
+
       const items = [
         {
           id: 'item-1',

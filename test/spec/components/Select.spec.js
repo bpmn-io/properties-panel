@@ -346,6 +346,8 @@ describe('<Select>', function() {
     it('should have no violations', async function() {
 
       // given
+      this.timeout(5000);
+
       const { container: node } = createSelect({
         container,
         label: 'foo'

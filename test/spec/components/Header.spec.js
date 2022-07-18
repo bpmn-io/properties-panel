@@ -186,6 +186,8 @@ describe('<Header>', function() {
     it('should have no violations', async function() {
 
       // given
+      this.timeout(5000);
+
       const provider = {
         getElementLabel: () => 'name',
         getTypeLabel: () => 'type',
