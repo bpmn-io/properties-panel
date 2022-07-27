@@ -138,6 +138,7 @@ function FeelTextfield(props) {
             disabled={ disabled }
             onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
             value={ feelOnlyValue }
+            variables={ props.variables }
             ref={ ref }
           /> :
           <OptionalComponent
@@ -319,6 +320,7 @@ export default function FeelEntry(props) {
         example={ props.example }
         show={ show }
         value={ value }
+        variables={ props.variables }
         OptionalComponent={ props.OptionalComponent } />
       {error && <div class="bio-properties-panel-error">{error}</div>}
       <Description forId={ id } element={ element } value={ description } />
