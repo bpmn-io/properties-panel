@@ -37,7 +37,8 @@ const CodeEditor = forwardRef((props, ref) => {
     value,
     onInput,
     onFeelToggle,
-    disabled
+    disabled,
+    variables
   } = props;
 
   const inputRef = useRef();
@@ -77,13 +78,19 @@ const CodeEditor = forwardRef((props, ref) => {
       container: inputRef.current,
       onChange: handleInput,
       onKeyDown: onKeyDown,
-      value: localValue
+      value: localValue,
+      variables: variables
     });
 
     setEditor(
       editor
     );
-  }, []);
+
+    return () => {
+      inputRef.current.innerHTML = '';
+      setEditor(null);
+    };
+  }, [ variables ]);
 
   useEffect(() => {
     if (!editor) {

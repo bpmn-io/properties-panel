@@ -24,6 +24,7 @@ import {
 import Group from 'src/components/Group';
 
 import { PropertiesPanelContext } from 'src/context';
+import { fireEvent } from '@testing-library/preact';
 
 insertCoreStyles();
 
@@ -64,7 +65,7 @@ describe('<Group>', function() {
       expect(domClasses(entries).has('open')).to.be.false;
 
       // when
-      await header.click();
+      await fireEvent.click(header);
 
       // then
       expect(domClasses(entries).has('open')).to.be.true;

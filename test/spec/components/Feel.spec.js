@@ -446,7 +446,6 @@ describe('<FeelField>', function() {
 
       });
 
-
     });
 
   });
