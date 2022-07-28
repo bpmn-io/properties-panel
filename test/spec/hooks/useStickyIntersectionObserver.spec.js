@@ -11,8 +11,11 @@ describe('hooks/userStickyIntersectionObserver', function() {
     global.IntersectionObserver = OriginalIntersectionObserver;
   });
 
-
-  it('should observe', async function() {
+  /**
+   * @pinussilvestrus Note: we exclude the sticky header feature until we
+   * find a proper fix for https://github.com/bpmn-io/bpmn-js-properties-panel/issues/726
+   */
+  it.skip('should observe', async function() {
 
     // given
     const observeSpy = sinon.spy();
@@ -35,7 +38,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   });
 
 
-  it('should not observe if DOM not ready', async function() {
+  it.skip('should not observe if DOM not ready', async function() {
 
     // given
     const observeSpy = sinon.spy();
@@ -56,7 +59,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   });
 
 
-  it('should unobserve after unmount', async function() {
+  it.skip('should unobserve after unmount', async function() {
 
     // given
     const unobserveSpy = sinon.spy();
