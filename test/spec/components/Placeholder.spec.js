@@ -74,6 +74,9 @@ describe('<Placeholder>', function() {
 
     it('should have no violations', async function() {
 
+      // given
+      this.timeout(5000);
+
       // when
       const { container: node } = render(<Placeholder text="foo" />, { container });
 
