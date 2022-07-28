@@ -225,6 +225,9 @@ describe('<DropdownButton>', function() {
     it('should have no violations', async function() {
 
       // given
+      this.timeout(5000);
+
+      // given
       const menuItems = [
         { entry: 'Click me' }
       ];
