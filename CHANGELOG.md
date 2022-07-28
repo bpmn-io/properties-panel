@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.18.0
+
+* `FEAT`: pass variables to FEEL editor ([#171](https://github.com/bpmn-io/properties-panel/pull/171))
+* `FIX`: add error class to text area with error ([#165](https://github.com/bpmn-io/properties-panel/issues/165))
+* `CHORE`: revert sticky headers ([#172](https://github.com/bpmn-io/properties-panel/pull/172))
+
 ## 0.17.0
 
 * `FEAT`: add `FeelEntry` component ([#158](https://github.com/bpmn-io/properties-panel/pull/158))
