@@ -40,12 +40,22 @@ function FeelTextfield(props) {
 
   const [localValue, _setLocalValue] = useState(value);
 
-  const ref = useShowEntryEvent(id);
+  const editorRef = useShowEntryEvent(id);
+  const containerRef = useRef();
 
   const feelActive = localValue.startsWith('=') || feel === 'required';
   const feelOnlyValue = localValue.substring(1);
 
-  const [focus, setFocus] = useState();
+  const [focus, _setFocus] = useState(undefined);
+
+  const setFocus = (offset = 0) => {
+    const hasFocus = containerRef.current.contains(document.activeElement);
+
+    // Keep carret position if it is already focused, otherwise focus at the end
+    const position = hasFocus ? document.activeElement.selectionStart : Infinity;
+
+    _setFocus(position + offset);
+  };
 
   const handleInputCallback = useMemo(() => {
     return debounce((newValue) => {
@@ -88,14 +98,16 @@ function FeelTextfield(props) {
     setLocalValue(newValue);
 
     if (!feelActive && newValue.startsWith('=')) {
-      setFocus(true);
+
+      // focus is behind `=` sign that will be removed
+      setFocus(-1);
     }
   };
 
   useEffect(() => {
-    if (focus) {
-      ref.current.focus();
-      setFocus(false);
+    if (typeof focus !== 'undefined') {
+      editorRef.current.focus(focus);
+      _setFocus(undefined);
     }
   }, [focus]);
 
@@ -113,9 +125,44 @@ function FeelTextfield(props) {
     setLocalValue(value);
   }, [value]);
 
+
+  // copy-paste integration
+  useEffect(() => {
+    const copyHandler = event => {
+      if (!feelActive) {
+        return;
+      }
+      event.clipboardData.setData('application/FEEL', event.clipboardData.getData('text'));
+    };
+
+    const pasteHandler = event => {
+      if (feelActive) {
+        return;
+      }
+
+      const data = event.clipboardData.getData('application/FEEL');
+
+      if (data) {
+        setTimeout(() => {
+          handleFeelToggle();
+          setFocus();
+        });
+      }
+    };
+    containerRef.current.addEventListener('copy', copyHandler);
+    containerRef.current.addEventListener('cut', copyHandler);
+    containerRef.current.addEventListener('paste', pasteHandler);
+
+    return () => {
+      containerRef.current.removeEventListener('copy', copyHandler);
+      containerRef.current.removeEventListener('cut', copyHandler);
+      containerRef.current.removeEventListener('paste', pasteHandler);
+    };
+  }, [containerRef, feelActive, handleFeelToggle, setFocus]);
+
   return (
     <div class="bio-properties-panel-feel-entry">
-      <label for={ prefixId(id) } class="bio-properties-panel-label" onClick={ () => setFocus(true) }>
+      <label for={ prefixId(id) } class="bio-properties-panel-label" onClick={ () => setFocus() }>
         {label}
         <FeelIcon
           label={ label }
@@ -124,7 +171,7 @@ function FeelTextfield(props) {
           active={ feelActive }></FeelIcon>
       </label>
 
-      <div class="bio-properties-panel-feel-container">
+      <div class="bio-properties-panel-feel-container" ref={ containerRef }>
         <FeelIndicator
           active={ feelActive }
           disabled={ feel !== 'optional' || disabled }
@@ -136,16 +183,16 @@ function FeelTextfield(props) {
             name={ id }
             onInput={ handleLocalInput }
             disabled={ disabled }
-            onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
+            onFeelToggle={ () => { handleFeelToggle(); setFocus(); } }
             value={ feelOnlyValue }
             variables={ props.variables }
-            ref={ ref }
+            ref={ editorRef }
           /> :
           <OptionalComponent
             { ...props }
             onInput={ handleLocalInput }
             value={ localValue }
-            ref={ ref }
+            ref={ editorRef }
           />
         }
       </div>
@@ -166,14 +213,20 @@ const OptionalFeelInput = forwardRef((props, ref) => {
   // To be consistent with the FEEL editor, set focus at start of input
   // this ensures clean editing experience when switching with the keyboard
   ref.current = {
-    focus: () => {
+    focus: (position) => {
       const input = inputRef.current;
       if (!input) {
         return;
       }
 
       input.focus();
-      input.setSelectionRange(0, 0);
+      if (typeof position === 'number') {
+        if (position > value.length) {
+          position = value.length;
+        }
+        input.setSelectionRange(position, position);
+      }
+
     }
   };
 
