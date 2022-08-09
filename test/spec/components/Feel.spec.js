@@ -463,6 +463,38 @@ describe('<FeelField>', function() {
 
       });
 
+
+      it('should toggle on paste with FEEL mime type', async function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => 'foo',
+          setValue: updateSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        const data = new DataTransfer();
+        data.setData('application/FEEL', 'foo');
+
+        const paste = new ClipboardEvent('paste', {
+          bubbles: true,
+          clipboardData: data
+        });
+
+        // when
+        input.dispatchEvent(paste);
+        await flushPromises();
+
+        // then
+        expect(updateSpy).to.have.been.calledWith('=foo');
+
+      });
+
     });
 
   });
@@ -934,6 +966,50 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should copy with FEEL mime type', async function() {
+
+      // given
+      const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
+
+      const contentEditable = domQuery('[role="textbox"]', result.container);
+
+      const copyEvent = new ClipboardEvent('copy', {
+        dataType: 'text/plain',
+        data: 'foo',
+        bubbles: true,
+        clipboardData: new DataTransfer()
+      });
+
+      // when
+      contentEditable.dispatchEvent(copyEvent);
+
+      // then
+      expect(copyEvent.clipboardData.getData('application/FEEL')).to.exist;
+    });
+
+
+    it('should cut with FEEL mime type', async function() {
+
+      // given
+      const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
+
+      const contentEditable = domQuery('[role="textbox"]', result.container);
+
+      const copyEvent = new ClipboardEvent('copy', {
+        dataType: 'text/plain',
+        data: 'foo',
+        bubbles: true,
+        clipboardData: new DataTransfer()
+      });
+
+      // when
+      contentEditable.dispatchEvent(copyEvent);
+
+      // then
+      expect(copyEvent.clipboardData.getData('application/FEEL')).to.exist;
+    });
+
+
     describe('#isEdited', function() {
 
       it('should NOT be edited', function() {
@@ -1010,7 +1086,6 @@ describe('<FeelField>', function() {
     });
 
 
-
     describe('errors', function() {
 
       it('should get error', function() {
@@ -1027,7 +1102,6 @@ describe('<FeelField>', function() {
       });
 
     });
-
 
 
     describe('validation', function() {
@@ -1261,6 +1335,7 @@ describe('<FeelField>', function() {
 
     });
 
+
     it('should render required feel icon', function() {
 
       // given
@@ -1275,6 +1350,7 @@ describe('<FeelField>', function() {
         result.container);
       expect(icon).to.exist;
     });
+
 
     describe('toggle', function() {
 
