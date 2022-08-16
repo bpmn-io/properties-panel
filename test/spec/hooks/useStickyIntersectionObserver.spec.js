@@ -11,11 +11,8 @@ describe('hooks/userStickyIntersectionObserver', function() {
     global.IntersectionObserver = OriginalIntersectionObserver;
   });
 
-  /**
-   * @pinussilvestrus Note: we exclude the sticky header feature until we
-   * find a proper fix for https://github.com/bpmn-io/bpmn-js-properties-panel/issues/726
-   */
-  it.skip('should observe', async function() {
+
+  it('should observe', async function() {
 
     // given
     const observeSpy = sinon.spy();
@@ -38,7 +35,37 @@ describe('hooks/userStickyIntersectionObserver', function() {
   });
 
 
-  it.skip('should not observe if DOM not ready', async function() {
+  it('should call for each entry', async function() {
+
+    // given
+    const callbackSpy = sinon.spy();
+
+    const triggerCallback = mockIntersectionObserver({});
+
+    const domObject = <div></div>;
+
+    // when
+    const ref = { current: domObject };
+
+    await renderHook(() => {
+      useStickyIntersectionObserver(ref, 'div', callbackSpy);
+
+      return domObject;
+    });
+
+    triggerCallback([
+      { intersectionRatio: 0 },
+      { intersectionRatio: 1 }
+    ]);
+
+    // then
+    expect(callbackSpy).to.have.been.calledTwice;
+    expect(callbackSpy.firstCall).to.have.been.calledWith(true);
+    expect(callbackSpy.secondCall).to.have.been.calledWith(false);
+  });
+
+
+  it('should not observe if DOM not ready', async function() {
 
     // given
     const observeSpy = sinon.spy();
@@ -59,7 +86,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   });
 
 
-  it.skip('should unobserve after unmount', async function() {
+  it('should unobserve after unmount', async function() {
 
     // given
     const unobserveSpy = sinon.spy();
@@ -113,14 +140,30 @@ describe('hooks/userStickyIntersectionObserver', function() {
 
 function noop() {}
 
+/**
+ * Overrides the IntersectionObserver global with a mock.
+ *
+ * @param {Object} props
+ * @param {Object} [props.observe]
+ * @param {Object} [props.unobserve]
+ * @returns {Function} triggers the callback on all created observers
+ */
 function mockIntersectionObserver(props) {
   const {
     observe = noop,
     unobserve = noop
   } = props;
 
-  global.IntersectionObserver = class IntersectionObserver {
-    constructor() {}
+  const callbacks = [];
+
+  function triggerCallbacks(args) {
+    callbacks.forEach(callback => callback(args));
+  }
+
+  class MockObserver {
+    constructor(callback) {
+      callbacks.push(callback);
+    }
 
     observe() {
       return observe();
@@ -130,5 +173,9 @@ function mockIntersectionObserver(props) {
       return unobserve();
     }
 
-  };
+  }
+
+  global.IntersectionObserver = MockObserver;
+
+  return triggerCallbacks;
 }

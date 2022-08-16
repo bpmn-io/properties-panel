@@ -25,11 +25,7 @@ import {
 export function useStickyIntersectionObserver(ref, scrollContainerSelector, setSticky) {
   useEffect(() => {
 
-    /**
-     * @pinussilvestrus Note: we exclude the sticky header feature until we
-     * find a proper fix for https://github.com/bpmn-io/bpmn-js-properties-panel/issues/726
-     */
-    const Observer = false /* IntersectionObserver */;
+    const Observer = IntersectionObserver;
 
     // return early if IntersectionObserver is not available
     if (!Observer) {
@@ -42,12 +38,14 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       const scrollContainer = domQuery(scrollContainerSelector);
 
       observer = new Observer((entries) => {
-        if (entries[0].intersectionRatio < 1) {
-          setSticky(true);
-        }
-        else if (entries[0].intersectionRatio === 1) {
-          setSticky(false);
-        }
+        entries.forEach(entry => {
+          if (entry.intersectionRatio < 1) {
+            setSticky(true);
+          }
+          else if (entry.intersectionRatio === 1) {
+            setSticky(false);
+          }
+        });
       },
       {
         root: scrollContainer,
@@ -64,5 +62,5 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       }
     };
 
-  }, [ ref ]);
+  }, [ ref, scrollContainerSelector, setSticky ]);
 }

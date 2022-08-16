@@ -246,14 +246,8 @@
   justify-content: space-between;
   margin-bottom: -1px; /* avoid double borders */
   position: relative;  /* browsers not supporting sticky */
-
-  /**
-   * @pinussilvestrus Note: we exclude the sticky header feature until we
-   * find a proper fix for https://github.com/bpmn-io/bpmn-js-properties-panel/issues/726
-   */
-   
-  /* position: -webkit-sticky;  /* for safari */
-  /* position: sticky; */
+  position: -webkit-sticky;  /* for safari */
+  position: sticky;
   top: 0;
   z-index: 1;
 }
