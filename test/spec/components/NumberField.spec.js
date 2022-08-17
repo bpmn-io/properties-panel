@@ -114,6 +114,23 @@ describe('<NumberField>', function() {
   });
 
 
+  it('should use unique input element on element change', function() {
+
+    // given
+    const result = createNumberField({ element: {}, container });
+
+    const input = domQuery('.bio-properties-panel-input', container);
+
+    // when
+    createNumberField({ element: {}, container }, result.render);
+
+    // then
+    const newInput = domQuery('.bio-properties-panel-input', container);
+
+    expect(newInput).to.not.eql(input);
+  });
+
+
   describe('#isEdited', function() {
 
     it('should NOT be edited', function() {
@@ -315,7 +332,7 @@ describe('<NumberField>', function() {
 
 // helpers ////////////////////
 
-function createNumberField(options = {}) {
+function createNumberField(options = {}, renderFn = render) {
   const {
     element,
     debounce = fn => fn,
@@ -338,7 +355,7 @@ function createNumberField(options = {}) {
     getDescriptionForId
   };
 
-  return render(
+  return renderFn(
     <DescriptionContext.Provider value={ context }>
       <NumberField
         element={ element }

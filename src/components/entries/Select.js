@@ -125,6 +125,7 @@ export default function SelectEntry(props) {
       data-entry-id={ id }>
       <Select
         id={ id }
+        key={ element }
         label={ label }
         value={ value }
         onChange={ setValue }

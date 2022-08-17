@@ -121,6 +121,23 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should use unique input element on element change', function() {
+
+      // given
+      const result = createFeelField({ element: {}, container });
+
+      const input = domQuery('.bio-properties-panel-input', container);
+
+      // when
+      createFeelField({ element: {}, container }, result.render);
+
+      // then
+      const newInput = domQuery('.bio-properties-panel-input', container);
+
+      expect(newInput).to.not.eql(input);
+    });
+
+
     describe('events', function() {
 
       it('should show entry', function() {
@@ -1401,7 +1418,7 @@ function createFeelField(options = {}) {
 }
 
 
-function createFeelTextArea(options = {}) {
+function createFeelTextArea(options = {}, renderFn = render) {
   const {
     element,
     id,
@@ -1438,7 +1455,7 @@ function createFeelTextArea(options = {}) {
     getDescriptionForId
   };
 
-  return render(
+  return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>

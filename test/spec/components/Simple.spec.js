@@ -57,6 +57,23 @@ describe('<Simple>', function() {
   });
 
 
+  it('should use unique input element on element change', function() {
+
+    // given
+    const result = createSimple({ element: {}, container });
+
+    const input = domQuery('.bio-properties-panel-input', container);
+
+    // when
+    createSimple({ element: {}, container }, result.render);
+
+    // then
+    const newInput = domQuery('.bio-properties-panel-input', container);
+
+    expect(newInput).to.not.eql(input);
+  });
+
+
   it('should NOT blow up on empty value', function() {
 
     // given
@@ -189,7 +206,7 @@ describe('<Simple>', function() {
 
 // helpers ////////////////////
 
-function createSimple(options = {}) {
+function createSimple(options = {}, renderFn = render) {
   const {
     element,
     id,
@@ -200,7 +217,7 @@ function createSimple(options = {}) {
     container
   } = options;
 
-  return render(
+  return renderFn(
     <Simple
       element={ element }
       id={ id }

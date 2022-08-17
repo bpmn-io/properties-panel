@@ -100,6 +100,23 @@ describe('<Select>', function() {
   });
 
 
+  it('should use unique input element on element change', function() {
+
+    // given
+    const result = createSelect({ element: {}, container });
+
+    const input = domQuery('.bio-properties-panel-input', container);
+
+    // when
+    createSelect({ element: {}, container }, result.render);
+
+    // then
+    const newInput = domQuery('.bio-properties-panel-input', container);
+
+    expect(newInput).to.not.eql(input);
+  });
+
+
   describe('options', function() {
 
     it('should render option enabled per default', function() {
@@ -364,7 +381,7 @@ describe('<Select>', function() {
 
 // helpers ////////////////////
 
-function createSelect(options = {}) {
+function createSelect(options = {}, renderFn = render) {
   const {
     element,
     id = 'select',
@@ -399,7 +416,7 @@ function createSelect(options = {}) {
     getDescriptionForId
   };
 
-  return render(
+  return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
