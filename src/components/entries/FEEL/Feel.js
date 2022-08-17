@@ -315,6 +315,7 @@ export default function FeelEntry(props) {
         disabled={ disabled }
         feel={ feel }
         id={ id }
+        key={ element }
         label={ label }
         onInput={ onInput }
         example={ props.example }

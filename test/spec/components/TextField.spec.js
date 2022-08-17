@@ -69,6 +69,23 @@ describe('<TextField>', function() {
   });
 
 
+  it('should use unique input element on element change', function() {
+
+    // given
+    const result = createTextField({ element: {}, container });
+
+    const input = domQuery('.bio-properties-panel-input', container);
+
+    // when
+    createTextField({ element: {}, container }, result.render);
+
+    // then
+    const newInput = domQuery('.bio-properties-panel-input', container);
+
+    expect(newInput).to.not.eql(input);
+  });
+
+
   describe('#isEdited', function() {
 
     it('should NOT be edited', function() {
@@ -411,7 +428,7 @@ describe('<TextField>', function() {
 
 // helpers ////////////////////
 
-function createTextField(options = {}) {
+function createTextField(options = {}, renderFn = render) {
   const {
     element,
     id,
@@ -447,7 +464,7 @@ function createTextField(options = {}) {
     getDescriptionForId
   };
 
-  return render(
+  return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>

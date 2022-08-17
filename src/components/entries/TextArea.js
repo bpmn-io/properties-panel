@@ -111,6 +111,7 @@ export default function TextAreaEntry(props) {
       data-entry-id={ id }>
       <TextArea
         id={ id }
+        key={ element }
         label={ label }
         value={ value }
         onInput={ setValue }

@@ -144,6 +144,7 @@ export default function TextfieldEntry(props) {
         debounce={ debounce }
         disabled={ disabled }
         id={ id }
+        key={ element }
         label={ label }
         onInput={ onInput }
         value={ value } />

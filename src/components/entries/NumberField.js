@@ -105,6 +105,7 @@ export default function NumberFieldEntry(props) {
         debounce={ debounce }
         disabled={ disabled }
         id={ id }
+        key={ element }
         label={ label }
         onInput={ setValue }
         max={ max }

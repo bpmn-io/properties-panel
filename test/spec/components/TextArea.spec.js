@@ -93,6 +93,23 @@ describe('<TextArea>', function() {
   });
 
 
+  it('should use unique input element on element change', function() {
+
+    // given
+    const result = createTextArea({ element: {}, container });
+
+    const input = domQuery('.bio-properties-panel-input', container);
+
+    // when
+    createTextArea({ element: {}, container }, result.render);
+
+    // then
+    const newInput = domQuery('.bio-properties-panel-input', container);
+
+    expect(newInput).to.not.eql(input);
+  });
+
+
   describe('events', function() {
 
     it('should show entry', function() {
@@ -296,7 +313,7 @@ describe('<TextArea>', function() {
 
 // helpers ////////////////////
 
-function createTextArea(options = {}) {
+function createTextArea(options = {}, renderFn = render) {
   const {
     element,
     id,
@@ -333,7 +350,7 @@ function createTextArea(options = {}) {
     getDescriptionForId
   };
 
-  return render(
+  return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>

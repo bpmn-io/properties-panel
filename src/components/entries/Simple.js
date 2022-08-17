@@ -53,6 +53,7 @@ export default function Simple(props) {
     <div class="bio-properties-panel-simple">
       <input
         id={ prefixId(id) }
+        key={ element }
         type="text"
         name={ id }
         spellCheck="false"

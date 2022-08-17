@@ -87,6 +87,7 @@ export default function CheckboxEntry(props) {
       <Checkbox
         disabled={ disabled }
         id={ id }
+        key={ element }
         label={ label }
         onChange={ setValue }
         value={ value } />

@@ -80,6 +80,23 @@ describe('<Checkbox>', function() {
   });
 
 
+  it('should use unique input element on element change', function() {
+
+    // given
+    const result = createCheckbox({ element: {}, container });
+
+    const input = domQuery('.bio-properties-panel-input', container);
+
+    // when
+    createCheckbox({ element: {}, container }, result.render);
+
+    // then
+    const newInput = domQuery('.bio-properties-panel-input', container);
+
+    expect(newInput).to.not.eql(input);
+  });
+
+
   describe('#isEdited', function() {
 
     it('should NOT be edited', function() {
@@ -282,7 +299,7 @@ describe('<Checkbox>', function() {
 
 // helpers ////////////////////
 
-function createCheckbox(options = {}) {
+function createCheckbox(options = {}, renderFn = render) {
   const {
     element,
     id,
@@ -315,7 +332,7 @@ function createCheckbox(options = {}) {
     getDescriptionForId
   };
 
-  return render(
+  return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
