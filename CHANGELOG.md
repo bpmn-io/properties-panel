@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.19.0
+
+* `FEAT`: make group headers sticky ([#175](https://github.com/bpmn-io/properties-panel/pull/175))
+* `CHORE`: use element as key for entries ([#176](https://github.com/bpmn-io/properties-panel/pull/176))
+
 ## 0.18.0
 
 * `FEAT`: pass variables to FEEL editor ([#171](https://github.com/bpmn-io/properties-panel/pull/171))
