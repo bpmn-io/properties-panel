@@ -37,6 +37,7 @@ const CodeEditor = forwardRef((props, ref) => {
     value,
     onInput,
     onFeelToggle,
+    onLint = () => {},
     disabled,
     variables
   } = props;
@@ -78,6 +79,7 @@ const CodeEditor = forwardRef((props, ref) => {
       container: inputRef.current,
       onChange: handleInput,
       onKeyDown: onKeyDown,
+      onLint: onLint,
       value: localValue,
       variables: variables
     });
@@ -87,6 +89,7 @@ const CodeEditor = forwardRef((props, ref) => {
     );
 
     return () => {
+      onLint([]);
       inputRef.current.innerHTML = '';
       setEditor(null);
     };

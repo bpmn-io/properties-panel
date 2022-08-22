@@ -1,6 +1,7 @@
 import Description from '../Description';
 
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -32,6 +33,7 @@ function FeelTextfield(props) {
     id,
     label,
     onInput,
+    onError,
     feel,
     value = '',
     disabled = false,
@@ -103,6 +105,18 @@ function FeelTextfield(props) {
       setFocus(-1);
     }
   };
+
+  const handleLint = useStaticCallback(lint => {
+
+    if (!(lint && lint.length)) {
+      onError(undefined);
+      return;
+    }
+    const error = lint[0];
+    const message = `${error.source}: ${error.message}`;
+
+    onError(message);
+  });
 
   useEffect(() => {
     if (typeof focus !== 'undefined') {
@@ -183,7 +197,8 @@ function FeelTextfield(props) {
             name={ id }
             onInput={ handleLocalInput }
             disabled={ disabled }
-            onFeelToggle={ () => { handleFeelToggle(); setFocus(); } }
+            onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
+            onLint={ handleLint }
             value={ feelOnlyValue }
             variables={ props.variables }
             ref={ editorRef }
@@ -314,6 +329,7 @@ export default function FeelEntry(props) {
 
   const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
   const [ validationError, setValidationError ] = useState(null);
+  const [ localError, setLocalError ] = useState(null);
 
   let value = getValue(element);
 
@@ -347,13 +363,17 @@ export default function FeelEntry(props) {
     setValidationError(newValidationError);
   });
 
+  const onError = useCallback(err => {
+    setLocalError(err);
+  }, []);
+
   if (previousValue === value && validationError) {
     value = cachedInvalidValue;
   }
 
   const temporaryError = useError(id);
 
-  const error = temporaryError || validationError;
+  const error = temporaryError || validationError || localError;
 
   return (
     <div
@@ -371,6 +391,7 @@ export default function FeelEntry(props) {
         key={ element }
         label={ label }
         onInput={ onInput }
+        onError={ onError }
         example={ props.example }
         show={ show }
         value={ value }

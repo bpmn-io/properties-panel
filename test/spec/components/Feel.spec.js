@@ -1101,6 +1101,26 @@ describe('<FeelField>', function() {
         expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
       });
 
+
+      it('should show syntax error', async function() {
+
+        // given
+        const clock = sinon.useFakeTimers();
+        const result = createFeelField({ container, getValue: () => '= foo == bar', feel: 'required' });
+
+        // when
+        // trigger debounced validation
+        clock.tick(1000);
+        clock.restore();
+
+        // wait for DOM update
+        await flushPromises();
+
+        // then
+        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+
+      });
+
     });
 
 
