@@ -517,7 +517,12 @@ textarea.bio-properties-panel-input {
   background-color: var(--input-error-background-color);
 }
 
-.bio-properties-panel-entry.has-error .bio-properties-panel-input:focus {
+.bio-properties-panel-entry.has-error .bio-properties-panel-feel-indicator {
+  border-color: var(--input-error-border-color);
+}
+
+.bio-properties-panel-entry.has-error .bio-properties-panel-input:focus,
+.bio-properties-panel-entry.has-error .bio-properties-panel-feel-indicator:focus {
   border-color: var(--input-error-focus-border-color);
 }
 
