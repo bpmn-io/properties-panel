@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.20.0
+
+* `FEAT`: keep `FEEL` enabled state ([#174](https://github.com/bpmn-io/properties-panel/pull/174))
+* `DEPS`: update to `@bpmn-io/feel-editor@0.3.0`
+
 ## 0.19.0
 
 * `FEAT`: make group headers sticky ([#175](https://github.com/bpmn-io/properties-panel/pull/175))
