@@ -202,37 +202,36 @@ function ItemsList(props) {
     }
   }, [ newItem, autoFocusEntry, id ]);
 
-  return (
-    <ol class={ classnames(
-      'bio-properties-panel-list-entry-items',
-      open ? 'open' : ''
-    ) }>
-      {
-        items.map((item, index) => {
-          const key = getKey(item);
+  return <ol class={ classnames(
+    'bio-properties-panel-list-entry-items',
+    open ? 'open' : ''
+  ) }>
+    {
+      items.map((item, index) => {
+        const key = getKey(item);
 
-          return (<li class="bio-properties-panel-list-entry-item" key={ key }>
-            <Component
-              { ...restProps }
-              element={ element }
-              id={ id }
-              index={ index }
-              item={ item }
-              open={ item === newItem } />
-            {
-              onRemove && (
-                <button
-                  type="button"
-                  title="Delete item"
-                  class="bio-properties-panel-remove-entry bio-properties-panel-remove-list-entry"
-                  onClick={ () => onRemove && onRemove(item) }
-                ><DeleteIcon /></button>
-              )
-            }
-          </li>);
-        })
-      }
-    </ol>);
+        return (<li class="bio-properties-panel-list-entry-item" key={ key }>
+          <Component
+            { ...restProps }
+            element={ element }
+            id={ id }
+            index={ index }
+            item={ item }
+            open={ item === newItem } />
+          {
+            onRemove && (
+              <button
+                type="button"
+                title="Delete item"
+                class="bio-properties-panel-remove-entry bio-properties-panel-remove-list-entry"
+                onClick={ () => onRemove && onRemove(item) }
+              ><DeleteIcon /></button>
+            )
+          }
+        </li>);
+      })
+    }
+  </ol>;
 }
 
 /**

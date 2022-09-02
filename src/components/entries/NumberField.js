@@ -20,7 +20,7 @@ function NumberField(props) {
     value = ''
   } = props;
 
-  const [localValue, setLocalValue] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const handleInputCallback = useMemo(() => {
     return debounce(event => {
@@ -47,7 +47,7 @@ function NumberField(props) {
     }
 
     setLocalValue(value);
-  }, [value]);
+  }, [ value ]);
 
   return (
     <div class="bio-properties-panel-numberfield">

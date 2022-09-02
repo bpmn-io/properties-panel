@@ -26,7 +26,7 @@ function TextArea(props) {
     monospace
   } = props;
 
-  const [localValue, setLocalValue] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const ref = useShowEntryEvent(id);
 
@@ -45,7 +45,7 @@ function TextArea(props) {
     }
 
     setLocalValue(value);
-  }, [value]);
+  }, [ value ]);
 
   return (
     <div class="bio-properties-panel-textarea">

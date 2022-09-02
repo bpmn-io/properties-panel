@@ -24,7 +24,7 @@ insertCoreStyles();
 
 const noop = () => {};
 
-const TEST_TOGGLE_ID='checkbox1';
+const TEST_TOGGLE_ID = 'checkbox1';
 
 
 describe('<ToggleSwitch>', function() {
@@ -280,7 +280,7 @@ describe('<ToggleSwitch>', function() {
 function createToggleSwitch(options = {}) {
   const {
     element,
-    id=TEST_TOGGLE_ID,
+    id = TEST_TOGGLE_ID,
     label,
     description,
     switcherLabel,
