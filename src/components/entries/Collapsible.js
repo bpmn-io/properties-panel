@@ -91,10 +91,12 @@ export default function CollapsibleEntry(props) {
                 id
               } = entry;
 
-              return <Component
-                { ...entry }
-                element={ element }
-                key={ id } />;
+              return (
+                <Component
+                  { ...entry }
+                  element={ element }
+                  key={ id } />
+              );
             })
           }
         </PropertiesPanelContext.Provider>

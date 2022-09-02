@@ -29,7 +29,7 @@ export default function Simple(props) {
 
   const value = getValue(element);
 
-  const [localValue, setLocalValue] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const handleInputCallback = useMemo(() => {
     return debounce(({ target }) => setValue(target.value.length ? target.value : undefined));
@@ -46,7 +46,7 @@ export default function Simple(props) {
     }
 
     setLocalValue(value);
-  }, [value]);
+  }, [ value ]);
 
 
   return (

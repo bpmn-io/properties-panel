@@ -40,7 +40,7 @@ function Select(props) {
 
   const ref = useShowEntryEvent(id);
 
-  const [localValue, setLocalValue] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const handleChangeCallback = ({ target }) => {
     onChange(target.value);
@@ -57,7 +57,7 @@ function Select(props) {
     }
 
     setLocalValue(value);
-  }, [value]);
+  }, [ value ]);
 
   return (
     <div class="bio-properties-panel-select">

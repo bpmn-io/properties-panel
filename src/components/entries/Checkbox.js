@@ -19,7 +19,7 @@ function Checkbox(props) {
     value = false
   } = props;
 
-  const [localValue, setLocalValue] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const handleChangeCallback = ({ target }) => {
     onChange(target.checked);
@@ -36,7 +36,7 @@ function Checkbox(props) {
     }
 
     setLocalValue(value);
-  }, [value]);
+  }, [ value ]);
 
   const ref = useShowEntryEvent(id);
 

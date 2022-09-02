@@ -11,7 +11,7 @@ import { useStaticCallback } from '../../../hooks';
  */
 const useBufferedFocus = function(editor, ref) {
 
-  const [buffer, setBuffer] = useState(undefined);
+  const [ buffer, setBuffer ] = useState(undefined);
 
   ref.current = useMemo(() => ({
     focus: (argument) => {
@@ -21,14 +21,14 @@ const useBufferedFocus = function(editor, ref) {
         setBuffer(argument);
       }
     }
-  }), [editor]);
+  }), [ editor ]);
 
   useEffect(() => {
     if (typeof buffer !== 'undefined' && editor) {
       editor.focus(buffer);
       setBuffer(false);
     }
-  }, [editor, buffer]);
+  }, [ editor, buffer ]);
 };
 
 const CodeEditor = forwardRef((props, ref) => {
@@ -42,8 +42,8 @@ const CodeEditor = forwardRef((props, ref) => {
   } = props;
 
   const inputRef = useRef();
-  const [editor, setEditor] = useState();
-  const [localValue, setLocalValue] = useState(value || '');
+  const [ editor, setEditor ] = useState();
+  const [ localValue, setLocalValue ] = useState(value || '');
 
   useBufferedFocus(editor, ref);
 

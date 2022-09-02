@@ -38,7 +38,7 @@ function FeelTextfield(props) {
     OptionalComponent = OptionalFeelInput
   } = props;
 
-  const [localValue, _setLocalValue] = useState(value);
+  const [ localValue, _setLocalValue ] = useState(value);
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
@@ -46,7 +46,7 @@ function FeelTextfield(props) {
   const feelActive = localValue.startsWith('=') || feel === 'required';
   const feelOnlyValue = localValue.substring(1);
 
-  const [focus, _setFocus] = useState(undefined);
+  const [ focus, _setFocus ] = useState(undefined);
 
   const setFocus = (offset = 0) => {
     const hasFocus = containerRef.current.contains(document.activeElement);
@@ -61,7 +61,7 @@ function FeelTextfield(props) {
     return debounce((newValue) => {
       onInput(newValue);
     });
-  }, [onInput, debounce]);
+  }, [ onInput, debounce ]);
 
   const setLocalValue = newValue => {
     _setLocalValue(newValue);
@@ -109,7 +109,7 @@ function FeelTextfield(props) {
       editorRef.current.focus(focus);
       _setFocus(undefined);
     }
-  }, [focus]);
+  }, [ focus ]);
 
   useEffect(() => {
     if (value === localValue) {
@@ -123,7 +123,7 @@ function FeelTextfield(props) {
     }
 
     setLocalValue(value);
-  }, [value]);
+  }, [ value ]);
 
 
   // copy-paste integration
@@ -158,7 +158,7 @@ function FeelTextfield(props) {
       containerRef.current.removeEventListener('cut', copyHandler);
       containerRef.current.removeEventListener('paste', pasteHandler);
     };
-  }, [containerRef, feelActive, handleFeelToggle, setFocus]);
+  }, [ containerRef, feelActive, handleFeelToggle, setFocus ]);
 
   return (
     <div class="bio-properties-panel-feel-entry">
@@ -312,8 +312,8 @@ export default function FeelEntry(props) {
     show = noop
   } = props;
 
-  const [cachedInvalidValue, setCachedInvalidValue] = useState(null);
-  const [validationError, setValidationError] = useState(null);
+  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
+  const [ validationError, setValidationError ] = useState(null);
 
   let value = getValue(element);
 
@@ -325,7 +325,7 @@ export default function FeelEntry(props) {
 
       setValidationError(newValidationError);
     }
-  }, [value]);
+  }, [ value ]);
 
   const onInput = useStaticCallback((newValue) => {
     let newValidationError = null;

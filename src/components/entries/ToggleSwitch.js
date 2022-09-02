@@ -14,7 +14,7 @@ function ToggleSwitch(props) {
     switcherLabel
   } = props;
 
-  const [localValue, setLocalValue] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const handleInputCallback = async () => {
     onInput(!value);
@@ -31,7 +31,7 @@ function ToggleSwitch(props) {
     }
 
     setLocalValue(value);
-  }, [value]);
+  }, [ value ]);
 
   return (
     <div class="bio-properties-panel-toggle-switch">
