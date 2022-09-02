@@ -4,6 +4,7 @@ export { useEvent } from './useEvent';
 export { useEventBuffer } from './useEventBuffer';
 export { useKeyFactory } from './useKeyFactory';
 export { useLayoutState } from './useLayoutState';
+export { useOverridesContext } from './useOverridesContext';
 export { usePrevious } from './usePrevious';
 export { useShowEntryEvent } from './useShowEntryEvent';
 export { useStickyIntersectionObserver } from './useStickyIntersectionObserver';

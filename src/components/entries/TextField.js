@@ -12,6 +12,7 @@ import { isFunction } from 'min-dash';
 
 import {
   useError,
+  useOverridesContext,
   usePrevious,
   useShowEntryEvent
 } from '../../hooks';
@@ -99,29 +100,41 @@ export default function TextfieldEntry(props) {
   const globalError = useError(id);
   const [ localError, setLocalError ] = useState(null);
 
-  let value = getValue(element);
+  const {
+    getValue: overrideGetValue,
+    setValue: overrideSetValue,
+    validate: overrideValidate
+  } = useOverridesContext(id);
+
+  let value = isFunction(overrideGetValue) ? overrideGetValue(element) : getValue(element);
 
   const previousValue = usePrevious(value);
 
   useEffect(() => {
-    if (isFunction(validate)) {
-      const newValidationError = validate(value) || null;
+    let newValidationError;
 
-      setLocalError(newValidationError);
+    if (isFunction(overrideValidate)) {
+      newValidationError = overrideValidate(value) || null;
+    } else if (isFunction(validate)) {
+      newValidationError = validate(value) || null;
     }
+
+    newValidationError && setLocalError(newValidationError);
   }, [ value ]);
 
   const onInput = (newValue) => {
     let newValidationError = null;
 
-    if (isFunction(validate)) {
+    if (isFunction(overrideValidate)) {
+      newValidationError = overrideValidate(newValue) || null;
+    } else if (isFunction(validate)) {
       newValidationError = validate(newValue) || null;
     }
 
     if (newValidationError) {
       setCachedInvalidValue(newValue);
     } else {
-      setValue(newValue);
+      isFunction(overrideSetValue) ? overrideSetValue(newValue) : setValue(newValue);
     }
 
     setLocalError(newValidationError);

@@ -23,6 +23,7 @@ import {
   ErrorsContext,
   EventContext,
   LayoutContext,
+  OverridesContext,
   PropertiesPanelContext
 } from './context';
 
@@ -36,6 +37,8 @@ const DEFAULT_LAYOUT = {
 };
 
 const DEFAULT_DESCRIPTION = {};
+
+const DEFAULT_OVERRIDES = {};
 
 const bufferedEvents = [
   'propertiesPanel.showEntry',
@@ -101,27 +104,29 @@ const bufferedEvents = [
  * data from implementor to describe *what* will be rendered.
  *
  * @param {Object} props
- * @param {Object|Array} props.element
- * @param {import('./components/Header').HeaderProvider} props.headerProvider
- * @param {PlaceholderProvider} [props.placeholderProvider]
- * @param {Array<GroupDefinition|ListGroupDefinition>} props.groups
- * @param {Object} [props.layoutConfig]
- * @param {Function} [props.layoutChanged]
- * @param {DescriptionConfig} [props.descriptionConfig]
  * @param {Function} [props.descriptionLoaded]
+ * @param {DescriptionConfig} [props.descriptionConfig]
  * @param {Object} [props.eventBus]
+ * @param {Object|Array} props.element
+ * @param {Array<GroupDefinition|ListGroupDefinition>} props.groups
+ * @param {import('./components/Header').HeaderProvider} props.headerProvider
+ * @param {Function} [props.layoutChanged]
+ * @param {Object} [props.layoutConfig]
+ * @param {Object} [props.overridesConfig]
+ * @param {PlaceholderProvider} [props.placeholderProvider]
  */
 export default function PropertiesPanel(props) {
   const {
-    element,
-    headerProvider,
-    placeholderProvider,
-    groups,
-    layoutConfig = {},
-    layoutChanged,
     descriptionConfig = {},
     descriptionLoaded,
-    eventBus
+    element,
+    eventBus,
+    groups,
+    headerProvider,
+    layoutChanged,
+    layoutConfig = {},
+    overridesConfig = {},
+    placeholderProvider
   } = props;
 
   // set-up layout context
@@ -166,6 +171,19 @@ export default function PropertiesPanel(props) {
     getDescriptionForId
   };
 
+  // set-up overrides context
+  const overrides = createOverridesContext(overridesConfig);
+
+  const getOverridesForId = (id) => {
+    return overrides[id] || {};
+  };
+
+  const overridesContext = {
+    overrides,
+    getOverridesForId
+  };
+
+  // set-up errors context
   useEventBuffer(bufferedEvents, eventBus);
 
   const [ errors, setErrors ] = useState({});
@@ -199,38 +217,40 @@ export default function PropertiesPanel(props) {
   return (
     <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
       <ErrorsContext.Provider value={ errorsContext }>
-        <DescriptionContext.Provider value={ descriptionContext }>
-          <LayoutContext.Provider value={ layoutContext }>
-            <EventContext.Provider value={ eventContext }>
-              <div
-                class={ classnames(
-                  'bio-properties-panel',
-                  layout.open ? 'open' : '')
-                }>
-                <Header
-                  element={ element }
-                  headerProvider={ headerProvider } />
-                <div class="bio-properties-panel-scroll-container">
-                  {
-                    groups.map(group => {
-                      const {
-                        component: Component = Group,
-                        id
-                      } = group;
+        <OverridesContext.Provider value={ overridesContext }>
+          <DescriptionContext.Provider value={ descriptionContext }>
+            <LayoutContext.Provider value={ layoutContext }>
+              <EventContext.Provider value={ eventContext }>
+                <div
+                  class={ classnames(
+                    'bio-properties-panel',
+                    layout.open ? 'open' : '')
+                  }>
+                  <Header
+                    element={ element }
+                    headerProvider={ headerProvider } />
+                  <div class="bio-properties-panel-scroll-container">
+                    {
+                      groups.map(group => {
+                        const {
+                          component: Component = Group,
+                          id
+                        } = group;
 
-                      return (
-                        <Component
-                          { ...group }
-                          key={ id }
-                          element={ element } />
-                      );
-                    })
-                  }
+                        return (
+                          <Component
+                            { ...group }
+                            key={ id }
+                            element={ element } />
+                        );
+                      })
+                    }
+                  </div>
                 </div>
-              </div>
-            </EventContext.Provider>
-          </LayoutContext.Provider>
-        </DescriptionContext.Provider>
+              </EventContext.Provider>
+            </LayoutContext.Provider>
+          </DescriptionContext.Provider>
+        </OverridesContext.Provider>
       </ErrorsContext.Provider>
     </PropertiesPanelContext.Provider>
   );
@@ -249,6 +269,13 @@ function createLayout(overrides) {
 function createDescriptionContext(overrides) {
   return {
     ...DEFAULT_DESCRIPTION,
+    ...overrides
+  };
+}
+
+function createOverridesContext(overrides) {
+  return {
+    ...DEFAULT_OVERRIDES,
     ...overrides
   };
 }

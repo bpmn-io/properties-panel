@@ -1,7 +1,10 @@
 import classNames from 'classnames';
 
+import { isFunction } from 'min-dash';
+
 import {
   useError,
+  useOverridesContext,
   useShowEntryEvent
 } from '../../hooks';
 
@@ -111,8 +114,15 @@ export default function SelectEntry(props) {
     disabled
   } = props;
 
-  const value = getValue(element);
-  const options = getOptions(element);
+  const {
+    getValue: overrideGetValue,
+    setValue: overrideSetValue,
+    getOptions: overrideGetOptions
+  } = useOverridesContext(id);
+
+  const value = isFunction(overrideGetValue) ? overrideGetValue(element) : getValue(element);
+  const options = isFunction(overrideGetOptions) ? overrideGetOptions(element) : getOptions(element);
+  const onChange = isFunction(overrideSetValue) ? overrideSetValue : setValue;
 
   const error = useError(id);
 
@@ -128,7 +138,7 @@ export default function SelectEntry(props) {
         key={ element }
         label={ label }
         value={ value }
-        onChange={ setValue }
+        onChange={ onChange }
         options={ options }
         disabled={ disabled } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
