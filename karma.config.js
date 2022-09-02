@@ -66,25 +66,25 @@ module.exports = function(karma) {
             exclude: /node_modules/,
             use: {
               loader: 'babel-loader',
-              options: babelConfig
+              options: {
+                ...babelConfig,
+                plugins: babelConfig.plugins.concat(coverage ? (
+                  [
+                    [ 'istanbul', {
+                      include: [
+                        'src/**'
+                      ]
+                    } ]
+                  ]
+                ) : [])
+              }
             }
           },
           {
             test: /\.svg$/,
             use: [ 'react-svg-loader' ]
           }
-        ].concat(coverage ?
-          {
-            test: /\.js$/,
-            use: {
-              loader: 'istanbul-instrumenter-loader',
-              options: { esModules: true }
-            },
-            enforce: 'post',
-            include: /src\.*/,
-            exclude: /node_modules/
-          } : []
-        )
+        ]
       },
       plugins: [
         new DefinePlugin({
