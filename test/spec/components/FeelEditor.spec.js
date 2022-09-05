@@ -79,22 +79,6 @@ describe('<FeelEditor>', function() {
     expect(suggestions.children).to.have.length(1);
   });
 
-
-  it('should focus on container click', async function() {
-
-    // given
-    render(<Wrapper />, { container });
-
-    const input = domQuery('.bio-properties-panel-input', container);
-    const editor = domQuery('[role="textbox"]', container);
-
-    // when
-    input.click();
-
-    // then
-    expect(document.activeElement).to.equal(editor);
-  });
-
 });
 
 

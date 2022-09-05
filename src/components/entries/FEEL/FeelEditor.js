@@ -105,17 +105,9 @@ const CodeEditor = forwardRef((props, ref) => {
     setLocalValue(value);
   }, [ value ]);
 
-  const handleClick = () => {
-    ref.current.focus();
-  };
 
   return <div class={ classNames('bio-properties-panel-feel-editor-container', disabled ? 'disabled' : null) }>
-    <div
-      name={ props.name }
-      class={ classNames('bio-properties-panel-input', localValue ? 'edited' : null) }
-      ref={ inputRef }
-      onClick={ handleClick }
-    ></div>
+    <div name={ props.name } class={ classNames('bio-properties-panel-input', localValue ? 'edited' : null) } ref={ inputRef }></div>
   </div>;
 });
 
