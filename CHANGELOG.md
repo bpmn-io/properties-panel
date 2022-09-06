@@ -6,6 +6,14 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.20.1
+
+* `FIX`: show FEEL syntax errors ([#173](https://github.com/bpmn-io/properties-panel/pull/173))
+* `FIX`: focus FEEL container on click ([#179](https://github.com/bpmn-io/properties-panel/pull/179))
+* `DEPS`: update to `diagram-js@8.9.0`
+* `DEPS`: update to `min-dash@3.8.1`
+* `DEPS`: update to `min-dom@3.2.1`
+
 ## 0.20.0
 
 * `FEAT`: keep `FEEL` enabled state ([#174](https://github.com/bpmn-io/properties-panel/pull/174))
