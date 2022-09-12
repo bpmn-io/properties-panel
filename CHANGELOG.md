@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.20.2
+
+* `FIX`: ensure focus on `propertiesPanel.showError` ([#182](https://github.com/bpmn-io/properties-panel/pull/182))
+
 ## 0.20.1
 
 * `FIX`: show FEEL syntax errors ([#173](https://github.com/bpmn-io/properties-panel/pull/173))
