@@ -946,6 +946,40 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should render with missing = sign', async function() {
+
+      // given
+      const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('[role="textbox"]', entry);
+
+      // then
+      expect(input.textContent).to.eql('foo');
+    });
+
+
+    it('should update with missing = sign', async function() {
+
+      // given
+      const updateSpy = sinon.spy();
+
+      const result = createFeelField({ container, setValue: updateSpy, getValue: () => 'foo', feel: 'required' });
+
+      const input = domQuery('[role="textbox"]', result.container);
+
+      // when
+      input.textContent += 'o';
+      await flushPromises();
+
+      // then
+      setTimeout(() => {
+        expect(updateSpy).to.have.been.calledWith('=fooo');
+      });
+
+    });
+
+
     it('should not submit empty feel expression', function() {
       const updateSpy = sinon.spy();
 

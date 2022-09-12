@@ -46,7 +46,7 @@ function FeelTextfield(props) {
   const containerRef = useRef();
 
   const feelActive = localValue.startsWith('=') || feel === 'required';
-  const feelOnlyValue = localValue.substring(1);
+  const feelOnlyValue = localValue.startsWith('=') ? localValue.substring(1) : localValue;
 
   const [ focus, _setFocus ] = useState(undefined);
 
