@@ -1,7 +1,6 @@
 export { useDescriptionContext } from './useDescriptionContext';
 export { useError } from './useError';
 export { useEvent } from './useEvent';
-export { useEventBuffer } from './useEventBuffer';
 export { useKeyFactory } from './useKeyFactory';
 export { useLayoutState } from './useLayoutState';
 export { usePrevious } from './usePrevious';

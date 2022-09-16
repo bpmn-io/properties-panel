@@ -26,21 +26,13 @@ import {
   PropertiesPanelContext
 } from './context';
 
-import {
-  useEvent,
-  useEventBuffer
-} from './hooks';
+import { useEvent } from './hooks';
 
 const DEFAULT_LAYOUT = {
   open: true
 };
 
 const DEFAULT_DESCRIPTION = {};
-
-const bufferedEvents = [
-  'propertiesPanel.showEntry',
-  'propertiesPanel.setErrors'
-];
 
 
 /**
@@ -165,8 +157,6 @@ export default function PropertiesPanel(props) {
     description,
     getDescriptionForId
   };
-
-  useEventBuffer(bufferedEvents, eventBus);
 
   const [ errors, setErrors ] = useState({});
 
