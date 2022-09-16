@@ -1,7 +1,7 @@
 import {
   useCallback,
   useContext,
-  useLayoutEffect,
+  useEffect,
   useRef
 } from 'preact/hooks';
 
@@ -35,7 +35,7 @@ export function useShowEntryEvent(id) {
     }
   }, [ id ]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (focus.current && ref.current) {
       if (isFunction(ref.current.focus)) {
         ref.current.focus();
