@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.20.3
+
+* `FIX`: keep first character of FEEL required expression ([#183](https://github.com/bpmn-io/properties-panel/pull/183))
+
 ## 0.20.2
 
 * `FIX`: ensure focus on `propertiesPanel.showError` ([#182](https://github.com/bpmn-io/properties-panel/pull/182))
