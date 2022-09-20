@@ -6,6 +6,14 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.21.0
+
+* `CHORE`: do not refire events during effect phase ([#186](https://github.com/bpmn-io/properties-panel/pull/186))
+
+### BREAKING CHANGES
+
+* events are not refired during effect phase anymore, you might have to use timeouts to ensure the events are being caught
+
 ## 0.20.3
 
 * `FIX`: keep first character of FEEL required expression ([#183](https://github.com/bpmn-io/properties-panel/pull/183))
