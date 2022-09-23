@@ -986,7 +986,7 @@ textarea.bio-properties-panel-input {
   min-height: 28px;
 }
 
-.cm-scroller {
+.bio-properties-panel-feel-container .cm-scroller {
   overflow: hidden !important;
 }
 
@@ -1011,6 +1011,6 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-feel-editor-container,
 .bio-properties-panel-feel-editor-container .bio-properties-panel-input,
-.cm-editor {
+.bio-properties-panel-feel-container .cm-editor {
   min-height: 100%;
 }
