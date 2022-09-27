@@ -9,7 +9,7 @@ ___Note:__ Yet to be released changes appear here._
 ## 0.22.0
 
 * `FIX`: scope `.cm-` styles
-* `DEPS`: update to @bpmn-io/feel-editor@0.4.1
+* `DEPS`: update to `@bpmn-io/feel-editor@0.4.1`
 
 ## 0.21.0
 
