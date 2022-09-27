@@ -32,7 +32,6 @@ describe('<FeelEditor>', function() {
     // given
     const variables = [
       { name: 'foo' },
-      { name: 'bar' },
     ];
 
     render(<Wrapper variables={ variables } />, { container });
@@ -46,7 +45,11 @@ describe('<FeelEditor>', function() {
     await new Promise(res => setTimeout(res, 50));
     const suggestions = domQuery('.cm-tooltip-autocomplete > ul', container);
     expect(suggestions).to.exist;
-    expect(suggestions.children).to.have.length(2);
+
+    const variableSuggestion = [ ...suggestions.children ].find(el => {
+      return el.textContent === 'foo';
+    });
+    expect(variableSuggestion).to.exist;
   });
 
 
@@ -55,7 +58,6 @@ describe('<FeelEditor>', function() {
     // given
     const variables = [
       { name: 'foo' },
-      { name: 'bar' },
     ];
 
     const newVariables = [
@@ -74,9 +76,12 @@ describe('<FeelEditor>', function() {
 
     // then
     await new Promise(res => setTimeout(res, 50));
-    const suggestions = domQuery('.cm-tooltip-autocomplete', container);
-    expect(suggestions).to.exist;
-    expect(suggestions.children).to.have.length(1);
+    const suggestions = domQuery('.cm-tooltip-autocomplete > ul', container);
+
+    const variableSuggestion = [ ...suggestions.children ].find(el => {
+      return el.textContent === 'baz';
+    });
+    expect(variableSuggestion).to.exist;
   });
 
 
