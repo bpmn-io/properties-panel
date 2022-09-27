@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.22.0
+
+* `FIX`: scope `.cm-` styles
+* `DEPS`: update to @bpmn-io/feel-editor@0.4.1
+
 ## 0.21.0
 
 * `CHORE`: do not refire events during effect phase ([#186](https://github.com/bpmn-io/properties-panel/pull/186))
