@@ -9,6 +9,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import pkg from './package.json';
 import babelConfig from './.babelrc.json';
 
+const nonbundledDependencies = Object.keys({ ...pkg.dependencies });
+
 export default [
   {
     input: 'src/index.js',
@@ -25,9 +27,7 @@ export default [
       }
     ],
     external: [
-      'classnames',
-      'min-dash',
-      'min-dom',
+      ...nonbundledDependencies,
 
       // exclude local preact copy to share it with extensions
       /\.\/preact/
