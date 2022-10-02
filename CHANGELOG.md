@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.23.0
+
+* `DEPS`: update modeling utility dependencies
+
 ## 0.22.0
 
 * `FIX`: scope `.cm-` styles
