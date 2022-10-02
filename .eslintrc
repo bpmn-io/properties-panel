@@ -1,6 +1,6 @@
 {
   "extends": [
-    "plugin:bpmn-io/es6",
+    "plugin:bpmn-io/browser",
     "plugin:bpmn-io/jsx",
     "plugin:react-hooks/recommended"
   ],
@@ -12,9 +12,5 @@
   },
   "plugins": [
     "import"
-  ],
-  "env": {
-    "browser": true,
-    "es6": true
-  }
+  ]
 }
