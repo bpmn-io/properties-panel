@@ -37,8 +37,8 @@
   "dependencies": {
     "@bpmn-io/feel-editor": "0.4.1",
     "classnames": "^2.3.1",
-    "min-dash": "^3.8.1",
-    "min-dom": "^3.2.1"
+    "min-dash": "^4.0.0",
+    "min-dom": "^4.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
@@ -58,7 +58,7 @@
     "copy-webpack-plugin": "^9.0.0",
     "cross-env": "^7.0.3",
     "del-cli": "^4.0.0",
-    "diagram-js": "^8.9.0",
+    "diagram-js": "^9.1.0",
     "eslint": "^8.23.0",
     "eslint-plugin-bpmn-io": "^0.14.1",
     "eslint-plugin-import": "^2.23.4",
