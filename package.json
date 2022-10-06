@@ -7,11 +7,12 @@
   "files": [
     "dist",
     "assets",
-    "preact"
+    "preact",
+    "@preact"
   ],
   "scripts": {
     "all": "run-s lint build test",
-    "build": "del-cli preact dist && rollup -c",
+    "build": "del-cli @preact preact dist && rollup -c",
     "build:watch": "rollup -c --watch",
     "lint": "eslint .",
     "dev": "npm test -- --auto-watch --no-single-run",
@@ -44,6 +45,7 @@
     "@babel/cli": "^7.14.5",
     "@babel/core": "^7.14.3",
     "@babel/plugin-transform-react-jsx": "^7.14.3",
+    "@preact/signals": "^1.1.1",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.6",

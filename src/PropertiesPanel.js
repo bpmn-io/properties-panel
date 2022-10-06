@@ -173,16 +173,16 @@ export default function PropertiesPanel(props) {
   };
 
   const propertiesPanelContext = {
-    element
+    element: element.value
   };
 
   // empty state
-  if (placeholderProvider && !element) {
+  if (placeholderProvider && !element.value) {
     return <Placeholder { ...placeholderProvider.getEmpty() } />;
   }
 
   // multiple state
-  if (placeholderProvider && isArray(element)) {
+  if (placeholderProvider && isArray(element.value)) {
     return <Placeholder { ...placeholderProvider.getMultiple() } />;
   }
 
@@ -202,7 +202,7 @@ export default function PropertiesPanel(props) {
                   headerProvider={ headerProvider } />
                 <div class="bio-properties-panel-scroll-container">
                   {
-                    groups.map(group => {
+                    groups.value.map(group => {
                       const {
                         component: Component = Group,
                         id

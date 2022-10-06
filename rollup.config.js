@@ -38,7 +38,8 @@ export default [
         // hook name provided to make sure next plugin has files to replace
         hook: 'buildStart',
         targets: [
-          { src: 'node_modules/preact', dest: '.' }
+          { src: 'node_modules/preact', dest: '.' },
+          { src: 'node_modules/@preact', dest: '.' }
         ]
       }),
       rewirePreactSubpackages(),
