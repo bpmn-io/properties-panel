@@ -80,6 +80,8 @@ function TextArea(props) {
  * @param {string} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  * @param {number} props.rows
  * @param {boolean} props.monospace
  * @param {boolean} [props.disabled]
@@ -95,7 +97,9 @@ export default function TextAreaEntry(props) {
     setValue,
     rows,
     monospace,
-    disabled
+    disabled,
+    onFocus,
+    onBlur
   } = props;
 
   const value = getValue(element);
@@ -115,6 +119,8 @@ export default function TextAreaEntry(props) {
         label={ label }
         value={ value }
         onInput={ setValue }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         rows={ rows }
         debounce={ debounce }
         monospace={ monospace }
