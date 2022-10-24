@@ -1155,6 +1155,43 @@ describe('<FeelField>', function() {
 
       });
 
+
+      it('should show local error over global error', async function() {
+
+        // given
+        const clock = sinon.useFakeTimers();
+        const errors = {
+          foo: 'bar'
+        };
+
+        const result = createFeelField({
+          id: 'foo',
+          container,
+          errors,
+          getValue: () => '= foo == bar',
+          feel: 'required'
+        });
+
+        // assume
+        let errorField = domQuery('.bio-properties-panel-error', result.container);
+        expect(errorField).to.exist;
+        expect(errorField.textContent).to.eql('bar');
+
+        // when
+        // trigger debounced validation
+        clock.tick(1000);
+        clock.restore();
+
+        // wait for DOM update
+        await flushPromises();
+
+        // then
+        errorField = domQuery('.bio-properties-panel-error', result.container);
+        expect(errorField).to.exist;
+        expect(errorField.textContent).not.to.eql('bar');
+
+      });
+
     });
 
 
