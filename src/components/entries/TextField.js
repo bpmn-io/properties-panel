@@ -24,6 +24,8 @@ function Textfield(props) {
     id,
     label,
     onInput,
+    onFocus,
+    onBlur,
     value = ''
   } = props;
 
@@ -63,8 +65,8 @@ function Textfield(props) {
         disabled={ disabled }
         class="bio-properties-panel-input"
         onInput={ handleInput }
-        onFocus={ props.onFocus }
-        onBlur={ props.onBlur }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         value={ localValue } />
     </div>
   );
@@ -80,6 +82,8 @@ function Textfield(props) {
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  * @param {Function} props.validate
  */
 export default function TextfieldEntry(props) {
@@ -92,7 +96,9 @@ export default function TextfieldEntry(props) {
     label,
     getValue,
     setValue,
-    validate
+    validate,
+    onFocus,
+    onBlur
   } = props;
 
   const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
@@ -147,6 +153,8 @@ export default function TextfieldEntry(props) {
         key={ element }
         label={ label }
         onInput={ onInput }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         value={ value } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />

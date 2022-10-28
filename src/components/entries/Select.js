@@ -24,6 +24,8 @@ import Description from './Description';
  * @param {string[]} props.path
  * @param {string} props.label
  * @param {Function} props.onChange
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  * @param {Array<Option>} [props.options]
  * @param {string} props.value
  * @param {boolean} [props.disabled]
@@ -35,7 +37,9 @@ function Select(props) {
     onChange,
     options = [],
     value,
-    disabled
+    disabled,
+    onFocus,
+    onBlur
   } = props;
 
   const ref = useShowEntryEvent(id);
@@ -68,6 +72,8 @@ function Select(props) {
         name={ id }
         class="bio-properties-panel-input"
         onInput={ handleChange }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         value={ localValue }
         disabled={ disabled }
       >
@@ -96,6 +102,8 @@ function Select(props) {
  * @param {string} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  * @param {Function} props.getOptions
  * @param {boolean} [props.disabled]
  */
@@ -108,7 +116,9 @@ export default function SelectEntry(props) {
     getValue,
     setValue,
     getOptions,
-    disabled
+    disabled,
+    onFocus,
+    onBlur
   } = props;
 
   const value = getValue(element);
@@ -129,6 +139,8 @@ export default function SelectEntry(props) {
         label={ label }
         value={ value }
         onChange={ setValue }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         options={ options }
         disabled={ disabled } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }

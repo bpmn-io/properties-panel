@@ -23,7 +23,9 @@ function TextArea(props) {
     onInput,
     value = '',
     disabled,
-    monospace
+    monospace,
+    onFocus,
+    onBlur
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -62,8 +64,8 @@ function TextArea(props) {
           monospace ? 'bio-properties-panel-input-monospace' : '')
         }
         onInput={ handleInput }
-        onFocus={ props.onFocus }
-        onBlur={ props.onBlur }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         rows={ rows }
         value={ localValue }
         disabled={ disabled } />

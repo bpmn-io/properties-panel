@@ -11,7 +11,9 @@ function ToggleSwitch(props) {
     label,
     onInput,
     value,
-    switcherLabel
+    switcherLabel,
+    onFocus,
+    onBlur
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -45,6 +47,8 @@ function ToggleSwitch(props) {
             id={ prefixId(id) }
             class="bio-properties-panel-input"
             type="checkbox"
+            onFocus={ onFocus }
+            onBlur={ onBlur }
             name={ id }
             onInput={ handleInput }
             checked={ localValue } />
@@ -65,6 +69,8 @@ function ToggleSwitch(props) {
  * @param {String} props.switcherLabel
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  */
 export default function ToggleSwitchEntry(props) {
   const {
@@ -74,13 +80,22 @@ export default function ToggleSwitchEntry(props) {
     label,
     switcherLabel,
     getValue,
-    setValue
+    setValue,
+    onFocus,
+    onBlur
   } = props;
 
   const value = getValue(element);
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-toggle-switch-entry" data-entry-id={ id }>
-      <ToggleSwitch id={ id } label={ label } value={ value } onInput={ setValue } switcherLabel={ switcherLabel } />
+      <ToggleSwitch
+        id={ id }
+        label={ label }
+        value={ value }
+        onInput={ setValue }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
+        switcherLabel={ switcherLabel } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
