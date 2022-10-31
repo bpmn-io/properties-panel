@@ -37,6 +37,7 @@ function FeelTextfield(props) {
     feel,
     value = '',
     disabled = false,
+    variables,
     OptionalComponent = OptionalFeelInput
   } = props;
 
@@ -53,7 +54,7 @@ function FeelTextfield(props) {
   const setFocus = (offset = 0) => {
     const hasFocus = containerRef.current.contains(document.activeElement);
 
-    // Keep carret position if it is already focused, otherwise focus at the end
+    // Keep caret position if it is already focused, otherwise focus at the end
     const position = hasFocus ? document.activeElement.selectionStart : Infinity;
 
     _setFocus(position + offset);
@@ -200,7 +201,7 @@ function FeelTextfield(props) {
             onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
             onLint={ handleLint }
             value={ feelOnlyValue }
-            variables={ props.variables }
+            variables={ variables }
             ref={ editorRef }
           /> :
           <OptionalComponent
@@ -220,7 +221,9 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     id,
     disabled,
     onInput,
-    value
+    value,
+    onFocus,
+    onBlur
   } = props;
 
   const inputRef = useRef();
@@ -255,8 +258,8 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     disabled={ disabled }
     class="bio-properties-panel-input"
     onInput={ e => onInput(e.target.value) }
-    onFocus={ props.onFocus }
-    onBlur={ props.onBlur }
+    onFocus={ onFocus }
+    onBlur={ onBlur }
     value={ value || '' } />;
 });
 
@@ -266,7 +269,9 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
     id,
     disabled,
     onInput,
-    value
+    value,
+    onFocus,
+    onBlur
   } = props;
 
   const inputRef = useRef();
@@ -295,8 +300,8 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
     disabled={ disabled }
     class="bio-properties-panel-input"
     onInput={ e => onInput(e.target.value) }
-    onFocus={ props.onFocus }
-    onBlur={ props.onBlur }
+    onFocus={ onFocus }
+    onBlur={ onBlur }
     value={ value || '' } />;
 });
 
@@ -324,7 +329,11 @@ export default function FeelEntry(props) {
     getValue,
     setValue,
     validate,
-    show = noop
+    show = noop,
+    example,
+    variables,
+    onFocus,
+    onBlur
   } = props;
 
   const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
@@ -392,10 +401,12 @@ export default function FeelEntry(props) {
         label={ label }
         onInput={ onInput }
         onError={ onError }
-        example={ props.example }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
+        example={ example }
         show={ show }
         value={ value }
-        variables={ props.variables }
+        variables={ variables }
         OptionalComponent={ props.OptionalComponent } />
       {error && <div class="bio-properties-panel-error">{error}</div>}
       <Description forId={ id } element={ element } value={ description } />
@@ -414,6 +425,8 @@ export default function FeelEntry(props) {
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  * @param {Function} props.validate
  */
 export function FeelTextArea(props) {

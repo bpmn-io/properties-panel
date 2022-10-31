@@ -17,7 +17,9 @@ function NumberField(props) {
     min,
     onInput,
     step,
-    value = ''
+    value = '',
+    onFocus,
+    onBlur
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -63,6 +65,8 @@ function NumberField(props) {
         max={ max }
         min={ min }
         onInput={ handleInput }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         step={ step }
         value={ localValue } />
     </div>
@@ -81,6 +85,8 @@ function NumberField(props) {
  * @param {String} props.max
  * @param {String} props.min
  * @param {Function} props.setValue
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  * @param {String} props.step
  */
 export default function NumberFieldEntry(props) {
@@ -95,7 +101,9 @@ export default function NumberFieldEntry(props) {
     max,
     min,
     setValue,
-    step
+    step,
+    onFocus,
+    onBlur
   } = props;
 
   const value = getValue(element);
@@ -108,6 +116,8 @@ export default function NumberFieldEntry(props) {
         key={ element }
         label={ label }
         onInput={ setValue }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         max={ max }
         min={ min }
         step={ step }

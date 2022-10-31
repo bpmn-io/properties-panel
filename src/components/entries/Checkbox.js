@@ -16,7 +16,9 @@ function Checkbox(props) {
     label,
     onChange,
     disabled,
-    value = false
+    value = false,
+    onFocus,
+    onBlur
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -46,6 +48,8 @@ function Checkbox(props) {
         ref={ ref }
         id={ prefixId(id) }
         name={ id }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         type="checkbox"
         class="bio-properties-panel-input"
         onChange={ handleChange }
@@ -65,6 +69,8 @@ function Checkbox(props) {
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  * @param {boolean} [props.disabled]
  */
 export default function CheckboxEntry(props) {
@@ -75,7 +81,9 @@ export default function CheckboxEntry(props) {
     label,
     getValue,
     setValue,
-    disabled
+    disabled,
+    onFocus,
+    onBlur
   } = props;
 
   const value = getValue(element);
@@ -90,6 +98,8 @@ export default function CheckboxEntry(props) {
         key={ element }
         label={ label }
         onChange={ setValue }
+        onFocus={ onFocus }
+        onBlur={ onBlur }
         value={ value } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
