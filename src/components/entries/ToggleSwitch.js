@@ -51,7 +51,7 @@ function ToggleSwitch(props) {
             onBlur={ onBlur }
             name={ id }
             onInput={ handleInput }
-            checked={ localValue } />
+            checked={ !!localValue } />
           <span class="bio-properties-panel-toggle-switch__slider" />
         </label>
         <p class="bio-properties-panel-toggle-switch__label">{ switcherLabel }</p>
