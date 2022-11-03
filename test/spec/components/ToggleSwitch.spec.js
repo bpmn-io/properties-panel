@@ -80,24 +80,65 @@ describe('<ToggleSwitch>', function() {
   });
 
 
-  it('should set checked according to value', function() {
+  describe('set checked according to value', function() {
 
-    // given
-    const getValueFunctions = [
-      () => true,
-      () => false
+    // [value, checked]
+    const possibleValues = [
+      [ true, true ],
+      [ false, false ],
+      [ undefined, false ],
+      [ {}, true ]
     ];
 
-    getValueFunctions.forEach(fn => {
+    possibleValues.forEach(([ value, checked ]) => {
 
-      // when
-      const result = createToggleSwitch({ container, getValue: fn });
+      it(`should set checked to ${checked} for ${value}`, function() {
 
-      // then
-      const toggle = domQuery(`#bio-properties-panel-${TEST_TOGGLE_ID}`, result.container);
+        // when
+        const result = createToggleSwitch({ container, getValue: () => value });
 
-      expect(toggle.checked).to.equal(fn());
+        // then
+        const toggle = domQuery(`#bio-properties-panel-${TEST_TOGGLE_ID}`, result.container);
+
+        expect(toggle.checked).to.equal(checked);
+
+      });
+
     });
+
+  });
+
+
+  describe('update on external change', function() {
+
+    // [initialValue, updatedValue, checked]
+    const possibleValues = [
+      [ true, false, false ],
+      [ false, true, true ],
+      [ undefined, {}, true ],
+      [ {}, undefined, false ]
+    ];
+
+    possibleValues.forEach(([ initial, updated, checked ]) => {
+
+      it(`should update ${initial} -> ${updated}`, function() {
+
+        // given
+        const givenFn = () => initial;
+        const updatedFn = () => updated;
+        const result = createToggleSwitch({ container, getValue: givenFn });
+
+        // when
+        createToggleSwitch({ container, getValue: updatedFn }, result.rerender);
+
+        // then
+        const toggle = domQuery(`#bio-properties-panel-${TEST_TOGGLE_ID}`, result.container);
+        expect(toggle.checked).to.equal(checked);
+
+      });
+
+    });
+
   });
 
 
@@ -277,7 +318,7 @@ describe('<ToggleSwitch>', function() {
 
 // helpers ////////////////////
 
-function createToggleSwitch(options = {}) {
+function createToggleSwitch(options = {}, renderFn = render) {
   const {
     element,
     id = TEST_TOGGLE_ID,
@@ -296,7 +337,7 @@ function createToggleSwitch(options = {}) {
     getDescriptionForId
   };
 
-  return render(
+  return renderFn(
     <DescriptionContext.Provider value={ context }>
       <ToggleSwitch
         element={ element }
