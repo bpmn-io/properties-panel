@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.24.0
+
+* `FEAT`: expose `onFocus` and `onBlur` callbacks ([#191](https://github.com/bpmn-io/properties-panel/pull/191))
+* `FIX`: uncheck `ToggleSwitch` when value is `undefined` ([#193](https://github.com/bpmn-io/properties-panel/pull/193))
+* `CHORE`: show local FEEL error over global error ([#192](https://github.com/bpmn-io/properties-panel/pull/192))
+
 ## 0.23.0
 
 * `DEPS`: update modeling utility dependencies
