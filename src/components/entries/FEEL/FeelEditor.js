@@ -96,7 +96,7 @@ const CodeEditor = forwardRef((props, ref) => {
       inputRef.current.innerHTML = '';
       setEditor(null);
     };
-  }, [ variables ]);
+  }, []);
 
   useEffect(() => {
     if (!editor) {
@@ -110,6 +110,14 @@ const CodeEditor = forwardRef((props, ref) => {
     editor.setValue(value);
     setLocalValue(value);
   }, [ value ]);
+
+  useEffect(() => {
+    if (!editor) {
+      return;
+    }
+
+    editor.setVariables(variables);
+  }, [ variables ]);
 
   const handleClick = () => {
     ref.current.focus();

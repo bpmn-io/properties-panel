@@ -1516,12 +1516,46 @@ describe('<FeelField>', function() {
 
   });
 
+
+  describe('variables', function() {
+
+    it('should maintain focus when variables change', function() {
+
+      // given
+      const element = {};
+      const props = {
+        container,
+        element,
+        feel: 'required',
+        getValue: () => '=foo',
+        variables: [
+          { name: 'foo', type: 'string' }
+        ]
+      };
+      const field = createFeelField(props);
+
+      const input = domQuery('[contenteditable]', field.container);
+      input.focus();
+
+      // when
+      createFeelField({
+        ...props,
+        variables: [
+          { name: 'bar', type: 'string' }
+        ]
+      }, field.render);
+
+      // then
+      expect(document.activeElement).to.equal(input);
+    });
+  });
+
 });
 
 
 // helpers ////////////////////
 
-function createFeelField(options = {}) {
+function createFeelField(options = {}, renderFn = render) {
   const {
     element,
     id,
@@ -1538,7 +1572,8 @@ function createFeelField(options = {}) {
     container,
     eventBus = new EventBus(),
     onShow = noop,
-    errors = {}
+    errors = {},
+    variables
   } = options;
 
   const errorsContext = {
@@ -1558,7 +1593,7 @@ function createFeelField(options = {}) {
     getDescriptionForId
   };
 
-  return render(
+  return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
@@ -1573,7 +1608,9 @@ function createFeelField(options = {}) {
               setValue={ setValue }
               debounce={ debounce }
               validate={ validate }
-              feel={ feel } />
+              feel={ feel }
+              variables={ variables }
+            />
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>
