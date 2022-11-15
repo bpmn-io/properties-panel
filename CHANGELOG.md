@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.24.1
+
+* `FIX`: buffer all focus events for FEEL entries ([#197](https://github.com/bpmn-io/properties-panel/pull/197))
+
 ## 0.24.0
 
 * `FEAT`: expose `onFocus` and `onBlur` callbacks ([#191](https://github.com/bpmn-io/properties-panel/pull/191))
