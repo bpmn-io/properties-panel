@@ -12,7 +12,7 @@ import {
   insertCoreStyles
 } from 'test/TestHelper';
 
-import { useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { fireEvent } from '@testing-library/preact';
 
 import FeelComponent from 'src/components/entries/FEEL/FeelEditor';
@@ -100,6 +100,27 @@ describe('<FeelEditor>', function() {
     expect(document.activeElement).to.equal(editor);
   });
 
+
+  it('should focus on external event', async function() {
+
+    // given
+    function FocusComponent() {
+      const ref = useRef();
+
+      useEffect(() => {
+        ref.current.focus();
+      }, []);
+
+      return <FeelComponent ref={ ref } />;
+    }
+
+    // when
+    render(<FocusComponent />, { container });
+
+    // then
+    const editor = domQuery('[role="textbox"]', container);
+    expect(document.activeElement).to.equal(editor);
+  });
 });
 
 

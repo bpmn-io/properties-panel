@@ -14,11 +14,14 @@ const useBufferedFocus = function(editor, ref) {
   const [ buffer, setBuffer ] = useState(undefined);
 
   ref.current = useMemo(() => ({
-    focus: (argument) => {
+    focus: (offset) => {
       if (editor) {
-        editor.focus(argument);
+        editor.focus(offset);
       } else {
-        setBuffer(argument);
+        if (typeof offset === 'undefined') {
+          offset = Infinity;
+        }
+        setBuffer(offset);
       }
     }
   }), [ editor ]);
