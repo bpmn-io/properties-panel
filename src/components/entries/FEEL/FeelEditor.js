@@ -42,6 +42,7 @@ const CodeEditor = forwardRef((props, ref) => {
     onFeelToggle,
     onLint = () => {},
     disabled,
+    tooltipContainer,
     variables
   } = props;
 
@@ -83,6 +84,7 @@ const CodeEditor = forwardRef((props, ref) => {
       onChange: handleInput,
       onKeyDown: onKeyDown,
       onLint: onLint,
+      tooltipContainer: tooltipContainer,
       value: localValue,
       variables: variables
     });

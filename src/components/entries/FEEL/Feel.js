@@ -38,6 +38,7 @@ function FeelTextfield(props) {
     value = '',
     disabled = false,
     variables,
+    tooltipContainer,
     OptionalComponent = OptionalFeelInput
   } = props;
 
@@ -203,6 +204,7 @@ function FeelTextfield(props) {
             value={ feelOnlyValue }
             variables={ variables }
             ref={ editorRef }
+            tooltipContainer={ tooltipContainer }
           /> :
           <OptionalComponent
             { ...props }
@@ -328,6 +330,7 @@ export default function FeelEntry(props) {
     label,
     getValue,
     setValue,
+    tooltipContainer,
     validate,
     show = noop,
     example,
@@ -407,6 +410,7 @@ export default function FeelEntry(props) {
         show={ show }
         value={ value }
         variables={ variables }
+        tooltipContainer={ tooltipContainer }
         OptionalComponent={ props.OptionalComponent } />
       {error && <div class="bio-properties-panel-error">{error}</div>}
       <Description forId={ id } element={ element } value={ description } />
