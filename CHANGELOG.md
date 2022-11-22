@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.25.0
+
+* `FEAT`: allow to configure tooltip container ([#198](https://github.com/bpmn-io/properties-panel/pull/198))
+
 ## 0.24.1
 
 * `FIX`: buffer all focus events for FEEL entries ([#197](https://github.com/bpmn-io/properties-panel/pull/197))
