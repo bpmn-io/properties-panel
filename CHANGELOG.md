@@ -9,6 +9,8 @@ ___Note:__ Yet to be released changes appear here._
 ## 0.24.1
 
 * `FIX`: buffer all focus events for FEEL entries ([#197](https://github.com/bpmn-io/properties-panel/pull/197))
+* `FIX`: maintain focus when variables passed to FEEL entry change ([#196](https://github.com/bpmn-io/properties-panel/issues/196))
+* `DEPS`: update to `@bpmn-io/feel-editor@0.6.0`
 
 ## 0.24.0
 
@@ -71,7 +73,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ### BREAKING CHANGES
 
-* `TextFieldEntry` and `TextAreaEntry` no longer support the `feel` prop. 
+* `TextFieldEntry` and `TextAreaEntry` no longer support the `feel` prop.
   Use `FeelEntry` or `FeelTextAreaEntry` instead.
 
 ## 0.16.0
@@ -96,7 +98,7 @@ ___Note:__ Yet to be released changes appear here._
 
 * `FEAT`: enable multiple and empty state ([#69](https://github.com/bpmn-io/properties-panel/issues/69))
 * `FEAT`: make group headers sticky ([#151](https://github.com/bpmn-io/properties-panel/pull/151))
-* `FIX`: fix outline on header buttons ([#148](https://github.com/bpmn-io/properties-panel/pull/148)) 
+* `FIX`: fix outline on header buttons ([#148](https://github.com/bpmn-io/properties-panel/pull/148))
 
 ## 0.13.2
 
