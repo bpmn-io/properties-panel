@@ -304,7 +304,9 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
     onInput={ e => onInput(e.target.value) }
     onFocus={ onFocus }
     onBlur={ onBlur }
-    value={ value || '' } />;
+    value={ value || '' }
+    data-gramm="false"
+  />;
 });
 
 /**

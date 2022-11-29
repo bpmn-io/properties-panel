@@ -512,6 +512,19 @@ describe('<FeelField>', function() {
     });
 
 
+    // https://github.com/bpmn-io/bpmn-js-properties-panel/issues/810
+    it('should be flagged with data-gramm="false"', function() {
+
+      // when
+      createFeelTextArea({ container });
+
+      const input = domQuery('.bio-properties-panel-input', container);
+
+      // then
+      expect(input.dataset.gramm).to.eql('false');
+    });
+
+
     it('should update', function() {
 
       // given
