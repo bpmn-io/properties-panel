@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.0.1
+
+* `FIX`: disable Grammarly extension ([#201](https://github.com/bpmn-io/properties-panel/pull/201))
+
 ## 1.0.0
 
 _Re-release of 0.25.0 as stable._
