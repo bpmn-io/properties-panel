@@ -110,6 +110,19 @@ describe('<TextArea>', function() {
   });
 
 
+  // https://github.com/bpmn-io/bpmn-js-properties-panel/issues/810
+  it('should be flagged with data-gramm="false"', function() {
+
+    // when
+    createTextArea({ container });
+
+    const input = domQuery('.bio-properties-panel-input', container);
+
+    // then
+    expect(input.dataset.gramm).to.eql('false');
+  });
+
+
   describe('events', function() {
 
     it('should show entry', function() {

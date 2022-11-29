@@ -68,7 +68,9 @@ function TextArea(props) {
         onBlur={ onBlur }
         rows={ rows }
         value={ localValue }
-        disabled={ disabled } />
+        disabled={ disabled }
+        data-gramm="false"
+      />
     </div>
   );
 }
