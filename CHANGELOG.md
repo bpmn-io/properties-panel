@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.0.0
+
+_Re-release of 0.25.0 as stable._
+
 ## 0.25.0
 
 * `FEAT`: allow to configure tooltip container ([#198](https://github.com/bpmn-io/properties-panel/pull/198))
