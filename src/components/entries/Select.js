@@ -36,7 +36,7 @@ function Select(props) {
     label,
     onChange,
     options = [],
-    value,
+    value = '',
     disabled,
     onFocus,
     onBlur

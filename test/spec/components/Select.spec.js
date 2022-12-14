@@ -69,6 +69,49 @@ describe('<Select>', function() {
   });
 
 
+  describe('should select', function() {
+
+    const getOptions = () => [
+      {
+        label: 'A',
+        value: 'A'
+      },
+      {
+        label: 'B',
+        value: 'B'
+      }
+    ];
+
+
+    it('none (undefined value)', function() {
+
+      // when
+      const result = createSelect({ container, getOptions, getValue: () => undefined });
+
+      const selectInput = domQuery('.bio-properties-panel-input', result.container);
+
+      // then
+      expect(selectInput.value).to.equal('');
+    });
+
+
+    it('active entry', function() {
+
+      // when
+      const result = createSelect({ container, getOptions, getValue: () => 'A' });
+
+      const selectInput = domQuery('.bio-properties-panel-input', result.container);
+
+      const optionA = domQuery('option[value="A"]', selectInput);
+
+      // then
+      expect(selectInput.value).to.equal('A');
+      expect(optionA.selected).to.be.true;
+    });
+
+  });
+
+
   it('should render disabled', function() {
 
     // given
