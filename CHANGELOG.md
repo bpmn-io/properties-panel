@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.1.1
+
+* `FIX`: ensure `<Select />` always sets value ([#203](https://github.com/bpmn-io/properties-panel/pull/203))
+
 ## 1.1.0
 
 * `DEPS`: update to `@bpmn-io/feel-editor@0.7.0`
