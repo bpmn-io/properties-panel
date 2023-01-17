@@ -1,10 +1,19 @@
+import Description from './Description';
+
 import {
   useEffect,
   useMemo,
   useState
 } from 'preact/hooks';
 
-import Description from './Description';
+import classnames from 'classnames';
+
+import { isFunction } from 'min-dash';
+
+import {
+  useError,
+  usePrevious
+} from '../../hooks';
 
 function NumberField(props) {
 
@@ -88,6 +97,7 @@ function NumberField(props) {
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  * @param {String} props.step
+ * @param {Function} props.validate
  */
 export default function NumberFieldEntry(props) {
   const {
@@ -103,25 +113,66 @@ export default function NumberFieldEntry(props) {
     setValue,
     step,
     onFocus,
-    onBlur
+    onBlur,
+    validate
   } = props;
 
-  const value = getValue(element);
+  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
+  const globalError = useError(id);
+  const [ localError, setLocalError ] = useState(null);
+
+  let value = getValue(element);
+
+  const previousValue = usePrevious(value);
+
+  useEffect(() => {
+    if (isFunction(validate)) {
+      const newValidationError = validate(value) || null;
+
+      setLocalError(newValidationError);
+    }
+  }, [ value ]);
+
+  const onInput = (newValue) => {
+    let newValidationError = null;
+
+    if (isFunction(validate)) {
+      newValidationError = validate(newValue) || null;
+    }
+
+    if (newValidationError) {
+      setCachedInvalidValue(newValue);
+    } else {
+      setValue(newValue);
+    }
+
+    setLocalError(newValidationError);
+  };
+
+  if (previousValue === value && localError) {
+    value = cachedInvalidValue;
+  }
+
+  const error = globalError || localError;
+
   return (
-    <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <div class={ classnames(
+      'bio-properties-panel-entry',
+      error ? 'has-error' : '') } data-entry-id={ id }>
       <NumberField
         debounce={ debounce }
         disabled={ disabled }
         id={ id }
         key={ element }
         label={ label }
-        onInput={ setValue }
         onFocus={ onFocus }
         onBlur={ onBlur }
+        onInput={ onInput }
         max={ max }
         min={ min }
         step={ step }
         value={ value } />
+      { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
