@@ -5,6 +5,7 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
+  classes as domClasses,
   query as domQuery
 } from 'min-dom';
 
@@ -17,7 +18,8 @@ import {
 import NumberField, { isEdited } from 'src/components/entries/NumberField';
 
 import {
-  DescriptionContext
+  DescriptionContext,
+  ErrorsContext
 } from 'src/context';
 
 insertCoreStyles();
@@ -178,6 +180,120 @@ describe('<NumberField>', function() {
 
       // then
       expect(isEdited(input)).to.be.true;
+    });
+
+  });
+
+  describe('errors', function() {
+
+    it('should get error', function() {
+
+      // given
+      const errors = {
+        foo: 'bar'
+      };
+
+      const result = createNumberField({ container, errors, id: 'foo' });
+
+      // then
+      expect(isValid(domQuery('.bio-properties-panel-entry', result.container))).to.be.false;
+      expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+    });
+
+  });
+
+
+  describe('validation', function() {
+
+    it('should set valid', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'bar') {
+          return 'error';
+        }
+      };
+
+      const result = createNumberField({ container, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 2);
+
+      // then
+      expect(isValid(entry)).to.be.true;
+    });
+
+
+    it('should set invalid', function() {
+
+      // given
+      const validate = (v) => {
+        if (v % 2 !== 0) {
+          return 'should be even';
+        }
+      };
+
+      const result = createNumberField({ container, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 3);
+
+      // then
+      expect(isValid(entry)).to.be.false;
+    });
+
+
+    it('should keep showing invalid value', function() {
+
+      // given
+      const validate = (v) => {
+        if (v % 2 !== 0) {
+          return 'should be even';
+        }
+      };
+
+      const result = createNumberField({ container, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 3);
+
+      // then
+      expect(input.value).to.eql('3');
+    });
+
+
+    it('should show error message', function() {
+
+      // given
+      const validate = (v) => {
+        if (v % 2 !== 0) {
+          return 'should be even';
+        }
+      };
+
+      const result = createNumberField({ container, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 3);
+
+      const error = domQuery('.bio-properties-panel-error', entry);
+
+      // then
+      expect(error).to.exist;
+      expect(error.innerText).to.eql('should be even');
     });
 
   });
@@ -344,11 +460,17 @@ function createNumberField(options = {}, renderFn = render) {
     max,
     min,
     setValue = noop,
+    validate = noop,
     step,
     descriptionConfig = {},
     getDescriptionForId = noop,
-    container
+    container,
+    errors = {}
   } = options;
+
+  const errorsContext = {
+    errors
+  };
 
   const context = {
     description: descriptionConfig,
@@ -356,22 +478,30 @@ function createNumberField(options = {}, renderFn = render) {
   };
 
   return renderFn(
-    <DescriptionContext.Provider value={ context }>
-      <NumberField
-        element={ element }
-        debounce={ debounce }
-        description={ description }
-        disabled={ disabled }
-        getValue={ getValue }
-        id={ id }
-        label={ label }
-        max={ max }
-        min={ min }
-        setValue={ setValue }
-        step={ step } />
-    </DescriptionContext.Provider>,
+    <ErrorsContext.Provider value={ errorsContext }>
+      <DescriptionContext.Provider value={ context }>
+        <NumberField
+          element={ element }
+          debounce={ debounce }
+          description={ description }
+          disabled={ disabled }
+          getValue={ getValue }
+          id={ id }
+          label={ label }
+          max={ max }
+          min={ min }
+          setValue={ setValue }
+          step={ step }
+          validate={ validate } />
+      </DescriptionContext.Provider>
+    </ErrorsContext.Provider>
+    ,
     {
       container
     }
   );
+}
+
+function isValid(node) {
+  return !domClasses(node).has('has-error');
 }
