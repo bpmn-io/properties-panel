@@ -354,6 +354,15 @@
   background-color: var(--dot-color);
 }
 
+.bio-properties-panel-error-icon {
+  align-self: center;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  margin: 12px;
+  background-color: var(--color-red-360-100-40);
+}
+
 /**
  * Lists
  */

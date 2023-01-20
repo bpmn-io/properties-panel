@@ -13,6 +13,7 @@ import {
 } from 'min-dom';
 
 import {
+  isDefined,
   isFunction
 } from 'min-dash';
 
@@ -50,6 +51,7 @@ export default function Group(props) {
   const toggleOpen = () => setOpen(!open);
 
   const [ edited, setEdited ] = useState(false);
+  const [ error, setError ] = useState(false);
 
   const [ sticky, setSticky ] = useState(false);
 
@@ -75,6 +77,18 @@ export default function Group(props) {
     setEdited(hasOneEditedEntry);
   }, [ entries ]);
 
+  const updateError = () => {
+    if (domQuery('.bio-properties-panel-error')) {
+      setError(true);
+      console.log('updateError', true);
+
+    } else {
+      setError(false);
+      console.log('updateError', false);
+
+    }
+  };
+
   // set css class when group is sticky to top
   useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
 
@@ -95,7 +109,10 @@ export default function Group(props) {
       </div>
       <div class="bio-properties-panel-group-header-buttons">
         {
-          edited && <DataMarker />
+          !error && edited && <DataMarker />
+        }
+        {
+          error && <Error />
         }
         <button
           title="Toggle section"
@@ -121,7 +138,8 @@ export default function Group(props) {
               <Component
                 { ...entry }
                 element={ element }
-                key={ id } />
+                key={ id }
+                updateError={ updateError } />
             );
           })
         }
@@ -133,5 +151,11 @@ export default function Group(props) {
 function DataMarker() {
   return (
     <div title="Section contains data" class="bio-properties-panel-dot"></div>
+  );
+}
+
+function Error() {
+  return (
+    <div class="bio-properties-panel-error-icon"></div>
   );
 }

@@ -98,7 +98,8 @@ export default function TextfieldEntry(props) {
     setValue,
     validate,
     onFocus,
-    onBlur
+    onBlur,
+    updateError
   } = props;
 
   const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
@@ -116,6 +117,13 @@ export default function TextfieldEntry(props) {
       setLocalError(newValidationError);
     }
   }, [ value ]);
+
+
+  useEffect(() => {
+    if (isFunction(updateError))
+      updateError();
+  }, [ localError ]);
+
 
   const onInput = (newValue) => {
     let newValidationError = null;
@@ -155,7 +163,8 @@ export default function TextfieldEntry(props) {
         onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
-        value={ value } />
+        value={ value }
+        updateError={ updateError } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
