@@ -209,8 +209,8 @@ describe('<NumberField>', function() {
 
       // given
       const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
+        if (v % 2 !== 0) {
+          return 'should be even';
         }
       };
 
@@ -294,6 +294,50 @@ describe('<NumberField>', function() {
       // then
       expect(error).to.exist;
       expect(error.innerText).to.eql('should be even');
+    });
+
+
+    it('should call setValue if validation succeeds', function() {
+
+      // given
+      const validate = (v) => {
+        if (v % 2 !== 0) {
+          return 'should be even';
+        }
+      };
+
+      const setValueSpy = sinon.spy();
+
+      const result = createNumberField({ container, validate, setValue: setValueSpy });
+      const entry = domQuery('.bio-properties-panel-entry .bio-properties-panel-input', result.container);
+
+      // when
+      changeInput(entry, 2);
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith(2);
+    });
+
+
+    it('should NOT call setValue if validation fails', function() {
+
+      // given
+      const validate = (v) => {
+        if (v % 2 !== 0) {
+          return 'should be even';
+        }
+      };
+
+      const setValueSpy = sinon.spy();
+
+      const result = createNumberField({ container, validate, setValue: setValueSpy });
+      const entry = domQuery('.bio-properties-panel-entry .bio-properties-panel-input', result.container);
+
+      // when
+      changeInput(entry, 3);
+
+      // then
+      expect(setValueSpy).to.not.have.been.called;
     });
 
   });
