@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.2.0
+
+* `FEAT`: enable `NumberFieldEntry` validation and linting ([#206](https://github.com/bpmn-io/properties-panel/issues/206))
+
 ## 1.1.1
 
 * `FIX`: ensure `<Select />` always sets value ([#203](https://github.com/bpmn-io/properties-panel/pull/203))
