@@ -303,6 +303,37 @@ describe('<TextArea>', function() {
   });
 
 
+  describe('auto resize', function() {
+
+    it('should resize textarea', function() {
+
+      // given
+      const result = createTextArea({
+        container,
+        id: 'textarea',
+        autoResize: true
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+      const initialHeight = input.clientHeight;
+
+      // when
+      changeInput(input, 'foo\nbar');
+
+      // then
+      expect(input.clientHeight).to.be.greaterThan(initialHeight);
+
+      // when
+      changeInput(input, 'foo');
+
+      // then
+      expect(input.clientHeight).to.be.greaterThan(initialHeight);
+
+    });
+
+  });
+
+
   describe('a11y', function() {
 
     it('should have no violations', async function() {
