@@ -2,6 +2,7 @@ import Description from './Description';
 
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState
 } from 'preact/hooks';
@@ -12,6 +13,11 @@ import {
   useError,
   useShowEntryEvent
 } from '../../hooks';
+
+function resizeToContents(element) {
+  element.style.height = 'auto';
+  element.style.height = Math.min(element.scrollHeight + 2, 150) + 'px';
+}
 
 function TextArea(props) {
 
@@ -40,13 +46,14 @@ function TextArea(props) {
   const handleInput = e => {
     handleInputCallback(e);
 
-    if (autoResize) {
-      e.target.style.height = 'auto';
-      e.target.style.height = Math.min(e.target.scrollHeight + 2, 150) + 'px';
-    }
+    autoResize && resizeToContents(e.target);
 
     setLocalValue(e.target.value);
   };
+
+  useLayoutEffect(() => {
+    autoResize && resizeToContents(ref.current);
+  }, []);
 
   useEffect(() => {
     if (value === localValue) {
