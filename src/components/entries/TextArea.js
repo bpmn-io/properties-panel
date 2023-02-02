@@ -25,7 +25,8 @@ function TextArea(props) {
     disabled,
     monospace,
     onFocus,
-    onBlur
+    onBlur,
+    autoResize
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -38,6 +39,12 @@ function TextArea(props) {
 
   const handleInput = e => {
     handleInputCallback(e);
+
+    if (autoResize) {
+      e.target.style.height = 'auto';
+      e.target.style.height = (e.target.scrollHeight) + 'px';
+    }
+
     setLocalValue(e.target.value);
   };
 
@@ -61,7 +68,8 @@ function TextArea(props) {
         spellCheck="false"
         class={ classnames(
           'bio-properties-panel-input',
-          monospace ? 'bio-properties-panel-input-monospace' : '')
+          monospace ? 'bio-properties-panel-input-monospace' : '',
+          autoResize ? 'auto-resize' : '')
         }
         onInput={ handleInput }
         onFocus={ onFocus }
@@ -103,7 +111,8 @@ export default function TextAreaEntry(props) {
     monospace,
     disabled,
     onFocus,
-    onBlur
+    onBlur,
+    autoResize
   } = props;
 
   const value = getValue(element);
@@ -128,7 +137,8 @@ export default function TextAreaEntry(props) {
         rows={ rows }
         debounce={ debounce }
         monospace={ monospace }
-        disabled={ disabled } />
+        disabled={ disabled }
+        autoResize={ autoResize } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
