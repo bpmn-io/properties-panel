@@ -42,7 +42,7 @@ function TextArea(props) {
 
     if (autoResize) {
       e.target.style.height = 'auto';
-      e.target.style.height = (e.target.scrollHeight) + 'px';
+      e.target.style.height = Math.min(e.target.scrollHeight + 2, 150) + 'px';
     }
 
     setLocalValue(e.target.value);

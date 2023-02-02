@@ -318,17 +318,18 @@ describe('<TextArea>', function() {
       const initialHeight = input.clientHeight;
 
       // when
-      changeInput(input, 'foo\nbar');
+      changeInput(input, 'foo\nbar\nbar\nbar');
+      const enlargedHeight = input.clientHeight;
 
       // then
-      expect(input.clientHeight).to.be.greaterThan(initialHeight);
+      expect(enlargedHeight).to.be.greaterThan(initialHeight);
 
       // when
       changeInput(input, 'foo');
+      const shrinkedHeight = input.clientHeight;
 
       // then
-      expect(input.clientHeight).to.be.greaterThan(initialHeight);
-
+      expect(shrinkedHeight).to.be.lessThan(enlargedHeight);
     });
 
   });
