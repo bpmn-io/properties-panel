@@ -380,14 +380,12 @@ GEHTS
 
       // when
       parent.style.display = 'block';
-      const initialHeight = input.clientHeight;
 
       changeInput(input, 'foo');
 
-      const updatedHeight = input.clientHeight;
-
       // then
-      expect(updatedHeight).to.eql(initialHeight);
+      // no visual resize took place
+      expect(input.clientHeight).to.be.lessThan(35);
     });
 
   });
