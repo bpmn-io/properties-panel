@@ -15,10 +15,6 @@ import {
 } from '../../hooks';
 
 function resizeToContents(element) {
-  if (!element.scrollHeight) {
-    return;
-  }
-
   element.style.height = 'auto';
 
   // a 2px pixel offset is required to prevent scrollbar from
