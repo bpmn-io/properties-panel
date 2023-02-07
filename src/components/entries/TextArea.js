@@ -15,8 +15,12 @@ import {
 } from '../../hooks';
 
 function resizeToContents(element) {
+  if (!element.scrollHeight) {
+    return;
+  }
+
   element.style.height = 'auto';
-  element.style.height = Math.min(element.scrollHeight + 2, 150) + 'px';
+  element.style.height = Math.min(element.scrollHeight, 150) + 'px';
 }
 
 function TextArea(props) {
@@ -24,7 +28,6 @@ function TextArea(props) {
   const {
     id,
     label,
-    rows = 2,
     debounce,
     onInput,
     value = '',
@@ -32,7 +35,8 @@ function TextArea(props) {
     monospace,
     onFocus,
     onBlur,
-    autoResize
+    autoResize,
+    rows = autoResize ? 1 : 2
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);

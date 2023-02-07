@@ -7,6 +7,7 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
+  domify,
   classes as domClasses,
   query as domQuery
 } from 'min-dom';
@@ -357,6 +358,36 @@ GEHTS
 
       // then
       expect(shrinkedHeight).to.be.lessThan(enlargedHeight);
+    });
+
+
+    it('should NOT resize on single line input when initially was display: none', function() {
+
+      // given
+      const parent = domify('<div style="display: none;"></div>');
+      container.appendChild(parent);
+
+      const style = domify('<style>.bio-properties-panel-input { box-sizing: border-box; }</style>');
+      parent.appendChild(style);
+
+      const result = createTextArea({
+        container: parent,
+        id: 'textarea',
+        autoResize: true
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      parent.style.display = 'block';
+      const initialHeight = input.clientHeight;
+
+      changeInput(input, 'foo');
+
+      const updatedHeight = input.clientHeight;
+
+      // then
+      expect(updatedHeight).to.eql(initialHeight);
     });
 
   });
