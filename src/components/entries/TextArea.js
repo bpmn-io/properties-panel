@@ -20,7 +20,10 @@ function resizeToContents(element) {
   }
 
   element.style.height = 'auto';
-  element.style.height = Math.min(element.scrollHeight, 150) + 'px';
+
+  // a 2px pixel offset is required to prevent scrollbar from
+  // appearing on OS with a full length scroll bar (Windows/Linux)
+  element.style.height = `${ element.scrollHeight + 2 }px`;
 }
 
 function TextArea(props) {
