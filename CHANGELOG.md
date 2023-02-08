@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.3.1
+
+* `FIX`: don't grow `TextAreaEntry` on first input ([#216](https://github.com/bpmn-io/properties-panel/pull/216))
+
 ## 1.3.0
 
 * `FEAT`: allow `TextAreaEntry` to be auto-resizeable ([#214](https://github.com/bpmn-io/properties-panel/pull/214))
