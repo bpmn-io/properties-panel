@@ -16,7 +16,10 @@ import {
 
 function resizeToContents(element) {
   element.style.height = 'auto';
-  element.style.height = Math.min(element.scrollHeight + 2, 150) + 'px';
+
+  // a 2px pixel offset is required to prevent scrollbar from
+  // appearing on OS with a full length scroll bar (Windows/Linux)
+  element.style.height = `${ element.scrollHeight + 2 }px`;
 }
 
 function TextArea(props) {
@@ -24,7 +27,6 @@ function TextArea(props) {
   const {
     id,
     label,
-    rows = 2,
     debounce,
     onInput,
     value = '',
@@ -32,7 +34,8 @@ function TextArea(props) {
     monospace,
     onFocus,
     onBlur,
-    autoResize
+    autoResize,
+    rows = autoResize ? 1 : 2
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
