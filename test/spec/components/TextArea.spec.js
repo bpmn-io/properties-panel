@@ -7,6 +7,7 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
+  domify,
   classes as domClasses,
   query as domQuery
 } from 'min-dom';
@@ -298,6 +299,93 @@ describe('<TextArea>', function() {
 
       expect(description).to.exist;
       expect(description.innerText).to.equal('myExplicitDescription');
+    });
+
+  });
+
+
+  describe('auto resize', function() {
+
+    it('should resize initially', function() {
+
+      // given
+      const result = createTextArea({
+        container,
+        id: 'textarea',
+        getValue() {
+          return `
+HALLO
+WELT
+WIE
+GEHTS
+`;
+        },
+        autoResize: true
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const initialHeight = input.clientHeight;
+
+      // then
+      expect(initialHeight).to.be.greaterThan(60);
+    });
+
+
+    it('should resize on input', function() {
+
+      // given
+      const result = createTextArea({
+        container,
+        id: 'textarea',
+        autoResize: true
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+      const initialHeight = input.clientHeight;
+
+      // when
+      changeInput(input, 'foo\nbar\nbar\nbar');
+      const enlargedHeight = input.clientHeight;
+
+      // then
+      expect(enlargedHeight).to.be.greaterThan(initialHeight);
+
+      // when
+      changeInput(input, 'foo');
+      const shrinkedHeight = input.clientHeight;
+
+      // then
+      expect(shrinkedHeight).to.be.lessThan(enlargedHeight);
+    });
+
+
+    it('should NOT resize on single line input when initially was display: none', function() {
+
+      // given
+      const parent = domify('<div style="display: none;"></div>');
+      container.appendChild(parent);
+
+      const style = domify('<style>.bio-properties-panel-input { box-sizing: border-box; }</style>');
+      parent.appendChild(style);
+
+      const result = createTextArea({
+        container: parent,
+        id: 'textarea',
+        autoResize: true
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      parent.style.display = 'block';
+
+      changeInput(input, 'foo');
+
+      // then
+      // no visual resize took place
+      expect(input.clientHeight).to.be.lessThan(35);
     });
 
   });

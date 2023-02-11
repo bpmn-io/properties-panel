@@ -2,6 +2,7 @@ import Description from './Description';
 
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState
 } from 'preact/hooks';
@@ -13,19 +14,28 @@ import {
   useShowEntryEvent
 } from '../../hooks';
 
+function resizeToContents(element) {
+  element.style.height = 'auto';
+
+  // a 2px pixel offset is required to prevent scrollbar from
+  // appearing on OS with a full length scroll bar (Windows/Linux)
+  element.style.height = `${ element.scrollHeight + 2 }px`;
+}
+
 function TextArea(props) {
 
   const {
     id,
     label,
-    rows = 2,
     debounce,
     onInput,
     value = '',
     disabled,
     monospace,
     onFocus,
-    onBlur
+    onBlur,
+    autoResize,
+    rows = autoResize ? 1 : 2
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -38,8 +48,15 @@ function TextArea(props) {
 
   const handleInput = e => {
     handleInputCallback(e);
+
+    autoResize && resizeToContents(e.target);
+
     setLocalValue(e.target.value);
   };
+
+  useLayoutEffect(() => {
+    autoResize && resizeToContents(ref.current);
+  }, []);
 
   useEffect(() => {
     if (value === localValue) {
@@ -61,7 +78,8 @@ function TextArea(props) {
         spellCheck="false"
         class={ classnames(
           'bio-properties-panel-input',
-          monospace ? 'bio-properties-panel-input-monospace' : '')
+          monospace ? 'bio-properties-panel-input-monospace' : '',
+          autoResize ? 'auto-resize' : '')
         }
         onInput={ handleInput }
         onFocus={ onFocus }
@@ -103,7 +121,8 @@ export default function TextAreaEntry(props) {
     monospace,
     disabled,
     onFocus,
-    onBlur
+    onBlur,
+    autoResize
   } = props;
 
   const value = getValue(element);
@@ -128,7 +147,8 @@ export default function TextAreaEntry(props) {
         rows={ rows }
         debounce={ debounce }
         monospace={ monospace }
-        disabled={ disabled } />
+        disabled={ disabled }
+        autoResize={ autoResize } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
