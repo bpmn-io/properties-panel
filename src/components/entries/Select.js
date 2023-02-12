@@ -13,8 +13,7 @@ import {
 import Description from './Description';
 
 /**
- * @typedef { { value: string, label: string, disabled: boolean, groupKey: (string|undefined) } } Option
- * @typedef { { key: string, label: string } } OptionGroup
+ * @typedef { { value: string, label: string, disabled: boolean, children: { value: string, label: string, disabled: boolean } } } Option
  */
 
 /**
@@ -30,7 +29,6 @@ import Description from './Description';
  * @param {Array<Option>} [props.options]
  * @param {string} props.value
  * @param {boolean} [props.disabled]
- * @param {Array<OptionGroup>} [props.groups]
  */
 function Select(props) {
   const {
@@ -38,7 +36,6 @@ function Select(props) {
     label,
     onChange,
     options = [],
-    groups = [],
     value = '',
     disabled,
     onFocus,
@@ -82,31 +79,29 @@ function Select(props) {
         value={ localValue }
         disabled={ disabled }
       >
-        {groups.map((group, idx) => (
-          <optgroup key={ idx } label={ group.label }>
-            {options
-              .filter((option) => option.groupKey === group.key)
-              .map((option, idx) => (
-                <option
-                  key={ idx }
-                  value={ option.name }
-                  disabled={ option.disabled }
-                >
-                  {option.label}
-                </option>
-              ))}
-          </optgroup>
-        ))}
-
-        {options
-          .filter((option) => !option.groupKey)
-          .map((option, idx) => {
+        {options.map((option, idx) => {
+          if (option.children) {
             return (
-              <option key={ idx } value={ option.value } disabled={ option.disabled }>
-                {option.label}
-              </option>
+              <optgroup key={ idx } label={ option.label }>
+                {option.children.map((child, idx) => (
+                  <option
+                    key={ idx }
+                    value={ child.value }
+                    disabled={ child.disabled }
+                  >
+                    {child.label}
+                  </option>
+                ))}
+              </optgroup>
             );
-          })}
+          }
+
+          return (
+            <option key={ idx } value={ option.value } disabled={ option.disabled }>
+              {option.label}
+            </option>
+          );
+        })}
       </select>
     </div>
   );
@@ -124,7 +119,6 @@ function Select(props) {
  * @param {Function} props.onBlur
  * @param {Function} props.getOptions
  * @param {boolean} [props.disabled]
- * @param {Function} [props.getGroups]
  */
 export default function SelectEntry(props) {
   const {
@@ -135,7 +129,6 @@ export default function SelectEntry(props) {
     getValue,
     setValue,
     getOptions,
-    getGroups,
     disabled,
     onFocus,
     onBlur
@@ -143,12 +136,6 @@ export default function SelectEntry(props) {
 
   const value = getValue(element);
   const options = getOptions(element);
-  let groups;
-
-  if (getGroups) {
-    groups = getGroups(element);
-  }
-
   const error = useError(id);
 
   return (
@@ -167,7 +154,6 @@ export default function SelectEntry(props) {
         onFocus={ onFocus }
         onBlur={ onBlur }
         options={ options }
-        groups={ groups }
         disabled={ disabled } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />

@@ -402,7 +402,7 @@ describe('<Select>', function() {
 
   describe('groups', function() {
 
-    it('should render without groups per default', function() {
+    it('should render without children per default', function() {
 
       // given
       const result = createSelect({
@@ -417,18 +417,28 @@ describe('<Select>', function() {
     });
 
 
-    it('should render with groups if set per props', function() {
+    it('should render with children if set per props', function() {
 
       // given
       const result = createSelect({
         container,
         id: 'groupsSelect',
         label: 'someLabel',
-        getGroups: () => [
+        getOptions: () => [
           {
-            key: 'first-group',
-            label: 'first group'
-          }
+            label: 'first group',
+            children: [
+              {
+                label: 'Test option 1',
+                value: 'test1'
+              },
+              {
+                label: 'Test option 2',
+                value: 'test2',
+                disabled: true
+              },
+            ]
+          },
         ]
       });
 
