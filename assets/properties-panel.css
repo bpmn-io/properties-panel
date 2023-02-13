@@ -455,7 +455,7 @@ textarea.bio-properties-panel-input,
   width: 100%;
 }
 
-textarea.bio-properties-panel-input.auto-resize {
+textarea.bio-properties-panel-input {
   min-height: 28px;
 }
 
