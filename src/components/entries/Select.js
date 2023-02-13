@@ -13,7 +13,7 @@ import {
 import Description from './Description';
 
 /**
- * @typedef { { value: string, label: string, disabled: boolean } } Option
+ * @typedef { { value: string, label: string, disabled: boolean, children: { value: string, label: string, disabled: boolean } } } Option
  */
 
 /**
@@ -65,7 +65,9 @@ function Select(props) {
 
   return (
     <div class="bio-properties-panel-select">
-      <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
+      <label for={ prefixId(id) } class="bio-properties-panel-label">
+        {label}
+      </label>
       <select
         ref={ ref }
         id={ prefixId(id) }
@@ -77,18 +79,29 @@ function Select(props) {
         value={ localValue }
         disabled={ disabled }
       >
-        {
-          options.map((option, idx) => {
+        {options.map((option, idx) => {
+          if (option.children) {
             return (
-              <option
-                key={ idx }
-                value={ option.value }
-                disabled={ option.disabled }>
-                { option.label }
-              </option>
+              <optgroup key={ idx } label={ option.label }>
+                {option.children.map((child, idx) => (
+                  <option
+                    key={ idx }
+                    value={ child.value }
+                    disabled={ child.disabled }
+                  >
+                    {child.label}
+                  </option>
+                ))}
+              </optgroup>
             );
-          })
-        }
+          }
+
+          return (
+            <option key={ idx } value={ option.value } disabled={ option.disabled }>
+              {option.label}
+            </option>
+          );
+        })}
       </select>
     </div>
   );
@@ -123,7 +136,6 @@ export default function SelectEntry(props) {
 
   const value = getValue(element);
   const options = getOptions(element);
-
   const error = useError(id);
 
   return (

@@ -400,6 +400,59 @@ describe('<Select>', function() {
 
   });
 
+  describe('groups', function() {
+
+    it('should render without children per default', function() {
+
+      // given
+      const result = createSelect({
+        container,
+        id: 'noGroupsSelect'
+      });
+
+      // then
+      const groups = domQuery('[data-entry-id="noGroupsSelect"] optgroup',
+        result.container);
+      expect(groups).not.to.exist;
+    });
+
+
+    it('should render with children if set per props', function() {
+
+      // given
+      const result = createSelect({
+        container,
+        id: 'groupsSelect',
+        label: 'someLabel',
+        getOptions: () => [
+          {
+            label: 'first group',
+            children: [
+              {
+                label: 'Test option 1',
+                value: 'test1'
+              },
+              {
+                label: 'Test option 2',
+                value: 'test2',
+                disabled: true
+              },
+            ]
+          },
+        ]
+      });
+
+      // then
+      const groups = domQuery(
+        '[data-entry-id="groupsSelect"] optgroup',
+        result.container
+      );
+
+      expect(groups).to.exist;
+      expect(groups.label).to.equal('first group');
+    });
+  });
+
 
   describe('a11y', function() {
 
