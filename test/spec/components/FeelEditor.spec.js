@@ -13,7 +13,7 @@ import {
 } from 'test/TestHelper';
 
 import { useEffect, useRef } from 'preact/hooks';
-import { fireEvent } from '@testing-library/preact';
+import { fireEvent, waitFor } from '@testing-library/preact';
 
 import FeelComponent from 'src/components/entries/FEEL/FeelEditor';
 
@@ -42,9 +42,11 @@ describe('<FeelEditor>', function() {
     fireEvent.keyDown(document.activeElement, { key: ' ', ctrlKey: true });
 
     // then
-    await new Promise(res => setTimeout(res, 50));
-    const suggestions = domQuery('.cm-tooltip-autocomplete > ul', container);
-    expect(suggestions).to.exist;
+    let suggestions;
+    await waitFor(() => {
+      suggestions = domQuery('.cm-tooltip-autocomplete > ul', container);
+      expect(suggestions).to.exist;
+    });
 
     const variableSuggestion = [ ...suggestions.children ].find(el => {
       return el.textContent === 'foo';
@@ -75,8 +77,11 @@ describe('<FeelEditor>', function() {
     fireEvent.keyDown(document.activeElement, { key: ' ', ctrlKey: true });
 
     // then
-    await new Promise(res => setTimeout(res, 50));
-    const suggestions = domQuery('.cm-tooltip-autocomplete > ul', container);
+    let suggestions;
+    await waitFor(() => {
+      suggestions = domQuery('.cm-tooltip-autocomplete > ul', container);
+      expect(suggestions).to.exist;
+    });
 
     const variableSuggestion = [ ...suggestions.children ].find(el => {
       return el.textContent === 'baz';
