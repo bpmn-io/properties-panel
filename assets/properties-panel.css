@@ -421,6 +421,14 @@
   border-radius: 3px;
 }
 
+.bio-properties-panel-description pre code {
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+  padding: 4px 6px;
+  font-family: var(--font-family-monospace);
+}
+
 .bio-properties-panel-description ul {
   padding: 0;
   margin: 0 0 0 12px;
