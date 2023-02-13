@@ -1,5 +1,6 @@
 import { act } from 'preact/test-utils';
 
+import { waitFor } from '@testing-library/dom';
 import {
   render
 } from '@testing-library/preact/pure';
@@ -416,7 +417,7 @@ describe('<FeelField>', function() {
 
     describe('toggle', function() {
 
-      it('should toggle feel active', async function() {
+      it('should toggle feel active', function() {
 
         // given
         const updateSpy = sinon.spy();
@@ -434,12 +435,12 @@ describe('<FeelField>', function() {
 
         // when
         icon.click();
-        await flushPromises();
 
         // then
-        expect(updateSpy).to.have.been.calledWith('=foo');
-        expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
-
+        return waitFor(() => {
+          expect(updateSpy).to.have.been.calledWith('=foo');
+          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+        });
       });
 
 
@@ -464,7 +465,7 @@ describe('<FeelField>', function() {
       });
 
 
-      it('should toggle on paste with FEEL mime type', async function() {
+      it('should toggle on paste with FEEL mime type', function() {
 
         // given
         const updateSpy = sinon.spy();
@@ -488,11 +489,11 @@ describe('<FeelField>', function() {
 
         // when
         input.dispatchEvent(paste);
-        await flushPromises();
 
         // then
-        expect(updateSpy).to.have.been.calledWith('=foo');
-
+        return waitFor(() => {
+          expect(updateSpy).to.have.been.calledWith('=foo');
+        });
       });
 
     });
@@ -873,7 +874,7 @@ describe('<FeelField>', function() {
 
     describe('toggle', function() {
 
-      it('should toggle feel active', async function() {
+      it('should toggle feel active', function() {
 
         // given
         const updateSpy = sinon.spy();
@@ -891,12 +892,12 @@ describe('<FeelField>', function() {
 
         // when
         icon.click();
-        await flushPromises();
 
         // then
-        expect(updateSpy).to.have.been.calledWith('=foo');
-        expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
-
+        return waitFor(() => {
+          expect(updateSpy).to.have.been.calledWith('=foo');
+          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+        });
       });
 
 
@@ -938,7 +939,7 @@ describe('<FeelField>', function() {
     });
 
 
-    it('should update', async function() {
+    it('should update', function() {
 
       // given
       const updateSpy = sinon.spy();
@@ -949,13 +950,11 @@ describe('<FeelField>', function() {
 
       // when
       input.textContent = 'foo';
-      await flushPromises();
 
       // then
-      setTimeout(() => {
+      return waitFor(() => {
         expect(updateSpy).to.have.been.calledWith('=foo');
       });
-
     });
 
 
@@ -972,7 +971,7 @@ describe('<FeelField>', function() {
     });
 
 
-    it('should update with missing = sign', async function() {
+    it('should update with missing = sign', function() {
 
       // given
       const updateSpy = sinon.spy();
@@ -983,13 +982,11 @@ describe('<FeelField>', function() {
 
       // when
       input.textContent += 'o';
-      await flushPromises();
 
       // then
-      setTimeout(() => {
+      return waitFor(() => {
         expect(updateSpy).to.have.been.calledWith('=fooo');
       });
-
     });
 
 
@@ -1089,7 +1086,7 @@ describe('<FeelField>', function() {
       });
 
 
-      it('should be edited after update', async function() {
+      it('should be edited after update', function() {
 
         // given
         const result = createFeelField({ container, feel: 'required' });
@@ -1102,10 +1099,11 @@ describe('<FeelField>', function() {
 
         // when
         contentEditable.textContent = 'foo';
-        await flushPromises();
 
         // then
-        expect(isEdited(input)).to.be.true;
+        return waitFor(() => {
+          expect(isEdited(input)).to.be.true;
+        });
       });
 
     });
@@ -1149,7 +1147,7 @@ describe('<FeelField>', function() {
       });
 
 
-      it('should show syntax error', async function() {
+      it('should show syntax error', function() {
 
         // given
         const clock = sinon.useFakeTimers();
@@ -1160,16 +1158,14 @@ describe('<FeelField>', function() {
         clock.tick(1000);
         clock.restore();
 
-        // wait for DOM update
-        await flushPromises();
-
         // then
-        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
-
+        return waitFor(() => {
+          expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+        });
       });
 
 
-      it('should show local error over global error', async function() {
+      it('should show local error over global error', function() {
 
         // given
         const clock = sinon.useFakeTimers();
@@ -1195,14 +1191,12 @@ describe('<FeelField>', function() {
         clock.tick(1000);
         clock.restore();
 
-        // wait for DOM update
-        await flushPromises();
-
         // then
-        errorField = domQuery('.bio-properties-panel-error', result.container);
-        expect(errorField).to.exist;
-        expect(errorField.textContent).not.to.eql('bar');
-
+        return waitFor(() => {
+          errorField = domQuery('.bio-properties-panel-error', result.container);
+          expect(errorField).to.exist;
+          expect(errorField.textContent).not.to.eql('bar');
+        });
       });
 
     });
@@ -1210,7 +1204,7 @@ describe('<FeelField>', function() {
 
     describe('validation', function() {
 
-      it('should set valid', async function() {
+      it('should set valid', function() {
 
         // given
         const validate = (v) => {
@@ -1227,14 +1221,15 @@ describe('<FeelField>', function() {
 
         // when
         input.textContent = 'foo';
-        await flushPromises();
 
         // then
-        expect(isValid(entry)).to.be.true;
+        return waitFor(() => {
+          expect(isValid(entry)).to.be.true;
+        });
       });
 
 
-      it('should set invalid', async function() {
+      it('should set invalid', function() {
 
         // given
         const validate = (v) => {
@@ -1250,14 +1245,15 @@ describe('<FeelField>', function() {
 
         // when
         input.textContent = 'bar';
-        await flushPromises();
 
         // then
-        expect(isValid(entry)).to.be.false;
+        return waitFor(() => {
+          expect(isValid(entry)).to.be.false;
+        });
       });
 
 
-      it('should keep showing invalid value', async function() {
+      it('should keep showing invalid value', function() {
 
         // given
         const validate = (v) => {
@@ -1273,14 +1269,15 @@ describe('<FeelField>', function() {
 
         // when
         input.textContent = 'bar';
-        await flushPromises();
 
         // then
-        expect(input.textContent).to.eql('bar');
+        return waitFor(() => {
+          expect(input.textContent).to.eql('bar');
+        });
       });
 
 
-      it('should show error message', async function() {
+      it('should show error message', function() {
 
         // given
         const validate = (v) => {
@@ -1296,13 +1293,13 @@ describe('<FeelField>', function() {
 
         // when
         input.textContent = 'bar';
-        await flushPromises();
-
-        const error = domQuery('.bio-properties-panel-error', entry);
 
         // then
-        expect(error).to.exist;
-        expect(error.innerText).to.eql('error');
+        return waitFor(() => {
+          const error = domQuery('.bio-properties-panel-error', entry);
+          expect(error).to.exist;
+          expect(error.innerText).to.eql('error');
+        });
       });
 
     });
@@ -1700,8 +1697,4 @@ function createFeelTextArea(options = {}, renderFn = render) {
 
 function isValid(node) {
   return !domClasses(node).has('has-error');
-}
-
-async function flushPromises() {
-  await new Promise(resolve => setTimeout(resolve, 0));
 }
