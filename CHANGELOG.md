@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.4.0 
+
+* `FEAT`: add `optgroup` option for selects ([#204](https://github.com/bpmn-io/properties-panel/pull/204))
+* `FIX`: enfore general minimum `TextAreaEntry` height ([#220](https://github.com/bpmn-io/properties-panel/pull/220))
+* `FIX`: style `pre` blocks in descriptions ([#219](https://github.com/bpmn-io/properties-panel/pull/219))
+
 ## 1.3.1
 
 * `FIX`: don't grow `TextAreaEntry` on first input ([#216](https://github.com/bpmn-io/properties-panel/pull/216))
