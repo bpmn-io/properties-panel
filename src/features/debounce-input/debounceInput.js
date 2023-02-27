@@ -2,6 +2,7 @@ import {
   debounce,
   isNumber
 } from 'min-dash';
+import { keepEventTarget } from '../../utils/shadow-dom';
 
 const DEFAULT_DEBOUNCE_TIME = 300;
 
@@ -14,7 +15,7 @@ export default function debounceInput(debounceDelay) {
           debounceDelay :
           DEFAULT_DEBOUNCE_TIME;
 
-      return debounce(fn, debounceTime);
+      return keepEventTarget(debounce(fn, debounceTime));
     } else {
       return fn;
     }
