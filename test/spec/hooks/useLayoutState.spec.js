@@ -4,6 +4,7 @@ import {
 } from '@testing-library/preact-hooks';
 
 import {
+  assign,
   get,
   set
 } from 'min-dash';
@@ -15,8 +16,7 @@ import {
 import {
   LayoutContext
 } from 'src/context';
-
-const noop = () => {};
+import { useContext, useState } from 'preact/hooks';
 
 
 describe('hooks/useLayoutState', function() {
@@ -72,7 +72,7 @@ describe('hooks/useLayoutState', function() {
   });
 
 
-  it('should set to layout context', function() {
+  it('should set to layout context', async function() {
 
     // given
     const layout = {
@@ -81,18 +81,20 @@ describe('hooks/useLayoutState', function() {
       }
     };
 
-    const setLayoutForKey = (path, value) => set(layout, path, value);
-
     const path = [ 'a', 'b' ];
 
     const wrapper = createLayout({
-      setLayoutForKey,
       layout
     });
 
-    const { result } = renderHook(() => useLayoutState(path), { wrapper });
+    const { result } = renderHook(() => {
+      return {
+        state: useLayoutState(path),
+        context: useContext(LayoutContext)
+      };
+    }, { wrapper });
 
-    const [ , setState ] = result.current;
+    const [ , setState ] = result.current.state;
 
     const newValue = 'newValue';
 
@@ -101,11 +103,13 @@ describe('hooks/useLayoutState', function() {
       setState(newValue);
     });
 
-    const [ value ] = result.current;
+    const [ value ] = result.current.state;
+    const newLayout = result.current.context.layout;
+
 
     // then
     expect(value).to.eql(newValue);
-    expect(layout).to.eql({
+    expect(newLayout).to.eql({
       a: {
         b: newValue
       }
@@ -118,17 +122,30 @@ describe('hooks/useLayoutState', function() {
 // helper ////////////////////
 
 function createLayout(props = {}) {
-  const {
-    layout = {},
-    getLayoutForKey = noop,
-    setLayoutForKey = noop
-  } = props;
 
-  const context = {
-    layout,
-    getLayoutForKey,
-    setLayoutForKey
+  return ({ children }) => {
+    const {
+      layout = {},
+    } = props;
+
+    const [ _layout, setLayout ] = useState(layout);
+
+    const getLayoutForKey = props.getLayoutForKey || function(path, defaultValue) {
+      return get(_layout, path) || defaultValue;
+    };
+
+    const setLayoutForKey = props.setLayoutForKey || function(path, value) {
+      const newLayout = assign({}, layout);
+      set(newLayout, path, value);
+      setLayout(newLayout);
+    };
+
+    const context = {
+      layout: _layout,
+      getLayoutForKey,
+      setLayoutForKey
+    };
+
+    return <LayoutContext.Provider value={ context }>{children}</LayoutContext.Provider>;
   };
-
-  return ({ children }) => <LayoutContext.Provider value={ context }>{children}</LayoutContext.Provider>;
 }

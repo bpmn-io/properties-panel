@@ -1,4 +1,4 @@
-import { useContext } from 'preact/hooks';
+import { useContext, useEffect, useState } from 'preact/hooks';
 
 import {
   act,
@@ -22,7 +22,7 @@ import {
 
 import ListGroup from 'src/components/ListGroup';
 
-import { PropertiesPanelContext } from 'src/context';
+import { PropertiesPanelContext, LayoutContext } from 'src/context';
 
 insertCoreStyles();
 
@@ -134,7 +134,7 @@ describe('<ListGroup>', function() {
     const Entry = () => {
       const { onShow } = useContext(PropertiesPanelContext);
 
-      onShow();
+      useEffect(onShow, []);
     };
 
     const items = [
@@ -1122,7 +1122,7 @@ describe('<ListGroup>', function() {
 function createListGroup(options = {}, renderFn = render) {
   const {
     element = noopElement,
-    id,
+    id = 'sampleId',
     label = 'List',
     items = [],
     add,
@@ -1132,14 +1132,16 @@ function createListGroup(options = {}, renderFn = render) {
   } = options;
 
   return renderFn(
-    <ListGroup
-      element={ element }
-      id={ id }
-      label={ label }
-      items={ items }
-      add={ add }
-      shouldSort={ shouldSort }
-      shouldOpen={ shouldOpen } />,
+    <MockLayout>
+      <ListGroup
+        element={ element }
+        id={ id }
+        label={ label }
+        items={ items }
+        add={ add }
+        shouldSort={ shouldSort }
+        shouldOpen={ shouldOpen } />
+    </MockLayout>,
     {
       container
     }
@@ -1158,4 +1160,26 @@ function getListOrdering(list) {
   });
 
   return ordering;
+}
+
+function MockLayout({ children }) {
+  const [ layout, setLayout ] = useState({});
+
+  const getLayoutForKey = (key, defaultValue) => {
+    return layout[key] || defaultValue;
+  };
+
+  const setLayoutForKey = (key, value) => {
+    setLayout({
+      [key]: value
+    });
+  };
+
+  const context = {
+    layout,
+    getLayoutForKey,
+    setLayoutForKey
+  };
+
+  return <LayoutContext.Provider value={ context }>{children}</LayoutContext.Provider>;
 }
