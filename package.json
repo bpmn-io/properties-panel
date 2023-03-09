@@ -37,6 +37,7 @@
   "dependencies": {
     "@bpmn-io/feel-editor": "^0.7.0",
     "classnames": "^2.3.1",
+    "feelers": "^0.1.0-alpha.4",
     "min-dash": "^4.0.0",
     "min-dom": "^4.0.3"
   },

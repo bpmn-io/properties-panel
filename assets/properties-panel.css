@@ -446,6 +446,21 @@
   text-decoration: underline;
 }
 
+.bio-properties-panel-feelers-editor.bio-properties-panel-input {
+  padding: 0;
+}
+
+.bio-properties-panel-feelers-input .cm-editor
+{
+  min-height: 32px;
+  max-height: 215px;
+  background-color: transparent;
+}
+
+.bio-properties-panel-feelers-input .cm-editor.cm-focused {
+  outline: none;
+}
+
 .bio-properties-panel-input {
   padding: 3px 6px 2px;
   border: 1px solid var(--input-border-color);
