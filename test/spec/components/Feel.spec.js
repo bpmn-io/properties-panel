@@ -1541,6 +1541,24 @@ describe('<FeelField>', function() {
       await expectNoViolations(node);
     });
 
+
+    // TODO: fix a11y violations when feel editor supports content attribute extensions
+    // cf. https://github.com/bpmn-io/feel-editor/issues/36
+    it.skip('should have no violations (feel)', async function() {
+
+      // given
+      this.timeout(5000);
+
+      const { container: node } = createFeelField({
+        container,
+        label: 'foo',
+        feel: 'required'
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
   });
 
 

@@ -86,6 +86,7 @@ describe('<FeelEditor>', function() {
     const variableSuggestion = [ ...suggestions.children ].find(el => {
       return el.textContent === 'baz';
     });
+
     expect(variableSuggestion).to.exist;
   });
 
