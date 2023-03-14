@@ -316,10 +316,17 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
  * @param {String} props.description
  * @param {Boolean} props.debounce
  * @param {Boolean} props.disabled
+ * @param {Boolean} props.feel
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.tooltipContainer
  * @param {Function} props.validate
+ * @param {Function} props.show
+ * @param {Function} props.example
+ * @param {Function} props.variables
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
  */
 export default function FeelEntry(props) {
   const {
@@ -428,12 +435,17 @@ export default function FeelEntry(props) {
  * @param {String} props.description
  * @param {Boolean} props.debounce
  * @param {Boolean} props.disabled
+ * @param {Boolean} props.feel
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.tooltipContainer
+ * @param {Function} props.validate
+ * @param {Function} props.show
+ * @param {Function} props.example
+ * @param {Function} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
- * @param {Function} props.validate
  */
 export function FeelTextArea(props) {
   return <FeelEntry class="bio-properties-panel-feel-textarea" OptionalComponent={ OptionalFeelTextArea } { ...props } />;

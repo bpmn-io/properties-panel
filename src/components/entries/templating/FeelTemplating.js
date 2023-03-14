@@ -18,7 +18,9 @@ const noop = () => { };
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
+ * @param {Function} props.tooltipContainer
  * @param {Function} props.validate
+ * @param {Function} props.show
  */
 export default function FeelTemplatingEntry(props) {
   const {
