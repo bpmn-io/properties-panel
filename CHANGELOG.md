@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.5.0
+
+* `FEAT`: feelers editor entry ([d47a738](https://github.com/bpmn-io/properties-panel/commit/d47a7387050171f9cada6c03d05456382ab1287a)) 
+* `FEAT`: react to external layout change ([b5e7468](https://github.com/bpmn-io/properties-panel/commit/b5e74680e4a0046497a62582b1357c1f60807b77))
+
 ## 1.4.0 
 
 * `FEAT`: add `optgroup` option for selects ([#204](https://github.com/bpmn-io/properties-panel/pull/204))
