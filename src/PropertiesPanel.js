@@ -1,6 +1,8 @@
 import {
   useState,
-  useEffect
+  useEffect,
+  useMemo,
+  useRef
 } from 'preact/hooks';
 
 import {
@@ -120,7 +122,7 @@ export default function PropertiesPanel(props) {
   const [ layout, setLayout ] = useState(createLayout(layoutConfig));
 
   // react to external changes in the layout config
-  useEffect(() => {
+  useUpdateEffect(() => {
     const newLayout = createLayout(layoutConfig);
 
     setLayout(newLayout);
@@ -150,11 +152,14 @@ export default function PropertiesPanel(props) {
   };
 
   // set-up description context
-  const description = createDescriptionContext(descriptionConfig);
+  const description = useMemo(() => createDescriptionContext(descriptionConfig), [ descriptionConfig ]);
 
-  if (typeof descriptionLoaded === 'function') {
-    descriptionLoaded(description);
-  }
+  useEffect(() => {
+    if (typeof descriptionLoaded === 'function') {
+      descriptionLoaded(description);
+    }
+  }, [ description, descriptionLoaded ]);
+
 
   const getDescriptionForId = (id, element) => {
     return description[id] && description[id](element);
@@ -248,4 +253,24 @@ function createDescriptionContext(overrides = {}) {
     ...DEFAULT_DESCRIPTION,
     ...overrides
   };
+}
+
+// hooks //////////////////
+
+/**
+ * This hook behaves like useEffect, but does not trigger on the first render.
+ *
+ * @param {Function} effect
+ * @param {Array} deps
+ */
+function useUpdateEffect(effect, deps) {
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      return effect();
+    } else {
+      isMounted.current = true;
+    }
+  }, deps);
 }

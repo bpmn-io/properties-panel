@@ -276,6 +276,7 @@ describe('<PropertiesPanel>', function() {
       });
 
       // then
+      expect(layoutChangedSpy).to.have.been.calledOnce;
       expect(layoutChangedSpy).to.have.been.calledWith(layoutConfig);
     });
 
@@ -375,6 +376,7 @@ describe('<PropertiesPanel>', function() {
       });
 
       // then
+      expect(descriptionLoadedSpy).to.have.been.calledOnce;
       expect(descriptionLoadedSpy).to.have.been.calledWith(descriptionConfig);
     });
 
@@ -392,6 +394,7 @@ describe('<PropertiesPanel>', function() {
       });
 
       // then
+      expect(descriptionLoadedSpy).to.have.been.calledOnce;
       expect(descriptionLoadedSpy).to.have.been.calledWith({});
     });
 
