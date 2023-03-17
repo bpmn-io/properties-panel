@@ -1,7 +1,10 @@
 import classNames from 'classnames';
 
+import { isFunction } from 'min-dash';
+
 import {
   useError,
+  usePrevious,
   useShowEntryEvent
 } from '../../hooks';
 
@@ -119,6 +122,7 @@ function Select(props) {
  * @param {Function} props.onBlur
  * @param {Function} props.getOptions
  * @param {boolean} [props.disabled]
+ * @param {Function} [props.validate]
  */
 export default function SelectEntry(props) {
   const {
@@ -131,12 +135,50 @@ export default function SelectEntry(props) {
     getOptions,
     disabled,
     onFocus,
-    onBlur
+    onBlur,
+    validate
   } = props;
 
-  const value = getValue(element);
   const options = getOptions(element);
-  const error = useError(id);
+  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
+  const globalError = useError(id);
+  const [ localError, setLocalError ] = useState(null);
+
+  let value = getValue(element);
+
+  const previousValue = usePrevious(value);
+
+
+  useEffect(() => {
+    if (isFunction(validate)) {
+      const newValidationError = validate(value) || null;
+
+      setLocalError(newValidationError);
+    }
+  }, [ value ]);
+
+
+  const onChange = (newValue) => {
+    let newValidationError = null;
+
+    if (isFunction(validate)) {
+      newValidationError = validate(newValue) || null;
+    }
+
+    if (newValidationError) {
+      setCachedInvalidValue(newValue);
+    } else {
+      setValue(newValue);
+    }
+
+    setLocalError(newValidationError);
+  };
+
+  if (previousValue === value && localError) {
+    value = cachedInvalidValue;
+  }
+
+  const error = globalError || localError;
 
   return (
     <div
@@ -150,7 +192,7 @@ export default function SelectEntry(props) {
         key={ element }
         label={ label }
         value={ value }
-        onChange={ setValue }
+        onChange={ onChange }
         onFocus={ onFocus }
         onBlur={ onBlur }
         options={ options }

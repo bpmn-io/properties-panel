@@ -318,6 +318,110 @@ describe('<Select>', function() {
   });
 
 
+  describe('validation', function() {
+
+    it('should set valid', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'A') {
+          return 'error';
+        }
+      };
+
+      const getOptions = () => createOptions();
+
+      const result = createSelect({ container, getOptions, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const select = domQuery('.bio-properties-panel-input', entry);
+
+
+      // when
+      changeInput(select, 'B');
+
+      // then
+      expect(isValid(entry)).to.be.true;
+    });
+
+
+    it('should set invalid', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'A') {
+          return 'error';
+        }
+      };
+
+      const getOptions = () => createOptions();
+
+      const result = createSelect({ container, getOptions, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const select = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(select, 'A');
+
+      // then
+      expect(isValid(entry)).to.be.false;
+    });
+
+
+    it('should keep showing invalid value', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'A') {
+          return 'error';
+        }
+      };
+
+      const getOptions = () => createOptions();
+
+      const result = createSelect({ container, getOptions, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const select = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(select, 'A');
+
+      // then
+      expect(select.value).to.eql('A');
+    });
+
+
+    it('should show error message', function() {
+
+      // given
+      const validate = (v) => {
+        if (v === 'A') {
+          return 'error';
+        }
+      };
+
+      const getOptions = () => createOptions();
+
+      const result = createSelect({ container, getOptions, validate });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const select = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(select, 'A');
+
+      const error = domQuery('.bio-properties-panel-error', entry);
+
+      // then
+      expect(error).to.exist;
+      expect(error.innerText).to.eql('error');
+    });
+
+  });
+
+
   describe('description', function() {
 
     it('should render without description per default', function() {
@@ -399,6 +503,7 @@ describe('<Select>', function() {
     });
 
   });
+
 
   describe('groups', function() {
 
@@ -492,6 +597,7 @@ function createSelect(options = {}, renderFn = render) {
     eventBus = new EventBus(),
     onShow = noop,
     errors = {},
+    validate = noop,
     ...rest
   } = options;
 
@@ -525,7 +631,8 @@ function createSelect(options = {}, renderFn = render) {
               description={ description }
               getValue={ getValue }
               setValue={ setValue }
-              getOptions={ getOptions } />
+              getOptions={ getOptions }
+              validate={ validate } />
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>
