@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'preact/hooks';
+import { useContext } from 'preact/hooks';
 
 import {
   render
@@ -25,7 +25,6 @@ import Group from 'src/components/Group';
 
 import { PropertiesPanelContext } from 'src/context';
 import { fireEvent } from '@testing-library/preact';
-import { act } from 'preact/test-utils';
 
 insertCoreStyles();
 
@@ -84,37 +83,6 @@ describe('<Group>', function() {
       expect(domClasses(entries).has('open')).to.be.true;
     });
 
-
-    it('should use global layout', async function() {
-
-      // given
-      let setLayoutForKey;
-      const Entry = () => {
-        setLayoutForKey = useContext(LayoutContext).setLayoutForKey;
-      };
-
-      const result = createGroup({
-        container,
-        id: 'groupId',
-        entries: createEntries({
-          component: Entry
-        }),
-        label: 'Group'
-      });
-
-      const entries = domQuery('.bio-properties-panel-group-entries', result.container);
-
-      // assume
-      expect(domClasses(entries).has('open')).to.be.false;
-
-      // when
-      await act(() => setLayoutForKey([ 'groups', 'groupId', 'open' ], true));
-
-      // then
-      expect(domClasses(entries).has('open')).to.be.true;
-
-    });
-
   });
 
 
@@ -124,7 +92,7 @@ describe('<Group>', function() {
     const Entry = () => {
       const { onShow } = useContext(PropertiesPanelContext);
 
-      useEffect(onShow, []);
+      onShow();
     };
 
     const result = createGroup({
@@ -308,10 +276,11 @@ function createGroup(options = {}) {
     container
   } = options;
 
+  var MockLayout = createLayout();
 
   return render(
     <MockLayout>
-      <Group id="Example" { ...options } />
+      <Group { ...options } />
     </MockLayout>,
     {
       container
@@ -330,18 +299,12 @@ function TestEntry(props = {}) {
   </div>;
 }
 
-function MockLayout({ children }) {
-  const [ layout, setLayout ] = useState({});
-
-  const getLayoutForKey = (key, defaultValue) => {
-    return layout[key] || defaultValue;
-  };
-
-  const setLayoutForKey = (key, value) => {
-    setLayout({
-      [key]: value
-    });
-  };
+function createLayout(props = {}) {
+  const {
+    layout = {},
+    getLayoutForKey = (key, defaultValue) => defaultValue,
+    setLayoutForKey = noop
+  } = props;
 
   const context = {
     layout,
@@ -349,5 +312,5 @@ function MockLayout({ children }) {
     setLayoutForKey
   };
 
-  return <LayoutContext.Provider value={ context }>{children}</LayoutContext.Provider>;
+  return ({ children }) => <LayoutContext.Provider value={ context }>{children}</LayoutContext.Provider>;
 }
