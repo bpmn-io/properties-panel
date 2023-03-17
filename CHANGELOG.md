@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.5.1
+
+* `FIX`: reverse [#225](https://github.com/bpmn-io/properties-panel/pull/225) ([#227](https://github.com/bpmn-io/properties-panel/issues/227))
+
 ## 1.5.0
 
 * `FEAT`: feelers editor entry ([d47a738](https://github.com/bpmn-io/properties-panel/commit/d47a7387050171f9cada6c03d05456382ab1287a)) 
