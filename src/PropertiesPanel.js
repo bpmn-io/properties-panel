@@ -109,9 +109,9 @@ export default function PropertiesPanel(props) {
     headerProvider,
     placeholderProvider,
     groups,
-    layoutConfig = {},
+    layoutConfig,
     layoutChanged,
-    descriptionConfig = {},
+    descriptionConfig,
     descriptionLoaded,
     eventBus
   } = props;
@@ -236,14 +236,14 @@ export default function PropertiesPanel(props) {
 
 // helpers //////////////////
 
-function createLayout(overrides, defaults = DEFAULT_LAYOUT) {
+function createLayout(overrides = {}, defaults = DEFAULT_LAYOUT) {
   return {
     ...defaults,
     ...overrides
   };
 }
 
-function createDescriptionContext(overrides) {
+function createDescriptionContext(overrides = {}) {
   return {
     ...DEFAULT_DESCRIPTION,
     ...overrides
