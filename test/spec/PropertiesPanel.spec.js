@@ -281,6 +281,25 @@ describe('<PropertiesPanel>', function() {
     });
 
 
+    it('should notify on initial layout loaded (default layout)', async function() {
+
+      // given
+      const DEFAULT_LAYOUT = { open: true };
+      const layoutChangedSpy = sinon.spy();
+
+      // when
+      createPropertiesPanel({
+        container,
+        element: noopElement,
+        layoutChanged: layoutChangedSpy
+      });
+
+      // then
+      expect(layoutChangedSpy).to.have.been.calledOnce;
+      expect(layoutChangedSpy).to.have.been.calledWith(DEFAULT_LAYOUT);
+    });
+
+
     it('should notify on layout changed', async function() {
 
       // given
@@ -310,6 +329,7 @@ describe('<PropertiesPanel>', function() {
       });
 
       // then
+      expect(layoutChangedSpy).to.have.been.calledTwice;
       expect(layoutChangedSpy).to.have.been.calledWith({
         open: true,
         groups: {
@@ -381,7 +401,7 @@ describe('<PropertiesPanel>', function() {
     });
 
 
-    it('should use default config, given no config provided', function() {
+    it('should use default config, given no config provided', async function() {
 
       // given
       const descriptionLoadedSpy = sinon.spy();
@@ -392,6 +412,7 @@ describe('<PropertiesPanel>', function() {
         element: noopElement,
         descriptionLoaded: descriptionLoadedSpy
       });
+
 
       // then
       expect(descriptionLoadedSpy).to.have.been.calledOnce;
@@ -413,9 +434,9 @@ function createPropertiesPanel(options = {}, renderFn = render) {
     headerProvider = HeaderProvider,
     placeholderProvider = PlaceholderProvider,
     groups = [],
-    layoutConfig = {},
+    layoutConfig,
     layoutChanged = noop,
-    descriptionConfig = {},
+    descriptionConfig,
     descriptionLoaded = noop
   } = options;
 
