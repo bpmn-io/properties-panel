@@ -417,7 +417,7 @@ describe('<FeelField>', function() {
 
     describe('toggle', function() {
 
-      it('should toggle feel active', async function() {
+      it('should toggle feel active', function() {
 
         // given
         const updateSpy = sinon.spy();
@@ -434,9 +434,7 @@ describe('<FeelField>', function() {
           field.container);
 
         // when
-        await act(() => {
-          icon.click();
-        });
+        icon.click();
 
         // then
         return waitFor(() => {
@@ -876,7 +874,7 @@ describe('<FeelField>', function() {
 
     describe('toggle', function() {
 
-      it('should toggle feel active', async function() {
+      it('should toggle feel active', function() {
 
         // given
         const updateSpy = sinon.spy();
@@ -893,9 +891,7 @@ describe('<FeelField>', function() {
           field.container);
 
         // when
-        await act(() => {
-          icon.click();
-        });
+        icon.click();
 
         // then
         return waitFor(() => {
@@ -1090,7 +1086,7 @@ describe('<FeelField>', function() {
       });
 
 
-      it('should be edited after update', async function() {
+      it('should be edited after update', function() {
 
         // given
         const result = createFeelField({ container, feel: 'required' });
@@ -1102,9 +1098,7 @@ describe('<FeelField>', function() {
         expect(isEdited(input)).to.be.false;
 
         // when
-        await act(() => {
-          contentEditable.textContent = 'foo';
-        });
+        contentEditable.textContent = 'foo';
 
         // then
         return waitFor(() => {
@@ -1153,7 +1147,7 @@ describe('<FeelField>', function() {
       });
 
 
-      it('should show syntax error', async function() {
+      it('should show syntax error', function() {
 
         // given
         const clock = sinon.useFakeTimers();
@@ -1161,17 +1155,17 @@ describe('<FeelField>', function() {
 
         // when
         // trigger debounced validation
-        await act(() => { clock.tick(1000); });
-        await act(() => { clock.restore(); });
+        clock.tick(1000);
+        clock.restore();
 
         // then
-        await waitFor(() => {
+        return waitFor(() => {
           expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
         });
       });
 
 
-      it('should show local error over global error', async function() {
+      it('should show local error over global error', function() {
 
         // given
         const clock = sinon.useFakeTimers();
@@ -1194,9 +1188,8 @@ describe('<FeelField>', function() {
 
         // when
         // trigger debounced validation
-        await act(() => { clock.tick(1000); });
-        await act(() => { clock.restore(); });
-
+        clock.tick(1000);
+        clock.restore();
 
         // then
         return waitFor(() => {
@@ -1236,7 +1229,7 @@ describe('<FeelField>', function() {
       });
 
 
-      it('should set invalid', async function() {
+      it('should set invalid', function() {
 
         // given
         const validate = (v) => {
@@ -1251,10 +1244,7 @@ describe('<FeelField>', function() {
         const input = domQuery('[role="textbox"]', entry);
 
         // when
-        await act(() => {
-          input.textContent = 'bar';
-        });
-
+        input.textContent = 'bar';
 
         // then
         return waitFor(() => {
@@ -1287,7 +1277,7 @@ describe('<FeelField>', function() {
       });
 
 
-      it('should show error message', async function() {
+      it('should show error message', function() {
 
         // given
         const validate = (v) => {
@@ -1302,10 +1292,7 @@ describe('<FeelField>', function() {
         const input = domQuery('[role="textbox"]', entry);
 
         // when
-        await act(() => {
-          input.textContent = 'bar';
-        });
-
+        input.textContent = 'bar';
 
         // then
         return waitFor(() => {
@@ -1468,7 +1455,7 @@ describe('<FeelField>', function() {
 
     describe('toggle', function() {
 
-      it('should toggle feel inactive', async function() {
+      it('should toggle feel inactive', function() {
 
         // given
         const updateSpy = sinon.spy();
@@ -1485,16 +1472,14 @@ describe('<FeelField>', function() {
           field.container);
 
         // when
-        await act(() => {
-          icon.click();
-        });
+        icon.click();
 
         // then
         expect(updateSpy).to.have.been.calledWith('foo');
       });
 
 
-      it('should NOT toggle if FEEL is required', async function() {
+      it('should NOT toggle if FEEL is required', function() {
 
         // given
         const updateSpy = sinon.spy();
@@ -1511,9 +1496,7 @@ describe('<FeelField>', function() {
           field.container);
 
         // when
-        await act(() => {
-          icon.click();
-        });
+        icon.click();
 
         // then
         expect(updateSpy).not.to.have.been.called;
