@@ -314,46 +314,6 @@ describe('<PropertiesPanel>', function() {
       });
     });
 
-
-    // For some reason, this will make other tests fail if not skipped.
-    // It suceeds when run individually.
-    // Sample of failing test: <Collapsible> should toggle open
-    it.skip('should notify on external layout change', async function() {
-
-      // given
-      const initialLayoutConfig = {
-        open: true,
-        foo: 'bar'
-      };
-
-      const layoutChangedSpy = sinon.spy();
-
-      const options = {
-        container,
-        element: noopElement,
-        layoutConfig: initialLayoutConfig,
-        layoutChanged: layoutChangedSpy,
-      };
-
-      const { rerender } = createPropertiesPanel(options);
-
-      // when
-      const updatedLayoutConfig = {
-        open: false,
-        foo: 'baz'
-      };
-
-      options.layoutConfig = updatedLayoutConfig;
-
-      createPropertiesPanel({
-        ...options,
-        layoutConfig: updatedLayoutConfig
-      }, rerender);
-
-      // then
-      expect(layoutChangedSpy).to.have.been.calledWith(updatedLayoutConfig);
-    });
-
   });
 
 
@@ -404,7 +364,7 @@ describe('<PropertiesPanel>', function() {
 
 // helpers //////////
 
-function createPropertiesPanel(options = {}, renderFn = render) {
+function createPropertiesPanel(options = {}) {
 
   const {
     container,
@@ -412,13 +372,13 @@ function createPropertiesPanel(options = {}, renderFn = render) {
     headerProvider = HeaderProvider,
     placeholderProvider = PlaceholderProvider,
     groups = [],
-    layoutConfig = {},
+    layoutConfig,
     layoutChanged = noop,
-    descriptionConfig = {},
+    descriptionConfig,
     descriptionLoaded = noop
   } = options;
 
-  return renderFn(
+  return render(
     <PropertiesPanel
       element={ element }
       headerProvider={ headerProvider }
