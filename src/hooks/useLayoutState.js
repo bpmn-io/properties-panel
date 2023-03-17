@@ -1,6 +1,6 @@
 import {
-  useCallback,
-  useContext
+  useContext,
+  useState
 } from 'preact/hooks';
 
 import {
@@ -29,11 +29,16 @@ export function useLayoutState(path, defaultValue) {
   } = useContext(LayoutContext);
 
   const layoutForKey = getLayoutForKey(path, defaultValue);
+  const [ value, set ] = useState(layoutForKey);
 
-  const setState = useCallback ((newValue) => {
+  const setState = (newValue) => {
+
+    // (1) set component state
+    set(newValue);
+
+    // (2) set context
     setLayoutForKey(path, newValue);
-  }, [ setLayoutForKey ]);
+  };
 
-
-  return [ layoutForKey, setState ];
+  return [ value, setState ];
 }

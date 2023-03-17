@@ -119,13 +119,6 @@ export default function PropertiesPanel(props) {
   // set-up layout context
   const [ layout, setLayout ] = useState(createLayout(layoutConfig));
 
-  // react to external changes in the layout config
-  useEffect(() => {
-    const newLayout = createLayout(layoutConfig);
-
-    setLayout(newLayout);
-  }, [ layoutConfig ]);
-
   useEffect(() => {
     if (typeof layoutChanged === 'function') {
       layoutChanged(layout);
@@ -236,9 +229,9 @@ export default function PropertiesPanel(props) {
 
 // helpers //////////////////
 
-function createLayout(overrides, defaults = DEFAULT_LAYOUT) {
+function createLayout(overrides) {
   return {
-    ...defaults,
+    ...DEFAULT_LAYOUT,
     ...overrides
   };
 }

@@ -110,9 +110,7 @@ describe('<Collapsible>', function() {
     expect(domClasses(entries).has('open')).to.be.false;
 
     // when
-    await act(() => {
-      header.click();
-    });
+    await header.click();
 
     // then
     expect(domClasses(entries).has('open')).to.be.true;
