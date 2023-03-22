@@ -247,8 +247,9 @@ export default function ListGroup(props) {
 
             const { id } = item;
 
-            // if item was added, open first or last item based on ordering
-            const autoOpen = newItemAdded && (shouldSort ? index === 0 : index === ordering.length - 1);
+            // if item was added, open it
+            // Existing items will not be affected as autoOpen is only applied on first render
+            const autoOpen = newItemAdded;
 
             return (
               <ListItem
