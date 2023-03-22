@@ -980,6 +980,64 @@ describe('<ListGroup>', function() {
       });
 
 
+      it('should open on adding new item in the middle', async function() {
+
+        // given
+        const newItems = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          },
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          },
+          {
+            id: 'item-3',
+            label: 'Item 3'
+          }
+        ];
+
+        const items = [ newItems[0], newItems[2] ];
+
+
+        const Component = () => {
+          const [ testItems, setTestItems ] = useState(items);
+
+          const add = () => {
+            setTestItems(newItems);
+          };
+
+          return <TestGroup items={ testItems } add={ add } shouldSort={ true }></TestGroup>;
+        };
+
+        const {
+          container
+        } = render(<Component />, parentContainer);
+
+        const list = domQuery('.bio-properties-panel-list', container);
+        const addButton = domQuery('.bio-properties-panel-add-entry', container);
+
+        // assume
+        expect(domClasses(list).has('open')).to.be.false;
+
+        // when
+        await act(() => {
+          addButton.click();
+        });
+
+        // then
+        const newItem = domQuery('[data-entry-id="item-2"]', container);
+        const oldItem = domQuery('[data-entry-id="item-1"]', container);
+        const otherOldItem = domQuery('[data-entry-id="item-3"]', container);
+
+        expect(domClasses(newItem).has('open')).to.be.true;
+        expect(domClasses(oldItem).has('open')).to.be.false;
+        expect(domClasses(otherOldItem).has('open')).to.be.false;
+        expect(domClasses(list).has('open')).to.be.true;
+      });
+
+
       it('should NOT open when change was not triggered by clicking add button', function() {
 
         // given
