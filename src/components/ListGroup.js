@@ -60,6 +60,9 @@ export default function ListGroup(props) {
   const [ ordering, setOrdering ] = useState([]);
   const [ newItemAdded, setNewItemAdded ] = useState(false);
 
+  // Flag to mark that add button was clicked in the last render cycle
+  const [ addTriggered, setAddTriggered ] = useState(false);
+
   const prevItems = usePrevious(items);
   const prevElement = usePrevious(element);
 
@@ -82,6 +85,10 @@ export default function ListGroup(props) {
 
   // (1) items were added
   useEffect(() => {
+
+    // reset addTriggered flag
+    setAddTriggered(false);
+
     if (shouldHandleEffects && prevItems && items.length > prevItems.length) {
 
       let add = [];
@@ -94,14 +101,18 @@ export default function ListGroup(props) {
 
       let newOrdering = ordering;
 
-      // open if not open and configured
-      if (!open && shouldOpen) {
+      // open if not open, configured and triggered by add button
+      //
+      // TODO(marstamm): remove once we refactor layout handling for listGroups.
+      // Ideally, opening should be handled as part of the `add` callback and
+      // not be a concern for the ListGroup component.
+      if (addTriggered && !open && shouldOpen) {
         toggleOpen();
+      }
 
-        // if I opened and I should sort, then sort items
-        if (shouldSort) {
-          newOrdering = createOrdering(sortItems(items));
-        }
+      // filter when not open and configured
+      if (!open && shouldSort) {
+        newOrdering = createOrdering(sortItems(items));
       }
 
       // add new items on top or bottom depending on sorting behavior
@@ -113,11 +124,11 @@ export default function ListGroup(props) {
       }
 
       setOrdering(newOrdering);
-      setNewItemAdded(true);
+      setNewItemAdded(addTriggered);
     } else {
       setNewItemAdded(false);
     }
-  }, [ items, open, shouldHandleEffects ]);
+  }, [ items, open, shouldHandleEffects, addTriggered ]);
 
   // (2) sort items on open if shouldSort is set
   useEffect(() => {
@@ -154,6 +165,11 @@ export default function ListGroup(props) {
     onShow
   };
 
+  const handleAddClick = e => {
+    setAddTriggered(true);
+    add(e);
+  };
+
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
     <div
       class={ classnames(
@@ -176,7 +192,7 @@ export default function ListGroup(props) {
               <button
                 title="Create new list item"
                 class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
-                onClick={ add }
+                onClick={ handleAddClick }
               >
                 <CreateIcon />
                 {

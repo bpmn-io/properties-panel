@@ -1,4 +1,4 @@
-import { useContext } from 'preact/hooks';
+import { useContext, useState } from 'preact/hooks';
 
 import {
   act,
@@ -873,7 +873,114 @@ describe('<ListGroup>', function() {
 
     describe('open', function() {
 
-      it('should open on adding new item per default', function() {
+      it('should open on adding new item per default', async function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          }
+        ];
+
+        const newItems = [
+          ...items,
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          },
+        ];
+
+        const Component = () => {
+          const [ testItems, setTestItems ] = useState(items);
+
+          const add = () => {
+            setTestItems(newItems);
+          };
+
+          return <TestGroup items={ testItems } add={ add } shouldSort={ true }></TestGroup>;
+        };
+
+        const {
+          container
+        } = render(<Component />, parentContainer);
+
+        const list = domQuery('.bio-properties-panel-list', container);
+        const addButton = domQuery('.bio-properties-panel-add-entry', container);
+
+        // assume
+        expect(domClasses(list).has('open')).to.be.false;
+
+
+        // when
+        await act(() => {
+          addButton.click();
+        });
+
+        // then
+        const newItem = domQuery('[data-entry-id="item-2"]', container);
+        const oldItem = domQuery('[data-entry-id="item-1"]', container);
+
+        expect(domClasses(newItem).has('open')).to.be.true;
+        expect(domClasses(oldItem).has('open')).to.be.false;
+        expect(domClasses(list).has('open')).to.be.true;
+      });
+
+
+      it('should open on adding new item per default given no sorting', async function() {
+
+        // given
+        const items = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
+          }
+        ];
+
+        const newItems = [
+          ...items,
+          {
+            id: 'item-2',
+            label: 'Item 2'
+          }
+        ];
+
+        const Component = () => {
+          const [ testItems, setTestItems ] = useState(items);
+
+          const add = () => {
+            setTestItems(newItems);
+          };
+
+          return <TestGroup items={ testItems } add={ add } shouldSort={ false }></TestGroup>;
+        };
+
+        const {
+          container
+        } = render(<Component />, parentContainer);
+
+        const list = domQuery('.bio-properties-panel-list', container);
+        const addButton = domQuery('.bio-properties-panel-add-entry', container);
+
+        // assume
+        expect(domClasses(list).has('open')).to.be.false;
+
+        // when
+        await act(() => {
+          addButton.click();
+        });
+
+        // then
+        const newItem = domQuery('[data-entry-id="item-2"]', container);
+        const oldItem = domQuery('[data-entry-id="item-1"]', container);
+
+        expect(domClasses(newItem).has('open')).to.be.true;
+        expect(domClasses(oldItem).has('open')).to.be.false;
+        expect(domClasses(list).has('open')).to.be.true;
+      });
+
+
+      it('should NOT open when change was not triggered by clicking add button', function() {
 
         // given
         const items = [
@@ -908,49 +1015,9 @@ describe('<ListGroup>', function() {
         const newItem = domQuery('[data-entry-id="item-2"]', container);
         const oldItem = domQuery('[data-entry-id="item-1"]', container);
 
-        expect(domClasses(newItem).has('open')).to.be.true;
+        expect(domClasses(newItem).has('open')).to.be.false;
         expect(domClasses(oldItem).has('open')).to.be.false;
-      });
-
-
-      it('should open on adding new item per default given no sorting', function() {
-
-        // given
-        const items = [
-          {
-            id: 'item-1',
-            label: 'Item 1'
-          }
-        ];
-
-        const {
-          container,
-          rerender
-        } = createListGroup({ container: parentContainer, items });
-
-        const list = domQuery('.bio-properties-panel-list', container);
-
-        // assume
         expect(domClasses(list).has('open')).to.be.false;
-
-        const newItems = [
-          ...items,
-          {
-            id: 'item-2',
-            label: 'Item 2'
-          }
-        ];
-
-        // when
-        createListGroup({ items: newItems, shouldSort: false }, rerender);
-
-        // then
-        const newItem = domQuery('[data-entry-id="item-2"]', container);
-        const oldItem = domQuery('[data-entry-id="item-1"]', container);
-
-        expect(domClasses(newItem).has('open')).to.be.true;
-        expect(domClasses(oldItem).has('open')).to.be.false;
-        expect(domClasses(list).has('open')).to.be.true;
       });
 
 
@@ -1119,6 +1186,29 @@ describe('<ListGroup>', function() {
 
 // helpers ////////////////////
 
+function TestGroup(props) {
+  const {
+    element = noopElement,
+    id = 'sampleId',
+    label = 'List',
+    items = [],
+    add,
+    shouldSort,
+    shouldOpen
+  } = props;
+
+  return (
+    <ListGroup
+      element={ element }
+      id={ id }
+      label={ label }
+      items={ items }
+      add={ add }
+      shouldSort={ shouldSort }
+      shouldOpen={ shouldOpen } />
+  );
+}
+
 function createListGroup(options = {}, renderFn = render) {
   const {
     element = noopElement,
@@ -1132,7 +1222,7 @@ function createListGroup(options = {}, renderFn = render) {
   } = options;
 
   return renderFn(
-    <ListGroup
+    <TestGroup
       element={ element }
       id={ id }
       label={ label }
