@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.6.0
+
+* `FEAT`: enable `SelectEntry` validation ([#206](https://github.com/bpmn-io/properties-panel/issues/230))
+
 ## 1.5.1
 
 * `FIX`: reverse [#225](https://github.com/bpmn-io/properties-panel/pull/225) ([#227](https://github.com/bpmn-io/properties-panel/issues/227))
