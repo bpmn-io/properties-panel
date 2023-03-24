@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.6.1
+
+* `FIX`: don't expand `ListGroup` on external change ([#231](https://github.com/bpmn-io/properties-panel/pull/231))
+
 ## 1.6.0
 
 * `FEAT`: enable `SelectEntry` validation ([#206](https://github.com/bpmn-io/properties-panel/issues/230))
