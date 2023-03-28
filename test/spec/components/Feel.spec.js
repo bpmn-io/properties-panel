@@ -27,7 +27,7 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
-import FeelField, { FeelTextArea, isEdited } from 'src/components/entries/FEEL';
+import FeelField, { FeelTextAreaEntry, isEdited } from 'src/components/entries/FEEL';
 
 insertCoreStyles();
 
@@ -1692,7 +1692,7 @@ function createFeelTextArea(options = {}, renderFn = render) {
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
           <DescriptionContext.Provider value={ descriptionContext }>
-            <FeelTextArea
+            <FeelTextAreaEntry
               element={ element }
               id={ id }
               label={ label }

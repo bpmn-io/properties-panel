@@ -4,7 +4,7 @@ import { isFunction } from 'min-dash';
 import { useError } from '../../../hooks';
 import classnames from 'classnames';
 import Description from '../Description';
-import FeelTemplatingEditor from './FeelTemplatingEditor';
+import TemplatingEditor from './TemplatingEditor';
 
 const noop = () => { };
 
@@ -22,7 +22,7 @@ const noop = () => { };
  * @param {Function} props.validate
  * @param {Function} props.show
  */
-export default function FeelTemplatingEntry(props) {
+export default function TemplatingEntry(props) {
   const {
     element,
     id,
@@ -92,7 +92,7 @@ export default function FeelTemplatingEntry(props) {
         error ? 'has-error' : '')
       }
       data-entry-id={ id }>
-      <FeelTemplating
+      <Templating
         debounce={ debounce }
         disabled={ disabled }
         id={ id }
@@ -109,7 +109,7 @@ export default function FeelTemplatingEntry(props) {
   );
 }
 
-function FeelTemplating(props) {
+function Templating(props) {
   const {
     debounce,
     id,
@@ -178,17 +178,16 @@ function FeelTemplating(props) {
   return (
     <div class="bio-properties-panel-feelers">
       <label id={ prefixIdLabel(id) } class="bio-properties-panel-label" onClick={ () => setFocus() }>
-        { label }
+        {label}
       </label>
       <div class="bio-properties-panel-feelers-input" ref={ containerRef }>
-        <FeelTemplatingEditor
+        <TemplatingEditor
           name={ id }
           onInput={ handleInput }
-          contentAttributes={ { 'aria-labelledby' : prefixIdLabel(id) } }
+          contentAttributes={ { 'aria-labelledby': prefixIdLabel(id) } }
           disabled={ disabled }
           onLint={ handleLint }
           value={ localValue }
-          useGutters={ false }
           ref={ editorRef }
           tooltipContainer={ tooltipContainer }
         />

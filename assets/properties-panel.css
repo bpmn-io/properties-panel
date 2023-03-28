@@ -457,6 +457,7 @@
   background-color: transparent;
 }
 
+.bio-properties-panel-feelers-editor .cm-editor.cm-focused,
 .bio-properties-panel-feelers-input .cm-editor.cm-focused {
   outline: none;
 }
@@ -1013,10 +1014,6 @@ textarea.bio-properties-panel-input {
   min-height: 28px;
 }
 
-.bio-properties-panel-feel-container .cm-scroller {
-  overflow: hidden !important;
-}
-
 .bio-properties-panel-feel-indicator {
   position: absolute;
   border: 1px solid var(--input-border-color);
@@ -1028,6 +1025,18 @@ textarea.bio-properties-panel-input {
   width: 2em;
   text-align: center;
   padding: 2px 6px;
+}
+
+.bio-properties-panel-feel-editor-container .cm-scroller {
+  overflow: hidden !important;
+}
+
+.bio-properties-panel-feelers-editor .cm-editor {
+  background-color: transparent;
+}
+
+.bio-properties-panel-feelers-editor .cm-editor.cm-focused {
+  background-color: transparent;
 }
 
 .bio-properties-panel-feel-editor-container .bio-properties-panel-input {

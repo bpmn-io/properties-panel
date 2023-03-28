@@ -1,2 +1,2 @@
-export { default } from './FeelTemplating';
-export * from './FeelTemplating';
+export { default } from './Templating';
+export * from './Templating';

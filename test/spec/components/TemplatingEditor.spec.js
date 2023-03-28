@@ -14,11 +14,11 @@ import {
 
 import { useEffect, useRef } from 'preact/hooks';
 
-import FeelTemplatingEditor from 'src/components/entries/templating/FeelTemplatingEditor';
+import TemplatingEditor from 'src/components/entries/templating/TemplatingEditor';
 
 insertCoreStyles();
 
-describe('<FeelTemplatingEditor>', function() {
+describe('<TemplatingEditor>', function() {
 
   let container;
 
@@ -52,7 +52,7 @@ describe('<FeelTemplatingEditor>', function() {
         ref.current.focus();
       }, []);
 
-      return <FeelTemplatingEditor ref={ ref } />;
+      return <TemplatingEditor ref={ ref } />;
     }
 
     // when
@@ -67,7 +67,7 @@ describe('<FeelTemplatingEditor>', function() {
   it('should add gutters', async function() {
 
     // given
-    render(<Wrapper useGutters={ true } />, { container });
+    render(<Wrapper enableGutters={ true } />, { container });
 
     // then
     const gutters = domQuery('.cm-gutter ', container);
@@ -104,5 +104,5 @@ describe('<FeelTemplatingEditor>', function() {
 function Wrapper(props) {
   const ref = useRef();
 
-  return <FeelTemplatingEditor { ...props } ref={ ref } />;
+  return <TemplatingEditor { ...props } ref={ ref } />;
 }
