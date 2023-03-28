@@ -1,4 +1,5 @@
 import Description from '../Description';
+import TemplatingEditor from '../templating/TemplatingEditor';
 
 import {
   useCallback,
@@ -209,6 +210,7 @@ function FeelTextfield(props) {
           <OptionalComponent
             { ...props }
             onInput={ handleLocalInput }
+            contentAttributes={ { 'id': prefixId(id) } }
             value={ localValue }
             ref={ editorRef }
           />
@@ -340,6 +342,8 @@ export default function FeelEntry(props) {
     getValue,
     setValue,
     tooltipContainer,
+    hostLanguage,
+    singleLine,
     validate,
     show = noop,
     example,
@@ -416,6 +420,8 @@ export default function FeelEntry(props) {
         onFocus={ onFocus }
         onBlur={ onBlur }
         example={ example }
+        hostLanguage={ hostLanguage }
+        singleLine={ singleLine }
         show={ show }
         value={ value }
         variables={ variables }
@@ -426,7 +432,6 @@ export default function FeelEntry(props) {
     </div>
   );
 }
-
 
 /**
  * @param {Object} props
@@ -447,8 +452,33 @@ export default function FeelEntry(props) {
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  */
-export function FeelTextArea(props) {
+export function FeelTextAreaEntry(props) {
   return <FeelEntry class="bio-properties-panel-feel-textarea" OptionalComponent={ OptionalFeelTextArea } { ...props } />;
+}
+
+/**
+ * @param {Object} props
+ * @param {Object} props.element
+ * @param {String} props.id
+ * @param {String} props.description
+ * @param {String} props.hostLanguage
+ * @param {Boolean} props.singleLine
+ * @param {Boolean} props.debounce
+ * @param {Boolean} props.disabled
+ * @param {Boolean} props.feel
+ * @param {String} props.label
+ * @param {Function} props.getValue
+ * @param {Function} props.setValue
+ * @param {Function} props.tooltipContainer
+ * @param {Function} props.validate
+ * @param {Function} props.show
+ * @param {Function} props.example
+ * @param {Function} props.variables
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
+ */
+export function FeelTemplatingEntry(props) {
+  return <FeelEntry class="bio-properties-panel-feel-templating" OptionalComponent={ TemplatingEditor } { ...props } />;
 }
 
 export function isEdited(node) {
@@ -461,4 +491,3 @@ export function isEdited(node) {
 function prefixId(id) {
   return `bio-properties-panel-${id}`;
 }
-

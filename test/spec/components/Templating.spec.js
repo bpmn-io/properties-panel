@@ -26,13 +26,13 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
-import FeelTemplatingEntry, { isEdited } from 'src/components/entries/templating/FeelTemplating.js';
+import TemplatingEntry, { isEdited } from 'src/components/entries/templating/Templating.js';
 
 insertCoreStyles();
 
 const noop = () => {};
 
-describe('<FeelTemplating>', function() {
+describe('<Templating>', function() {
 
   let container;
   let clock;
@@ -592,7 +592,7 @@ function createTemplatingEntry(options = {}, renderFn = render) {
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
           <DescriptionContext.Provider value={ descriptionContext }>
-            <FeelTemplatingEntry
+            <TemplatingEntry
               element={ element }
               id={ id }
               description={ description }

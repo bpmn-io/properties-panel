@@ -37,14 +37,15 @@ const useBufferedFocus = function(editor, ref) {
 const CodeEditor = forwardRef((props, ref) => {
 
   const {
-    value,
     onInput,
-    onLint = () => {},
-    contentAttributes = {},
     disabled,
     tooltipContainer,
-    useGutters = false,
-    darkMode = false
+    enableGutters,
+    value,
+    onLint = () => {},
+    contentAttributes = {},
+    hostLanguage = null,
+    singleLine = false
   } = props;
 
   const inputRef = useRef();
@@ -65,12 +66,13 @@ const CodeEditor = forwardRef((props, ref) => {
     editor = new FeelersEditor({
       container: inputRef.current,
       onChange: handleInput,
-      onLint: onLint,
-      contentAttributes: contentAttributes,
-      tooltipContainer: tooltipContainer,
       value: localValue,
-      darkMode: darkMode,
-      enableGutters: useGutters
+      onLint,
+      contentAttributes,
+      tooltipContainer,
+      enableGutters,
+      hostLanguage,
+      singleLine
     });
 
     setEditor(
