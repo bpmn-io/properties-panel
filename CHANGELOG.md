@@ -6,6 +6,13 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.7.0
+
+* `FEAT`: support optional `TemplatingEntry` ([#235](https://github.com/bpmn-io/properties-panel/issues/235))
+* `FEAT`: apply [#225](https://github.com/bpmn-io/properties-panel/pull/229) ([`439e9f3d`](https://github.com/bpmn-io/properties-panel/commit/439e9f3d968bb633d8326da9c33a7ee2cbea59d1))
+* `FIX`: only call callbacks once on first render ([#228](https://github.com/bpmn-io/properties-panel/pull/228))
+* `DEPS`: update to `feelers@0.1.0-alpha.8`
+
 ## 1.6.2
 
 * `DEPS`: fix audit warnings
