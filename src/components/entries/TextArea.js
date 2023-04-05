@@ -11,8 +11,11 @@ import classnames from 'classnames';
 
 import {
   useError,
+  usePrevious,
   useShowEntryEvent
 } from '../../hooks';
+
+import { isFunction } from 'min-dash';
 
 function resizeToContents(element) {
   element.style.height = 'auto';
@@ -106,6 +109,7 @@ function TextArea(props) {
  * @param {Function} props.onBlur
  * @param {number} props.rows
  * @param {boolean} props.monospace
+ * @param {Function} [props.validate]
  * @param {boolean} [props.disabled]
  */
 export default function TextAreaEntry(props) {
@@ -120,14 +124,49 @@ export default function TextAreaEntry(props) {
     rows,
     monospace,
     disabled,
+    validate,
     onFocus,
     onBlur,
     autoResize
   } = props;
 
-  const value = getValue(element);
+  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
+  const globalError = useError(id);
+  const [ localError, setLocalError ] = useState(null);
 
-  const error = useError(id);
+  let value = getValue(element);
+
+  const previousValue = usePrevious(value);
+
+  useEffect(() => {
+    if (isFunction(validate)) {
+      const newValidationError = validate(value) || null;
+
+      setLocalError(newValidationError);
+    }
+  }, [ value ]);
+
+  const onInput = (newValue) => {
+    let newValidationError = null;
+
+    if (isFunction(validate)) {
+      newValidationError = validate(newValue) || null;
+    }
+
+    if (newValidationError) {
+      setCachedInvalidValue(newValue);
+    } else {
+      setValue(newValue);
+    }
+
+    setLocalError(newValidationError);
+  };
+
+  if (previousValue === value && localError) {
+    value = cachedInvalidValue;
+  }
+
+  const error = globalError || localError;
 
   return (
     <div
@@ -141,7 +180,7 @@ export default function TextAreaEntry(props) {
         key={ element }
         label={ label }
         value={ value }
-        onInput={ setValue }
+        onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
         rows={ rows }
