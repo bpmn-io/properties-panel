@@ -2,7 +2,8 @@ import {
   useState,
   useEffect,
   useMemo,
-  useRef
+  useRef,
+  useLayoutEffect
 } from 'preact/hooks';
 
 import {
@@ -122,7 +123,7 @@ export default function PropertiesPanel(props) {
   const [ layout, setLayout ] = useState(createLayout(layoutConfig));
 
   // react to external changes in the layout config
-  useUpdateEffect(() => {
+  useUpdateLayoutEffect(() => {
     const newLayout = createLayout(layoutConfig);
 
     setLayout(newLayout);
@@ -258,15 +259,15 @@ function createDescriptionContext(overrides = {}) {
 // hooks //////////////////
 
 /**
- * This hook behaves like useEffect, but does not trigger on the first render.
+ * This hook behaves like useLayoutEffect, but does not trigger on the first render.
  *
  * @param {Function} effect
  * @param {Array} deps
  */
-function useUpdateEffect(effect, deps) {
+function useUpdateLayoutEffect(effect, deps) {
   const isMounted = useRef(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isMounted.current) {
       return effect();
     } else {
