@@ -9,7 +9,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   const OriginalIntersectionObserver = global.IntersectionObserver;
 
   let container;
-  this.beforeEach(function() {
+  beforeEach(function() {
     container = TestContainer.get(this);
   });
 
