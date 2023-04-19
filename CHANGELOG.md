@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.8.1
+
+* `FIX`: do not update sticky state when unmounted ([#238](https://github.com/bpmn-io/properties-panel/pull/238))
+* `FIX`: perform layout updates in `useLayoutEffect` ([#238](https://github.com/bpmn-io/properties-panel/pull/238))
+
 ## 1.8.0
 
 * `FEAT`: support local `TextArea#validate` hook ([#233](https://github.com/bpmn-io/properties-panel/issues/233))
