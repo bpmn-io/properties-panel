@@ -2,10 +2,16 @@ import { useStickyIntersectionObserver } from 'src/hooks';
 
 import { renderHook } from '@testing-library/preact-hooks';
 
+import TestContainer from 'mocha-test-container-support';
 
 describe('hooks/userStickyIntersectionObserver', function() {
 
   const OriginalIntersectionObserver = global.IntersectionObserver;
+
+  let container;
+  this.beforeEach(function() {
+    container = TestContainer.get(this);
+  });
 
   afterEach(function() {
     global.IntersectionObserver = OriginalIntersectionObserver;
@@ -83,6 +89,38 @@ describe('hooks/userStickyIntersectionObserver', function() {
 
     // then
     expect(observeSpy).to.not.have.been.called;
+  });
+
+
+  it('should not call when scrollContainer is unmounted', async function() {
+
+    // given
+    const callbackSpy = sinon.spy();
+
+    const triggerCallback = mockIntersectionObserver({});
+
+    const domObject = <div></div>;
+
+    const scrollContainer = document.createElement('div');
+    scrollContainer.setAttribute('id', 'scrollContainer');
+    container.appendChild(scrollContainer);
+
+    const ref = { current: domObject };
+
+    await renderHook(() => {
+      useStickyIntersectionObserver(ref, '#scrollContainer', callbackSpy);
+
+      return domObject;
+    });
+
+    // when
+    scrollContainer.remove();
+    triggerCallback([
+      { intersectionRatio: 1 }
+    ]);
+
+    // then
+    expect(callbackSpy).not.to.have.been.called;
   });
 
 

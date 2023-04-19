@@ -38,6 +38,12 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       const scrollContainer = domQuery(scrollContainerSelector);
 
       observer = new Observer((entries) => {
+
+        // The ScrollContainer is unmounted, do not update sticky state
+        if (scrollContainer.scrollHeight === 0) {
+          return;
+        }
+
         entries.forEach(entry => {
           if (entry.intersectionRatio < 1) {
             setSticky(true);
