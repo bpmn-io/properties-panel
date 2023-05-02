@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.8.2
+
+* `DEPS`: update to `@bpmn-io/feel-editor@0.7.1`
+
 ## 1.8.1
 
 * `FIX`: do not update sticky state when unmounted ([#238](https://github.com/bpmn-io/properties-panel/pull/238))
