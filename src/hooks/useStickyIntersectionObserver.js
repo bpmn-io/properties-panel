@@ -37,6 +37,10 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
     if (ref.current) {
       const scrollContainer = domQuery(scrollContainerSelector);
 
+      if (!scrollContainer) {
+        return;
+      }
+
       observer = new Observer((entries) => {
 
         // The ScrollContainer is unmounted, do not update sticky state
@@ -68,5 +72,5 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       }
     };
 
-  }, [ ref, scrollContainerSelector, setSticky ]);
+  }, [ ref.current, scrollContainerSelector, setSticky ]);
 }
