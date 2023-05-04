@@ -124,6 +124,33 @@ describe('hooks/userStickyIntersectionObserver', function() {
   });
 
 
+  it('should not call when scrollContainer is non-existent', async function() {
+
+    // given
+    const callbackSpy = sinon.spy();
+
+    const triggerCallback = mockIntersectionObserver({});
+
+    const domObject = <div></div>;
+
+    const ref = { current: domObject };
+
+    await renderHook(() => {
+      useStickyIntersectionObserver(ref, '#nonExistentScrollContainer', callbackSpy);
+
+      return domObject;
+    });
+
+    // when
+    triggerCallback([
+      { intersectionRatio: 1 }
+    ]);
+
+    // then
+    expect(callbackSpy).not.to.have.been.called;
+  });
+
+
   it('should unobserve after unmount', async function() {
 
     // given
@@ -171,6 +198,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
       expect(error).not.to.exist;
     }
   });
+
 });
 
 
