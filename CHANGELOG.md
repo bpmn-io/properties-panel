@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.8.3
+
+* `FIX`: do not break when propertiesPanel is initialized unmounted ([#241](https://github.com/bpmn-io/properties-panel/pull/241))
+
 ## 1.8.2
 
 * `DEPS`: update to `@bpmn-io/feel-editor@0.7.1`
