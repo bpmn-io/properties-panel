@@ -37,6 +37,7 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
     if (ref.current) {
       const scrollContainer = domQuery(scrollContainerSelector);
 
+      // TODO(@barmac): test this
       if (!scrollContainer) {
         return;
       }
