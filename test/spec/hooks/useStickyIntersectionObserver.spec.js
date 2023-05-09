@@ -1,8 +1,12 @@
+import EventBus from 'diagram-js/lib/core/EventBus';
+
 import { useStickyIntersectionObserver } from 'src/hooks';
 
+import { waitFor } from '@testing-library/preact';
 import { renderHook } from '@testing-library/preact-hooks';
 
 import TestContainer from 'mocha-test-container-support';
+import { EventContext } from '../../../src/context';
 
 describe('hooks/userStickyIntersectionObserver', function() {
 
@@ -13,8 +17,16 @@ describe('hooks/userStickyIntersectionObserver', function() {
     container = TestContainer.get(this);
   });
 
+  let eventBus;
+
+  beforeEach(function() {
+    eventBus = new EventBus();
+  });
+
   afterEach(function() {
     global.IntersectionObserver = OriginalIntersectionObserver;
+
+    container.remove();
   });
 
 
@@ -124,6 +136,40 @@ describe('hooks/userStickyIntersectionObserver', function() {
   });
 
 
+  it('should observe after being attached', async function() {
+
+    // given
+    const observeSpy = sinon.spy();
+
+    mockIntersectionObserver({ observe: observeSpy });
+
+    const domObject = <div></div>;
+    const ref = { current: domObject };
+
+    await renderHook(() => {
+      useStickyIntersectionObserver(ref, '#scrollContainer', () => {});
+
+      return domObject;
+    }, { wrapper: WithEventContext(eventBus) });
+
+    // assume
+    expect(observeSpy).not.to.have.been.called;
+
+    // when
+    const scrollContainer = document.createElement('div');
+    scrollContainer.setAttribute('id', 'scrollContainer');
+    container.appendChild(scrollContainer);
+
+    eventBus.fire('propertiesPanel.attach');
+
+    // then
+    await waitFor(() => {
+      expect(observeSpy).to.have.been.calledOnce;
+    });
+
+  });
+
+
   it('should unobserve after unmount', async function() {
 
     // given
@@ -146,6 +192,38 @@ describe('hooks/userStickyIntersectionObserver', function() {
 
     // then
     expect(unobserveSpy).to.have.been.calledOnce;
+  });
+
+
+  it('should unobserve after being detached', async function() {
+
+    // given
+    const unobserveSpy = sinon.spy();
+
+    mockIntersectionObserver({ unobserve: unobserveSpy });
+
+    const scrollContainer = document.createElement('div');
+    scrollContainer.setAttribute('id', 'scrollContainer');
+    container.appendChild(scrollContainer);
+
+    const domObject = <div></div>;
+    const ref = { current: domObject };
+
+    await renderHook(() => {
+      useStickyIntersectionObserver(ref, '#scrollContainer', () => {});
+
+      return domObject;
+    }, { wrapper: WithEventContext(eventBus) });
+
+    // when
+    scrollContainer.remove();
+    eventBus.fire('propertiesPanel.detach');
+
+    // then
+    await waitFor(() => {
+      expect(unobserveSpy).to.have.been.calledOnce;
+    });
+
   });
 
 
@@ -216,4 +294,20 @@ function mockIntersectionObserver(props) {
   global.IntersectionObserver = MockObserver;
 
   return triggerCallbacks;
+}
+
+function WithEventContext(eventBus) {
+  return function Wrapper(props) {
+    const { children } = props;
+
+    const eventContext = {
+      eventBus
+    };
+
+    return (
+      <EventContext.Provider value={ eventContext }>
+        { children }
+      </EventContext.Provider>
+    );
+  };
 }

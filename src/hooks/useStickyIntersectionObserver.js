@@ -1,10 +1,14 @@
 import {
-  useEffect
+  useCallback,
+  useEffect,
+  useState
 } from 'preact/hooks';
 
 import {
   query as domQuery
 } from 'min-dom';
+
+import { useEvent } from './useEvent';
 
 
 /**
@@ -23,8 +27,25 @@ import {
  * @param {setSticky} setSticky
  */
 export function useStickyIntersectionObserver(ref, scrollContainerSelector, setSticky) {
-  useEffect(() => {
 
+  const [ scrollContainer, setScrollContainer ] = useState(domQuery(scrollContainerSelector));
+
+  const updateScrollContainer = useCallback(() => {
+    const newScrollContainer = domQuery(scrollContainerSelector);
+
+    if (newScrollContainer !== scrollContainer) {
+      setScrollContainer(newScrollContainer);
+    }
+  }, [ scrollContainerSelector, scrollContainer ]);
+
+  useEffect(() => {
+    updateScrollContainer();
+  }, [ updateScrollContainer ]);
+
+  useEvent('propertiesPanel.attach', updateScrollContainer);
+  useEvent('propertiesPanel.detach', updateScrollContainer);
+
+  useEffect(() => {
     const Observer = IntersectionObserver;
 
     // return early if IntersectionObserver is not available
@@ -32,46 +53,38 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       return;
     }
 
-    let observer;
+    // TODO(@barmac): test this
+    if (!ref.current || !scrollContainer) {
+      return;
+    }
 
-    if (ref.current) {
-      const scrollContainer = domQuery(scrollContainerSelector);
+    const observer = new Observer((entries) => {
 
-      // TODO(@barmac): test this
-      if (!scrollContainer) {
+      // The ScrollContainer is unmounted, do not update sticky state
+      if (scrollContainer.scrollHeight === 0) {
         return;
       }
 
-      observer = new Observer((entries) => {
-
-        // The ScrollContainer is unmounted, do not update sticky state
-        if (scrollContainer.scrollHeight === 0) {
-          return;
+      entries.forEach(entry => {
+        if (entry.intersectionRatio < 1) {
+          setSticky(true);
         }
-
-        entries.forEach(entry => {
-          if (entry.intersectionRatio < 1) {
-            setSticky(true);
-          }
-          else if (entry.intersectionRatio === 1) {
-            setSticky(false);
-          }
-        });
-      },
-      {
-        root: scrollContainer,
-        rootMargin: '0px 0px 999999% 0px', // Use bottom margin to avoid stickyness when scrolling out to bottom
-        threshold: [ 1 ]
+        else if (entry.intersectionRatio === 1) {
+          setSticky(false);
+        }
       });
-      observer.observe(ref.current);
-    }
+    },
+    {
+      root: scrollContainer,
+      rootMargin: '0px 0px 999999% 0px', // Use bottom margin to avoid stickyness when scrolling out to bottom
+      threshold: [ 1 ]
+    });
+    observer.observe(ref.current);
 
     // Unobserve if unmounted
     return () => {
-      if (ref.current && observer) {
-        observer.unobserve(ref.current);
-      }
+      observer.unobserve(ref.current);
     };
 
-  }, [ ref.current, scrollContainerSelector, setSticky ]);
+  }, [ ref.current, scrollContainer, setSticky ]);
 }
