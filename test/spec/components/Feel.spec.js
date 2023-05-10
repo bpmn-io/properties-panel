@@ -16,6 +16,7 @@ import EventBus from 'diagram-js/lib/core/EventBus';
 
 import {
   changeInput,
+  clickInput,
   expectNoViolations,
   insertCoreStyles
 } from 'test/TestHelper';
@@ -27,7 +28,12 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
-import FeelField, { FeelTextAreaEntry, isEdited } from 'src/components/entries/FEEL';
+import FeelField, {
+  FeelCheckboxEntry,
+  FeelTextAreaEntry,
+  FeelToggleSwitchEntry,
+  isEdited
+} from 'src/components/entries/FEEL';
 
 insertCoreStyles();
 
@@ -931,6 +937,272 @@ describe('<FeelField>', function() {
   });
 
 
+  describe('FEEL disabled (Toggle Switch)', function() {
+
+    it('should render', function() {
+
+      // given
+      const result = createFeelToggleSwitch({ container });
+
+      // then
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+    });
+
+
+    it('should update', function() {
+
+      // given
+      const updateSpy = sinon.spy();
+
+      const result = createFeelToggleSwitch({ container, setValue: updateSpy, getValue: () => false });
+
+      const slider = domQuery('.bio-properties-panel-toggle-switch__slider', result.container);
+
+      // when
+      clickInput(slider);
+
+      // then
+      expect(updateSpy).to.have.been.calledWith(true);
+    });
+
+
+    describe('#isEdited', function() {
+
+      it('should NOT be edited', function() {
+
+        // given
+        const result = createFeelToggleSwitch({ container, getValue: () => false });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        const edited = isEdited(input);
+
+        // then
+        expect(edited).to.be.false;
+      });
+
+
+      it('should be edited', function() {
+
+        // given
+        const result = createFeelToggleSwitch({ container, getValue: () => true });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        const edited = isEdited(input);
+
+        // then
+        expect(edited).to.be.true;
+      });
+
+
+      it('should be edited after update', function() {
+
+        // given
+        const result = createFeelToggleSwitch({ container });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // assume
+        expect(isEdited(input)).to.be.false;
+
+        // when
+        const slider = domQuery('.bio-properties-panel-toggle-switch__slider', result.container);
+
+        clickInput(slider);
+
+        // then
+        expect(isEdited(input)).to.be.true;
+      });
+
+    });
+
+
+    it('should render optional feel icon', function() {
+
+      // given
+      const field = createFeelToggleSwitch({
+        container,
+        id: 'feelField',
+        feel: 'optional'
+      });
+
+      // then
+      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container);
+      expect(icon).to.exist;
+    });
+
+
+    describe('toggle', function() {
+
+      it('should toggle feel active', async function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const field = createFeelToggleSwitch({
+          container,
+          id: 'feelField',
+          feel: 'optional',
+          getValue: () => true,
+          setValue: updateSpy
+        });
+
+        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container);
+
+        // when
+        await act(() => {
+          icon.click();
+        });
+
+        // then
+        return waitFor(() => {
+          expect(updateSpy).to.have.been.calledWith('=true');
+          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+        });
+      });
+
+    });
+
+  });
+
+
+  describe('FEEL disabled (Checkbox)', function() {
+
+    it('should render', function() {
+
+      // given
+      const result = createFeelCheckbox({ container });
+
+      // then
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+    });
+
+
+    it('should update', function() {
+
+      // given
+      const updateSpy = sinon.spy();
+
+      const result = createFeelCheckbox({ container, setValue: updateSpy, getValue: () => false });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      clickInput(input);
+
+      // then
+      expect(updateSpy).to.have.been.calledWith(true);
+    });
+
+
+    describe('#isEdited', function() {
+
+      it('should NOT be edited', function() {
+
+        // given
+        const result = createFeelCheckbox({ container, getValue: () => false });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        const edited = isEdited(input);
+
+        // then
+        expect(edited).to.be.false;
+      });
+
+
+      it('should be edited', function() {
+
+        // given
+        const result = createFeelCheckbox({ container, getValue: () => true });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        const edited = isEdited(input);
+
+        // then
+        expect(edited).to.be.true;
+      });
+
+
+      it('should be edited after update', function() {
+
+        // given
+        const result = createFeelCheckbox({ container });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // assume
+        expect(isEdited(input)).to.be.false;
+
+        // when
+        clickInput(input);
+
+        // then
+        expect(isEdited(input)).to.be.true;
+      });
+
+    });
+
+
+    it('should render optional feel icon', function() {
+
+      // given
+      const field = createFeelCheckbox({
+        container,
+        id: 'feelField',
+        feel: 'optional'
+      });
+
+      // then
+      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container);
+      expect(icon).to.exist;
+    });
+
+
+    describe('toggle', function() {
+
+      it('should toggle feel active', async function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const field = createFeelCheckbox({
+          container,
+          id: 'feelField',
+          feel: 'optional',
+          getValue: () => true,
+          setValue: updateSpy
+        });
+
+        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container);
+
+        // when
+        await act(() => {
+          icon.click();
+        });
+
+        // then
+        return waitFor(() => {
+          expect(updateSpy).to.have.been.calledWith('=true');
+          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+        });
+      });
+
+    });
+
+  });
+
+
   describe('FEEL enabled', function() {
 
     it('should render', function() {
@@ -1542,6 +1814,51 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should have no violations - text area', async function() {
+
+      // given
+      this.timeout(5000);
+
+      const { container: node } = createFeelTextArea({
+        container,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
+
+    it('should have no violations - toggle switch', async function() {
+
+      // given
+      this.timeout(5000);
+
+      const { container: node } = createFeelToggleSwitch({
+        container,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
+
+    it('should have no violations - checkbox', async function() {
+
+      // given
+      this.timeout(5000);
+
+      const { container: node } = createFeelCheckbox({
+        container,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
+
     // TODO: fix a11y violations when feel editor supports content attribute extensions
     // cf. https://github.com/bpmn-io/feel-editor/issues/36
     it.skip('should have no violations (feel)', async function() {
@@ -1603,7 +1920,7 @@ describe('<FeelField>', function() {
 function createFeelField(options = {}, renderFn = render) {
   const {
     element,
-    id,
+    id = 'feel',
     description,
     debounce = fn => fn,
     disabled,
@@ -1618,7 +1935,8 @@ function createFeelField(options = {}, renderFn = render) {
     eventBus = new EventBus(),
     onShow = noop,
     errors = {},
-    variables
+    variables,
+    Component = FeelField
   } = options;
 
   const errorsContext = {
@@ -1643,7 +1961,7 @@ function createFeelField(options = {}, renderFn = render) {
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
           <DescriptionContext.Provider value={ descriptionContext }>
-            <FeelField
+            <Component
               element={ element }
               id={ id }
               label={ label }
@@ -1668,66 +1986,24 @@ function createFeelField(options = {}, renderFn = render) {
 
 
 function createFeelTextArea(options = {}, renderFn = render) {
-  const {
-    element,
-    id,
-    description,
-    debounce = fn => fn,
-    disabled,
-    feel = 'optional',
-    label,
-    getValue = noop,
-    setValue = noop,
-    validate = noop,
-    descriptionConfig = {},
-    getDescriptionForId = noop,
-    container,
-    eventBus = new EventBus(),
-    onShow = noop,
-    errors = {}
-  } = options;
+  return createFeelField({
+    ...options,
+    Component: FeelTextAreaEntry
+  }, renderFn);
+}
 
-  const errorsContext = {
-    errors
-  };
+function createFeelToggleSwitch(options = {}, renderFn = render) {
+  return createFeelField({
+    ...options,
+    Component: FeelToggleSwitchEntry
+  }, renderFn);
+}
 
-  const eventContext = {
-    eventBus
-  };
-
-  const propertiesPanelContext = {
-    onShow
-  };
-
-  const descriptionContext = {
-    description: descriptionConfig,
-    getDescriptionForId
-  };
-
-  return renderFn(
-    <ErrorsContext.Provider value={ errorsContext }>
-      <EventContext.Provider value={ eventContext }>
-        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-          <DescriptionContext.Provider value={ descriptionContext }>
-            <FeelTextAreaEntry
-              element={ element }
-              id={ id }
-              label={ label }
-              description={ description }
-              disabled={ disabled }
-              getValue={ getValue }
-              setValue={ setValue }
-              debounce={ debounce }
-              validate={ validate }
-              feel={ feel } />
-          </DescriptionContext.Provider>
-        </PropertiesPanelContext.Provider>
-      </EventContext.Provider>
-    </ErrorsContext.Provider>,
-    {
-      container
-    }
-  );
+function createFeelCheckbox(options = {}, renderFn = render) {
+  return createFeelField({
+    ...options,
+    Component: FeelCheckboxEntry
+  }, renderFn);
 }
 
 function isValid(node) {
