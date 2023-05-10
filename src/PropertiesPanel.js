@@ -13,8 +13,6 @@ import {
   set
 } from 'min-dash';
 
-import classnames from 'classnames';
-
 import Header from './components/Header';
 
 import Group from './components/Group';
@@ -31,9 +29,7 @@ import {
 
 import { useEvent } from './hooks';
 
-const DEFAULT_LAYOUT = {
-  open: true
-};
+const DEFAULT_LAYOUT = {};
 
 const DEFAULT_DESCRIPTION = {};
 
@@ -205,11 +201,7 @@ export default function PropertiesPanel(props) {
         <DescriptionContext.Provider value={ descriptionContext }>
           <LayoutContext.Provider value={ layoutContext }>
             <EventContext.Provider value={ eventContext }>
-              <div
-                class={ classnames(
-                  'bio-properties-panel',
-                  layout.open ? 'open' : '')
-                }>
+              <div class="bio-properties-panel">
                 <Header
                   element={ element }
                   headerProvider={ headerProvider } />
