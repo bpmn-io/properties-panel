@@ -13,7 +13,7 @@ import { forwardRef } from 'preact/compat';
 
 import classnames from 'classnames';
 
-import { isFunction } from 'min-dash';
+import { isFunction, isString } from 'min-dash';
 
 import {
   usePrevious,
@@ -25,6 +25,8 @@ import {
 import CodeEditor from './FeelEditor';
 import { FeelIndicator } from './FeelIndicator';
 import FeelIcon from './FeelIcon';
+
+import { ToggleSwitch } from '../ToggleSwitch';
 
 const noop = () => { };
 
@@ -48,8 +50,8 @@ function FeelTextfield(props) {
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
 
-  const feelActive = localValue.startsWith('=') || feel === 'required';
-  const feelOnlyValue = localValue.startsWith('=') ? localValue.substring(1) : localValue;
+  const feelActive = (isString(localValue) && localValue.startsWith('=')) || feel === 'required';
+  const feelOnlyValue = (isString(localValue) && localValue.startsWith('=')) ? localValue.substring(1) : localValue;
 
   const [ focus, _setFocus ] = useState(undefined);
 
@@ -102,7 +104,7 @@ function FeelTextfield(props) {
 
     setLocalValue(newValue);
 
-    if (!feelActive && newValue.startsWith('=')) {
+    if (!feelActive && isString(newValue) && newValue.startsWith('=')) {
 
       // focus is behind `=` sign that will be removed
       setFocus(-1);
@@ -178,7 +180,10 @@ function FeelTextfield(props) {
   }, [ containerRef, feelActive, handleFeelToggle, setFocus ]);
 
   return (
-    <div class="bio-properties-panel-feel-entry">
+    <div class={ classnames(
+      'bio-properties-panel-feel-entry',
+      { 'feel-active': feelActive }
+    ) }>
       <label for={ prefixId(id) } class="bio-properties-panel-label" onClick={ () => setFocus() }>
         {label}
         <FeelIcon
@@ -309,6 +314,84 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
     value={ value || '' }
     data-gramm="false"
   />;
+});
+
+const OptionalFeelToggleSwitch = forwardRef((props, ref) => {
+  const {
+    id,
+    onInput,
+    value,
+    onFocus,
+    onBlur,
+    switcherLabel
+  } = props;
+
+  const inputRef = useRef();
+
+  // To be consistent with the FEEL editor, set focus at start of input
+  // this ensures clean editing experience when switching with the keyboard
+  ref.current = {
+    focus: () => {
+      const input = inputRef.current;
+      if (!input) {
+        return;
+      }
+
+      input.focus();
+    }
+  };
+
+  return <ToggleSwitch
+    id={ id }
+    value={ value }
+    inputRef={ inputRef }
+    onInput={ onInput }
+    onFocus={ onFocus }
+    onBlur={ onBlur }
+    switcherLabel={ switcherLabel } />;
+});
+
+
+const OptionalFeelCheckbox = forwardRef((props, ref) => {
+  const {
+    id,
+    disabled,
+    onInput,
+    value,
+    onFocus,
+    onBlur
+  } = props;
+
+  const inputRef = useRef();
+
+  const handleChange = ({ target }) => {
+    onInput(target.checked);
+  };
+
+  // To be consistent with the FEEL editor, set focus at start of input
+  // this ensures clean editing experience when switching with the keyboard
+  ref.current = {
+    focus: () => {
+      const input = inputRef.current;
+      if (!input) {
+        return;
+      }
+
+      input.focus();
+    }
+  };
+
+  return <input
+    ref={ inputRef }
+    id={ prefixId(id) }
+    name={ id }
+    onFocus={ onFocus }
+    onBlur={ onBlur }
+    type="checkbox"
+    class="bio-properties-panel-input"
+    onChange={ handleChange }
+    checked={ value }
+    disabled={ disabled } />;
 });
 
 /**
@@ -461,6 +544,52 @@ export function FeelTextAreaEntry(props) {
  * @param {Object} props.element
  * @param {String} props.id
  * @param {String} props.description
+ * @param {Boolean} props.debounce
+ * @param {Boolean} props.disabled
+ * @param {Boolean} props.feel
+ * @param {String} props.label
+ * @param {Function} props.getValue
+ * @param {Function} props.setValue
+ * @param {Function} props.tooltipContainer
+ * @param {Function} props.validate
+ * @param {Function} props.show
+ * @param {Function} props.example
+ * @param {Function} props.variables
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
+ */
+export function FeelToggleSwitchEntry(props) {
+  return <FeelEntry class="bio-properties-panel-feel-toggle-switch" OptionalComponent={ OptionalFeelToggleSwitch } { ...props } />;
+}
+
+/**
+ * @param {Object} props
+ * @param {Object} props.element
+ * @param {String} props.id
+ * @param {String} props.description
+ * @param {Boolean} props.debounce
+ * @param {Boolean} props.disabled
+ * @param {Boolean} props.feel
+ * @param {String} props.label
+ * @param {Function} props.getValue
+ * @param {Function} props.setValue
+ * @param {Function} props.tooltipContainer
+ * @param {Function} props.validate
+ * @param {Function} props.show
+ * @param {Function} props.example
+ * @param {Function} props.variables
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
+ */
+export function FeelCheckboxEntry(props) {
+  return <FeelEntry class="bio-properties-panel-feel-checkbox" OptionalComponent={ OptionalFeelCheckbox } { ...props } />;
+}
+
+/**
+ * @param {Object} props
+ * @param {Object} props.element
+ * @param {String} props.id
+ * @param {String} props.description
  * @param {String} props.hostLanguage
  * @param {Boolean} props.singleLine
  * @param {Boolean} props.debounce
@@ -482,7 +611,15 @@ export function FeelTemplatingEntry(props) {
 }
 
 export function isEdited(node) {
-  return node && (!!node.value || node.classList.contains('edited'));
+  if (!node) {
+    return false;
+  }
+
+  if (node.type === 'checkbox') {
+    return !!node.checked || node.classList.contains('edited');
+  }
+
+  return !!node.value || node.classList.contains('edited');
 }
 
 

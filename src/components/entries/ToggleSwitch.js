@@ -5,7 +5,7 @@ import {
   useState
 } from 'preact/hooks';
 
-function ToggleSwitch(props) {
+export function ToggleSwitch(props) {
   const {
     id,
     label,
@@ -13,7 +13,8 @@ function ToggleSwitch(props) {
     value,
     switcherLabel,
     onFocus,
-    onBlur
+    onBlur,
+    inputRef
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -44,6 +45,7 @@ function ToggleSwitch(props) {
       <div class="bio-properties-panel-field-wrapper">
         <label class="bio-properties-panel-toggle-switch__switcher">
           <input
+            ref={ inputRef }
             id={ prefixId(id) }
             class="bio-properties-panel-input"
             type="checkbox"

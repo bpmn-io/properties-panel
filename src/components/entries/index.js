@@ -1,7 +1,14 @@
 export { default as CheckboxEntry, isEdited as isCheckboxEntryEdited } from './Checkbox';
 export { default as CollapsibleEntry } from './Collapsible';
 export { default as DescriptionEntry } from './Description';
-export { default as FeelEntry, FeelTextAreaEntry, FeelTemplatingEntry, isEdited as isFeelEntryEdited } from './FEEL';
+export {
+  default as FeelEntry,
+  FeelCheckboxEntry,
+  FeelTextAreaEntry,
+  FeelTemplatingEntry,
+  FeelToggleSwitchEntry,
+  isEdited as isFeelEntryEdited
+} from './FEEL';
 export { default as TemplatingEntry, isEdited as isTemplatingEntryEdited } from './templating';
 export { default as ListEntry } from './List';
 export { default as NumberFieldEntry, isEdited as isNumberFieldEntryEdited } from './NumberField';

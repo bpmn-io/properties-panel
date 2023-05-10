@@ -1077,3 +1077,20 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-feel-container .cm-editor {
   min-height: 100%;
 }
+
+.bio-properties-panel-feel-checkbox,
+.bio-properties-panel-feel-toggle-switch {
+  padding-top: 1px;
+}
+
+.bio-properties-panel-feel-checkbox .bio-properties-panel-feel-entry:not(.feel-active),
+.bio-properties-panel-feel-toggle-switch .bio-properties-panel-feel-entry:not(.feel-active) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.bio-properties-panel-feel-checkbox .bio-properties-panel-feel-entry:not(.feel-active) .bio-properties-panel-feel-container,
+.bio-properties-panel-feel-toggle-switch .bio-properties-panel-feel-entry:not(.feel-active) .bio-properties-panel-feel-container {
+  margin-left: auto;
+}
