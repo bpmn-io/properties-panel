@@ -99,8 +99,11 @@
   --dropdown-item-hover-background-color: var(--color-grey-225-10-95);
   --dropdown-separator-background-color: var(--color-grey-225-10-75);
 
-  --feel-active-color: var(--color-blue-205-100-35);
+  --feel-background-color: var(--color-grey-225-10-95);
+  --feel-active-color: var(--color-blue-205-100-45);
   --feel-inactive-color: var(--color-grey-225-10-35);
+  --feel-hover-background-color: var(--color-grey-225-10-90);
+  --feel-active-background-color: var(--color-grey-225-10-95);
 
   --feel-indicator-background-color: var(--color-grey-225-10-90);
 
@@ -512,7 +515,7 @@ select.bio-properties-panel-input {
 }
 
 .bio-properties-panel-input[type="checkbox"]:focus {
-  outline: 1px solid var(--input-focus-border-color);
+  outline: 2px solid var(--input-focus-border-color);
   outline-offset: 0;
 }
 
@@ -596,6 +599,11 @@ textarea.bio-properties-panel-input {
   position: relative;
   width: 32px;
   height: 16px;
+}
+
+.bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher:focus-within {
+  outline: 2px solid var(--input-focus-border-color);
+  outline-offset: 1px;
 }
 
 .bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher input[type='checkbox'] {
@@ -962,34 +970,57 @@ textarea.bio-properties-panel-input {
   padding-right: 2em
 }
 
+.bio-properties-panel-feel-entry .bio-properties-panel-label {
+  display: flex;
+}
+
 .bio-properties-panel-feel-icon {
-  display: inline-block;
-  height: 16px;
-  border-radius: 8px;
+  display: inline-flex;
+  height: 22px;
+  width: 22px;
   vertical-align: text-bottom;
   padding: 0;
   margin: 0 3px;
   align-items: center;
   align-self: center;
+  justify-content: center;
   border: none;
   background: none;
+  border-radius: 3px;
 }
 
 .bio-properties-panel-feel-icon.optional {
   cursor: pointer;
+
+  background: var(--feel-background-color);
 }
 
 .bio-properties-panel-feel-icon svg * {
-  color: var(--feel-inactive-color);
+  fill: var(--feel-inactive-color);
+}
+
+.bio-properties-panel-feel-icon:hover {
+  background: var(--feel-hover-background-color);
+}
+
+.bio-properties-panel-feel-icon.active {
+  background: var(--feel-active-background-color);
+}
+
+.bio-properties-panel-feel-icon.active:hover {
+  background: var(--feel-hover-background-color);
+}
+
+.bio-properties-panel-feel-icon.required.active {
+  background: none;
 }
 
 .bio-properties-panel-feel-icon.active svg * {
-  color: var(--feel-active-color);
+  fill: var(--feel-active-color);
 }
 
-.bio-properties-panel-feel-icon svg {
-  width: 16px;
-  height: 16px;
+.bio-properties-panel-feel-icon.required.active svg * {
+  fill: var(--feel-inactive-color);
 }
 
 .bio-properties-panel-feel-editor-container {
