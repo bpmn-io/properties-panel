@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FeelOptionalIcon, FeelRequiredIcon } from '../../icons';
+import { FeelIcon as FeelIconSvg } from '../../icons';
 
 const noop = () => {};
 
@@ -11,15 +11,14 @@ const noop = () => {};
 export default function FeelIcon(props) {
 
   const {
-    label,
     feel = false,
     active,
     disabled = false,
     onClick = noop
   } = props;
 
-  const feelRequiredLabel = ' must be a FEEL expression';
-  const feelOptionalLabel = ' can optionally be a FEEL expression';
+  const feelRequiredLabel = 'FEEL expression is mandatory';
+  const feelOptionalLabel = `Click to ${active ? 'remove' : 'set a'} dynamic value with FEEL expression`;
 
   const handleClick = e => {
     onClick(e);
@@ -38,12 +37,10 @@ export default function FeelIcon(props) {
       onClick={ handleClick }
       disabled={ feel === 'required' || disabled }
       title={
-        label + (
-          feel === 'required' ? feelRequiredLabel : feelOptionalLabel
-        )
+        feel === 'required' ? feelRequiredLabel : feelOptionalLabel
       }
     >
-      {feel === 'required' ? <FeelRequiredIcon /> : <FeelOptionalIcon />}
+      <FeelIconSvg />
     </button>
   );
 }
