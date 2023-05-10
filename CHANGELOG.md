@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+
+__Breaking Changes__
+
+* Open state is no longer handled by the library, the properties panel is now considered to be always open. Hiding the properties panel must be handled by the integrating application.
+
 ## 1.8.2
 
 * `FIX`: do not break when propertiesPanel is initialized unmounted

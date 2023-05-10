@@ -284,7 +284,7 @@ describe('<PropertiesPanel>', function() {
     it('should notify on initial layout loaded (default layout)', async function() {
 
       // given
-      const DEFAULT_LAYOUT = { open: true };
+      const DEFAULT_LAYOUT = { };
       const layoutChangedSpy = sinon.spy();
 
       // when
@@ -331,7 +331,6 @@ describe('<PropertiesPanel>', function() {
       // then
       expect(layoutChangedSpy).to.have.been.calledTwice;
       expect(layoutChangedSpy).to.have.been.calledWith({
-        open: true,
         groups: {
           [ groups[0].id ]: { open: true }
         }
