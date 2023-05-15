@@ -5,6 +5,8 @@ import {
   useState
 } from 'preact/hooks';
 
+import classNames from 'classnames';
+
 export function ToggleSwitch(props) {
   const {
     id,
@@ -12,6 +14,7 @@ export function ToggleSwitch(props) {
     onInput,
     value,
     switcherLabel,
+    inline,
     onFocus,
     onBlur,
     inputRef
@@ -37,7 +40,10 @@ export function ToggleSwitch(props) {
   }, [ value ]);
 
   return (
-    <div class="bio-properties-panel-toggle-switch">
+    <div class={ classNames(
+      'bio-properties-panel-toggle-switch',
+      { inline }
+    ) }>
       <label class="bio-properties-panel-label"
         for={ prefixId(id) }>
         { label }
@@ -56,7 +62,7 @@ export function ToggleSwitch(props) {
             checked={ !!localValue } />
           <span class="bio-properties-panel-toggle-switch__slider" />
         </label>
-        <p class="bio-properties-panel-toggle-switch__label">{ switcherLabel }</p>
+        { switcherLabel && <p class="bio-properties-panel-toggle-switch__label">{ switcherLabel }</p> }
       </div>
     </div>
   );
@@ -69,6 +75,7 @@ export function ToggleSwitch(props) {
  * @param {String} props.description
  * @param {String} props.label
  * @param {String} props.switcherLabel
+ * @param {Boolean} props.inline
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.onFocus
@@ -81,6 +88,7 @@ export default function ToggleSwitchEntry(props) {
     description,
     label,
     switcherLabel,
+    inline,
     getValue,
     setValue,
     onFocus,
@@ -97,7 +105,8 @@ export default function ToggleSwitchEntry(props) {
         onInput={ setValue }
         onFocus={ onFocus }
         onBlur={ onBlur }
-        switcherLabel={ switcherLabel } />
+        switcherLabel={ switcherLabel }
+        inline={ inline } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

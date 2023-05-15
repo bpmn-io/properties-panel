@@ -160,6 +160,28 @@ describe('<ToggleSwitch>', function() {
   });
 
 
+  it('should not set switcher label', function() {
+
+    // given
+    const result = createToggleSwitch({ container });
+
+    // then
+    expect(domQuery('.bio-properties-panel-toggle-switch__label', result.container)).to.not.exist;
+  });
+
+
+  it('should set inline', function() {
+
+    // given
+    const result = createToggleSwitch({ container, inline: true });
+
+    const toggle = domQuery('.bio-properties-panel-toggle-switch', result.container);
+
+    // then
+    expect(toggle.classList.contains('inline')).to.be.true;
+  });
+
+
   describe('#isEdited', function() {
 
     it('should NOT be edited', function() {
@@ -311,6 +333,22 @@ describe('<ToggleSwitch>', function() {
       await expectNoViolations(node);
     });
 
+
+    it('should have no violations - switcher label', async function() {
+
+      // given
+      this.timeout(5000);
+
+      const { container: node } = createToggleSwitch({
+        container,
+        label: 'foo',
+        switchLabel: 'on'
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
   });
 
 });
@@ -325,6 +363,7 @@ function createToggleSwitch(options = {}, renderFn = render) {
     label,
     description,
     switcherLabel,
+    inline,
     getValue = () => false,
     setValue = noop,
     descriptionConfig = {},
@@ -344,6 +383,7 @@ function createToggleSwitch(options = {}, renderFn = render) {
         id={ id }
         label={ label }
         description={ description }
+        inline={ inline }
         getValue={ getValue }
         setValue={ setValue }
         switcherLabel={ switcherLabel } />

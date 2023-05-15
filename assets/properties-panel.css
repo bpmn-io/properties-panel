@@ -585,8 +585,21 @@ textarea.bio-properties-panel-input {
   align-items: center;
 }
 
+.bio-properties-panel-toggle-switch.inline {
+  display: flex;
+  flex-direction: row;
+}
+
+.bio-properties-panel-toggle-switch.inline .bio-properties-panel-field-wrapper {
+  margin-left: auto;
+}
+
 .bio-properties-panel-toggle-switch > .bio-properties-panel-label {
   font-size: var(--text-size-base);
+}
+
+.bio-properties-panel-toggle-switch.inline > .bio-properties-panel-label {
+  font-size: var(--text-size-small);
 }
 
 .bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__label {
@@ -614,6 +627,7 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-toggle-switch .bio-properties-panel-toggle-switch__switcher .bio-properties-panel-toggle-switch__slider {
   position: absolute;
+  cursor: pointer;
   top: 0;
   left: 0;
   right: 0;
