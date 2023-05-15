@@ -60,7 +60,7 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
 
     const observer = new Observer((entries) => {
 
-      // The ScrollContainer is unmounted, do not update sticky state
+      // scroll container is unmounted, do not update sticky state
       if (scrollContainer.scrollHeight === 0) {
         return;
       }
