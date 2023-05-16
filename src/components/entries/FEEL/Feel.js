@@ -215,7 +215,7 @@ function FeelTextfield(props) {
           <OptionalComponent
             { ...props }
             onInput={ handleLocalInput }
-            contentAttributes={ { 'id': prefixId(id) } }
+            contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }
           />
