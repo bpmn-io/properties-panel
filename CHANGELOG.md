@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.0.0
+
+* `CHORE`: remove `open` layout option ([#244](https://github.com/bpmn-io/properties-panel/pull/244))
+* `FIX`: set sticky class when property panel was created detached ([#243](https://github.com/bpmn-io/properties-panel/pull/243))
 
 __Breaking Changes__
 
