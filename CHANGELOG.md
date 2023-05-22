@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.1.0
+
+* `FEAT`: introduce new FX toggle ([#240](https://github.com/bpmn-io/properties-panel/issues/240))
+* `FEAT`: add FEEL entries for toggle switches and check boxes ([#194](https://github.com/bpmn-io/properties-panel/issues/194))
+* `FEAT`: support `inline` for toggle switches ([#245](https://github.com/bpmn-io/properties-panel/issues/245))
+
 ## 2.0.0
 
 * `CHORE`: remove `open` layout option ([#244](https://github.com/bpmn-io/properties-panel/pull/244))
