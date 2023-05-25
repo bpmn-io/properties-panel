@@ -15,12 +15,14 @@ import {
   usePrevious
 } from '../../hooks';
 
-function NumberField(props) {
+export function NumberField(props) {
 
   const {
     debounce,
     disabled,
+    displayLabel = true,
     id,
+    inputRef,
     label,
     max,
     min,
@@ -62,9 +64,10 @@ function NumberField(props) {
 
   return (
     <div class="bio-properties-panel-numberfield">
-      <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
+      {displayLabel && <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label> }
       <input
         id={ prefixId(id) }
+        ref={ inputRef }
         type="number"
         name={ id }
         spellCheck="false"
