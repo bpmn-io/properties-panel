@@ -4,6 +4,7 @@ export { default as DescriptionEntry } from './Description';
 export {
   default as FeelEntry,
   FeelCheckboxEntry,
+  FeelNumberEntry,
   FeelTextAreaEntry,
   FeelTemplatingEntry,
   FeelToggleSwitchEntry,

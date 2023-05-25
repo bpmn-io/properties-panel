@@ -30,6 +30,7 @@ import {
 
 import FeelField, {
   FeelCheckboxEntry,
+  FeelNumberEntry,
   FeelTextAreaEntry,
   FeelToggleSwitchEntry,
   isEdited
@@ -501,6 +502,464 @@ describe('<FeelField>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=foo');
+        });
+      });
+
+    });
+
+  });
+
+
+  describe('FEEL disabled (NumberField)', function() {
+
+    it('should render', function() {
+
+      // given
+      const result = createFeelNumber({ container });
+
+      // then
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+    });
+
+
+    it('should update', function() {
+
+      // given
+      const updateSpy = sinon.spy();
+
+      const result = createFeelNumber({ container, setValue: updateSpy });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      changeInput(input, 2);
+
+      // then
+      expect(updateSpy).to.have.been.calledWith(2);
+    });
+
+
+    it('should update (floating point number)', function() {
+
+      // given
+      const updateSpy = sinon.spy();
+
+      const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      changeInput(input, 20.5);
+
+      // then
+      expect(updateSpy).to.have.been.calledWith(20.5);
+    });
+
+
+    describe('#isEdited', function() {
+
+      it('should NOT be edited', function() {
+
+        // given
+        const result = createFeelNumber({ container });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        const edited = isEdited(input);
+
+        // then
+        expect(edited).to.be.false;
+      });
+
+
+      it('should be edited', function() {
+
+        // given
+        const result = createFeelNumber({ container, getValue: () => 2 });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        const edited = isEdited(input);
+
+        // then
+        expect(edited).to.be.true;
+      });
+
+
+      it('should be edited after update', function() {
+
+        // given
+        const result = createFeelNumber({ container });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // assume
+        expect(isEdited(input)).to.be.false;
+
+        // when
+        changeInput(input, 2);
+
+        // then
+        expect(isEdited(input)).to.be.true;
+      });
+
+    });
+
+
+    it('should use unique input element on element change', function() {
+
+      // given
+      const result = createFeelNumber({ element: {}, container });
+
+      const input = domQuery('.bio-properties-panel-input', container);
+
+      // when
+      createFeelNumber({ element: {}, container }, result.render);
+
+      // then
+      const newInput = domQuery('.bio-properties-panel-input', container);
+
+      expect(newInput).to.not.eql(input);
+    });
+
+
+    describe('events', function() {
+
+      it('should show entry', function() {
+
+        // given
+        const eventBus = new EventBus();
+
+        const onShowSpy = sinon.spy();
+
+        createFeelNumber({ id: 'foo', container, eventBus, onShow: onShowSpy });
+
+        // when
+        act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
+
+        // then
+        expect(onShowSpy).to.have.been.called;
+      });
+
+    });
+
+
+    describe('errors', function() {
+
+      it('should get error', function() {
+
+        // given
+        const errors = {
+          foo: 'bar'
+        };
+
+        const result = createFeelNumber({ container, errors, id: 'foo' });
+
+        // then
+        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+      });
+
+    });
+
+    describe('validation', function() {
+
+      it('should set valid', function() {
+
+        // given
+        const validate = (v) => {
+          if (v === 3) {
+            return 'error';
+          }
+        };
+
+        const result = createFeelNumber({ container, validate });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 2);
+
+        // then
+        expect(isValid(entry)).to.be.true;
+      });
+
+
+      it('should set invalid', function() {
+
+        // given
+        const validate = (v) => {
+          if (v === 3) {
+            return 'error';
+          }
+        };
+
+        const result = createFeelNumber({ container, validate });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 3);
+
+        // then
+        expect(isValid(entry)).to.be.false;
+      });
+
+
+      it('should keep showing invalid value', function() {
+
+        // given
+        const validate = (v) => {
+          if (v === 3) {
+            return 'error';
+          }
+        };
+
+        const result = createFeelNumber({ container, validate });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 3);
+
+        // then
+        expect(input.value).to.eql('3');
+      });
+
+
+      it('should show error message', function() {
+
+        // given
+        const validate = (v) => {
+          if (v === 3) {
+            return 'error';
+          }
+        };
+
+        const result = createFeelNumber({ container, validate });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 3);
+
+        const error = domQuery('.bio-properties-panel-error', entry);
+
+        // then
+        expect(error).to.exist;
+        expect(error.innerText).to.eql('error');
+      });
+
+    });
+
+
+    describe('disabled', function() {
+
+      it('should render enabled per default', function() {
+
+        // given
+        const result = createFeelNumber({ container });
+
+        // then
+        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        expect(textInput.disabled).to.be.false;
+      });
+
+
+      it('should render enabled if set', function() {
+
+        // given
+        const result = createFeelNumber({
+          container,
+          disabled: false
+        });
+
+        // then
+        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        expect(textInput.disabled).to.be.false;
+      });
+
+
+      it('should render disabled if set', function() {
+
+        // given
+        const result = createFeelNumber({
+          container,
+          disabled: true
+        });
+
+        // then
+        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        expect(textInput.disabled).to.be.true;
+      });
+
+    });
+
+
+    describe('description', function() {
+
+      it('should render without description per default', function() {
+
+        // given
+        const result = createFeelNumber({
+          container,
+          id: 'noDescriptionNumberField'
+        });
+
+        // then
+        const description = domQuery('[data-entry-id="noDescriptionNumberField"] .bio-properties-panel-description',
+          result.container);
+        expect(description).not.to.exist;
+      });
+
+
+      it('should render with description if set per props', function() {
+
+        // given
+        const result = createFeelNumber({
+          container,
+          id: 'descriptionNumberField',
+          label: 'someLabel',
+          description: 'my description'
+        });
+
+        // then
+        const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+          result.container);
+
+        expect(description).to.exist;
+        expect(description.innerText).to.equal('my description');
+      });
+
+
+      it('should render with description if set per context', function() {
+
+        // given
+        const descriptionConfig = { descriptionNumberField: (element) => 'myContextDesc' };
+
+        const result = createFeelNumber({
+          container,
+          id: 'descriptionNumberField',
+          label: 'someLabel',
+          descriptionConfig,
+          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+        });
+
+        // then
+        const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+          result.container);
+
+        expect(description).to.exist;
+        expect(description.innerText).to.equal('myContextDesc');
+      });
+
+
+      it('should render description set per props over context', function() {
+
+        // given
+        const descriptionConfig = { descriptionNumberField: (element) => 'myContextDesc' };
+
+        const result = createFeelNumber({
+          container,
+          id: 'descriptionNumberField',
+          label: 'someLabel',
+          description: 'myExplicitDescription',
+          descriptionConfig,
+          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+        });
+
+        // then
+        const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+          result.container);
+
+        expect(description).to.exist;
+        expect(description.innerText).to.equal('myExplicitDescription');
+      });
+
+    });
+
+
+    it('should render optional feel icon', function() {
+
+      // given
+      const field = createFeelNumber({
+        container,
+        id: 'feelField',
+        feel: 'optional'
+      });
+
+      // then
+      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container);
+      expect(icon).to.exist;
+    });
+
+
+    describe('toggle', function() {
+
+      it('should toggle feel active', async function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const field = createFeelNumber({
+          container,
+          id: 'feelField',
+          feel: 'optional',
+          getValue: () => 2,
+          setValue: updateSpy
+        });
+
+        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container);
+
+        // when
+        await act(() => {
+          icon.click();
+        });
+
+        // then
+        return waitFor(() => {
+          expect(updateSpy).to.have.been.calledWith('=2');
+          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+        });
+      });
+
+
+      it('should toggle on paste with FEEL mime type', function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => 2,
+          setValue: updateSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        const data = new DataTransfer();
+        data.setData('application/FEEL', 2);
+
+        const paste = new ClipboardEvent('paste', {
+          bubbles: true,
+          clipboardData: data
+        });
+
+        // when
+        input.dispatchEvent(paste);
+
+        // then
+        return waitFor(() => {
+          expect(updateSpy).to.have.been.calledWith('=2');
         });
       });
 
@@ -1814,6 +2273,21 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should have no violations - number', async function() {
+
+      // given
+      this.timeout(5000);
+
+      const { container: node } = createFeelNumber({
+        container,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
+
     it('should have no violations - text area', async function() {
 
       // given
@@ -1936,7 +2410,8 @@ function createFeelField(options = {}, renderFn = render) {
     onShow = noop,
     errors = {},
     variables,
-    Component = FeelField
+    Component = FeelField,
+    ...rest
   } = options;
 
   const errorsContext = {
@@ -1973,6 +2448,7 @@ function createFeelField(options = {}, renderFn = render) {
               validate={ validate }
               feel={ feel }
               variables={ variables }
+              { ...rest }
             />
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
@@ -1984,6 +2460,12 @@ function createFeelField(options = {}, renderFn = render) {
   );
 }
 
+function createFeelNumber(options = {}, renderFn = render) {
+  return createFeelField({
+    ...options,
+    Component: FeelNumberEntry
+  }, renderFn);
+}
 
 function createFeelTextArea(options = {}, renderFn = render) {
   return createFeelField({

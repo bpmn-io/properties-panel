@@ -28,6 +28,8 @@ import FeelIcon from './FeelIcon';
 
 import { ToggleSwitch } from '../ToggleSwitch';
 
+import { NumberField } from '../NumberField';
+
 const noop = () => { };
 
 function FeelTextfield(props) {
@@ -273,6 +275,59 @@ const OptionalFeelInput = forwardRef((props, ref) => {
 });
 
 
+const OptionalFeelNumberField = forwardRef((props, ref) => {
+  const {
+    id,
+    debounce,
+    disabled,
+    onInput,
+    value,
+    min,
+    max,
+    step,
+    onFocus,
+    onBlur
+  } = props;
+
+  const inputRef = useRef();
+
+  // To be consistent with the FEEL editor, set focus at start of input
+  // this ensures clean editing experience when switching with the keyboard
+  ref.current = {
+    focus: (position) => {
+      const input = inputRef.current;
+      if (!input) {
+        return;
+      }
+
+      input.focus();
+      if (typeof position === 'number' && position !== Infinity) {
+        if (position > value.length) {
+          position = value.length;
+        }
+        input.setSelectionRange(position, position);
+      }
+
+    }
+  };
+
+  return <NumberField
+    id={ id }
+    debounce={ debounce }
+    disabled={ disabled }
+    displayLabel={ false }
+    inputRef={ inputRef }
+    max={ max }
+    min={ min }
+    onInput={ onInput }
+    step={ step }
+    value={ value }
+    onFocus={ onFocus }
+    onBlur={ onBlur }
+  />;
+});
+
+
 const OptionalFeelTextArea = forwardRef((props, ref) => {
   const {
     id,
@@ -492,6 +547,7 @@ export default function FeelEntry(props) {
       }
       data-entry-id={ id }>
       <FeelTextfield
+        { ...props }
         debounce={ debounce }
         disabled={ disabled }
         feel={ feel }
@@ -514,6 +570,32 @@ export default function FeelEntry(props) {
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
+}
+
+/**
+ * @param {Object} props
+ * @param {Object} props.element
+ * @param {String} props.id
+ * @param {String} props.description
+ * @param {Boolean} props.debounce
+ * @param {Boolean} props.disabled
+ * @param {String} props.max
+ * @param {String} props.min
+ * @param {String} props.step
+ * @param {Boolean} props.feel
+ * @param {String} props.label
+ * @param {Function} props.getValue
+ * @param {Function} props.setValue
+ * @param {Function} props.tooltipContainer
+ * @param {Function} props.validate
+ * @param {Function} props.show
+ * @param {Function} props.example
+ * @param {Function} props.variables
+ * @param {Function} props.onFocus
+ * @param {Function} props.onBlur
+ */
+export function FeelNumberEntry(props) {
+  return <FeelEntry class="bio-properties-panel-feel-number" OptionalComponent={ OptionalFeelNumberField } { ...props } />;
 }
 
 /**
