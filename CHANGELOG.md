@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.2.0 
+
+* `FEAT`: add FEEL entry for number field ([#248](https://github.com/bpmn-io/properties-panel/pull/248))
+
 ## 2.1.0
 
 * `FEAT`: introduce new FX toggle ([#240](https://github.com/bpmn-io/properties-panel/issues/240))
