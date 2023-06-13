@@ -99,11 +99,13 @@
   --dropdown-item-hover-background-color: var(--color-grey-225-10-95);
   --dropdown-separator-background-color: var(--color-grey-225-10-75);
 
-  --feel-background-color: var(--color-grey-225-10-95);
+  --feel-background-color: transparent;
   --feel-active-color: var(--color-blue-205-100-45);
   --feel-inactive-color: var(--color-grey-225-10-35);
-  --feel-hover-background-color: var(--color-grey-225-10-90);
-  --feel-active-background-color: var(--color-grey-225-10-95);
+  --feel-hover-color: var(--color-grey-225-10-15);
+  --feel-hover-background-color: var(--color-grey-225-10-97);
+  --feel-active-background-color: transparent;
+  --feel-required-color: var(--color-grey-225-10-55);
 
   --feel-indicator-background-color: var(--color-grey-225-10-90);
 
@@ -990,7 +992,7 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-feel-icon {
   display: inline-flex;
-  height: 22px;
+  height: 18px;
   width: 22px;
   vertical-align: text-bottom;
   padding: 0;
@@ -1005,7 +1007,6 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-feel-icon.optional {
   cursor: pointer;
-
   background: var(--feel-background-color);
 }
 
@@ -1015,6 +1016,10 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-feel-icon:hover {
   background: var(--feel-hover-background-color);
+}
+
+.bio-properties-panel-feel-icon:hover svg * {
+  fill: var(--feel-hover-color);
 }
 
 .bio-properties-panel-feel-icon.active {
@@ -1034,7 +1039,7 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-feel-icon.required.active svg * {
-  fill: var(--feel-inactive-color);
+  fill: var(--feel-required-color);
 }
 
 .bio-properties-panel-feel-editor-container {
