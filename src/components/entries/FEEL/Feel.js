@@ -16,7 +16,6 @@ import classnames from 'classnames';
 import { isFunction, isString } from 'min-dash';
 
 import {
-  usePrevious,
   useShowEntryEvent,
   useError,
   useStaticCallback
@@ -490,13 +489,10 @@ export default function FeelEntry(props) {
     onBlur
   } = props;
 
-  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
   const [ validationError, setValidationError ] = useState(null);
   const [ localError, setLocalError ] = useState(null);
 
   let value = getValue(element);
-
-  const previousValue = usePrevious(value);
 
   useEffect(() => {
     if (isFunction(validate)) {
@@ -513,14 +509,9 @@ export default function FeelEntry(props) {
       newValidationError = validate(newValue) || null;
     }
 
-    if (newValidationError) {
-      setCachedInvalidValue(newValue);
-    } else {
-
-      // don't create multiple commandStack entries for the same value
-      if (newValue !== value) {
-        setValue(newValue);
-      }
+    // don't create multiple commandStack entries for the same value
+    if (newValue !== value) {
+      setValue(newValue);
     }
 
     setValidationError(newValidationError);
@@ -529,10 +520,6 @@ export default function FeelEntry(props) {
   const onError = useCallback(err => {
     setLocalError(err);
   }, []);
-
-  if (previousValue === value && validationError) {
-    value = cachedInvalidValue;
-  }
 
   const temporaryError = useError(id);
 

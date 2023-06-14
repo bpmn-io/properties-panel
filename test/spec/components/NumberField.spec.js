@@ -319,7 +319,7 @@ describe('<NumberField>', function() {
     });
 
 
-    it('should NOT call setValue if validation fails', function() {
+    it('should call setValue even if validation fails', function() {
 
       // given
       const validate = (v) => {
@@ -337,7 +337,7 @@ describe('<NumberField>', function() {
       changeInput(entry, 3);
 
       // then
-      expect(setValueSpy).to.not.have.been.called;
+      expect(setValueSpy).to.have.been.called;
     });
 
   });
