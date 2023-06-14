@@ -11,7 +11,6 @@ import classnames from 'classnames';
 
 import {
   useError,
-  usePrevious,
   useShowEntryEvent
 } from '../../hooks';
 
@@ -130,13 +129,10 @@ export default function TextAreaEntry(props) {
     autoResize
   } = props;
 
-  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
   const globalError = useError(id);
   const [ localError, setLocalError ] = useState(null);
 
   let value = getValue(element);
-
-  const previousValue = usePrevious(value);
 
   useEffect(() => {
     if (isFunction(validate)) {
@@ -153,18 +149,11 @@ export default function TextAreaEntry(props) {
       newValidationError = validate(newValue) || null;
     }
 
-    if (newValidationError) {
-      setCachedInvalidValue(newValue);
-    } else {
-      setValue(newValue);
-    }
+    setValue(newValue);
 
     setLocalError(newValidationError);
   };
 
-  if (previousValue === value && localError) {
-    value = cachedInvalidValue;
-  }
 
   const error = globalError || localError;
 

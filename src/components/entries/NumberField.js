@@ -11,8 +11,7 @@ import classnames from 'classnames';
 import { isFunction } from 'min-dash';
 
 import {
-  useError,
-  usePrevious
+  useError
 } from '../../hooks';
 
 export function NumberField(props) {
@@ -120,13 +119,10 @@ export default function NumberFieldEntry(props) {
     validate
   } = props;
 
-  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
   const globalError = useError(id);
   const [ localError, setLocalError ] = useState(null);
 
   let value = getValue(element);
-
-  const previousValue = usePrevious(value);
 
   useEffect(() => {
     if (isFunction(validate)) {
@@ -143,18 +139,9 @@ export default function NumberFieldEntry(props) {
       newValidationError = validate(newValue) || null;
     }
 
-    if (newValidationError) {
-      setCachedInvalidValue(newValue);
-    } else {
-      setValue(newValue);
-    }
-
+    setValue(newValue);
     setLocalError(newValidationError);
   };
-
-  if (previousValue === value && localError) {
-    value = cachedInvalidValue;
-  }
 
   const error = globalError || localError;
 

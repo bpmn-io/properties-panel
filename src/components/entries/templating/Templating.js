@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useMemo, useRef } from 'preact/hooks';
-import { usePrevious, useStaticCallback, useShowEntryEvent } from '../../../hooks';
+import { useStaticCallback, useShowEntryEvent } from '../../../hooks';
 import { isFunction } from 'min-dash';
 import { useError } from '../../../hooks';
 import classnames from 'classnames';
@@ -37,13 +37,10 @@ export default function TemplatingEntry(props) {
     show = noop,
   } = props;
 
-  const [ cachedInvalidValue, setCachedInvalidValue ] = useState(null);
   const [ validationError, setValidationError ] = useState(null);
   const [ localError, setLocalError ] = useState(null);
 
   let value = getValue(element);
-
-  const previousValue = usePrevious(value);
 
   useEffect(() => {
     if (isFunction(validate)) {
@@ -60,14 +57,9 @@ export default function TemplatingEntry(props) {
       newValidationError = validate(newValue) || null;
     }
 
-    if (newValidationError) {
-      setCachedInvalidValue(newValue);
-    } else {
-
-      // don't create multiple commandStack entries for the same value
-      if (newValue !== value) {
-        setValue(newValue);
-      }
+    // don't create multiple commandStack entries for the same value
+    if (newValue !== value) {
+      setValue(newValue);
     }
 
     setValidationError(newValidationError);
@@ -76,10 +68,6 @@ export default function TemplatingEntry(props) {
   const onError = useCallback(err => {
     setLocalError(err);
   }, []);
-
-  if (previousValue === value && validationError) {
-    value = cachedInvalidValue;
-  }
 
   const temporaryError = useError(id);
 
