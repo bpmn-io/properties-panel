@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: propagate invalid values ([#252](https://github.com/bpmn-io/properties-panel/pull/252))
+
+__Breaking Changes__
+
+* `setValue` is now also called when `validate` returns an error. Ensure that your `setValue` callback can handle invalid values.
+
 ## 2.2.1
 
 * `FIX`: improve FX toggle styles ([#249](https://github.com/bpmn-io/properties-panel/pull/249))
