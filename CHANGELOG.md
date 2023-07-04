@@ -10,7 +10,7 @@ ___Note:__ Yet to be released changes appear here._
 
 __Breaking Changes__
 
-* `setValue` is now also called when `validate` returns an error. Ensure that your `setValue` callback can handle invalid values.
+* `setValue` is now also called when `validate` returns an error. The error message is provided as a second argument to the `setValue` callback.
 
 ## 2.2.1
 

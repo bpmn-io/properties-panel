@@ -297,7 +297,7 @@ describe('<NumberField>', function() {
     });
 
 
-    it('should call setValue if validation succeeds', function() {
+    it('should pass error to `setValue`', function() {
 
       // given
       const validate = (v) => {
@@ -312,32 +312,10 @@ describe('<NumberField>', function() {
       const entry = domQuery('.bio-properties-panel-entry .bio-properties-panel-input', result.container);
 
       // when
-      changeInput(entry, 2);
+      changeInput(entry, 1);
 
       // then
-      expect(setValueSpy).to.have.been.calledWith(2);
-    });
-
-
-    it('should call setValue even if validation fails', function() {
-
-      // given
-      const validate = (v) => {
-        if (v % 2 !== 0) {
-          return 'should be even';
-        }
-      };
-
-      const setValueSpy = sinon.spy();
-
-      const result = createNumberField({ container, validate, setValue: setValueSpy });
-      const entry = domQuery('.bio-properties-panel-entry .bio-properties-panel-input', result.container);
-
-      // when
-      changeInput(entry, 3);
-
-      // then
-      expect(setValueSpy).to.have.been.called;
+      expect(setValueSpy).to.have.been.calledWith(1, 'should be even');
     });
 
   });

@@ -390,6 +390,31 @@ describe('<Templating>', function() {
         });
       });
 
+
+      it('should set invalid', async function() {
+
+        // given
+        const setValueSpy = sinon.spy();
+        const validate = (v) => {
+          if (v === '{{bar}}') {
+            return 'error';
+          }
+        };
+
+        const result = createTemplatingEntry({ container, validate, setValue: setValueSpy });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('[role="textbox"]', entry);
+
+        // when
+        await act(() => input.textContent = '{{bar}}');
+
+        // then
+        return await waitFor(() => {
+          expect(setValueSpy).to.have.been.calledWith('{{bar}}', 'error');
+        });
+      });
+
     });
 
 

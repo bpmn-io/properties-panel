@@ -160,7 +160,7 @@ export default function SelectEntry(props) {
       newValidationError = validate(newValue) || null;
     }
 
-    setValue(newValue);
+    setValue(newValue, newValidationError);
     setLocalError(newValidationError);
   };
 
