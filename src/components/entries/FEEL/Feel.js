@@ -511,7 +511,7 @@ export default function FeelEntry(props) {
 
     // don't create multiple commandStack entries for the same value
     if (newValue !== value) {
-      setValue(newValue);
+      setValue(newValue, newValidationError);
     }
 
     setValidationError(newValidationError);

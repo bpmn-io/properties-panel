@@ -149,7 +149,7 @@ export default function TextAreaEntry(props) {
       newValidationError = validate(newValue) || null;
     }
 
-    setValue(newValue);
+    setValue(newValue, newValidationError);
 
     setLocalError(newValidationError);
   };

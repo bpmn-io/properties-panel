@@ -277,6 +277,29 @@ describe('<FeelField>', function() {
         expect(error.innerText).to.eql('error');
       });
 
+
+      it('should pass error to `setValue`', function() {
+
+        // given
+        const setValueSpy = sinon.spy();
+        const validate = (v) => {
+          if (v === 'bar') {
+            return 'error';
+          }
+        };
+
+        const result = createFeelField({ container, validate, setValue: setValueSpy });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 'bar');
+
+        // then
+        expect(setValueSpy).to.have.been.calledWith('bar', 'error');
+      });
+
     });
 
 
@@ -756,6 +779,28 @@ describe('<FeelField>', function() {
         expect(error.innerText).to.eql('error');
       });
 
+
+      it('should pass error to `setValue`', function() {
+
+        // given
+        const setValueSpy = sinon.spy();
+        const validate = (v) => {
+          if (v === 3) {
+            return 'error';
+          }
+        };
+
+        const result = createFeelNumber({ container, validate, setValue: setValueSpy });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 3);
+
+        // then
+        expect(setValueSpy).to.have.been.calledWith(3, 'error');
+      });
     });
 
 
@@ -1192,6 +1237,29 @@ describe('<FeelField>', function() {
         // then
         expect(error).to.exist;
         expect(error.innerText).to.eql('error');
+      });
+
+
+      it('should pass error to `setValue`', function() {
+
+        // given
+        const setValueSpy = sinon.spy();
+        const validate = (v) => {
+          if (v === 'bar') {
+            return 'error';
+          }
+        };
+
+        const result = createFeelTextArea({ container, validate, setValue: setValueSpy });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('.bio-properties-panel-input', entry);
+
+        // when
+        changeInput(input, 'bar');
+
+        // then
+        expect(setValueSpy).to.have.been.calledWith('bar', 'error');
       });
 
     });
@@ -2044,6 +2112,31 @@ describe('<FeelField>', function() {
           expect(error).to.exist;
           expect(error.innerText).to.eql('error');
         });
+      });
+
+
+      it('should pass error to `setValue`', async function() {
+
+        // given
+        const setValueSpy = sinon.spy();
+        const validate = (v) => {
+          if (v === '=bar') {
+            return 'error';
+          }
+        };
+
+        const result = createFeelTextArea({ container, validate, setValue: setValueSpy, feel: 'required' });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const input = domQuery('[role="textbox"]', entry);
+
+        // when
+        await act(() => {
+          input.textContent = 'bar';
+        });
+
+        // then
+        expect(setValueSpy).to.have.been.calledWith('=bar', 'error');
       });
 
     });

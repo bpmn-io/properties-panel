@@ -397,6 +397,28 @@ describe('<TextArea>', function() {
       expect(error.innerText).to.eql('error');
     });
 
+    it('should set invalid', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+      const validate = (v) => {
+        if (v === 'bar') {
+          return 'error';
+        }
+      };
+
+      const result = createTextArea({ container, validate, setValue: setValueSpy });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 'bar');
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('bar', 'error');
+    });
+
   });
 
 

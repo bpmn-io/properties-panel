@@ -419,6 +419,29 @@ describe('<Select>', function() {
       expect(error.innerText).to.eql('error');
     });
 
+
+    it('should pass error to `setValue`', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+      const validate = (v) => {
+        if (v === 'A') {
+          return 'error';
+        }
+      };
+      const getOptions = () => createOptions();
+
+      const result = createSelect({ container, validate, getOptions, setValue: setValueSpy });
+
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      const input = domQuery('.bio-properties-panel-input', entry);
+
+      // when
+      changeInput(input, 'A');
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('A', 'error');
+    });
   });
 
 
