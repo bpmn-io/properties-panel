@@ -6,10 +6,14 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.0.0
+
+* `FEAT`: treat FEEL fields as single expressions ([#254](https://github.com/bpmn-io/properties-panel/pull/254))
 * `FEAT`: propagate invalid values ([#252](https://github.com/bpmn-io/properties-panel/pull/252))
 
 __Breaking Changes__
 
+* FEEL fields are now treated as single expressions, improving alignment with the DMN FEEL specification.
 * `setValue` is now also called when `validate` returns an error. The error message is provided as a second argument to the `setValue` callback.
 
 ## 2.2.1
