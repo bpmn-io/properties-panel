@@ -323,11 +323,7 @@ describe('<Select>', function() {
     it('should set valid', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'A') {
-          return 'error';
-        }
-      };
+      const validate = () => null;
 
       const getOptions = () => createOptions();
 
@@ -338,7 +334,7 @@ describe('<Select>', function() {
 
 
       // when
-      changeInput(select, 'B');
+      changeInput(select, 'A');
 
       // then
       expect(isValid(entry)).to.be.true;
@@ -348,11 +344,7 @@ describe('<Select>', function() {
     it('should set invalid', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'A') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const getOptions = () => createOptions();
 
@@ -372,11 +364,7 @@ describe('<Select>', function() {
     it('should keep showing invalid value', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'A') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const getOptions = () => createOptions();
 
@@ -396,11 +384,7 @@ describe('<Select>', function() {
     it('should show error message', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'A') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const getOptions = () => createOptions();
 
@@ -424,11 +408,7 @@ describe('<Select>', function() {
 
       // given
       const setValueSpy = sinon.spy();
-      const validate = (v) => {
-        if (v === 'A') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
       const getOptions = () => createOptions();
 
       const result = createSelect({ container, validate, getOptions, setValue: setValueSpy });

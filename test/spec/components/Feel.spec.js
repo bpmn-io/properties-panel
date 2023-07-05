@@ -189,11 +189,7 @@ describe('<FeelField>', function() {
       it('should set valid', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => null;
 
         const result = createFeelField({ container, validate });
 
@@ -212,11 +208,7 @@ describe('<FeelField>', function() {
       it('should set invalid', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelField({ container, validate });
 
@@ -234,11 +226,7 @@ describe('<FeelField>', function() {
       it('should keep showing invalid value', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelField({ container, validate });
 
@@ -256,11 +244,7 @@ describe('<FeelField>', function() {
       it('should show error message', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelField({ container, validate });
 
@@ -282,11 +266,7 @@ describe('<FeelField>', function() {
 
         // given
         const setValueSpy = sinon.spy();
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelField({ container, validate, setValue: setValueSpy });
 
@@ -691,11 +671,7 @@ describe('<FeelField>', function() {
       it('should set valid', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 3) {
-            return 'error';
-          }
-        };
+        const validate = () => null;
 
         const result = createFeelNumber({ container, validate });
 
@@ -714,11 +690,7 @@ describe('<FeelField>', function() {
       it('should set invalid', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 3) {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelNumber({ container, validate });
 
@@ -736,11 +708,7 @@ describe('<FeelField>', function() {
       it('should keep showing invalid value', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 3) {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelNumber({ container, validate });
 
@@ -758,11 +726,7 @@ describe('<FeelField>', function() {
       it('should show error message', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 3) {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelNumber({ container, validate });
 
@@ -784,11 +748,7 @@ describe('<FeelField>', function() {
 
         // given
         const setValueSpy = sinon.spy();
-        const validate = (v) => {
-          if (v === 3) {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelNumber({ container, validate, setValue: setValueSpy });
 
@@ -1151,11 +1111,7 @@ describe('<FeelField>', function() {
       it('should set valid', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => null;
 
         const result = createFeelTextArea({ container, validate });
 
@@ -1174,11 +1130,7 @@ describe('<FeelField>', function() {
       it('should set invalid', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelTextArea({ container, validate });
 
@@ -1196,11 +1148,7 @@ describe('<FeelField>', function() {
       it('should keep showing invalid value', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelTextArea({ container, validate });
 
@@ -1218,11 +1166,7 @@ describe('<FeelField>', function() {
       it('should show error message', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelTextArea({ container, validate });
 
@@ -1244,11 +1188,7 @@ describe('<FeelField>', function() {
 
         // given
         const setValueSpy = sinon.spy();
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelTextArea({ container, validate, setValue: setValueSpy });
 
@@ -2013,11 +1953,7 @@ describe('<FeelField>', function() {
       it('should set valid', function() {
 
         // given
-        const validate = (v) => {
-          if (v === 'bar') {
-            return 'error';
-          }
-        };
+        const validate = () => null;
 
         const result = createFeelField({ container, validate, feel: 'required' });
 
@@ -2038,11 +1974,7 @@ describe('<FeelField>', function() {
       it('should set invalid', async function() {
 
         // given
-        const validate = (v) => {
-          if (v === '=bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelField({ container, validate, feel: 'required' });
 
@@ -2065,11 +1997,7 @@ describe('<FeelField>', function() {
       it('should keep showing invalid value', function() {
 
         // given
-        const validate = (v) => {
-          if (v === '=bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelField({ container, validate, feel: 'required' });
 
@@ -2089,11 +2017,7 @@ describe('<FeelField>', function() {
       it('should show error message', async function() {
 
         // given
-        const validate = (v) => {
-          if (v === '=bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelField({ container, validate, feel: 'required' });
 
@@ -2119,11 +2043,7 @@ describe('<FeelField>', function() {
 
         // given
         const setValueSpy = sinon.spy();
-        const validate = (v) => {
-          if (v === '=bar') {
-            return 'error';
-          }
-        };
+        const validate = () => 'error';
 
         const result = createFeelTextArea({ container, validate, setValue: setValueSpy, feel: 'required' });
 

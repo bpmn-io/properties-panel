@@ -188,11 +188,7 @@ describe('<TextField>', function() {
     it('should set valid', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => null;
 
       const result = createTextField({ container, validate });
 
@@ -211,11 +207,7 @@ describe('<TextField>', function() {
     it('should set invalid', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createTextField({ container, validate });
 
@@ -233,11 +225,7 @@ describe('<TextField>', function() {
     it('should keep showing invalid value', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createTextField({ container, validate });
 
@@ -255,11 +243,7 @@ describe('<TextField>', function() {
     it('should show error message', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createTextField({ container, validate });
 
@@ -281,11 +265,7 @@ describe('<TextField>', function() {
 
       // given
       const setValueSpy = sinon.spy();
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createTextField({ container, validate, setValue: setValueSpy });
 
