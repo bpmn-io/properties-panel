@@ -309,11 +309,7 @@ describe('<TextArea>', function() {
     it('should set valid', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => null;
 
       const result = createTextArea({ container, validate });
 
@@ -332,11 +328,7 @@ describe('<TextArea>', function() {
     it('should set invalid', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createTextArea({ container, validate });
 
@@ -354,11 +346,7 @@ describe('<TextArea>', function() {
     it('should keep showing invalid value', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createTextArea({ container, validate });
 
@@ -376,11 +364,7 @@ describe('<TextArea>', function() {
     it('should show error message', function() {
 
       // given
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createTextArea({ container, validate });
 
@@ -397,15 +381,12 @@ describe('<TextArea>', function() {
       expect(error.innerText).to.eql('error');
     });
 
+
     it('should set invalid', function() {
 
       // given
       const setValueSpy = sinon.spy();
-      const validate = (v) => {
-        if (v === 'bar') {
-          return 'error';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createTextArea({ container, validate, setValue: setValueSpy });
 

@@ -208,11 +208,7 @@ describe('<NumberField>', function() {
     it('should set valid', function() {
 
       // given
-      const validate = (v) => {
-        if (v % 2 !== 0) {
-          return 'should be even';
-        }
-      };
+      const validate = () => null;
 
       const result = createNumberField({ container, validate });
 
@@ -221,7 +217,7 @@ describe('<NumberField>', function() {
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
-      changeInput(input, 2);
+      changeInput(input, 1);
 
       // then
       expect(isValid(entry)).to.be.true;
@@ -231,11 +227,7 @@ describe('<NumberField>', function() {
     it('should set invalid', function() {
 
       // given
-      const validate = (v) => {
-        if (v % 2 !== 0) {
-          return 'should be even';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createNumberField({ container, validate });
 
@@ -243,7 +235,7 @@ describe('<NumberField>', function() {
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
-      changeInput(input, 3);
+      changeInput(input, 1);
 
       // then
       expect(isValid(entry)).to.be.false;
@@ -253,11 +245,7 @@ describe('<NumberField>', function() {
     it('should keep showing invalid value', function() {
 
       // given
-      const validate = (v) => {
-        if (v % 2 !== 0) {
-          return 'should be even';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createNumberField({ container, validate });
 
@@ -265,21 +253,17 @@ describe('<NumberField>', function() {
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
-      changeInput(input, 3);
+      changeInput(input, 1);
 
       // then
-      expect(input.value).to.eql('3');
+      expect(input.value).to.eql('1');
     });
 
 
     it('should show error message', function() {
 
       // given
-      const validate = (v) => {
-        if (v % 2 !== 0) {
-          return 'should be even';
-        }
-      };
+      const validate = () => 'error';
 
       const result = createNumberField({ container, validate });
 
@@ -287,24 +271,20 @@ describe('<NumberField>', function() {
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
-      changeInput(input, 3);
+      changeInput(input, 1);
 
       const error = domQuery('.bio-properties-panel-error', entry);
 
       // then
       expect(error).to.exist;
-      expect(error.innerText).to.eql('should be even');
+      expect(error.innerText).to.eql('error');
     });
 
 
     it('should pass error to `setValue`', function() {
 
       // given
-      const validate = (v) => {
-        if (v % 2 !== 0) {
-          return 'should be even';
-        }
-      };
+      const validate = () => 'error';
 
       const setValueSpy = sinon.spy();
 
@@ -315,7 +295,7 @@ describe('<NumberField>', function() {
       changeInput(entry, 1);
 
       // then
-      expect(setValueSpy).to.have.been.calledWith(1, 'should be even');
+      expect(setValueSpy).to.have.been.calledWith(1, 'error');
     });
 
   });
