@@ -11,12 +11,14 @@
   --color-grey-225-10-90: hsl(225, 10%, 90%);
   --color-grey-225-10-95: hsl(225, 10%, 95%);
   --color-grey-225-10-97: hsl(225, 10%, 97%);
+  --color-grey-0-0-22: hsl(0, 0%, 22%);
 
   --color-blue-205-100-35: hsl(205, 100%, 35%);
   --color-blue-205-100-45: hsl(205, 100%, 45%);
   --color-blue-205-100-50: hsl(205, 100%, 50%);
   --color-blue-205-100-95: hsl(205, 100%, 95%);
-
+  --color-blue-219-99-53: hsl(219, 99%, 53%);
+  --color-blue-218-100-74: hsl(218, 100%, 74%);
   --color-green-150-86-44: hsl(150, 86%, 44%);
 
   --color-red-360-100-40: hsl(360, 100%, 40%);
@@ -110,6 +112,12 @@
 
   --feel-indicator-background-color: var(--color-grey-225-10-90);
 
+  --tooltip-underline-color: var(--color-blue-219-99-53);
+  --tooltip-background-color: var(--color-grey-0-0-22);
+  --tooltip-link: var(--color-blue-218-100-74);
+  --tooltip-code-background-color: var(--color-grey-225-10-97);
+  --tooltip-code-border-color: var(--color-grey-225-10-85);
+  
   --text-size-base: 14px;
   --text-size-small: 13px;
   --text-size-smallest: 12px;
@@ -1121,4 +1129,53 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-feel-checkbox .bio-properties-panel-feel-entry:not(.feel-active) .bio-properties-panel-feel-container,
 .bio-properties-panel-feel-toggle-switch .bio-properties-panel-feel-entry:not(.feel-active) .bio-properties-panel-feel-container {
   margin-left: auto;
+}
+
+.bio-properties-panel-tooltip-wrapper {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+.bio-properties-panel-tooltip {
+  display: flex;
+  color: var(--color-white, white);
+  position: fixed;
+  z-index: 1000;
+  padding-right: 6px;
+  max-width: 300px;
+  font-size: var(--text-size-small);
+  font-family: var(--font-family);
+}
+
+.bio-properties-panel-tooltip-content {
+  background-color: var(--tooltip-background-color);
+  padding: 16px;
+  border-radius: 2px;
+  font-weight: 400;
+}
+
+.bio-properties-panel-tooltip-content code,
+.bio-properties-panel-tooltip-content pre {
+  color: var(--description-color);
+  font-family: var(--font-family);
+  font-size: var(--text-size-small);
+  line-height: var(--line-height-condensed);
+  padding: 0 2px;
+  background-color: var(--tooltip-code-background-color);
+  border: 1px solid var(--tooltip-code-border-color);
+  border-radius: 3px;
+}
+
+.bio-properties-panel-tooltip-content a {
+  color: var(--tooltip-link);
+}
+
+.bio-properties-panel-tooltip .bio-properties-panel-tooltip-arrow {
+  width: 0; 
+  height: 0; 
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid var(--tooltip-background-color);
+  margin-top: 16px;
 }
