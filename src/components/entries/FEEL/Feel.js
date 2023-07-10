@@ -28,6 +28,7 @@ import FeelIcon from './FeelIcon';
 import { ToggleSwitch } from '../ToggleSwitch';
 
 import { NumberField } from '../NumberField';
+import Tooltip from '../Tooltip';
 
 const noop = () => { };
 
@@ -43,7 +44,8 @@ function FeelTextfield(props) {
     disabled = false,
     variables,
     tooltipContainer,
-    OptionalComponent = OptionalFeelInput
+    OptionalComponent = OptionalFeelInput,
+    tooltip
   } = props;
 
   const [ localValue, _setLocalValue ] = useState(value);
@@ -186,7 +188,9 @@ function FeelTextfield(props) {
       { 'feel-active': feelActive }
     ) }>
       <label for={ prefixId(id) } class="bio-properties-panel-label" onClick={ () => setFocus() }>
-        {label}
+        <Tooltip value={ tooltip } labelId={ prefixId(id) }>
+          {label}
+        </Tooltip>
         <FeelIcon
           label={ label }
           feel={ feel }
@@ -466,6 +470,7 @@ const OptionalFeelCheckbox = forwardRef((props, ref) => {
  * @param {Function} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
+ * @param {string|import('preact').Component} props.tooltip
  */
 export default function FeelEntry(props) {
   const {
@@ -486,7 +491,8 @@ export default function FeelEntry(props) {
     example,
     variables,
     onFocus,
-    onBlur
+    onBlur,
+    tooltip
   } = props;
 
   const [ validationError, setValidationError ] = useState(null);
@@ -552,7 +558,8 @@ export default function FeelEntry(props) {
         value={ value }
         variables={ variables }
         tooltipContainer={ tooltipContainer }
-        OptionalComponent={ props.OptionalComponent } />
+        OptionalComponent={ props.OptionalComponent }
+        tooltip={ tooltip } />
       {error && <div class="bio-properties-panel-error">{error}</div>}
       <Description forId={ id } element={ element } value={ description } />
     </div>

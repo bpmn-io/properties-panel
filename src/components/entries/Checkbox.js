@@ -9,6 +9,7 @@ import {
 } from 'preact/hooks';
 
 import Description from './Description';
+import Tooltip from './Tooltip';
 
 function Checkbox(props) {
   const {
@@ -18,7 +19,8 @@ function Checkbox(props) {
     disabled,
     value = false,
     onFocus,
-    onBlur
+    onBlur,
+    tooltip
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -55,7 +57,11 @@ function Checkbox(props) {
         onChange={ handleChange }
         checked={ localValue }
         disabled={ disabled } />
-      <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label>
+      <label for={ prefixId(id) } class="bio-properties-panel-label">
+        <Tooltip value={ tooltip } labelId={ prefixId(id) }>
+          { label }
+        </Tooltip>
+      </label>
     </div>
   );
 }
@@ -71,6 +77,7 @@ function Checkbox(props) {
  * @param {Function} props.setValue
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
+ * @param {string|import('preact').Component} props.tooltip
  * @param {boolean} [props.disabled]
  */
 export default function CheckboxEntry(props) {
@@ -83,7 +90,8 @@ export default function CheckboxEntry(props) {
     setValue,
     disabled,
     onFocus,
-    onBlur
+    onBlur,
+    tooltip
   } = props;
 
   const value = getValue(element);
@@ -100,7 +108,8 @@ export default function CheckboxEntry(props) {
         onChange={ setValue }
         onFocus={ onFocus }
         onBlur={ onBlur }
-        value={ value } />
+        value={ value }
+        tooltip={ tooltip } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>

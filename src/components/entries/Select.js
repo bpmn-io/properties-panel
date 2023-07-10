@@ -13,6 +13,7 @@ import {
 } from 'preact/hooks';
 
 import Description from './Description';
+import Tooltip from './Tooltip';
 
 /**
  * @typedef { { value: string, label: string, disabled: boolean, children: { value: string, label: string, disabled: boolean } } } Option
@@ -41,7 +42,8 @@ function Select(props) {
     value = '',
     disabled,
     onFocus,
-    onBlur
+    onBlur,
+    tooltip
   } = props;
 
   const ref = useShowEntryEvent(id);
@@ -68,7 +70,9 @@ function Select(props) {
   return (
     <div class="bio-properties-panel-select">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
-        {label}
+        <Tooltip value={ tooltip } labelId={ prefixId(id) }>
+          {label}
+        </Tooltip>
       </label>
       <select
         ref={ ref }
@@ -122,6 +126,7 @@ function Select(props) {
  * @param {Function} props.getOptions
  * @param {boolean} [props.disabled]
  * @param {Function} [props.validate]
+ * @param {string|import('preact').Component} props.tooltip
  */
 export default function SelectEntry(props) {
   const {
@@ -135,7 +140,8 @@ export default function SelectEntry(props) {
     disabled,
     onFocus,
     onBlur,
-    validate
+    validate,
+    tooltip
   } = props;
 
   const options = getOptions(element);
@@ -182,7 +188,8 @@ export default function SelectEntry(props) {
         onFocus={ onFocus }
         onBlur={ onBlur }
         options={ options }
-        disabled={ disabled } />
+        disabled={ disabled }
+        tooltip={ tooltip } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
