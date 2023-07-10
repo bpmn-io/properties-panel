@@ -6,6 +6,7 @@ import {
 } from 'preact/hooks';
 
 import classNames from 'classnames';
+import Tooltip from './Tooltip';
 
 export function ToggleSwitch(props) {
   const {
@@ -17,7 +18,8 @@ export function ToggleSwitch(props) {
     inline,
     onFocus,
     onBlur,
-    inputRef
+    inputRef,
+    tooltip
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -46,7 +48,9 @@ export function ToggleSwitch(props) {
     ) }>
       <label class="bio-properties-panel-label"
         for={ prefixId(id) }>
-        { label }
+        <Tooltip value={ tooltip } labelId={ prefixId(id) }>
+          { label }
+        </Tooltip>
       </label>
       <div class="bio-properties-panel-field-wrapper">
         <label class="bio-properties-panel-toggle-switch__switcher">
@@ -80,6 +84,7 @@ export function ToggleSwitch(props) {
  * @param {Function} props.setValue
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
+ * @param {string|import('preact').Component} props.tooltip
  */
 export default function ToggleSwitchEntry(props) {
   const {
@@ -92,7 +97,8 @@ export default function ToggleSwitchEntry(props) {
     getValue,
     setValue,
     onFocus,
-    onBlur
+    onBlur,
+    tooltip
   } = props;
 
   const value = getValue(element);
@@ -106,7 +112,8 @@ export default function ToggleSwitchEntry(props) {
         onFocus={ onFocus }
         onBlur={ onBlur }
         switcherLabel={ switcherLabel }
-        inline={ inline } />
+        inline={ inline }
+        tooltip={ tooltip } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

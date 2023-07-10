@@ -1,8 +1,10 @@
 import Description from './Description';
+import Tooltip from './Tooltip';
 
 import {
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'preact/hooks';
 
@@ -25,12 +27,14 @@ function Textfield(props) {
     onInput,
     onFocus,
     onBlur,
-    value = ''
+    value = '',
+    tooltip
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value || '');
 
   const ref = useShowEntryEvent(id);
+  const labelRef = useRef(null);
 
   const handleInputCallback = useMemo(() => {
     return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
@@ -52,7 +56,9 @@ function Textfield(props) {
   return (
     <div class="bio-properties-panel-textfield">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
-        { label }
+        <Tooltip value={ tooltip } refElement={ labelRef } labelId={ prefixId(id) }>
+          { label }
+        </Tooltip>
       </label>
       <input
         ref={ ref }
@@ -83,6 +89,7 @@ function Textfield(props) {
  * @param {Function} props.setValue
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
+ * @param {string|import('preact').Component} props.tooltip
  * @param {Function} props.validate
  */
 export default function TextfieldEntry(props) {
@@ -97,7 +104,8 @@ export default function TextfieldEntry(props) {
     setValue,
     validate,
     onFocus,
-    onBlur
+    onBlur,
+    tooltip
   } = props;
 
   const globalError = useError(id);
@@ -144,7 +152,8 @@ export default function TextfieldEntry(props) {
         onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
-        value={ value } />
+        value={ value }
+        tooltip={ tooltip } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>

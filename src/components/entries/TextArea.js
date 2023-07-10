@@ -15,6 +15,7 @@ import {
 } from '../../hooks';
 
 import { isFunction } from 'min-dash';
+import Tooltip from './Tooltip';
 
 function resizeToContents(element) {
   element.style.height = 'auto';
@@ -37,7 +38,8 @@ function TextArea(props) {
     onFocus,
     onBlur,
     autoResize,
-    rows = autoResize ? 1 : 2
+    rows = autoResize ? 1 : 2,
+    tooltip
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -71,7 +73,9 @@ function TextArea(props) {
   return (
     <div class="bio-properties-panel-textarea">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
-        { label }
+        <Tooltip value={ tooltip } labelId={ prefixId(id) }>
+          { label }
+        </Tooltip>
       </label>
       <textarea
         ref={ ref }
@@ -126,7 +130,8 @@ export default function TextAreaEntry(props) {
     validate,
     onFocus,
     onBlur,
-    autoResize
+    autoResize,
+    tooltip
   } = props;
 
   const globalError = useError(id);
@@ -176,7 +181,8 @@ export default function TextAreaEntry(props) {
         debounce={ debounce }
         monospace={ monospace }
         disabled={ disabled }
-        autoResize={ autoResize } />
+        autoResize={ autoResize }
+        tooltip={ tooltip } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
