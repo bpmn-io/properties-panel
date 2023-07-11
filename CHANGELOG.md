@@ -14,7 +14,7 @@ ___Note:__ Yet to be released changes appear here._
 __Breaking Changes__
 
 * FEEL fields are now treated as single expressions, improving alignment with the DMN FEEL specification.
-* `setValue` is now also called when `validate` returns an error. The error message is provided as a second argument to the `setValue` callback.
+* `setValue` is now also called when `validate` returns an error. The error message is provided as a second argument to the `setValue` callback. This makes handling of invalid values an integration concern.
 
 ## 2.2.1
 
