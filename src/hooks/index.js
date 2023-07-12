@@ -1,5 +1,5 @@
 export { useDescriptionContext } from './useDescriptionContext';
-export { useError } from './useError';
+export { useError, useErrors } from './useError';
 export { useEvent } from './useEvent';
 export { useKeyFactory } from './useKeyFactory';
 export { useLayoutState } from './useLayoutState';

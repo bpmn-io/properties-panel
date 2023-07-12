@@ -14,6 +14,7 @@ import {
 } from 'min-dash';
 
 import {
+  useErrors,
   useLayoutState,
   usePrevious
 } from '../hooks';
@@ -170,13 +171,29 @@ export default function ListGroup(props) {
     add(e);
   };
 
+  const allErrors = useErrors();
+  const hasError = items.some(item => {
+    if (allErrors[item.id]) {
+      return true;
+    }
+
+    if (!item.entries) {
+      return;
+    }
+
+    // also check if the error is nested, e.g. for name-value entries
+    return item.entries.some(entry => allErrors[entry.id]);
+  }
+  );
+
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
     <div
       class={ classnames(
         'bio-properties-panel-group-header',
         hasItems ? '' : 'empty',
         (hasItems && open) ? 'open' : '',
-        (sticky && open) ? 'sticky' : ''
+        (sticky && open) ? 'sticky' : '',
+        hasError ? 'error' : ''
       ) }
       onClick={ hasItems ? toggleOpen : noop }>
       <div
@@ -210,7 +227,12 @@ export default function ListGroup(props) {
             ? (
               <div
                 title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
-                class="bio-properties-panel-list-badge"
+                class={
+                  classnames(
+                    'bio-properties-panel-list-badge',
+                    hasError ? 'error' : ''
+                  )
+                }
               >
                 { items.length }
               </div>
