@@ -23,7 +23,10 @@ import {
 
 import Group from 'src/components/Group';
 
-import { PropertiesPanelContext } from 'src/context';
+import {
+  PropertiesPanelContext,
+  ErrorsContext
+} from 'src/context';
 import { fireEvent } from '@testing-library/preact';
 import { act } from 'preact/test-utils';
 
@@ -218,6 +221,24 @@ describe('<Group>', function() {
       expect(dataMarker).to.exist;
     });
 
+
+    it('should show error marker', function() {
+
+      // given
+      const entries = createEntries();
+      const errors = { 'entry-1': 'message' };
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries, errors });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const errorMarker = domQuery('.bio-properties-panel-dot.error', header);
+
+      // then
+      expect(errorMarker).to.exist;
+    });
+
   });
 
 
@@ -305,14 +326,17 @@ function createEntries(options = {}) {
 
 function createGroup(options = {}) {
   const {
-    container
+    container,
+    errors = {}
   } = options;
 
 
   return render(
-    <MockLayout>
-      <Group id="Example" { ...options } />
-    </MockLayout>,
+    <ErrorsContext.Provider value={ { errors } }>
+      <MockLayout>
+        <Group id="Example" { ...options } />
+      </MockLayout>
+    </ErrorsContext.Provider>,
     {
       container
     }

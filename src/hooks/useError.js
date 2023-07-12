@@ -7,3 +7,9 @@ export function useError(id) {
 
   return errors[ id ];
 }
+
+export function useErrors() {
+  const { errors } = useContext(ErrorsContext);
+
+  return errors;
+}

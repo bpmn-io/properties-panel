@@ -23,6 +23,7 @@ import {
 import ListGroup from 'src/components/ListGroup';
 
 import { PropertiesPanelContext, LayoutContext } from 'src/context';
+import { ErrorsContext } from '../../../src/context';
 
 insertCoreStyles();
 
@@ -53,27 +54,92 @@ describe('<ListGroup>', function() {
   });
 
 
-  it('should render item count', function() {
+  describe('header', function() {
 
-    // given
-    const items = [
-      {
-        id: 'item-1',
-        label: 'Item 1'
-      },
-      {
-        id: 'item-2',
-        label: 'Item 2'
-      }
-    ];
+    it('should render item count', function() {
 
-    const { container } = createListGroup({ container: parentContainer, items });
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        },
+        {
+          id: 'item-2',
+          label: 'Item 2'
+        }
+      ];
 
-    const listBadge = domQuery('.bio-properties-panel-list-badge', container);
+      const { container } = createListGroup({ container: parentContainer, items });
 
-    // then
-    expect(listBadge).to.exist;
-    expect(listBadge.innerText).to.eql('2');
+      const listBadge = domQuery('.bio-properties-panel-list-badge', container);
+
+      // then
+      expect(listBadge).to.exist;
+      expect(listBadge.innerText).to.eql('2');
+    });
+
+
+    it('should indicate error', function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        },
+        {
+          id: 'item-2',
+          label: 'Item 2'
+        }
+      ];
+
+      const errors = {
+        'item-1': 'foo'
+      };
+
+      const { container } = createListGroup({ container: parentContainer, items, errors });
+
+      const errorBadge = domQuery('.bio-properties-panel-list-badge.error', container);
+
+      // then
+      expect(errorBadge).to.exist;
+      expect(errorBadge.innerText).to.eql('2');
+    });
+
+
+    it('should indicate error in nested entry', function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1',
+          entries: [
+            {
+              id: 'entry-1'
+            }
+          ]
+        },
+        {
+          id: 'item-2',
+          label: 'Item 2'
+        }
+      ];
+
+      const errors = {
+        'entry-1': 'foo'
+      };
+
+      const { container } = createListGroup({ container: parentContainer, items, errors });
+
+      const errorBadge = domQuery('.bio-properties-panel-list-badge.error', container);
+
+      // then
+      expect(errorBadge).to.exist;
+      expect(errorBadge.innerText).to.eql('2');
+    });
+
   });
 
 
@@ -1247,6 +1313,7 @@ describe('<ListGroup>', function() {
 function TestGroup(props) {
   const {
     element = noopElement,
+    errors = {},
     id = 'sampleId',
     label = 'List',
     items = [],
@@ -1256,22 +1323,25 @@ function TestGroup(props) {
   } = props;
 
   return (
-    <MockLayout>
-      <ListGroup
-        element={ element }
-        id={ id }
-        label={ label }
-        items={ items }
-        add={ add }
-        shouldSort={ shouldSort }
-        shouldOpen={ shouldOpen } />
-    </MockLayout>
+    <ErrorsContext.Provider value={ { errors } }>
+      <MockLayout>
+        <ListGroup
+          element={ element }
+          id={ id }
+          label={ label }
+          items={ items }
+          add={ add }
+          shouldSort={ shouldSort }
+          shouldOpen={ shouldOpen } />
+      </MockLayout>
+    </ErrorsContext.Provider>
   );
 }
 
 function createListGroup(options = {}, renderFn = render) {
   const {
     element = noopElement,
+    errors,
     id = 'sampleId',
     label = 'List',
     items = [],
@@ -1284,6 +1354,7 @@ function createListGroup(options = {}, renderFn = render) {
   return renderFn(
     <TestGroup
       element={ element }
+      errors={ errors }
       id={ id }
       label={ label }
       items={ items }

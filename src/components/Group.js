@@ -17,6 +17,7 @@ import {
 } from 'min-dash';
 
 import {
+  useErrors,
   useLayoutState
 } from '../hooks';
 
@@ -75,6 +76,10 @@ export default function Group(props) {
     setEdited(hasOneEditedEntry);
   }, [ entries ]);
 
+  // set error state depending on all entries
+  const allErrors = useErrors();
+  const hasErrors = entries.some(entry => allErrors[entry.id]);
+
   // set css class when group is sticky to top
   useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
 
@@ -88,14 +93,18 @@ export default function Group(props) {
       'bio-properties-panel-group-header',
       edited ? '' : 'empty',
       open ? 'open' : '',
-      (sticky && open) ? 'sticky' : ''
+      (sticky && open) ? 'sticky' : '',
+      hasErrors ? 'error' : ''
     ) } onClick={ toggleOpen }>
       <div title={ label } class="bio-properties-panel-group-header-title">
         { label }
       </div>
       <div class="bio-properties-panel-group-header-buttons">
         {
-          edited && <DataMarker />
+          <DataMarker
+            edited={ edited }
+            hasErrors={ hasErrors }
+          />
         }
         <button
           title="Toggle section"
@@ -130,8 +139,22 @@ export default function Group(props) {
   </div>;
 }
 
-function DataMarker() {
-  return (
-    <div title="Section contains data" class="bio-properties-panel-dot"></div>
-  );
+function DataMarker(props) {
+  const {
+    edited,
+    hasErrors
+  } = props;
+
+  if (hasErrors) {
+    return (
+      <div title="Section contains an error" class="bio-properties-panel-dot error"></div>
+    );
+  }
+
+  if (edited) {
+    return (
+      <div title="Section contains data" class="bio-properties-panel-dot"></div>
+    );
+  }
+  return null;
 }
