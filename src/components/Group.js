@@ -93,8 +93,7 @@ export default function Group(props) {
       'bio-properties-panel-group-header',
       edited ? '' : 'empty',
       open ? 'open' : '',
-      (sticky && open) ? 'sticky' : '',
-      hasErrors ? 'error' : ''
+      (sticky && open) ? 'sticky' : ''
     ) } onClick={ toggleOpen }>
       <div title={ label } class="bio-properties-panel-group-header-title">
         { label }
@@ -147,7 +146,7 @@ function DataMarker(props) {
 
   if (hasErrors) {
     return (
-      <div title="Section contains an error" class="bio-properties-panel-dot error"></div>
+      <div title="Section contains an error" class="bio-properties-panel-dot bio-properties-panel-dot--error"></div>
     );
   }
 

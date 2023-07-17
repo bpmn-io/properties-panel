@@ -233,7 +233,7 @@ describe('<Group>', function() {
 
       const header = domQuery('.bio-properties-panel-group-header', result.container);
 
-      const errorMarker = domQuery('.bio-properties-panel-dot.error', header);
+      const errorMarker = domQuery('.bio-properties-panel-dot--error', header);
 
       // then
       expect(errorMarker).to.exist;

@@ -192,8 +192,7 @@ export default function ListGroup(props) {
         'bio-properties-panel-group-header',
         hasItems ? '' : 'empty',
         (hasItems && open) ? 'open' : '',
-        (sticky && open) ? 'sticky' : '',
-        hasError ? 'error' : ''
+        (sticky && open) ? 'sticky' : ''
       ) }
       onClick={ hasItems ? toggleOpen : noop }>
       <div
@@ -230,7 +229,7 @@ export default function ListGroup(props) {
                 class={
                   classnames(
                     'bio-properties-panel-list-badge',
-                    hasError ? 'error' : ''
+                    hasError ? 'bio-properties-panel-list-badge--error' : ''
                   )
                 }
               >
