@@ -357,7 +357,7 @@
 }
 
 .bio-properties-panel-dot--error {
-  background-color: var(--dot-color-error);
+  --dot-color: var(--dot-color-error);
 }
 
 /**
@@ -388,7 +388,7 @@
 }
 
 .bio-properties-panel-list-badge--error {
-  background-color: var(--dot-color-error);
+  --list-badge-background-color: var(--dot-color-error);
 }
 
 /**
