@@ -100,7 +100,7 @@ describe('<ListGroup>', function() {
 
       const { container } = createListGroup({ container: parentContainer, items, errors });
 
-      const errorBadge = domQuery('.bio-properties-panel-list-badge.error', container);
+      const errorBadge = domQuery('.bio-properties-panel-list-badge--error', container);
 
       // then
       expect(errorBadge).to.exist;
@@ -133,7 +133,7 @@ describe('<ListGroup>', function() {
 
       const { container } = createListGroup({ container: parentContainer, items, errors });
 
-      const errorBadge = domQuery('.bio-properties-panel-list-badge.error', container);
+      const errorBadge = domQuery('.bio-properties-panel-list-badge--error', container);
 
       // then
       expect(errorBadge).to.exist;
