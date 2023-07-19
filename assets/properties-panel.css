@@ -1153,6 +1153,7 @@ textarea.bio-properties-panel-input {
   padding: 16px;
   border-radius: 2px;
   font-weight: 400;
+  white-space: pre-wrap;
 }
 
 .bio-properties-panel-tooltip-content code,
@@ -1165,6 +1166,14 @@ textarea.bio-properties-panel-input {
   background-color: var(--tooltip-code-background-color);
   border: 1px solid var(--tooltip-code-border-color);
   border-radius: 3px;
+}
+
+.bio-properties-panel-tooltip p:first-child {
+  margin-top: 0;
+}
+
+.bio-properties-panel-tooltip p:last-child {
+  margin-bottom: 0;
 }
 
 .bio-properties-panel-tooltip-content a {
