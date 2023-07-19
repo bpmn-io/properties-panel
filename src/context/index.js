@@ -3,3 +3,4 @@ export { default as ErrorsContext } from './ErrorsContext';
 export { default as EventContext } from './EventContext';
 export { default as LayoutContext } from './LayoutContext';
 export { default as PropertiesPanelContext } from './LayoutContext';
+export { default as TooltipContext } from './TooltipContext';

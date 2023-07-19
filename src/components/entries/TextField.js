@@ -4,7 +4,6 @@ import Tooltip from './Tooltip';
 import {
   useEffect,
   useMemo,
-  useRef,
   useState
 } from 'preact/hooks';
 
@@ -34,7 +33,6 @@ function Textfield(props) {
   const [ localValue, setLocalValue ] = useState(value || '');
 
   const ref = useShowEntryEvent(id);
-  const labelRef = useRef(null);
 
   const handleInputCallback = useMemo(() => {
     return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
@@ -56,7 +54,7 @@ function Textfield(props) {
   return (
     <div class="bio-properties-panel-textfield">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
-        <Tooltip value={ tooltip } refElement={ labelRef } labelId={ prefixId(id) }>
+        <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           { label }
         </Tooltip>
       </label>
@@ -153,7 +151,8 @@ export default function TextfieldEntry(props) {
         onFocus={ onFocus }
         onBlur={ onBlur }
         value={ value }
-        tooltip={ tooltip } />
+        tooltip={ tooltip }
+        element={ element } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>

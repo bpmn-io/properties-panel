@@ -188,7 +188,7 @@ function FeelTextfield(props) {
       { 'feel-active': feelActive }
     ) }>
       <label for={ prefixId(id) } class="bio-properties-panel-label" onClick={ () => setFocus() }>
-        <Tooltip value={ tooltip } labelId={ prefixId(id) }>
+        <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           {label}
         </Tooltip>
         <FeelIcon

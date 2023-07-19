@@ -24,7 +24,8 @@ import {
   ErrorsContext,
   EventContext,
   LayoutContext,
-  PropertiesPanelContext
+  PropertiesPanelContext,
+  TooltipContext
 } from './context';
 
 import { useEvent } from './hooks';
@@ -32,6 +33,8 @@ import { useEvent } from './hooks';
 const DEFAULT_LAYOUT = {};
 
 const DEFAULT_DESCRIPTION = {};
+
+const DEFAULT_TOOLTIP = {};
 
 
 /**
@@ -73,11 +76,21 @@ const DEFAULT_DESCRIPTION = {};
  *    [id: String]: GetDescriptionFunction
  * } } DescriptionConfig
  *
+ *  @typedef { {
+ *    [id: String]: GetTooltipFunction
+ * } } TooltipConfig
+ *
  * @callback { {
  * @param {string} id
  * @param {Object} element
  * @returns {string}
  * } } GetDescriptionFunction
+ *
+ * @callback { {
+ * @param {string} id
+ * @param {Object} element
+ * @returns {string}
+ * } } GetTooltipFunction
  *
  * @typedef { {
  *  getEmpty: (element: object) => import('./components/Placeholder').PlaceholderDefinition,
@@ -100,6 +113,8 @@ const DEFAULT_DESCRIPTION = {};
  * @param {Function} [props.layoutChanged]
  * @param {DescriptionConfig} [props.descriptionConfig]
  * @param {Function} [props.descriptionLoaded]
+ * @param {TooltipConfig} [props.tooltipConfig]
+ * @param {Function} [props.tooltipLoaded]
  * @param {Object} [props.eventBus]
  */
 export default function PropertiesPanel(props) {
@@ -112,6 +127,8 @@ export default function PropertiesPanel(props) {
     layoutChanged,
     descriptionConfig,
     descriptionLoaded,
+    tooltipConfig,
+    tooltipLoaded,
     eventBus
   } = props;
 
@@ -167,6 +184,24 @@ export default function PropertiesPanel(props) {
     getDescriptionForId
   };
 
+  // set-up tooltip context
+  const tooltip = useMemo(() => createTooltipContext(tooltipConfig), [ tooltipConfig ]);
+
+  useEffect(() => {
+    if (typeof tooltipLoaded === 'function') {
+      tooltipLoaded(tooltip);
+    }
+  }, [ tooltip, tooltipLoaded ]);
+
+  const getTooltipForId = (id, element) => {
+    return tooltip[id] && tooltip[id](element);
+  };
+
+  const tooltipContext = {
+    tooltip,
+    getTooltipForId
+  };
+
   const [ errors, setErrors ] = useState({});
 
   const onSetErrors = ({ errors }) => setErrors(errors);
@@ -199,32 +234,34 @@ export default function PropertiesPanel(props) {
     <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
       <ErrorsContext.Provider value={ errorsContext }>
         <DescriptionContext.Provider value={ descriptionContext }>
-          <LayoutContext.Provider value={ layoutContext }>
-            <EventContext.Provider value={ eventContext }>
-              <div class="bio-properties-panel">
-                <Header
-                  element={ element }
-                  headerProvider={ headerProvider } />
-                <div class="bio-properties-panel-scroll-container">
-                  {
-                    groups.map(group => {
-                      const {
-                        component: Component = Group,
-                        id
-                      } = group;
+          <TooltipContext.Provider value={ tooltipContext }>
+            <LayoutContext.Provider value={ layoutContext }>
+              <EventContext.Provider value={ eventContext }>
+                <div class="bio-properties-panel">
+                  <Header
+                    element={ element }
+                    headerProvider={ headerProvider } />
+                  <div class="bio-properties-panel-scroll-container">
+                    {
+                      groups.map(group => {
+                        const {
+                          component: Component = Group,
+                          id
+                        } = group;
 
-                      return (
-                        <Component
-                          { ...group }
-                          key={ id }
-                          element={ element } />
-                      );
-                    })
-                  }
+                        return (
+                          <Component
+                            { ...group }
+                            key={ id }
+                            element={ element } />
+                        );
+                      })
+                    }
+                  </div>
                 </div>
-              </div>
-            </EventContext.Provider>
-          </LayoutContext.Provider>
+              </EventContext.Provider>
+            </LayoutContext.Provider>
+          </TooltipContext.Provider>
         </DescriptionContext.Provider>
       </ErrorsContext.Provider>
     </PropertiesPanelContext.Provider>
@@ -244,6 +281,13 @@ function createLayout(overrides = {}, defaults = DEFAULT_LAYOUT) {
 function createDescriptionContext(overrides = {}) {
   return {
     ...DEFAULT_DESCRIPTION,
+    ...overrides
+  };
+}
+
+function createTooltipContext(overrides = {}) {
+  return {
+    ...DEFAULT_TOOLTIP,
     ...overrides
   };
 }

@@ -48,7 +48,7 @@ export function ToggleSwitch(props) {
     ) }>
       <label class="bio-properties-panel-label"
         for={ prefixId(id) }>
-        <Tooltip value={ tooltip } labelId={ prefixId(id) }>
+        <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           { label }
         </Tooltip>
       </label>
@@ -113,7 +113,8 @@ export default function ToggleSwitchEntry(props) {
         onBlur={ onBlur }
         switcherLabel={ switcherLabel }
         inline={ inline }
-        tooltip={ tooltip } />
+        tooltip={ tooltip }
+        element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
