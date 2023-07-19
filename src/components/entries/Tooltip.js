@@ -3,25 +3,34 @@ import {
   useEffect,
   useState
 } from 'react';
+import { useTooltipContext } from '../../hooks/useTooltipContext';
 
 /**
  * @param {Object} props
- * @param {String} props.labelId
+ * @param {String} props.forId
  * @param {String} props.value
  */
 export default function TooltipWrapper(props) {
+  const {
+    forId,
+    element
+  } = props;
 
-  if (!props.value) {
+  const contextDescription = useTooltipContext(forId, element);
+
+  const value = props.value || contextDescription;
+
+  if (!value) {
     return props.children;
   }
 
-  return <Tooltip { ...props } />;
+  return <Tooltip { ...props } value={ value } forId={ prefixId(forId) } />;
 }
 
 function Tooltip(props) {
   const {
-    value,
-    labelId
+    forId,
+    value
   } = props;
 
   const [ visible, setShow ] = useState(false);
@@ -105,7 +114,7 @@ function Tooltip(props) {
           class="bio-properties-panel-tooltip"
           role="tooltip"
           id="bio-properties-panel-tooltip"
-          aria-labelledby={ labelId }
+          aria-labelledby={ forId }
           style={ getTooltipPosition(wrapperRef.current) }
           ref={ tooltipRef }
           onClick={ (e)=> e.stopPropagation() }
@@ -139,4 +148,8 @@ function getTooltipPosition(refElement) {
 
 function isHovered(element) {
   return element.matches(':hover');
+}
+
+function prefixId(id) {
+  return `bio-properties-panel-${ id }`;
 }

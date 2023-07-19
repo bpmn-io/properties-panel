@@ -73,7 +73,7 @@ function TextArea(props) {
   return (
     <div class="bio-properties-panel-textarea">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
-        <Tooltip value={ tooltip } labelId={ prefixId(id) }>
+        <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           { label }
         </Tooltip>
       </label>
@@ -182,7 +182,8 @@ export default function TextAreaEntry(props) {
         monospace={ monospace }
         disabled={ disabled }
         autoResize={ autoResize }
-        tooltip={ tooltip } />
+        tooltip={ tooltip }
+        element={ element } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>

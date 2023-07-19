@@ -19,6 +19,7 @@ import {
 import Tooltip from 'src/components/entries/Tooltip';
 import { act } from 'preact/test-utils';
 
+import { TooltipContext } from '../../../src/context';
 
 insertCoreStyles();
 
@@ -154,6 +155,54 @@ describe('<Tooltip>', function() {
   });
 
 
+  it('should render with tooltip if set per context', async function() {
+
+    // given
+    const tooltipConfig = { tooltipCheckbox: (element) => 'myContextDesc' };
+
+    createTooltip({
+      container,
+      id: 'tooltipCheckbox',
+      value: null,
+      tooltipConfig,
+      getTooltipForId: (id, element) => tooltipConfig[id](element)
+    });
+
+    const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+    // then
+    await openTooltip(wrapper);
+
+    const tooltipContentNode = domQuery('.bio-properties-panel-tooltip-content');
+    expect(tooltipContentNode).to.exist;
+    expect(tooltipContentNode.textContent).to.equal('myContextDesc');
+  });
+
+
+  it('should render tooltip set per props over context', async function() {
+
+    // given
+    const tooltipConfig = { tooltipCheckbox: (element) => 'myContextDesc' };
+
+    createTooltip({
+      container,
+      id: 'tooltipCheckbox',
+      value: 'myPropsTooltip',
+      tooltipConfig,
+      getTooltipForId: (id, element) => tooltipConfig[id](element)
+    });
+
+    const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+    // then
+    await openTooltip(wrapper);
+
+    const tooltipContentNode = domQuery('.bio-properties-panel-tooltip-content');
+    expect(tooltipContentNode).to.exist;
+    expect(tooltipContentNode.textContent).to.equal('myPropsTooltip');
+  });
+
+
   describe('a11y', function() {
 
     it('should have no violations', async function() {
@@ -192,12 +241,26 @@ describe('<Tooltip>', function() {
 
 function createTooltip(options = {}, renderFn = render) {
   const {
+    value = 'tooltip text',
+    id = 'componentId',
     container,
-    value = 'tooltip text'
+    tooltipConfig = {},
+    getTooltipForId = ()=>{},
   } = options;
 
+  const tooltipContext = {
+    tooltip: tooltipConfig,
+    getTooltipForId
+  };
+
   return renderFn(
-    <Tooltip labelId="componentId" value={ value }>
-      <div id="componentId">foo</div>
-    </Tooltip>, { container });
+    <TooltipContext.Provider value={ tooltipContext }>
+      <Tooltip forId={ id } value={ value }>
+        <div id={ id }>foo</div>
+      </Tooltip>
+    </TooltipContext.Provider>,
+    {
+      container
+    }
+  );
 }

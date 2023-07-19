@@ -420,6 +420,51 @@ describe('<PropertiesPanel>', function() {
 
   });
 
+
+  describe('tooltip context', function() {
+
+    it('should notify on tooltip loaded', function() {
+
+      // given
+      const tooltipConfig = {
+        input1: (element, translate) => undefined
+      };
+
+      const tooltipLoadedSpy = sinon.spy();
+
+      // when
+      createPropertiesPanel({
+        container,
+        element: noopElement,
+        tooltipConfig,
+        tooltipLoaded: tooltipLoadedSpy
+      });
+
+      // then
+      expect(tooltipLoadedSpy).to.have.been.calledOnce;
+      expect(tooltipLoadedSpy).to.have.been.calledWith(tooltipConfig);
+    });
+
+    it('should use default config, given no config provided', async function() {
+
+      // given
+      const tooltipLoadedSpy = sinon.spy();
+
+      // when
+      createPropertiesPanel({
+        container,
+        element: noopElement,
+        tooltipLoaded: tooltipLoadedSpy
+      });
+
+
+      // then
+      expect(tooltipLoadedSpy).to.have.been.calledOnce;
+      expect(tooltipLoadedSpy).to.have.been.calledWith({});
+    });
+
+  });
+
 });
 
 
@@ -436,7 +481,9 @@ function createPropertiesPanel(options = {}, renderFn = render) {
     layoutConfig,
     layoutChanged = noop,
     descriptionConfig,
-    descriptionLoaded = noop
+    descriptionLoaded = noop,
+    tooltipConfig,
+    tooltipLoaded = noop
   } = options;
 
   return renderFn(
@@ -449,6 +496,8 @@ function createPropertiesPanel(options = {}, renderFn = render) {
       layoutChanged={ layoutChanged }
       descriptionConfig={ descriptionConfig }
       descriptionLoaded={ descriptionLoaded }
+      tooltipConfig={ tooltipConfig }
+      tooltipLoaded={ tooltipLoaded }
     />,
     {
       container
