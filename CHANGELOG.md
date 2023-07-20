@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.1.0
+
+* `FEAT`: added error markers to groups ([1332bb7a](https://github.com/bpmn-io/properties-panel/commit/1332bb7a82b184994ea26f74915c361888c0900f))
+* `FEAT`: new tooltip component ([4dd14de1](https://github.com/bpmn-io/properties-panel/commit/4dd14de10e8034765e659ed93143eb609295fc74))
+* `FEAT`: implemented tooltip API in fields ([ac84761f](https://github.com/bpmn-io/properties-panel/commit/ac84761ff9de77d0cca10d3b1f0b3a9a17618056))
+
 ## 3.0.0
 
 * `FEAT`: treat FEEL fields as single expressions ([#254](https://github.com/bpmn-io/properties-panel/pull/254))
