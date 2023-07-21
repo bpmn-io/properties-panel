@@ -6,6 +6,8 @@ import {
   useState
 } from 'preact/hooks';
 
+import Tooltip from './entries/Tooltip';
+
 import classnames from 'classnames';
 
 import {
@@ -96,7 +98,9 @@ export default function Group(props) {
       (sticky && open) ? 'sticky' : ''
     ) } onClick={ toggleOpen }>
       <div title={ label } class="bio-properties-panel-group-header-title">
-        { label }
+        <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element }>
+          { label }
+        </Tooltip>
       </div>
       <div class="bio-properties-panel-group-header-buttons">
         {
