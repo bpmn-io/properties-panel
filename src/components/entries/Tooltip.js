@@ -107,7 +107,9 @@ function Tooltip(props) {
       onMouseEnter={ showTooltip }
       onMouseLeave={ ()=> clearTimeout(timeout) }
       onFocus={ showTooltip }
-      onKeyDown={ hideTooltipViaEscape }>
+      onKeyDown={ hideTooltipViaEscape }
+      onMouseDown={ (e)=> {e.preventDefault();} }
+    >
       {props.children}
       {visible ?
         <div

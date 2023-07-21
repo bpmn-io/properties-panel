@@ -1135,6 +1135,7 @@ textarea.bio-properties-panel-input {
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
+  font: inherit;
 }
 
 .bio-properties-panel-tooltip {
