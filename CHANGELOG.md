@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.2.0
+
+* `FEAT`: suppport tooltip population via context ([#262](https://github.com/bpmn-io/properties-panel/pull/262))
+* `FEAT`: suppport tooltips in group header labels ([#263](https://github.com/bpmn-io/properties-panel/pull/263))
+
 ## 3.1.0
 
 * `FEAT`: added error markers to groups ([1332bb7a](https://github.com/bpmn-io/properties-panel/commit/1332bb7a82b184994ea26f74915c361888c0900f))
