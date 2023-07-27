@@ -96,6 +96,52 @@ describe('<TemplatingEditor>', function() {
     expect(editor.textContent).to.equal('');
   });
 
+
+  it('should render open popup action', async function() {
+
+    // given
+    render(<Wrapper value={ '' } />, { container });
+
+    // then
+    const openPopup = domQuery('.bio-properties-panel-open-feel-popup', container);
+    expect(openPopup).to.exist;
+  });
+
+
+  it('should handle open popup', async function() {
+
+    // given
+    const spy = sinon.spy();
+
+    render(<Wrapper value={ '' } onPopupOpen={ spy } />, { container });
+
+    const openPopup = domQuery('.bio-properties-panel-open-feel-popup', container);
+
+    // when
+    openPopup.click();
+
+    // then
+    expect(spy).to.have.been.called;
+  });
+
+
+  it('should show placeholder while open popup', async function() {
+
+    // given
+    const result = render(<Wrapper value={ '' } />, { container });
+
+    const placeholder = domQuery('.bio-properties-panel-feelers-editor__open-popup-placeholder', container);
+
+    // assume
+    expect(window.getComputedStyle(placeholder).display).to.eql('none');
+
+    // when
+    result.rerender(<Wrapper value={ '' } popupOpen={ true } />, { container });
+
+    // then
+    expect(window.getComputedStyle(placeholder).display).to.eql('flex');
+  });
+
 });
 
 

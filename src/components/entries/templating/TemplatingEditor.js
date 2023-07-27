@@ -5,6 +5,10 @@ import { forwardRef } from 'preact/compat';
 import { FeelersEditor } from 'feelers';
 import { useStaticCallback } from '../../../hooks';
 
+import { ExternalLinkIcon } from '../../icons';
+
+const noop = () => {};
+
 /**
  * Buffer `.focus()` calls while the editor is not initialized.
  * Set Focus inside when the editor is ready.
@@ -42,7 +46,9 @@ const CodeEditor = forwardRef((props, ref) => {
     tooltipContainer,
     enableGutters,
     value,
-    onLint = () => {},
+    onLint = noop,
+    onPopupOpen = noop,
+    popupOpen,
     contentAttributes = {},
     hostLanguage = null,
     singleLine = false
@@ -103,12 +109,23 @@ const CodeEditor = forwardRef((props, ref) => {
     ref.current.focus();
   };
 
-  return <div
-    name={ props.name }
-    class={ classNames('bio-properties-panel-feelers-editor bio-properties-panel-input', localValue ? 'edited' : null, disabled ? 'disabled' : null) }
-    ref={ inputRef }
-    onClick={ handleClick }
-  ></div>;
+  return <div class={ classNames(
+    'bio-properties-panel-feelers-editor-container',
+    popupOpen ? 'popupOpen' : null
+  ) }>
+    <div class="bio-properties-panel-feelers-editor__open-popup-placeholder">Opened in editor</div>
+    <div
+      name={ props.name }
+      class={ classNames('bio-properties-panel-feelers-editor bio-properties-panel-input', localValue ? 'edited' : null, disabled ? 'disabled' : null) }
+      ref={ inputRef }
+      onClick={ handleClick }
+    ></div>
+
+    <button
+      title="Open pop-up editor"
+      class="bio-properties-panel-open-feel-popup"
+      onClick={ () => onPopupOpen('feelers') }><ExternalLinkIcon /></button>
+  </div>;
 });
 
 export default CodeEditor;
