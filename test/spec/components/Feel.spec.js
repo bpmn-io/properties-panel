@@ -28,6 +28,10 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
+import {
+  FeelPopupContext
+} from 'src/components/entries/FEEL/context';
+
 import FeelField, {
   FeelCheckboxEntry,
   FeelNumberEntry,
@@ -2266,6 +2270,90 @@ describe('<FeelField>', function() {
 
     });
 
+
+    describe('open popup editor', function() {
+
+      it('should render open popup action', async function() {
+
+        // given
+        const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
+
+        // then
+        expect(openEditor).to.exist;
+      });
+
+
+      it('should open popup editor', async function() {
+
+        // given
+        const spy = sinon.spy();
+
+        const result = createFeelField({
+          container,
+          element: { type: 'foo' },
+          feel: 'required',
+          getValue: () => 'foo',
+          openPopup: spy
+        });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
+
+        // when
+        await act(() => {
+          openEditor.click();
+        });
+
+        // then
+        expect(spy).to.have.been.called;
+        expect(spy.args[0][1].type).to.eql('feel');
+      });
+
+
+      it('should show placeholder while popup open', async function() {
+
+        // given
+        const id = 'myPopup';
+        let currentPopupSource;
+
+        const props = {
+          container,
+          feel: 'required',
+          id,
+          element: { type: 'foo' },
+          getValue: () => 'foo',
+          openPopup: () => currentPopupSource = id,
+          getPopupSource: () => currentPopupSource
+        };
+
+        const result = createFeelField(props);
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
+
+        const placeholder = domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container);
+
+        // assume
+        expect(window.getComputedStyle(placeholder).display).to.eql('none');
+
+        // when
+        await act(() => {
+          openEditor.click();
+        });
+
+        createFeelField({
+          ...props,
+        }, result.render);
+
+        // then
+        expect(window.getComputedStyle(placeholder).display).to.eql('flex');
+      });
+
+    });
+
   });
 
 
@@ -2423,6 +2511,8 @@ function createFeelField(options = {}, renderFn = render) {
     onShow = noop,
     errors = {},
     variables,
+    openPopup = noop,
+    getPopupSource = noop,
     Component = FeelField,
     ...rest
   } = options;
@@ -2444,25 +2534,32 @@ function createFeelField(options = {}, renderFn = render) {
     getDescriptionForId
   };
 
+  const feelPopupContext = {
+    open: openPopup,
+    source: getPopupSource()
+  };
+
   return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
           <DescriptionContext.Provider value={ descriptionContext }>
-            <Component
-              element={ element }
-              id={ id }
-              label={ label }
-              description={ description }
-              disabled={ disabled }
-              getValue={ getValue }
-              setValue={ setValue }
-              debounce={ debounce }
-              validate={ validate }
-              feel={ feel }
-              variables={ variables }
-              { ...rest }
-            />
+            <FeelPopupContext.Provider value={ feelPopupContext }>
+              <Component
+                element={ element }
+                id={ id }
+                label={ label }
+                description={ description }
+                disabled={ disabled }
+                getValue={ getValue }
+                setValue={ setValue }
+                debounce={ debounce }
+                validate={ validate }
+                feel={ feel }
+                variables={ variables }
+                { ...rest }
+              />
+            </FeelPopupContext.Provider>
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>

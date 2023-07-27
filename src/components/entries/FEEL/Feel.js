@@ -3,6 +3,7 @@ import TemplatingEditor from '../templating/TemplatingEditor';
 
 import {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -25,6 +26,10 @@ import CodeEditor from './FeelEditor';
 import { FeelIndicator } from './FeelIndicator';
 import FeelIcon from './FeelIcon';
 
+import { FEEL_POPUP_WIDTH } from './FeelPopup';
+
+import { FeelPopupContext } from './context';
+
 import { ToggleSwitch } from '../ToggleSwitch';
 
 import { NumberField } from '../NumberField';
@@ -36,13 +41,16 @@ function FeelTextfield(props) {
   const {
     debounce,
     id,
+    element,
     label,
+    hostLanguage,
     onInput,
     onError,
     feel,
     value = '',
     disabled = false,
     variables,
+    singleLine,
     tooltipContainer,
     OptionalComponent = OptionalFeelInput,
     tooltip
@@ -57,6 +65,13 @@ function FeelTextfield(props) {
   const feelOnlyValue = (isString(localValue) && localValue.startsWith('=')) ? localValue.substring(1) : localValue;
 
   const [ focus, _setFocus ] = useState(undefined);
+
+  const {
+    open: openPopup,
+    source: popupSource
+  } = useContext(FeelPopupContext);
+
+  const popuOpen = popupSource === id;
 
   const setFocus = (offset = 0) => {
     const hasFocus = containerRef.current.contains(document.activeElement);
@@ -126,6 +141,23 @@ function FeelTextfield(props) {
     onError(message);
   });
 
+  const handlePopupOpen = (type = 'feel') => {
+    const popupOptions = {
+      id,
+      hostLanguage,
+      onInput: handleLocalInput,
+      position: calculatePopupPosition(containerRef.current),
+      singleLine,
+      title: getPopupTitle(element, label),
+      tooltipContainer,
+      type,
+      value: feelOnlyValue,
+      variables
+    };
+
+    openPopup(id, popupOptions, editorRef.current);
+  };
+
   useEffect(() => {
     if (typeof focus !== 'undefined') {
       editorRef.current.focus(focus);
@@ -158,7 +190,7 @@ function FeelTextfield(props) {
     };
 
     const pasteHandler = event => {
-      if (feelActive) {
+      if (feelActive || popuOpen) {
         return;
       }
 
@@ -210,8 +242,10 @@ function FeelTextfield(props) {
             name={ id }
             onInput={ handleLocalInput }
             disabled={ disabled }
+            popupOpen={ popuOpen }
             onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
             onLint={ handleLint }
+            onPopupOpen={ handlePopupOpen }
             value={ feelOnlyValue }
             variables={ variables }
             ref={ editorRef }
@@ -219,10 +253,13 @@ function FeelTextfield(props) {
           /> :
           <OptionalComponent
             { ...props }
+            popupOpen={ popuOpen }
             onInput={ handleLocalInput }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }
+            onPopupOpen={ handlePopupOpen }
+            containerRef={ containerRef }
           />
         }
       </div>
@@ -703,4 +740,24 @@ export function isEdited(node) {
 
 function prefixId(id) {
   return `bio-properties-panel-${id}`;
+}
+
+function calculatePopupPosition(element) {
+  const { top, left } = element.getBoundingClientRect();
+
+  return {
+    left: left - FEEL_POPUP_WIDTH - 20,
+    top: top
+  };
+}
+
+// todo(pinussilvestrus): make this configurable in the future
+function getPopupTitle(element, label) {
+  let popupTitle;
+
+  if (element && element.type) {
+    popupTitle = `${element.type} / `;
+  }
+
+  return `${popupTitle}${label}`;
 }

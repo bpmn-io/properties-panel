@@ -16,6 +16,7 @@
   --color-blue-205-100-35: hsl(205, 100%, 35%);
   --color-blue-205-100-45: hsl(205, 100%, 45%);
   --color-blue-205-100-50: hsl(205, 100%, 50%);
+  --color-blue-205-100-85: hsl(205, 100%, 85%);
   --color-blue-205-100-95: hsl(205, 100%, 95%);
   --color-blue-219-99-53: hsl(219, 99%, 53%);
   --color-blue-218-100-74: hsl(218, 100%, 74%);
@@ -109,8 +110,13 @@
   --feel-hover-background-color: var(--color-grey-225-10-97);
   --feel-active-background-color: transparent;
   --feel-required-color: var(--color-grey-225-10-55);
+  --feel-open-popup-color: hsla(0, 0%, 32%, 1);
+  --feel-open-popup-background-color: var(--color-white);
+  --feel-open-popup-hover-color: hsla(219, 99%, 53%, 1);
 
   --feel-indicator-background-color: var(--color-grey-225-10-90);
+
+  --feelers-select-color:  var(--color-blue-205-100-85);
 
   --tooltip-underline-color: var(--color-blue-219-99-53);
   --tooltip-background-color: var(--color-grey-0-0-22);
@@ -1098,6 +1104,12 @@ textarea.bio-properties-panel-input {
   background-color: transparent;
 }
 
+
+/* @Note(pinussilvestrus): mitigate low contrast - https://github.com/bpmn-io/cm-theme/issues/4 */
+.bio-properties-panel-feelers-editor .cm-content ::selection {
+  background: var(--feelers-select-color, hsl(205, 100%, 85%));
+}
+
 .bio-properties-panel-feelers-editor .cm-editor.cm-focused {
   background-color: transparent;
 }
@@ -1188,4 +1200,233 @@ textarea.bio-properties-panel-input {
   border-bottom: 5px solid transparent;
   border-left: 5px solid var(--tooltip-background-color);
   margin-top: 16px;
+}
+
+.bio-properties-panel-feelers-editor-container .bio-properties-panel-feelers-editor__open-popup-placeholder,
+.bio-properties-panel-feel-editor-container .bio-properties-panel-feel-editor__open-popup-placeholder {
+  display: none;
+  justify-content: center;
+  flex-direction: column;
+  color: hsla(0, 0%, 9%, 0.25);
+  padding: 3px 6px 2px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 2px;
+  background-color: var(--input-background-color);
+  font-size: var(--text-size-base);
+  font-family: inherit;
+  width: 100%;
+  min-height: 100%;
+}
+
+.bio-properties-panel-feelers-editor-container.popupOpen .bio-properties-panel-input,
+.bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-input {
+  display: none;
+}
+
+.bio-properties-panel-feelers-editor-container.popupOpen .bio-properties-panel-feelers-editor__open-popup-placeholder,
+.bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-feel-editor__open-popup-placeholder {
+  display: flex;
+}
+
+.bio-properties-panel-popup {
+  --popup-background-color: hsla(0, 0%, 96%, 1);
+  --popup-header-background-color: white;
+  --popup-font-color: hsla(0, 0%, 0%, 1);
+  --popup-title-color: hsla(0, 0%, 0%, 1);
+
+  --feel-popup-close-background-color: hsla(219, 99%, 53%, 1);
+  --feel-popup-gutters-background-color: hsla(0, 0%, 90%, 1);
+
+  position: absolute;
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  font-family: IBM Plex Sans, sans-serif;
+  padding: 0;
+  z-index: 1001;
+  box-shadow: 0px 2px 6px 0px hsla(0, 0%, 0%, 0.3);
+  background-color: var(--popup-background-color);
+  color: var(--popup-font-color);
+  height: auto;
+  width: auto;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.bio-properties-panel-popup h1, h2, h3, h4 {
+  font-weight: 500;
+  font-size: inherit;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__header,
+.bio-properties-panel-popup .bio-properties-panel-popup__body,
+.bio-properties-panel-popup .bio-properties-panel-popup__footer {
+  padding: 12px;
+  display: flex;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__body:not(:first-child) {
+  padding-top: 0;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__header {
+  background-color: var(--popup-header-background-color);
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  color: var(--popup-title-color);
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__header.draggable {
+  cursor: grab;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__drag-handle {
+  display: flex;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__drag-preview {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  top: 0;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__title {
+  margin-left: 8px;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__title::first-letter {
+  text-transform: capitalize;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__header svg {
+  margin-left: -4px;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__body {
+  font-size: inherit;
+  height: 100%;
+  display: flex;
+  overflow: auto;
+  padding-bottom: 0;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__footer {
+  position: absolute;
+  bottom: 0;
+  right: 8px;
+}
+
+.bio-properties-panel-feel-popup {
+  min-height: 400px;
+  width: fit-content;
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-feel-popup__body {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-feel-editor-container {
+  display: flex;
+  min-width: 100%;
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-feelers-editor-container {
+  width: 100%;
+  display: flex;
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-feelers-editor-container .bio-properties-panel-feelers-editor {
+  display: flex;
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-feelers-editor-container .bio-properties-panel-feelers-editor .cm-editor {
+  width: 100%;
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-input {
+  width: 100%;
+  resize: none;
+  padding: 0;
+  margin-left: -12px;
+  overflow: hidden;
+  overflow-y: auto
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-open-feel-popup {
+  display: none !important;
+}
+
+.bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup,
+.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup {
+  position: absolute;
+  display: none;
+  right: 0;
+  bottom: -1px;
+  background: none;
+  border: none;
+  color: var(--feel-open-popup-color);
+  cursor: pointer;
+}
+
+.bio-properties-panel-open-feel-popup svg {
+  background: var(--feel-open-popup-background-color);
+}
+
+.bio-properties-panel-feelers-editor-container:hover .bio-properties-panel-open-feel-popup,
+.bio-properties-panel-feel-container:hover .bio-properties-panel-open-feel-popup,
+.bio-properties-panel-feelers-editor-container:focus-within .bio-properties-panel-open-feel-popup,
+.bio-properties-panel-feel-container:focus-within .bio-properties-panel-open-feel-popup {
+  display: block;
+}
+
+.bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup {
+  bottom: 0;
+}
+
+.bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup:hover,
+.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup:hover {
+  color: var(--feel-open-popup-hover-color);
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-popup__footer .bio-properties-panel-feel-popup__close-btn {
+  background: var(--feel-popup-close-background-color);
+  width: 66px;
+  font-weight: 400;
+  font-size: 14px;
+  font-family: inherit;
+  color: white;
+  border: none;
+  height: 32px;
+  cursor: pointer;
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-feel-editor-container .cm-editor {
+  width: 100%;
+  height: 100%;
+}
+
+.bio-properties-panel-feel-popup .bio-properties-panel-feel-editor-container .cm-editor .cm-content {
+  padding-left: 4px;
+}
+
+.bio-properties-panel-feel-popup .cm-gutters {
+  background-color: var(--feel-popup-gutters-background-color);
+  border: none;
+  padding: 0;
+}
+
+.bio-properties-panel-feel-popup .cm-gutter {
+  min-width: 32px;
+}
+
+.bio-properties-panel-feel-popup .cm-gutters .cm-lineNumbers .cm-gutterElement {
+  text-align: center;
 }
