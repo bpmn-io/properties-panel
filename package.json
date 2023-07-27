@@ -35,9 +35,11 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@bpmn-io/feel-editor": "^0.8.0",
+    "@bpmn-io/feel-editor": "^0.9.0",
+    "@codemirror/view": "^6.14.0",
     "classnames": "^2.3.1",
-    "feelers": "^0.1.0-alpha.8",
+    "feelers": "^0.1.0",
+    "focus-trap": "^7.5.2",
     "min-dash": "^4.1.1",
     "min-dom": "^4.0.3"
   },

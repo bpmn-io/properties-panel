@@ -127,6 +127,18 @@ describe('<FeelEditor>', function() {
     const editor = domQuery('[role="textbox"]', container);
     expect(document.activeElement).to.equal(editor);
   });
+
+
+  it('should enable gutters', async function() {
+
+    // given
+    render(<Wrapper enableGutters={ true } />, { container });
+
+    // then
+    const gutters = domQuery('.cm-gutter ', container);
+    expect(gutters).to.exist;
+  });
+
 });
 
 
