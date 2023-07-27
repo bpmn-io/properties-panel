@@ -176,7 +176,7 @@ describe('<Simple>', function() {
 
       // then
       await expectNoViolations(node, {
-        rules: [ 'label' ]
+        runOnly: [ 'label' ]
       });
     });
 
@@ -195,7 +195,7 @@ describe('<Simple>', function() {
 
       // then
       await expectNoViolations(node, {
-        rules: [ 'label' ]
+        runOnly: [ 'label' ]
       });
     });
 
