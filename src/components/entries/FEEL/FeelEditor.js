@@ -86,7 +86,10 @@ const CodeEditor = forwardRef((props, ref) => {
       onLint: onLint,
       tooltipContainer: tooltipContainer,
       value: localValue,
-      variables: variables
+      variables: variables,
+      extensions: [
+        ...enableGutters ? [ lineNumbers() ] : []
+      ]
     });
 
     setEditor(
