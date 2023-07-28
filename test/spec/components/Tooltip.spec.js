@@ -20,6 +20,7 @@ import Tooltip from 'src/components/entries/Tooltip';
 import { act } from 'preact/test-utils';
 
 import { TooltipContext } from '../../../src/context';
+import { useRef } from 'preact/hooks';
 
 insertCoreStyles();
 
@@ -120,6 +121,30 @@ describe('<Tooltip>', function() {
 
       // expect
       expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
+    });
+
+
+    it('should render inside parent if defined', async function() {
+
+      // given
+      const TooltipWithParent = () => {
+        const ref = useRef();
+
+        return <div id="parent" ref={ ref }>
+          <TooltipComponent parent={ ref } />
+        </div>;
+      };
+
+      render(<TooltipWithParent />,{ container });
+
+      const element = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+      // when
+      await openTooltip(element);
+
+      // then
+      expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
+      expect(domQuery('.bio-properties-panel-tooltip').parentElement).to.equal(domQuery('#parent'));
     });
 
   });
@@ -259,28 +284,34 @@ describe('<Tooltip>', function() {
 
 // helpers ////////////////////
 
-function createTooltip(options = {}, renderFn = render) {
+function TooltipComponent(props) {
   const {
     value = 'tooltip text',
     id = 'componentId',
-    container,
     tooltipConfig = {},
     getTooltipForId = ()=>{},
-  } = options;
+    parent
+  } = props;
 
   const tooltipContext = {
     tooltip: tooltipConfig,
     getTooltipForId
   };
 
-  return renderFn(
+  return (
     <TooltipContext.Provider value={ tooltipContext }>
-      <Tooltip forId={ id } value={ value }>
+      <Tooltip forId={ id } value={ value } parent={ parent }>
         <div id={ id }>foo</div>
       </Tooltip>
-    </TooltipContext.Provider>,
-    {
-      container
-    }
+    </TooltipContext.Provider>
   );
 }
+
+function createTooltip(options = {}, renderFn = render) {
+  const {
+    container
+  } = options;
+
+  return renderFn(<TooltipComponent { ...options } />,{ container });
+}
+

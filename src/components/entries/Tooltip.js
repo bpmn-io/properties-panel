@@ -94,11 +94,12 @@ function Tooltip(props) {
       }
     };
 
+    document.addEventListener('wheel', hideHoveredTooltip);
     document.addEventListener('focusout', hideFocusedTooltip);
     document.addEventListener('mousemove', hideHoveredTooltip);
 
     return () => {
-
+      document.removeEventListener('wheel', hideHoveredTooltip);
       document.removeEventListener('mousemove', hideHoveredTooltip);
       document.removeEventListener('focusout', hideFocusedTooltip);
     };
