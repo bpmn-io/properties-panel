@@ -5,6 +5,8 @@ import {
 } from 'react';
 import { useTooltipContext } from '../../hooks/useTooltipContext';
 
+import { createPortal } from 'preact/compat';
+
 /**
  * @param {Object} props
  * @param {String} props.forId
@@ -30,7 +32,8 @@ export default function TooltipWrapper(props) {
 function Tooltip(props) {
   const {
     forId,
-    value
+    value,
+    parent
   } = props;
 
   const [ visible, setShow ] = useState(false);
@@ -101,6 +104,24 @@ function Tooltip(props) {
     };
   }, [ wrapperRef.current, visible ]);
 
+  const renderTooltip = () => {
+    return (
+      <div
+        class="bio-properties-panel-tooltip"
+        role="tooltip"
+        id="bio-properties-panel-tooltip"
+        aria-labelledby={ forId }
+        style={ getTooltipPosition(wrapperRef.current) }
+        ref={ tooltipRef }
+        onClick={ (e)=> e.stopPropagation() }
+      >
+        <div class="bio-properties-panel-tooltip-content">
+          {value}
+        </div>
+        <div class="bio-properties-panel-tooltip-arrow" />
+      </div>
+    );};
+
   return (
     <div class="bio-properties-panel-tooltip-wrapper" tabIndex="0"
       ref={ wrapperRef }
@@ -112,21 +133,10 @@ function Tooltip(props) {
     >
       {props.children}
       {visible ?
-        <div
-          class="bio-properties-panel-tooltip"
-          role="tooltip"
-          id="bio-properties-panel-tooltip"
-          aria-labelledby={ forId }
-          style={ getTooltipPosition(wrapperRef.current) }
-          ref={ tooltipRef }
-          onClick={ (e)=> e.stopPropagation() }
-        >
-          <div class="bio-properties-panel-tooltip-content">
-            {value}
-          </div>
-          <div class="bio-properties-panel-tooltip-arrow" />
-        </div>
-        : null
+        (parent ?
+          createPortal(renderTooltip(), parent.current)
+          : renderTooltip()
+        ) : null
       }
     </div>
   );
