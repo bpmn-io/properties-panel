@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+
+## 3.2.1
+
+* `FIX`: do not clip tooltips in group headers ([#268](https://github.com/bpmn-io/properties-panel/pull/268))
+* `FIX`: evaluate tooltip visibility on scroll ([#268](https://github.com/bpmn-io/properties-panel/pull/268))
+
 ## 3.2.0
 
 * `FEAT`: suppport tooltip population via context ([#262](https://github.com/bpmn-io/properties-panel/pull/262))
