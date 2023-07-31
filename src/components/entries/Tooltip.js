@@ -1,8 +1,9 @@
-import { useRef } from 'preact/hooks';
 import {
+  useRef,
   useEffect,
   useState
-} from 'react';
+} from 'preact/hooks';
+
 import { useTooltipContext } from '../../hooks/useTooltipContext';
 
 import { createPortal } from 'preact/compat';
