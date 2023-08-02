@@ -7,6 +7,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 ___Note:__ Yet to be released changes appear here._
 
 
+## 3.3.0
+
+* `FEAT`: enable gutters in feel editor via option ([#265](https://github.com/bpmn-io/properties-panel/pull/265))
+* `FEAT`: add draggable popup component ([#265](https://github.com/bpmn-io/properties-panel/pull/265))
+* `FEAT`: open popup editor for feel and template editor ([#265](https://github.com/bpmn-io/properties-panel/pull/265))
+
 ## 3.2.1
 
 * `FIX`: do not clip tooltips in group headers ([#268](https://github.com/bpmn-io/properties-panel/pull/268))
