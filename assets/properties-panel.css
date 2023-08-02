@@ -1253,7 +1253,10 @@ textarea.bio-properties-panel-input {
   font-size: 14px;
 }
 
-.bio-properties-panel-popup h1, h2, h3, h4 {
+.bio-properties-panel-popup h1, 
+.bio-properties-panel-popup h2, 
+.bio-properties-panel-popup h3, 
+.bio-properties-panel-popup h4 {
   font-weight: 500;
   font-size: inherit;
 }
