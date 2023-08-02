@@ -6,6 +6,9 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.3.1
+
+* `FIX`: fixup header styles for popups ([#271](https://github.com/bpmn-io/properties-panel/pull/271))
 
 ## 3.3.0
 
