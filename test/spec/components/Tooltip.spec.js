@@ -46,9 +46,9 @@ describe('<Tooltip>', function() {
     clock.restore();
   });
 
-  function openTooltip(element) {
+  function openTooltip(element, viaFocus = false) {
     return act(() => {
-      fireEvent.mouseEnter(element);
+      viaFocus ? element.focus() : fireEvent.mouseEnter(element);
       clock.tick(200);
     });
   }
@@ -127,14 +127,6 @@ describe('<Tooltip>', function() {
     it('should render inside parent if defined', async function() {
 
       // given
-      const TooltipWithParent = () => {
-        const ref = useRef();
-
-        return <div id="parent" ref={ ref }>
-          <TooltipComponent parent={ ref } />
-        </div>;
-      };
-
       render(<TooltipWithParent />,{ container });
 
       const element = domQuery('.bio-properties-panel-tooltip-wrapper', container);
@@ -279,6 +271,128 @@ describe('<Tooltip>', function() {
 
   });
 
+
+  describe('focus', function() {
+
+    describe('trigger element', function() {
+
+      it('should not persist tooltip when opened with mouse', async function() {
+
+        // given
+        createTooltip({ container });
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+        await openTooltip(wrapper);
+
+        // when
+        fireEvent.mouseMove(container);
+
+        // then
+        expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
+      });
+
+
+      it('should not persist tooltip when opened with mouse - render portal', async function() {
+
+        // given
+        render(<TooltipWithParent />,{ container });
+
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+        // when
+        await openTooltip(wrapper);
+
+        // when
+        wrapper.focus();
+        fireEvent.mouseMove(container);
+
+        // then
+        expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
+      });
+
+
+      it('should persist tooltip when opened with keyboard focus', async function() {
+
+        // given
+        createTooltip({ container });
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+        await openTooltip(wrapper, true);
+
+        // when
+        fireEvent.mouseMove(wrapper);
+
+        // then
+        expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
+      });
+
+
+      it('should persist tooltip when opened with keyboard focus - render portal', async function() {
+
+        // given
+        render(<TooltipWithParent />,{ container });
+
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+        // when
+        await openTooltip(wrapper, true);
+
+        // when
+        fireEvent.mouseMove(container);
+
+        // then
+        expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
+      });
+
+    });
+
+
+    describe('tooltip content', function() {
+
+      it('should not persist tooltip - mouse focus', async function() {
+
+        // given
+        const tooltipContent = <div>
+          <a id="link" href="#">some link</a>
+        </div>;
+
+        createTooltip({ container, value: tooltipContent });
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+        await openTooltip(wrapper);
+
+        // when
+        const link = domQuery('#link', container);
+
+        link.focus();
+        fireEvent.mouseMove(container);
+
+        // then
+        expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
+      });
+
+
+      it('should persist tooltip - keyboard focus', async function() {
+
+        // given
+        const tooltipContent = <div>
+          <a id="link" href="#">some link</a>
+        </div>;
+
+        createTooltip({ container, value: tooltipContent });
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+        await openTooltip(wrapper, true);
+
+        // when
+        const link = domQuery('#link', container);
+        link.focus();
+        fireEvent.mouseMove(wrapper);
+
+        // then
+        expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
+      });
+
+    });
+
+  });
+
 });
 
 
@@ -306,6 +420,15 @@ function TooltipComponent(props) {
     </TooltipContext.Provider>
   );
 }
+
+function TooltipWithParent() {
+  const ref = useRef();
+
+  return <div id="parent" ref={ ref }>
+    <TooltipComponent parent={ ref } />
+  </div>;
+}
+
 
 function createTooltip(options = {}, renderFn = render) {
   const {
