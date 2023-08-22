@@ -1239,6 +1239,20 @@ describe('<ListGroup>', function() {
     });
 
 
+    it('should not have title for lists with tooltip', function() {
+
+      // given
+      const { container } = createListGroup({ container: parentContainer, tooltip: 'foo' });
+
+      const header = domQuery('.bio-properties-panel-group-header', container);
+
+      const title = domQuery('.bio-properties-panel-group-header-title', header);
+
+      // then
+      expect(domAttr(title, 'title')).to.not.exist;
+    });
+
+
     it('should have title for list with items', function() {
 
       // given
@@ -1319,7 +1333,8 @@ function TestGroup(props) {
     items = [],
     add,
     shouldSort,
-    shouldOpen
+    shouldOpen,
+    tooltip
   } = props;
 
   return (
@@ -1332,7 +1347,8 @@ function TestGroup(props) {
           items={ items }
           add={ add }
           shouldSort={ shouldSort }
-          shouldOpen={ shouldOpen } />
+          shouldOpen={ shouldOpen }
+          tooltip={ tooltip } />
       </MockLayout>
     </ErrorsContext.Provider>
   );
@@ -1348,7 +1364,8 @@ function createListGroup(options = {}, renderFn = render) {
     add,
     shouldSort,
     shouldOpen,
-    container
+    container,
+    tooltip
   } = options;
 
   return renderFn(
@@ -1361,6 +1378,7 @@ function createListGroup(options = {}, renderFn = render) {
       add={ add }
       shouldSort={ shouldSort }
       shouldOpen={ shouldOpen }
+      tooltip={ tooltip }
     /> ,
     {
       container

@@ -198,7 +198,8 @@ export default function ListGroup(props) {
       ) }
       onClick={ hasItems ? toggleOpen : noop }>
       <div
-        title={ label }
+        title={ props.tooltip ? null : label }
+        data-title={ label }
         class="bio-properties-panel-group-header-title"
       >
         <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element } parent={ groupRef }>

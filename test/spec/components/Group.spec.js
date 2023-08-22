@@ -258,6 +258,20 @@ describe('<Group>', function() {
     });
 
 
+    it('should not have title for groups with tooltip', function() {
+
+      // given
+      const result = createGroup({ container, label: 'Group', tooltip: 'foo' });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const title = domQuery('.bio-properties-panel-group-header-title', header);
+
+      // then
+      expect(domAttr(title, 'title')).to.not.exist;
+    });
+
+
     it('should have title for configured groups', function() {
 
       // given
