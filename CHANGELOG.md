@@ -6,6 +6,13 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+
+## 3.3.2
+
+* `FIX`: tooltip content is selectable ([#273](https://github.com/bpmn-io/properties-panel/pull/273))
+* `FIX`: group tooltips hide on blur ([#273](https://github.com/bpmn-io/properties-panel/pull/273))
+* `FIX`: remove native tooltip when custom tooltip is present ([#275](https://github.com/bpmn-io/properties-panel/pull/275))
+
 ## 3.3.1
 
 * `FIX`: fixup header styles for popups ([#271](https://github.com/bpmn-io/properties-panel/pull/271))
