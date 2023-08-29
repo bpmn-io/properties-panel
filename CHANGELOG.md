@@ -6,6 +6,9 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.4.0
+
+* `CHORE`: publish css in `dist/assets` 
 
 ## 3.3.2
 
