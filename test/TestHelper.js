@@ -46,7 +46,7 @@ export function clickInput(input) {
 export function insertCoreStyles() {
   insertCSS(
     'properties-panel.css',
-    require('../assets/properties-panel.css').default
+    require('../src/assets/properties-panel.css').default
   );
 
   insertCSS(
