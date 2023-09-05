@@ -51,6 +51,31 @@ describe('<FeelPopup>', function() {
   });
 
 
+  it('should render popup in container', async function() {
+
+    // given
+    const parent = document.createElement('div');
+
+    // when
+    createFeelPopup({ popupContainer: parent }, container);
+
+    const childComponent = domQuery('.child-component', container);
+
+    const btn = domQuery('button', childComponent);
+
+    // when
+    await act(() => {
+      btn.click();
+    });
+
+    // assume
+    expect(domQuery('.bio-properties-panel-feel-editor-container', parent)).to.exist;
+
+    // then
+    expect(childComponent).to.exist;
+  });
+
+
   it('should restore focus on source element', async function() {
 
     // given
@@ -267,12 +292,13 @@ describe('<FeelPopup>', function() {
 
 function createFeelPopup(props, container) {
   const {
+    popupContainer,
     element = noopElement,
     type
   } = props;
 
   return render(
-    <FEELPopupRoot element={ element }>
+    <FEELPopupRoot popupContainer={ popupContainer } element={ element }>
       <ChildComponent type={ type } />
     </FEELPopupRoot>,
     { container }
