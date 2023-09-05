@@ -23,7 +23,8 @@ export const FEEL_POPUP_HEIGHT = 250;
  */
 export default function FEELPopupRoot(props) {
   const {
-    element
+    element,
+    popupContainer
   } = props;
 
   const prevElement = usePrevious(element);
@@ -63,6 +64,7 @@ export default function FEELPopupRoot(props) {
       { open && (
         <FeelPopupComponent
           onClose={ handleClose }
+          container={ popupContainer }
           sourceElement={ sourceElement }
           { ...popupConfig } />
       )}
@@ -73,6 +75,7 @@ export default function FEELPopupRoot(props) {
 
 function FeelPopupComponent(props) {
   const {
+    container,
     id,
     hostLanguage,
     onInput,
@@ -103,6 +106,7 @@ function FeelPopupComponent(props) {
 
   return (
     <Popup
+      container={ container }
       className="bio-properties-panel-feel-popup"
       position={ position }
       title={ title }
