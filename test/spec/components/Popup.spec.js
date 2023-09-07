@@ -146,6 +146,26 @@ describe('<Popup>', function() {
   });
 
 
+  it('should NOT close on ESC (closeOnEscape=false)', async function() {
+
+    // given
+    const closeSpy = sinon.spy();
+
+    await act(() => {
+      render(<Popup closeOnEscape={ false } onClose={ closeSpy }><input name="foo"></input></Popup>, { container });
+    });
+
+    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const input = domQuery('input', popup);
+
+    // when
+    fireEvent.keyDown(input, { key: 'Escape' });
+
+    // then
+    expect(closeSpy).to.not.have.been.called;
+  });
+
+
   describe('Popup.Title', function() {
 
     it('should render children', function() {

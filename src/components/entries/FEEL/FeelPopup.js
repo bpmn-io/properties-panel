@@ -92,17 +92,34 @@ function FeelPopupComponent(props) {
 
   const editorRef = useRef();
 
+  const isAutoCompletionOpen = useRef(false);
+
   const handleSetReturnFocus = () => {
     sourceElement && sourceElement.focus();
   };
 
-  useEffect(() => {
-    const editor = editorRef.current;
+  const onKeyDownCapture = (event) => {
 
-    if (editor) {
-      editor.focus();
+    // we use capture here to make sure we handle the event before the editor does
+    if (event.key === 'Escape') {
+      isAutoCompletionOpen.current = autoCompletionOpen(event.target);
     }
-  }, [ editorRef, id ]);
+  };
+
+  const onKeyDown = (event) => {
+
+    if (event.key === 'Escape') {
+
+      // close popup only if auto completion is not open
+      // we need to do check this because the editor is not
+      // stop propagating the keydown event
+      // cf. https://discuss.codemirror.net/t/how-can-i-replace-the-default-autocompletion-keymap-v6/3322/5
+      if (!isAutoCompletionOpen.current) {
+        onClose();
+        isAutoCompletionOpen.current = false;
+      }
+    }
+  };
 
   return (
     <Popup
@@ -114,6 +131,8 @@ function FeelPopupComponent(props) {
 
       // handle focus manually on deactivate
       returnFocus={ false }
+      closeOnEscape={ false }
+      delayInitialFocus={ false }
       onPostDeactivate={ handleSetReturnFocus }
       height={ FEEL_POPUP_HEIGHT }
       width={ FEEL_POPUP_WIDTH }
@@ -122,7 +141,10 @@ function FeelPopupComponent(props) {
         title={ title }
         draggable />
       <Popup.Body>
-        <div class="bio-properties-panel-feel-popup__body">
+        <div
+          onKeyDownCapture={ onKeyDownCapture }
+          onKeyDown={ onKeyDown }
+          class="bio-properties-panel-feel-popup__body">
 
           {
             type === 'feel' && (
@@ -171,4 +193,8 @@ function FeelPopupComponent(props) {
 
 function prefixId(id) {
   return `bio-properties-panel-${id}`;
+}
+
+function autoCompletionOpen(element) {
+  return element.closest('.cm-editor').querySelector('.cm-tooltip-autocomplete');
 }
