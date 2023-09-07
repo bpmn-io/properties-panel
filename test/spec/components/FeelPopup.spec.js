@@ -1,5 +1,6 @@
 import {
   act,
+  fireEvent,
   render,
   waitFor
 } from '@testing-library/preact/pure';
@@ -27,7 +28,6 @@ const noopElement = {
   id: 'foo',
   type: 'foo'
 };
-
 
 
 describe('<FeelPopup>', function() {
@@ -116,7 +116,7 @@ describe('<FeelPopup>', function() {
     });
 
     // assume
-    expect(domQuery('.bio-properties-panel-feel-editor-container', document.body)).to.exist;
+    expect(getFeelEditor(document.body)).to.exist;
 
     // and when
     await act(() => {
@@ -124,7 +124,7 @@ describe('<FeelPopup>', function() {
     });
 
     // then
-    expect(domQuery('.bio-properties-panel-feel-editor-container', document.body)).to.not.exist;
+    expect(getFeelEditor(document.body)).to.not.exist;
   });
 
 
@@ -139,7 +139,7 @@ describe('<FeelPopup>', function() {
       const btn = domQuery('button', childComponent);
 
       // assume
-      expect(domQuery('.bio-properties-panel-feel-editor-container', document.body)).to.not.exist;
+      expect(getFeelEditor(document.body)).to.not.exist;
 
       // when
       await act(() => {
@@ -147,11 +147,115 @@ describe('<FeelPopup>', function() {
       });
 
       // then
-      expect(domQuery('.bio-properties-panel-feel-editor-container', document.body)).to.exist;
+      expect(getFeelEditor(document.body)).to.exist;
     });
 
 
-    it('should close <feel> editor', async function() {
+    it('should focus <feel> editor', async function() {
+
+      // given
+      createFeelPopup({ type: 'feel' }, container);
+
+      const childComponent = domQuery('.child-component', container);
+      const btn = domQuery('button', childComponent);
+
+      // when
+      await act(() => {
+        btn.click();
+      });
+
+      const editor = getFeelEditor(document.body);
+
+      // then
+      expect(document.activeElement).to.eql(domQuery('.cm-content', editor));
+    });
+
+
+    it('should autosuggest in <feel> editor', async function() {
+
+      // given
+      createFeelPopup({ type: 'feel' }, container);
+
+      const childComponent = domQuery('.child-component', container);
+      const btn = domQuery('button', childComponent);
+
+      await act(() => {
+        btn.click();
+      });
+
+      const editor = getFeelEditor(document.body);
+
+      // assume
+      expect(editor).to.exist;
+
+      // when
+      fireEvent.keyDown(document.activeElement, { key: ' ', ctrlKey: true });
+
+      // then
+      let suggestions;
+      await waitFor(() => {
+        suggestions = domQuery('.cm-tooltip-autocomplete > ul', editor);
+        expect(suggestions).to.exist;
+      });
+    });
+
+
+    it('should NOT close <feel> editor on ESC (autosuggest)', async function() {
+
+      // given
+      createFeelPopup({ type: 'feel' }, container);
+
+      const childComponent = domQuery('.child-component', container);
+      const btn = domQuery('button', childComponent);
+
+      await act(() => {
+        btn.click();
+      });
+
+      const editor = getFeelEditor(document.body);
+
+      expect(editor).to.exist;
+
+      fireEvent.keyDown(domQuery('.cm-content', editor), { key: ' ', ctrlKey: true });
+
+      // assume
+      let suggestions;
+      await waitFor(() => {
+        suggestions = domQuery('.cm-tooltip-autocomplete > ul', editor);
+        expect(suggestions).to.exist;
+      });
+
+      // when
+      fireEvent.keyDown(domQuery('.cm-content', editor), { key: 'Escape' });
+
+      // then
+      expect(getFeelEditor(document.body)).to.exist;
+    });
+
+
+    it('should close <feel> editor on ESC (no autosuggest)', async function() {
+
+      // given
+      createFeelPopup({ type: 'feel' }, container);
+
+      const childComponent = domQuery('.child-component', container);
+      const btn = domQuery('button', childComponent);
+
+      await act(() => {
+        btn.click();
+      });
+
+      const editor = getFeelEditor(document.body);
+
+      // when
+      fireEvent.keyDown(domQuery('.cm-content', editor), { key: 'Escape' });
+
+      // then
+      expect(getFeelEditor(document.body)).to.not.exist;
+    });
+
+
+    it('should close <feel> editor on btn click', async function() {
 
       // given
       createFeelPopup({ type: 'feel' }, container);
@@ -164,7 +268,7 @@ describe('<FeelPopup>', function() {
       });
 
       // assume
-      expect(domQuery('.bio-properties-panel-feel-editor-container', document.body)).to.exist;
+      expect(getFeelEditor(document.body)).to.exist;
 
       const closeBtn = domQuery('.bio-properties-panel-feel-popup__close-btn', document.body);
 
@@ -174,7 +278,7 @@ describe('<FeelPopup>', function() {
       });
 
       // then
-      expect(domQuery('.bio-properties-panel-feel-editor-container', document.body)).to.not.exist;
+      expect(getFeelEditor(document.body)).to.not.exist;
     });
 
   });
@@ -191,7 +295,7 @@ describe('<FeelPopup>', function() {
       const btn = domQuery('button', childComponent);
 
       // assume
-      expect(domQuery('.bio-properties-panel-feelers-editor-container', document.body)).to.not.exist;
+      expect(getFeelersEditor(document.body)).to.not.exist;
 
       // when
       await act(() => {
@@ -199,11 +303,53 @@ describe('<FeelPopup>', function() {
       });
 
       // then
-      expect(domQuery('.bio-properties-panel-feelers-editor-container', document.body)).to.exist;
+      expect(getFeelersEditor(document.body)).to.exist;
     });
 
 
-    it('should close <feelers> editor', async function() {
+    it('should focus <feelers> editor', async function() {
+
+      // given
+      createFeelPopup({ type: 'feelers' }, container);
+
+      const childComponent = domQuery('.child-component', container);
+      const btn = domQuery('button', childComponent);
+
+      // when
+      await act(() => {
+        btn.click();
+      });
+
+      const editor = getFeelersEditor(document.body);
+
+      // then
+      expect(document.activeElement).to.eql(domQuery('.cm-content', editor));
+    });
+
+
+    it('should close <feelers> editor on ESC (no autosuggest)', async function() {
+
+      // given
+      createFeelPopup({ type: 'feelers' }, container);
+
+      const childComponent = domQuery('.child-component', container);
+      const btn = domQuery('button', childComponent);
+
+      await act(() => {
+        btn.click();
+      });
+
+      const editor = getFeelersEditor(document.body);
+
+      // when
+      fireEvent.keyDown(domQuery('.cm-content', editor), { key: 'Escape' });
+
+      // then
+      expect(getFeelersEditor(document.body)).to.not.exist;
+    });
+
+
+    it('should close <feelers> editor on btn click', async function() {
 
       // given
       createFeelPopup({ type: 'feelers' }, container);
@@ -216,7 +362,7 @@ describe('<FeelPopup>', function() {
       });
 
       // assume
-      expect(domQuery('.bio-properties-panel-feelers-editor-container', document.body)).to.exist;
+      expect(getFeelersEditor(document.body)).to.exist;
 
       const closeBtn = domQuery('.bio-properties-panel-feel-popup__close-btn', document.body);
 
@@ -226,7 +372,7 @@ describe('<FeelPopup>', function() {
       });
 
       // then
-      expect(domQuery('.bio-properties-panel-feelers-editor-container', document.body)).to.not.exist;
+      expect(getFeelersEditor(document.body)).to.not.exist;
     });
 
   });
@@ -328,4 +474,12 @@ function ChildComponent(props) {
   return <div class="child-component">
     <button ref={ btnRef } onClick={ onClick }>Open popup</button>
   </div>;
+}
+
+function getFeelEditor(container) {
+  return domQuery('.bio-properties-panel-feel-editor-container', container);
+}
+
+function getFeelersEditor(container) {
+  return domQuery('.bio-properties-panel-feelers-editor-container', container);
 }

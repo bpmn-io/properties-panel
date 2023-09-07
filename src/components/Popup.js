@@ -23,6 +23,7 @@ const noop = () => {};
  * @param {Object} props
  * @param {HTMLElement} [props.container]
  * @param {string} [props.className]
+ * @param {boolean} [props.delayInitialFocus]
  * @param {{x: number, y: number}} [props.position]
  * @param {number} [props.width]
  * @param {number} [props.height]
@@ -30,6 +31,7 @@ const noop = () => {};
  * @param {Function} [props.onPostActivate]
  * @param {Function} [props.onPostDeactivate]
  * @param {boolean} [props.returnFocus]
+ * @param {boolean} [props.closeOnEscape]
  * @param {string} props.title
  */
 export function Popup(props) {
@@ -37,6 +39,7 @@ export function Popup(props) {
   const {
     container,
     className,
+    delayInitialFocus,
     position,
     width,
     height,
@@ -44,6 +47,7 @@ export function Popup(props) {
     onPostActivate = noop,
     onPostDeactivate = noop,
     returnFocus = true,
+    closeOnEscape = true,
     title
   } = props;
 
@@ -51,7 +55,7 @@ export function Popup(props) {
   const popupRef = useRef(null);
 
   const handleKeyPress = event => {
-    if (event.key === 'Escape') {
+    if (closeOnEscape && event.key === 'Escape') {
       onClose();
     }
   };
@@ -101,6 +105,7 @@ export function Popup(props) {
     if (popupRef.current) {
       focusTrapRef.current = focusTrap.createFocusTrap(popupRef.current, {
         clickOutsideDeactivates: true,
+        delayInitialFocus,
         fallbackFocus: popupRef.current,
         onPostActivate,
         onPostDeactivate,
