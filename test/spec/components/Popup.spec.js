@@ -166,6 +166,28 @@ describe('<Popup>', function() {
   });
 
 
+  it('should not bubble keyboard events to parent', async function() {
+
+    // given
+    const keyDownSpy = sinon.spy();
+
+    container.addEventListener('keydown', keyDownSpy);
+
+    await act(() => {
+      render(<Popup container={ container }><input name="foo"></input></Popup>, { container });
+    });
+
+    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const input = domQuery('input', popup);
+
+    // when
+    fireEvent.keyDown(input, { key: 'A' });
+
+    // then
+    expect(keyDownSpy).to.not.have.been.called;
+  });
+
+
   describe('Popup.Title', function() {
 
     it('should render children', function() {

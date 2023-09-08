@@ -128,6 +128,32 @@ describe('<FeelPopup>', function() {
   });
 
 
+  it('should not bubble keyboard events to parent', async function() {
+
+    // given
+    const keyDownSpy = sinon.spy();
+
+    container.addEventListener('keydown', keyDownSpy);
+
+    const result = createFeelPopup({ type: 'feel', popupContainer: container }, container);
+
+    const childComponent = domQuery('.child-component', container);
+    const btn = domQuery('button', childComponent);
+
+    await act(() => {
+      btn.click();
+    });
+
+    const editor = getFeelEditor(result.container);
+
+    // when
+    fireEvent.keyDown(domQuery('.cm-content', editor), { key: 'A' });
+
+    // then
+    expect(keyDownSpy).to.not.have.been.called;
+  });
+
+
   describe('<feel>', function() {
 
     it('should open <feel> editor', async function() {
