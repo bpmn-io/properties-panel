@@ -54,7 +54,11 @@ export function Popup(props) {
   const focusTrapRef = useRef(null);
   const popupRef = useRef(null);
 
-  const handleKeyPress = event => {
+  const handleKeydown = event => {
+
+    // do not allow keyboard events to bubble
+    event.stopPropagation();
+
     if (closeOnEscape && event.key === 'Escape') {
       onClose();
     }
@@ -87,14 +91,6 @@ export function Popup(props) {
 
   useEffect(() => {
     if (popupRef.current) {
-      popupRef.current.addEventListener('keydown', handleKeyPress);
-    }
-
-    return () => { popupRef.current.removeEventListener('keydown', handleKeyPress); };
-  }, [ popupRef ]);
-
-  useEffect(() => {
-    if (popupRef.current) {
       popupRef.current.addEventListener('focusin', handleFocus);
     }
 
@@ -124,6 +120,7 @@ export function Popup(props) {
       aria-label={ title }
       tabIndex={ -1 }
       ref={ popupRef }
+      onKeyDown={ handleKeydown }
       role="dialog"
       class={ classNames('bio-properties-panel-popup', className) }
       style={ style }>{ props.children }</div>
