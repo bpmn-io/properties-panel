@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.5.0
+
+* `FEAT`: allow defining feel popup container ([#280](https://github.com/bpmn-io/properties-panel/pull/280))
+
 ## 3.4.0
 
 * `CHORE`: publish css in `dist/assets` 
