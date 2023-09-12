@@ -8,7 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 3.5.0
 
-* `FEAT`: allow defining feel popup container ([#280](https://github.com/bpmn-io/properties-panel/pull/280))
+* `FEAT`: allow defining FEEL popup container ([#280](https://github.com/bpmn-io/properties-panel/pull/280))
 
 ## 3.4.0
 
@@ -26,9 +26,9 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 3.3.0
 
-* `FEAT`: enable gutters in feel editor via option ([#265](https://github.com/bpmn-io/properties-panel/pull/265))
+* `FEAT`: enable gutters in FEEL editor via option ([#265](https://github.com/bpmn-io/properties-panel/pull/265))
 * `FEAT`: add draggable popup component ([#265](https://github.com/bpmn-io/properties-panel/pull/265))
-* `FEAT`: open popup editor for feel and template editor ([#265](https://github.com/bpmn-io/properties-panel/pull/265))
+* `FEAT`: open popup editor for FEEL and template editor ([#265](https://github.com/bpmn-io/properties-panel/pull/265))
 
 ## 3.2.1
 
