@@ -1914,7 +1914,7 @@ describe('<FeelField>', function() {
       });
 
 
-      it('should show local error over global error', async function() {
+      it('should show global error over local error', async function() {
 
         // given
         const clock = sinon.useFakeTimers();
@@ -1945,7 +1945,7 @@ describe('<FeelField>', function() {
         return waitFor(() => {
           errorField = domQuery('.bio-properties-panel-error', result.container);
           expect(errorField).to.exist;
-          expect(errorField.textContent).not.to.eql('bar');
+          expect(errorField.textContent).to.eql('bar');
         });
       });
 

@@ -566,7 +566,7 @@ export default function FeelEntry(props) {
 
   const temporaryError = useError(id);
 
-  const error = localError || temporaryError || validationError;
+  const error = temporaryError || localError || validationError;
 
   return (
     <div
