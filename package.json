@@ -26,6 +26,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "engines": {
+    "node": "*"
+  },
   "author": "Niklas Kiefer <niklas.kiefer@camunda.com> (https://github.com/pinussilvestrus)",
   "contributors": [
     {
