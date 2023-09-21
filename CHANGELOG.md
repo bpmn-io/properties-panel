@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.6.0
+
+* `FEAT`: prioritize externally provided errors ([`375838b7`](https://github.com/bpmn-io/properties-panel/commit/375838b7c82b559a579792a46479592efcd5f500))
+* `FIX`: correct FEEL popup editor closing during auto-suggest ([#279](https://github.com/bpmn-io/properties-panel/issues/279))
+* `FIX`: contain keyboard events within the FEEL popup editor ([`a8dd384`](https://github.com/bpmn-io/properties-panel/commit/a8dd384ad625adb03272a9bc2e25fc4aab7bb284))
+
 ## 3.5.0
 
 * `FEAT`: allow defining FEEL popup container ([#280](https://github.com/bpmn-io/properties-panel/pull/280))
