@@ -241,7 +241,10 @@ export default function PropertiesPanel(props) {
           <TooltipContext.Provider value={ tooltipContext }>
             <LayoutContext.Provider value={ layoutContext }>
               <EventContext.Provider value={ eventContext }>
-                <FeelPopupRoot element={ element } popupContainer={ feelPopupContainer }>
+                <FeelPopupRoot
+                  element={ element }
+                  eventBus={ eventBus }
+                  popupContainer={ feelPopupContainer }>
                   <div class="bio-properties-panel">
                     <Header
                       element={ element }
