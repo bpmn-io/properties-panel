@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useRef,
   useState
@@ -24,6 +25,7 @@ export const FEEL_POPUP_HEIGHT = 250;
 export default function FEELPopupRoot(props) {
   const {
     element,
+    eventBus,
     popupContainer
   } = props;
 
@@ -34,16 +36,26 @@ export default function FEELPopupRoot(props) {
   const [ source, setSource ] = useState(null);
   const [ sourceElement, setSourceElement ] = useState(null);
 
-  const handleOpen = (key, config, _sourceElement) => {
-    setSource(key);
+  const emit = (type, context) => {
+    eventBus.fire('feelPopup.' + type, context);
+  };
+
+  const isOpen = useCallback(() => {
+    return !!open;
+  }, [ open ]);
+
+  const handleOpen = (entryId, config, _sourceElement) => {
+    setSource(entryId);
     setPopupConfig(config);
     setOpen(true);
     setSourceElement(_sourceElement);
+    emit('opened');
   };
 
   const handleClose = () => {
     setOpen(false);
     setSource(null);
+    emit('closed');
   };
 
   const feelPopupContext = {
@@ -54,10 +66,47 @@ export default function FEELPopupRoot(props) {
 
   // close popup on element change, cf. https://github.com/bpmn-io/properties-panel/issues/270
   useEffect(() => {
-    if (element && element !== prevElement) {
+    if (element && prevElement && element !== prevElement) {
       handleClose();
     }
   }, [ element ]);
+
+  // allow close and open via events
+  useEffect(() => {
+
+    if (!eventBus) {
+      return;
+    }
+
+    const handlePopupOpen = (context) => {
+      const {
+        entryId,
+        popupConfig,
+        sourceElement
+      } = context;
+
+      handleOpen(entryId, popupConfig, sourceElement);
+    };
+
+    const handleIsOpen = () => {
+      return isOpen();
+    };
+
+    eventBus.on('feelPopup._close', handleClose);
+    eventBus.on('feelPopup._open', handlePopupOpen);
+    eventBus.on('feelPopup._isOpen', handleIsOpen);
+
+    return () => {
+      if (!eventBus) {
+        return;
+      }
+
+      eventBus.off('feelPopup._close', handleClose);
+      eventBus.off('feelPopup._open', handleOpen);
+      eventBus.off('feelPopup._isOpen', handleIsOpen);
+    };
+
+  }, [ eventBus, isOpen ]);
 
   return (
     <FeelPopupContext.Provider value={ feelPopupContext }>

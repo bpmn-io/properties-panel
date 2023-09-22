@@ -9,6 +9,8 @@ import { useContext, useRef } from 'preact/hooks';
 
 import TestContainer from 'mocha-test-container-support';
 
+import EventBus from 'diagram-js/lib/core/EventBus';
+
 import {
   query as domQuery
 } from 'min-dom';
@@ -151,6 +153,149 @@ describe('<FeelPopup>', function() {
 
     // then
     expect(keyDownSpy).to.not.have.been.called;
+  });
+
+
+  describe('events', function() {
+
+    it('should listen on <feelPopup.opened>', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const spy = sinon.spy();
+
+      eventBus.on('feelPopup.opened', spy);
+
+      createFeelPopup({ eventBus }, container);
+
+      // assume
+      expect(getFeelEditor(document.body)).to.not.exist;
+
+      // when
+      await act(() => {
+        eventBus.fire('feelPopup._open');
+      });
+
+      // then
+      expect(spy).to.have.been.calledOnce;
+    });
+
+
+    it('should listen on <feelPopup.closed>', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const spy = sinon.spy();
+
+      eventBus.on('feelPopup.closed', spy);
+
+      createFeelPopup({ eventBus }, container);
+
+      // assume
+      expect(getFeelEditor(document.body)).to.not.exist;
+
+      // when
+      await act(() => {
+        eventBus.fire('feelPopup._open');
+      });
+
+      await act(() => {
+        eventBus.fire('feelPopup._close');
+      });
+
+      // then
+      expect(spy).to.have.been.calledOnce;
+    });
+
+
+    it('<feelPopup.open>', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      createFeelPopup({ eventBus }, container);
+
+      // assume
+      expect(getFeelEditor(document.body)).to.not.exist;
+
+      // when
+      await act(() => {
+        eventBus.fire('feelPopup._open', {
+          entryId: 'foo',
+          popupConfig: {
+            type: 'feel'
+          },
+          sourceElement: container
+        });
+      });
+
+      // then
+      expect(getFeelEditor(document.body)).to.exist;
+    });
+
+
+    it('<feelPopup._close>', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      createFeelPopup({ eventBus }, container);
+
+      await act(() => {
+        eventBus.fire('feelPopup._open', {
+          entryId: 'foo',
+          popupConfig: {
+            type: 'feel'
+          },
+          sourceElement: container
+        });
+      });
+
+      // assume
+      expect(getFeelEditor(document.body)).to.exist;
+
+      await act(() => {
+        eventBus.fire('feelPopup._close');
+      });
+
+      // assume
+      expect(getFeelEditor(document.body)).to.not.exist;
+    });
+
+
+    it('<feelPopup._isOpen>', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      createFeelPopup({ eventBus }, container);
+
+      // assume
+      expect(eventBus.fire('feelPopup._isOpen')).to.be.false;
+
+      await act(() => {
+        eventBus.fire('feelPopup._open', {
+          entryId: 'foo',
+          popupConfig: {
+            type: 'feel'
+          },
+          sourceElement: container
+        });
+      });
+
+      // assume
+      expect(eventBus.fire('feelPopup._isOpen')).to.be.true;
+
+      await act(() => {
+        eventBus.fire('feelPopup._close');
+      });
+
+      // assume
+      expect(eventBus.fire('feelPopup._isOpen')).to.be.false;
+    });
+
   });
 
 
@@ -466,11 +611,12 @@ function createFeelPopup(props, container) {
   const {
     popupContainer,
     element = noopElement,
+    eventBus = new EventBus(),
     type
   } = props;
 
   return render(
-    <FEELPopupRoot popupContainer={ popupContainer } element={ element }>
+    <FEELPopupRoot popupContainer={ popupContainer } element={ element } eventBus={ eventBus }>
       <ChildComponent type={ type } />
     </FEELPopupRoot>,
     { container }
