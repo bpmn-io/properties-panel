@@ -25,7 +25,7 @@ export const FEEL_POPUP_HEIGHT = 250;
 export default function FEELPopupRoot(props) {
   const {
     element,
-    eventBus,
+    eventBus = { fire() {}, on() {}, off() {} },
     popupContainer
   } = props;
 
@@ -74,10 +74,6 @@ export default function FEELPopupRoot(props) {
   // allow close and open via events
   useEffect(() => {
 
-    if (!eventBus) {
-      return;
-    }
-
     const handlePopupOpen = (context) => {
       const {
         entryId,
@@ -97,10 +93,6 @@ export default function FEELPopupRoot(props) {
     eventBus.on('feelPopup._isOpen', handleIsOpen);
 
     return () => {
-      if (!eventBus) {
-        return;
-      }
-
       eventBus.off('feelPopup._close', handleClose);
       eventBus.off('feelPopup._open', handleOpen);
       eventBus.off('feelPopup._isOpen', handleIsOpen);
