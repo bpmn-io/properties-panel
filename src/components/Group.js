@@ -58,25 +58,29 @@ export default function Group(props) {
 
   // set edited state depending on all entries
   useEffect(() => {
-    const hasOneEditedEntry = entries.find(entry => {
-      const {
-        id,
-        isEdited
-      } = entry;
+    const scheduled = requestAnimationFrame(() => {
+      const hasOneEditedEntry = entries.find(entry => {
+        const {
+          id,
+          isEdited
+        } = entry;
 
-      const entryNode = domQuery(`[data-entry-id="${id}"]`);
+        const entryNode = domQuery(`[data-entry-id="${id}"]`);
 
-      if (!isFunction(isEdited) || !entryNode) {
-        return false;
-      }
+        if (!isFunction(isEdited) || !entryNode) {
+          return false;
+        }
 
-      const inputNode = domQuery('.bio-properties-panel-input', entryNode);
+        const inputNode = domQuery('.bio-properties-panel-input', entryNode);
 
-      return isEdited(inputNode);
+        return isEdited(inputNode);
+      });
+
+      setEdited(hasOneEditedEntry);
     });
 
-    setEdited(hasOneEditedEntry);
-  }, [ entries ]);
+    return () => cancelAnimationFrame(scheduled);
+  }, [ entries, setEdited ]);
 
   // set error state depending on all entries
   const allErrors = useErrors();
