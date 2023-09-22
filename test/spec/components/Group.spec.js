@@ -43,6 +43,11 @@ describe('<Group>', function() {
     container = TestContainer.get(this);
   });
 
+  beforeEach(() => {
+    const requestAnimationFrameSpy = sinon.fake.returns(cb => cb());
+    global.window.requestAnimationFrame = requestAnimationFrameSpy();
+  });
+
 
   it('should render', function() {
 
