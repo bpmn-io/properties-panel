@@ -4,8 +4,6 @@ import { useEffect, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { isFunction } from 'min-dash';
-
 import * as focusTrap from 'focus-trap';
 
 import { DragIcon } from './icons';
@@ -24,7 +22,6 @@ const noop = () => {};
  * @param {HTMLElement} [props.container]
  * @param {string} [props.className]
  * @param {boolean} [props.delayInitialFocus]
- * @param {Function} [props.emit]
  * @param {{x: number, y: number}} [props.position]
  * @param {number} [props.width]
  * @param {number} [props.height]
@@ -142,7 +139,7 @@ function Title(props) {
     children,
     className,
     draggable,
-    emit,
+    emit = () => {},
     title,
     ...rest
   } = props;
@@ -174,7 +171,7 @@ function Title(props) {
     popupParent.style.left = newPosition.x + 'px';
 
     // notify interested parties
-    isFunction(emit) && emit('dragover', { newPosition, delta });
+    emit('dragover', { newPosition, delta });
   };
 
   const onMoveStart = (event) => {
@@ -194,14 +191,14 @@ function Title(props) {
     };
 
     // notify interested parties
-    isFunction(emit) && emit('dragstart');
+    emit('dragstart');
   };
 
   const onMoveEnd = () => {
     context.current.newPosition = null;
 
     // notify interested parties
-    isFunction(emit) && emit('dragend');
+    emit('dragend');
   };
 
   return (
