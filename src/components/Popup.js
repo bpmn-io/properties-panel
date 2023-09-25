@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { throttle } from 'min-dash';
+import { isFunction } from 'min-dash';
 
 import * as focusTrap from 'focus-trap';
 
@@ -24,6 +24,7 @@ const noop = () => {};
  * @param {HTMLElement} [props.container]
  * @param {string} [props.className]
  * @param {boolean} [props.delayInitialFocus]
+ * @param {Function} [props.emit]
  * @param {{x: number, y: number}} [props.position]
  * @param {number} [props.width]
  * @param {number} [props.height]
@@ -141,6 +142,7 @@ function Title(props) {
     children,
     className,
     draggable,
+    emit,
     title,
     ...rest
   } = props;
@@ -156,7 +158,9 @@ function Title(props) {
 
   const titleRef = useRef();
 
-  const onMove = throttle((_, delta) => {
+  const onMove = (event, delta) => {
+    cancel(event);
+
     const { x: dx, y: dy } = delta;
 
     const newPosition = {
@@ -168,13 +172,18 @@ function Title(props) {
 
     popupParent.style.top = newPosition.y + 'px';
     popupParent.style.left = newPosition.x + 'px';
-  });
+
+    // notify interested parties
+    isFunction(emit) && emit('dragover', { newPosition, delta });
+  };
 
   const onMoveStart = (event) => {
 
     // initialize drag handler
     const onDragStart = createDragger(onMove, dragPreviewRef.current);
     onDragStart(event);
+
+    event.stopPropagation();
 
     const popupParent = getPopupParent(titleRef.current);
 
@@ -183,10 +192,16 @@ function Title(props) {
       x: bounds.left,
       y: bounds.top
     };
+
+    // notify interested parties
+    isFunction(emit) && emit('dragstart');
   };
 
   const onMoveEnd = () => {
     context.current.newPosition = null;
+
+    // notify interested parties
+    isFunction(emit) && emit('dragend');
   };
 
   return (
@@ -248,4 +263,9 @@ function Footer(props) {
 
 function getPopupParent(node) {
   return node.closest('.bio-properties-panel-popup');
+}
+
+function cancel(event) {
+  event.preventDefault();
+  event.stopPropagation();
 }
