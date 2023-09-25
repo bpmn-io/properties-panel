@@ -39,7 +39,12 @@ export function createDragger(fn, dragPreview) {
     // (2) setup drag listeners
 
     // attach drag + cleanup event
-    document.addEventListener('dragover', onDrag);
+    // we need to do this to make sure we track cursor
+    // movements before we reach other drag event handlers,
+    // e.g. in child containers.
+    document.addEventListener('dragover', onDrag, true);
+    document.addEventListener('dragenter', preventDefault, true);
+
     document.addEventListener('dragend', onEnd);
     document.addEventListener('drop', preventDefault);
   }
@@ -55,7 +60,9 @@ export function createDragger(fn, dragPreview) {
   }
 
   function onEnd() {
-    document.removeEventListener('dragover', onDrag);
+    document.removeEventListener('dragover', onDrag, true);
+    document.removeEventListener('dragenter', preventDefault, true);
+
     document.removeEventListener('dragend', onEnd);
     document.removeEventListener('drop', preventDefault);
   }
