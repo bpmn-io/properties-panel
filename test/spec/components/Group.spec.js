@@ -44,8 +44,11 @@ describe('<Group>', function() {
   });
 
   beforeEach(() => {
-    const requestAnimationFrameSpy = sinon.fake.returns(cb => cb());
-    global.window.requestAnimationFrame = requestAnimationFrameSpy();
+    sinon.replace(window, 'requestAnimationFrame', cb => cb());
+  });
+
+  afterEach(() => {
+    sinon.restore();
   });
 
 
