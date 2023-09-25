@@ -163,14 +163,16 @@ describe('<FeelPopup>', function() {
       // given
       const eventBus = new EventBus();
 
-      const spy = sinon.spy();
+      const openSpy = sinon.spy();
+      const openedSpy = sinon.spy();
 
-      eventBus.on('feelPopup.opened', spy);
+      eventBus.on('feelPopup.open', openSpy);
+      eventBus.on('feelPopup.opened', openedSpy);
 
       createFeelPopup({ eventBus }, container);
 
       // assume
-      expect(getFeelEditor(document.body)).to.not.exist;
+      expect(getPopup(document.body)).to.not.exist;
 
       // when
       await act(() => {
@@ -178,7 +180,9 @@ describe('<FeelPopup>', function() {
       });
 
       // then
-      expect(spy).to.have.been.calledOnce;
+      expect(openSpy).to.have.been.calledOnce;
+      expect(openedSpy).to.have.been.calledOnce;
+      expect(openedSpy).to.have.been.calledWith(sinon.match.has('domNode'));
     });
 
 
@@ -187,14 +191,16 @@ describe('<FeelPopup>', function() {
       // given
       const eventBus = new EventBus();
 
-      const spy = sinon.spy();
+      const closeSpy = sinon.spy();
+      const closedSpy = sinon.spy();
 
-      eventBus.on('feelPopup.closed', spy);
+      eventBus.on('feelPopup.close', closeSpy);
+      eventBus.on('feelPopup.closed', closedSpy);
 
       createFeelPopup({ eventBus }, container);
 
       // assume
-      expect(getFeelEditor(document.body)).to.not.exist;
+      expect(getPopup(document.body)).to.not.exist;
 
       // when
       await act(() => {
@@ -206,7 +212,46 @@ describe('<FeelPopup>', function() {
       });
 
       // then
-      expect(spy).to.have.been.calledOnce;
+      expect(closeSpy).to.have.been.calledOnce;
+      expect(closeSpy).to.have.been.calledWith(sinon.match.has('domNode'));
+      expect(closedSpy).to.have.been.calledOnce;
+    });
+
+
+    it('lifecycle events',async function() {
+
+      // given
+      const eventBus = new EventBus();
+      createFeelPopup({ eventBus }, container);
+
+      // List of lifecycle events and expected popup visibility
+      const expectedEvents = [
+        [ 'feelPopup.open', false ],
+        [ 'feelPopup.opened', true ],
+        [ 'feelPopup.close', true ],
+        [ 'feelPopup.closed', false ]
+      ];
+
+      const firedEvents = [];
+      expectedEvents.forEach(([ eventName ]) => {
+
+        // Track fired events and wether the popup is visible at the time
+        eventBus.on(eventName , () =>{
+          firedEvents.push([ eventName, !!getPopup(document.body) ]);
+        });
+      });
+
+      // when
+      await act(() => {
+        eventBus.fire('feelPopup._open');
+      });
+
+      await act(() => {
+        eventBus.fire('feelPopup._close');
+      });
+
+      // then
+      expect(firedEvents).to.eql(expectedEvents);
     });
 
 
@@ -646,6 +691,10 @@ function ChildComponent(props) {
   return <div class="child-component">
     <button ref={ btnRef } onClick={ onClick }>Open popup</button>
   </div>;
+}
+
+function getPopup(container) {
+  return domQuery('.bio-properties-panel-feel-popup', container);
 }
 
 function getFeelEditor(container) {

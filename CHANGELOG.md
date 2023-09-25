@@ -6,6 +6,13 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: improve FEEL popup lifecycle events:
+  - `feelPopup.open` - fired before the popup is mounted
+  - `feelPopup.opened` - fired before the popup is unmounted. Event context contains the DOM node of the popup
+  - `feelPopup.close`- fired before the popup is unmounted. Event context contains the DOM node of the popup.
+  - `feelPopup.closed`- fired after the popup is unmounted
+
+
 ## 3.7.1
 
 * `FIX`: remove `undefined` in FEEL popup label ([#288](https://github.com/bpmn-io/properties-panel/pull/288)) 
