@@ -1,4 +1,4 @@
-import { createPortal } from 'preact/compat';
+import { createPortal, forwardRef } from 'preact/compat';
 
 import { useEffect, useRef } from 'preact/hooks';
 
@@ -33,8 +33,9 @@ const noop = () => {};
  * @param {boolean} [props.returnFocus]
  * @param {boolean} [props.closeOnEscape]
  * @param {string} props.title
+ * @param {Ref} [ref]
  */
-export function Popup(props) {
+function PopupComponent(props, globalRef) {
 
   const {
     container,
@@ -52,7 +53,8 @@ export function Popup(props) {
   } = props;
 
   const focusTrapRef = useRef(null);
-  const popupRef = useRef(null);
+  const localRef = useRef(null);
+  const popupRef = globalRef || localRef;
 
   const handleKeydown = event => {
 
@@ -127,6 +129,8 @@ export function Popup(props) {
     , container || document.body
   );
 }
+
+export const Popup = forwardRef(PopupComponent);
 
 Popup.Title = Title;
 Popup.Body = Body;

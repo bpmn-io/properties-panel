@@ -20,7 +20,11 @@ export const FEEL_POPUP_HEIGHT = 250;
 
 
 /**
- * FEEL popup component, built as a singleton.
+ * FEEL popup component, built as a singleton. Emits lifecycle events as follows:
+ *  - `feelPopup.open` - fired before the popup is mounted
+ *  - `feelPopup.opened` - fired after the popup is mounted. Event context contains the DOM node of the popup.
+ *  - `feelPopup.close` - fired before the popup is unmounted. Event context contains the DOM node of the popup.
+ *  - `feelPopup.closed` - fired after the popup is unmounted
  */
 export default function FEELPopupRoot(props) {
   const {
@@ -44,18 +48,23 @@ export default function FEELPopupRoot(props) {
     return !!open;
   }, [ open ]);
 
+  useUpdateEffect(() => {
+    if (!open) {
+      emit('closed');
+    }
+  }, [ open ]);
+
   const handleOpen = (entryId, config, _sourceElement) => {
     setSource(entryId);
     setPopupConfig(config);
     setOpen(true);
     setSourceElement(_sourceElement);
-    emit('opened');
+    emit('open');
   };
 
   const handleClose = () => {
     setOpen(false);
     setSource(null);
-    emit('closed');
   };
 
   const feelPopupContext = {
@@ -107,6 +116,7 @@ export default function FEELPopupRoot(props) {
           onClose={ handleClose }
           container={ popupContainer }
           sourceElement={ sourceElement }
+          emit={ emit }
           { ...popupConfig } />
       )}
       { props.children }
@@ -128,10 +138,12 @@ function FeelPopupComponent(props) {
     tooltipContainer,
     type,
     value,
-    variables
+    variables,
+    emit
   } = props;
 
   const editorRef = useRef();
+  const popupRef = useRef();
 
   const isAutoCompletionOpen = useRef(false);
 
@@ -162,6 +174,11 @@ function FeelPopupComponent(props) {
     }
   };
 
+  useEffect(() => {
+    emit('opened', { domNode: popupRef.current });
+    return () => emit('close', { domNode: popupRef.current });
+  }, []);
+
   return (
     <Popup
       container={ container }
@@ -177,6 +194,7 @@ function FeelPopupComponent(props) {
       onPostDeactivate={ handleSetReturnFocus }
       height={ FEEL_POPUP_HEIGHT }
       width={ FEEL_POPUP_WIDTH }
+      ref={ popupRef }
     >
       <Popup.Title
         title={ title }
@@ -238,4 +256,22 @@ function prefixId(id) {
 
 function autoCompletionOpen(element) {
   return element.closest('.cm-editor').querySelector('.cm-tooltip-autocomplete');
+}
+
+/**
+ * This hook behaves like useEffect, but does not trigger on the first render.
+ *
+ * @param {Function} effect
+ * @param {Array} deps
+ */
+function useUpdateEffect(effect, deps) {
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      return effect();
+    } else {
+      isMounted.current = true;
+    }
+  }, deps);
 }
