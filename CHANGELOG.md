@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.7.1
+
+* `FIX`: remove `undefined` in FEEL popup label ([#288](https://github.com/bpmn-io/properties-panel/pull/288)) 
+
 ## 3.7.0
 
 * `FEAT`: allow listen to `feelPopup.opened` and `feelPopup.closed` events ([#287](https://github.com/bpmn-io/properties-panel/pull/287))
