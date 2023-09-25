@@ -58,6 +58,8 @@ export default function Group(props) {
 
   // set edited state depending on all entries
   useEffect(() => {
+
+    // TODO(@barmac): replace with CSS when `:has()` is supported in all major browsers, or rewrite as in https://github.com/camunda/camunda-modeler/issues/3815#issuecomment-1733038161
     const scheduled = requestAnimationFrame(() => {
       const hasOneEditedEntry = entries.find(entry => {
         const {
