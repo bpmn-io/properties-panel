@@ -1237,7 +1237,7 @@ textarea.bio-properties-panel-input {
   --feel-popup-close-background-color: hsla(219, 99%, 53%, 1);
   --feel-popup-gutters-background-color: hsla(0, 0%, 90%, 1);
 
-  position: absolute;
+  position: fixed;
   display: flex;
   flex: auto;
   flex-direction: column;
