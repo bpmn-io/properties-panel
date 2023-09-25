@@ -298,6 +298,42 @@ describe('<Popup>', function() {
         expect(newBounds.x).to.eql(oldBounds.x + 20);
       });
 
+
+      it('should not bubble dragging events to parent', function() {
+
+        // given
+        const dragStartSpy = sinon.spy();
+        const dragOverSpy = sinon.spy();
+        const dragEnterSpy = sinon.spy();
+
+        container.addEventListener('dragstart', dragStartSpy);
+        container.addEventListener('dragover', dragOverSpy);
+        container.addEventListener('dragenter', dragEnterSpy);
+
+        render(
+          <Popup container={ container }>
+            <Popup.Title draggable={ true } />
+          </Popup>,
+          { container }
+        );
+
+        const header = domQuery('.bio-properties-panel-popup__header', container);
+        const dragger = domQuery('.bio-properties-panel-popup__drag-handle', header);
+
+        const draggerBounds = dragger.getBoundingClientRect();
+
+        // when
+        startDragging(dragger);
+        moveDragging(dragger, { clientX: draggerBounds.x + 20, clientY: draggerBounds.y });
+        endDragging(dragger);
+
+        // then
+        expect(dragStartSpy).to.not.have.been.called;
+        expect(dragOverSpy).to.not.have.been.called;
+        expect(dragEnterSpy).to.not.have.been.called;
+      });
+
+
     });
 
   });
