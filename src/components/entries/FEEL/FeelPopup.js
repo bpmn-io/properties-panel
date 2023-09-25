@@ -183,6 +183,7 @@ function FeelPopupComponent(props) {
     <Popup
       container={ container }
       className="bio-properties-panel-feel-popup"
+      emit={ emit }
       position={ position }
       title={ title }
       onClose={ onClose }
@@ -198,6 +199,7 @@ function FeelPopupComponent(props) {
     >
       <Popup.Title
         title={ title }
+        emit={ emit }
         draggable />
       <Popup.Body>
         <div

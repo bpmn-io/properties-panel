@@ -158,6 +158,42 @@ describe('<FeelPopup>', function() {
 
   describe('events', function() {
 
+    function expectDraggingEvent(event) {
+
+      it('should listen on <' + event + '>', async function() {
+
+        // given
+        const eventBus = new EventBus();
+
+        const spy = sinon.spy();
+
+        eventBus.on(event, spy);
+
+        createFeelPopup({ popupContainer: container, eventBus }, container);
+
+        // assume
+        expect(getFeelEditor(container)).to.not.exist;
+
+        // when
+        await act(() => {
+          eventBus.fire('feelPopup._open');
+        });
+
+        const header = domQuery('.bio-properties-panel-popup__header', container);
+        const dragger = domQuery('.bio-properties-panel-popup__drag-handle', header);
+        const draggerBounds = dragger.getBoundingClientRect();
+
+        // when
+        startDragging(dragger);
+        moveDragging(dragger, { clientX: draggerBounds.x + 20, clientY: draggerBounds.y });
+        endDragging(dragger);
+
+        // then
+        expect(spy).to.have.been.calledOnce;
+      });
+    }
+
+
     it('should listen on <feelPopup.opened>', async function() {
 
       // given
@@ -253,6 +289,15 @@ describe('<FeelPopup>', function() {
       // then
       expect(firedEvents).to.eql(expectedEvents);
     });
+
+
+    expectDraggingEvent('feelPopup.dragstart');
+
+
+    expectDraggingEvent('feelPopup.dragover');
+
+
+    expectDraggingEvent('feelPopup.dragend');
 
 
     it('<feelPopup.open>', async function() {
@@ -703,4 +748,42 @@ function getFeelEditor(container) {
 
 function getFeelersEditor(container) {
   return domQuery('.bio-properties-panel-feelers-editor-container', container);
+}
+
+function dispatchEvent(element, type, options = {}) {
+  const event = document.createEvent('Event');
+
+  event.initEvent(type, true, true);
+
+  Object.keys(options).forEach(key => event[ key ] = options[ key ]);
+
+  element.dispatchEvent(event);
+}
+
+function startDragging(node, position) {
+  if (!position) {
+    const bounds = node.getBoundingClientRect();
+    position = {
+      clientX: bounds.x,
+      clientY: bounds.y
+    };
+  }
+
+  dispatchEvent(node, 'dragstart', position);
+}
+
+function moveDragging(node, position) {
+  if (!position) {
+    const bounds = node.getBoundingClientRect();
+    position = {
+      clientX: bounds.x + 20,
+      clientY: bounds.y + 20
+    };
+  }
+
+  dispatchEvent(node, 'dragover', position);
+}
+
+function endDragging(node) {
+  dispatchEvent(node, 'dragend');
 }
