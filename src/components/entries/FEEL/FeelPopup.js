@@ -22,8 +22,8 @@ export const FEEL_POPUP_HEIGHT = 250;
 /**
  * FEEL popup component, built as a singleton. Emits lifecycle events as follows:
  *  - `feelPopup.open` - fired before the popup is mounted
- *  - `feelPopup.opened` - fired after the popup is mounted. Event context contains the DOM node of the popup.
- *  - `feelPopup.close` - fired before the popup is unmounted. Event context contains the DOM node of the popup.
+ *  - `feelPopup.opened` - fired after the popup is mounted. Event context contains the DOM node of the popup
+ *  - `feelPopup.close` - fired before the popup is unmounted. Event context contains the DOM node of the popup
  *  - `feelPopup.closed` - fired after the popup is unmounted
  */
 export default function FEELPopupRoot(props) {
