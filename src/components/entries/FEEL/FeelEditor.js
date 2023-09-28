@@ -10,36 +10,6 @@ import { useStaticCallback } from '../../../hooks';
 
 import { ExternalLinkIcon } from '../../icons';
 
-const noop = () => {};
-
-/**
- * Buffer `.focus()` calls while the editor is not initialized.
- * Set Focus inside when the editor is ready.
- */
-const useBufferedFocus = function(editor, ref) {
-
-  const [ buffer, setBuffer ] = useState(undefined);
-
-  ref.current = useMemo(() => ({
-    focus: (offset) => {
-      if (editor) {
-        editor.focus(offset);
-      } else {
-        if (typeof offset === 'undefined') {
-          offset = Infinity;
-        }
-        setBuffer(offset);
-      }
-    }
-  }), [ editor ]);
-
-  useEffect(() => {
-    if (typeof buffer !== 'undefined' && editor) {
-      editor.focus(buffer);
-      setBuffer(false);
-    }
-  }, [ editor, buffer ]);
-};
 
 const CodeEditor = forwardRef((props, ref) => {
 
@@ -158,3 +128,36 @@ const CodeEditor = forwardRef((props, ref) => {
 });
 
 export default CodeEditor;
+
+// helper //////
+
+/**
+ * Buffer `.focus()` calls while the editor is not initialized.
+ * Set Focus inside when the editor is ready.
+ */
+function useBufferedFocus(editor, ref) {
+
+  const [ buffer, setBuffer ] = useState(undefined);
+
+  ref.current = useMemo(() => ({
+    focus: (offset) => {
+      if (editor) {
+        editor.focus(offset);
+      } else {
+        if (typeof offset === 'undefined') {
+          offset = Infinity;
+        }
+        setBuffer(offset);
+      }
+    }
+  }), [ editor ]);
+
+  useEffect(() => {
+    if (typeof buffer !== 'undefined' && editor) {
+      editor.focus(buffer);
+      setBuffer(false);
+    }
+  }, [ editor, buffer ]);
+}
+
+function noop() {}
