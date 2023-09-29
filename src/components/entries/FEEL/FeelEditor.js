@@ -17,7 +17,6 @@ const CodeEditor = forwardRef((props, ref) => {
     enableGutters,
     value,
     onInput,
-    onFeelToggle = noop,
     onLint = noop,
     onPopupOpen = noop,
     popupOpen,
@@ -27,85 +26,26 @@ const CodeEditor = forwardRef((props, ref) => {
   } = props;
 
   const inputRef = useRef();
-  const [ editor, setEditor ] = useState();
-  const [ localValue, setLocalValue ] = useState(value || '');
-
-  useBufferedFocus(editor, ref);
 
   const handleInput = useStaticCallback(newValue => {
     onInput(newValue);
-    setLocalValue(newValue);
   });
 
-  useEffect(() => {
+  const editor = useEditor({
+    container: inputRef.current,
+    onChange: handleInput,
+    onLint,
+    tooltipContainer,
+    value,
+    variables,
+    enableGutters
+  });
 
-    let editor;
-
-    /* Trigger FEEL toggle when
-     *
-     * - `backspace` is pressed
-     * - AND the cursor is at the beginning of the input
-     */
-    const onKeyDown = e => {
-      if (e.key !== 'Backspace' || !editor) {
-        return;
-      }
-
-      const selection = editor.getSelection();
-      const range = selection.ranges[selection.mainIndex];
-
-      if (range.from === 0 && range.to === 0) {
-        onFeelToggle();
-      }
-    };
-
-    editor = new FeelEditor({
-      container: inputRef.current,
-      onChange: handleInput,
-      onKeyDown: onKeyDown,
-      onLint: onLint,
-      tooltipContainer: tooltipContainer,
-      value: localValue,
-      variables: variables,
-      extensions: [
-        ...enableGutters ? [ lineNumbers() ] : []
-      ]
-    });
-
-    setEditor(
-      editor
-    );
-
-    return () => {
-      onLint([]);
-      inputRef.current.innerHTML = '';
-      setEditor(null);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!editor) {
-      return;
-    }
-
-    if (value === localValue) {
-      return;
-    }
-
-    editor.setValue(value);
-    setLocalValue(value);
-  }, [ value ]);
-
-  useEffect(() => {
-    if (!editor) {
-      return;
-    }
-
-    editor.setVariables(variables);
-  }, [ variables ]);
+  // useBufferedFocus(editor, ref);
 
   const handleClick = () => {
-    ref.current.focus();
+
+    // ref.current.focus();
   };
 
   return <div class={ classNames(
@@ -116,9 +56,10 @@ const CodeEditor = forwardRef((props, ref) => {
     <div class="bio-properties-panel-feel-editor__open-popup-placeholder">Opened in editor</div>
     <div
       name={ props.name }
-      class={ classNames('bio-properties-panel-input', localValue ? 'edited' : null) }
+      class={ classNames('bio-properties-panel-input', value ? 'edited' : null) }
       ref={ inputRef }
       onClick={ handleClick }
+      tabIndex={ 0 /** make focussable */ }
     ></div>
     <button
       title="Open pop-up editor"
@@ -130,6 +71,65 @@ const CodeEditor = forwardRef((props, ref) => {
 export default CodeEditor;
 
 // helper //////
+function useEditor({
+  container,
+  onChange,
+  onLint,
+  tooltipContainer,
+  value,
+  variables,
+  enableGutters
+}) {
+  const editorRef = useRef();
+
+  function _useEditor(fn, deps) {
+    useEffect(() => {
+      if (!editorRef.current) {
+        return;
+      }
+
+      return fn(editorRef.current);
+    }, [ ...deps, editorRef.current ]);
+  }
+
+  useEffect(() => {
+    if (!container) {
+      return;
+    }
+
+    let editor;
+
+    editor = new FeelEditor({
+      container,
+      onChange,
+      onLint,
+      tooltipContainer,
+      value,
+      variables,
+      extensions: [
+        ...enableGutters ? [ lineNumbers() ] : []
+      ]
+    });
+
+    editorRef.current = editor;
+
+    return () => {
+      onLint([]);
+      container.innerHTML = '';
+    };
+  }, [ container, tooltipContainer, onLint, enableGutters ]);
+
+  _useEditor(editor => {
+    editor.setVariables(variables);
+  }, [ variables ]);
+
+  _useEditor(editor => {
+    editor.setValue(value);
+  }, [ value ]);
+
+  return editorRef.current;
+}
+
 
 /**
  * Buffer `.focus()` calls while the editor is not initialized.
