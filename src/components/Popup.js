@@ -1,16 +1,16 @@
 import { createPortal, forwardRef } from 'preact/compat';
 
-import { useEffect, useRef } from 'preact/hooks';
+import { useEffect, useMemo, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
+
+import { query as domQuery } from 'min-dom';
 
 import * as focusTrap from 'focus-trap';
 
 import { DragIcon } from './icons';
 
 import { createDragger } from './util/dragger';
-
-
 
 
 const noop = () => {};
@@ -53,6 +53,8 @@ function PopupComponent(props, globalRef) {
   const focusTrapRef = useRef(null);
   const localRef = useRef(null);
   const popupRef = globalRef || localRef;
+
+  const containerNode = useMemo(() => getContainerNode(container), [ container ]);
 
   const handleKeydown = event => {
 
@@ -115,7 +117,6 @@ function PopupComponent(props, globalRef) {
   }, [ popupRef ]);
 
   return createPortal(
-
     <div
       aria-label={ title }
       tabIndex={ -1 }
@@ -124,7 +125,7 @@ function PopupComponent(props, globalRef) {
       role="dialog"
       class={ classNames('bio-properties-panel-popup', className) }
       style={ style }>{ props.children }</div>
-    , container || document.body
+    , containerNode || document.body
   );
 }
 
@@ -265,4 +266,12 @@ function getPopupParent(node) {
 function cancel(event) {
   event.preventDefault();
   event.stopPropagation();
+}
+
+function getContainerNode(node) {
+  if (typeof node === 'string') {
+    return domQuery(node);
+  }
+
+  return node;
 }
