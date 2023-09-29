@@ -7,6 +7,7 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
+  domify,
   query as domQuery
 } from 'min-dom';
 
@@ -93,6 +94,24 @@ describe('<Popup>', function() {
     render(<Popup container={ container } />, { container });
 
     const popup = domQuery('.bio-properties-panel-popup', container);
+
+    // then
+    expect(popup).to.exist;
+  });
+
+
+  it('should render in container (query selector)', function() {
+
+    // given
+
+    const customContainer = domify('<div class="foo"></div>');
+    container.appendChild(customContainer);
+
+    // when
+
+    render(<Popup container={ '.foo' } />, { container });
+
+    const popup = domQuery('.bio-properties-panel-popup', customContainer);
 
     // then
     expect(popup).to.exist;
