@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.9.0
+
+* `FEAT`: allow `PopupContainer` to be a CSS selector ([#291](https://github.com/bpmn-io/properties-panel/issues/291))
+
 ## 3.8.0
 
 * `FEAT`: improve FEEL popup lifecycle events ([#294](https://github.com/bpmn-io/properties-panel/pull/294))
