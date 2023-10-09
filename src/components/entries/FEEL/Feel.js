@@ -91,7 +91,7 @@ function FeelTextfield(props) {
   const setLocalValue = newValue => {
     _setLocalValue(newValue);
 
-    if (!newValue || newValue === '=') {
+    if (typeof newValue === 'undefined' || newValue === '' || newValue === '=') {
       handleInputCallback(undefined);
     } else {
       handleInputCallback(newValue);
