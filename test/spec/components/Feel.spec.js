@@ -563,6 +563,23 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should update (0)', function() {
+
+      // given
+      const updateSpy = sinon.spy();
+
+      const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      changeInput(input, 0);
+
+      // then
+      expect(updateSpy).to.have.been.calledWith(0);
+    });
+
+
     describe('#isEdited', function() {
 
       it('should NOT be edited', function() {
