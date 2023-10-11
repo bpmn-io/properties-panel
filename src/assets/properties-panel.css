@@ -1181,6 +1181,10 @@ textarea.bio-properties-panel-input {
   border-radius: 3px;
 }
 
+.bio-properties-panel-tooltip-content pre code {
+  border: none;
+}
+
 .bio-properties-panel-tooltip p:first-child {
   margin-top: 0;
 }
