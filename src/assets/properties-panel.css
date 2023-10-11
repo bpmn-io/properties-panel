@@ -564,7 +564,8 @@ textarea.bio-properties-panel-input {
   resize: vertical;
 }
 
-.bio-properties-panel-entry.has-error .bio-properties-panel-input {
+.bio-properties-panel-entry.has-error .bio-properties-panel-input,
+.bio-properties-panel-entry.has-error .bio-properties-panel-feel-editor__open-popup-placeholder {
   border-color: var(--input-error-border-color);
   background-color: var(--input-error-background-color);
 }
