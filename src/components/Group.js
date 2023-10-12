@@ -120,6 +120,7 @@ export default function Group(props) {
           />
         }
         <button
+          type="button"
           title="Toggle section"
           class="bio-properties-panel-group-header-button bio-properties-panel-arrow"
         >

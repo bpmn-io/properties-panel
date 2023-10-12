@@ -9,6 +9,7 @@ export function HeaderButton(props) {
   } = props;
 
   return <button
+    type="button"
     { ...otherProps }
     onClick={ onClick }
     class={ classnames('bio-properties-panel-group-header-button', classname) }>

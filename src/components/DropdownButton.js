@@ -68,6 +68,7 @@ function MenuItem({ item, onClick }) {
 
   if (item.action) {
     return (<button
+      type="button"
       class="bio-properties-panel-dropdown-button__menu-item bio-properties-panel-dropdown-button__menu-item--actionable"
       onClick={ event => onClick(event, item.action) }
     >

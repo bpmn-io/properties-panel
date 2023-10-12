@@ -151,6 +151,7 @@ const CodeEditor = forwardRef((props, ref) => {
       onClick={ handleClick }
     ></div>
     <button
+      type="button"
       title="Open pop-up editor"
       class="bio-properties-panel-open-feel-popup"
       onClick={ () => onPopupOpen() }><ExternalLinkIcon /></button>

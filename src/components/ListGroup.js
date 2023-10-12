@@ -211,6 +211,7 @@ export default function ListGroup(props) {
           add
             ? (
               <button
+                type="button"
                 title="Create new list item"
                 class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
                 onClick={ handleAddClick }
@@ -247,6 +248,7 @@ export default function ListGroup(props) {
           hasItems
             ? (
               <button
+                type="button"
                 title="Toggle section"
                 class="bio-properties-panel-group-header-button bio-properties-panel-arrow"
               >

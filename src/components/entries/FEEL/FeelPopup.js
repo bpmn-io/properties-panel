@@ -242,6 +242,7 @@ function FeelPopupComponent(props) {
       </Popup.Body>
       <Popup.Footer>
         <button
+          type="button"
           onClick={ onClose }
           title="Close pop-up editor"
           class="bio-properties-panel-feel-popup__close-btn">Close</button>

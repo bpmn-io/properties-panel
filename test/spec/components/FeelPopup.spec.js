@@ -734,7 +734,7 @@ function ChildComponent(props) {
   };
 
   return <div class="child-component">
-    <button ref={ btnRef } onClick={ onClick }>Open popup</button>
+    <button type="button" ref={ btnRef } onClick={ onClick }>Open popup</button>
   </div>;
 }
 
