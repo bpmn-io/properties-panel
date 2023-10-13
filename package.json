@@ -84,7 +84,6 @@
     "preact": "^10.5.13",
     "puppeteer": "^18.0.5",
     "raw-loader": "^4.0.2",
-    "react-svg-loader": "^3.0.3",
     "replace-in-file": "^6.3.2",
     "rollup": "^2.61.0",
     "rollup-plugin-copy": "^3.4.0",
