@@ -8,6 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 4.0.0
 
+* `DEPS`: update to `feelers@1.0.0`
 * `CHORE`: unbundle `preact` dependency
 
 ### Breaking Changes
