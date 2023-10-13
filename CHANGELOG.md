@@ -6,6 +6,14 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 4.0.0
+
+* `CHORE`: unbundle `preact` dependency
+
+### Breaking Changes
+
+* We removed the export `@bpmn-io/properties-panel`. You shall now depend on `preact` yourself, and ensure it is de-duplicated properly.
+
 ## 3.10.0
 
 * `FIX`: add error style to popup editor opened fields ([#298](https://github.com/bpmn-io/properties-panel/pull/298))
