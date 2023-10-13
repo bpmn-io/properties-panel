@@ -102,9 +102,8 @@ module.exports = function(karma) {
           'main'
         ],
         alias: {
-          'preact': '/preact',
-          'react': '/preact/compat',
-          'react-dom': '/preact/compat'
+          'react': 'preact/compat',
+          'react-dom': 'preact/compat'
         },
         modules: [
           'node_modules',
