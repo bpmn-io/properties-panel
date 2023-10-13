@@ -5,20 +5,26 @@
 
 Library for creating bpmn-io properties panels.
 
+## Resources
 
-## Hacking the Project
+* [Changelog](./CHANGELOG.md)
 
-To get the development setup make sure to have [NodeJS](https://nodejs.org/en/download/) installed.
+## Build and Run
 
-```
-# Install dependencies
+Prepare the project by installing all dependencies:
+
+```sh
 npm install
+```
 
-# Spin up development mode
-npm run dev
+Then, depending on your use-case you may run any of the following commands:
 
-# Run all tasks (lint, test and bundle)
+```sh
+# build the library and run all tests
 npm run all
+
+# run the full development setup
+npm run dev
 ```
 
 Expose an environment variable `TEST_BROWSERS=(Chrome|Firefox|IE)` to execute the tests in a non-headless browser.
