@@ -3,7 +3,7 @@
   "version": "3.9.0",
   "description": "Library for creating bpmn-io properties panels.",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.mjs",
   "files": [
     "dist",
     "assets",
