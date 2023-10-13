@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.10.0
+
+* `FIX`: add error style to popup editor opened fields ([#298](https://github.com/bpmn-io/properties-panel/pull/298))
+* `FIX`: allow value `0` in FEEL number fields ([#297](https://github.com/bpmn-io/properties-panel/pull/297))
+* `CHORE`: expose module build using `mjs` extension ([#303](https://github.com/bpmn-io/properties-panel/pull/303))
+
 ## 3.9.0
 
 * `FEAT`: allow `PopupContainer` to be a CSS selector ([#291](https://github.com/bpmn-io/properties-panel/issues/291))
