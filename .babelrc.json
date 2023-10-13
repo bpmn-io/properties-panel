@@ -7,8 +7,7 @@
     "inline-react-svg",
     [ "module-resolver", {
       "alias": {
-        "preact": "./preact",
-        "react": "./preact/compat"
+        "react": "preact/compat"
       }
     } ]
   ]

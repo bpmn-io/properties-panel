@@ -1,9 +1,9 @@
 {
   "name": "@bpmn-io/properties-panel",
-  "version": "3.11.0",
+  "version": "4.0.0-2",
   "description": "Library for creating bpmn-io properties panels.",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.mjs",
   "files": [
     "dist",
     "assets",
@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "all": "run-s lint clean build test",
-    "clean": "del-cli preact dist",
+    "clean": "del-cli dist",
     "build": "rollup -c",
     "build:watch": "npm run build -- --watch",
     "lint": "eslint .",
@@ -45,7 +45,8 @@
     "feelers": "^1.1.0",
     "focus-trap": "^7.5.2",
     "min-dash": "^4.1.1",
-    "min-dom": "^4.0.3"
+    "min-dom": "^4.0.3",
+    "preact": "^10.18.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
@@ -81,11 +82,9 @@
     "mocha": "^10.0.0",
     "mocha-test-container-support": "^0.2.0",
     "npm-run-all": "^4.1.5",
-    "preact": "^10.5.13",
     "puppeteer": "^18.0.5",
     "raw-loader": "^4.0.2",
     "react-svg-loader": "^3.0.3",
-    "replace-in-file": "^6.3.2",
     "rollup": "^2.61.0",
     "rollup-plugin-copy": "^3.4.0",
     "sinon": "^11.1.1",

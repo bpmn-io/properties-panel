@@ -6,6 +6,15 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 4.0.0
+
+* `DEPS`: update to `feelers@1.0.0`
+* `CHORE`: unbundle `preact` dependency
+
+### Breaking Changes
+
+* We removed the export `@bpmn-io/properties-panel/preact`. You shall now depend on `preact` yourself, and ensure it is de-duplicated properly.
+
 ## 3.11.0
 
 * `CHORE`: deduce duplicated dependencies in bundle
