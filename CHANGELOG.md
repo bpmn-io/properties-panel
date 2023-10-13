@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.11.0
+
+* `CHORE`: deduce duplicated dependencies in bundle
+* `DEPS`: update to `feelers@1.1.0`
+
 ## 3.10.1
 
 * `FIX`: revert `mjs` module export
