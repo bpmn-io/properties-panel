@@ -13,7 +13,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ### Breaking Changes
 
-* We removed the export `@bpmn-io/properties-panel`. You shall now depend on `preact` yourself, and ensure it is de-duplicated properly.
+* We removed the export `@bpmn-io/properties-panel/preact`. You shall now depend on `preact` yourself, and ensure it is de-duplicated properly.
 
 ## 3.11.0
 
