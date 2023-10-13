@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.10.1
+
+* `FIX`: revert `mjs` module export
+
 ## 3.10.0
 
 * `FIX`: add error style to popup editor opened fields ([#298](https://github.com/bpmn-io/properties-panel/pull/298))
