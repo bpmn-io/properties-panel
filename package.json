@@ -1,6 +1,6 @@
 {
   "name": "@bpmn-io/properties-panel",
-  "version": "4.0.0-1",
+  "version": "4.0.0-2",
   "description": "Library for creating bpmn-io properties panels.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
