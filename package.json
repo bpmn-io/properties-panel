@@ -10,9 +10,10 @@
     "preact"
   ],
   "scripts": {
-    "all": "run-s lint build test",
-    "build": "del-cli preact dist && rollup -c",
-    "build:watch": "rollup -c --watch",
+    "all": "run-s lint clean build test",
+    "clean": "del-cli dist",
+    "build": "rollup -c",
+    "build:watch": "npm run build -- --watch",
     "lint": "eslint .",
     "dev": "npm test -- --auto-watch --no-single-run",
     "test": "karma start karma.config.js",
