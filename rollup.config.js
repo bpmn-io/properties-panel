@@ -6,7 +6,12 @@ import resolve from '@rollup/plugin-node-resolve';
 import pkg from './package.json';
 import babelConfig from './.babelrc.json';
 
-const nonbundledDependencies = Object.keys({ ...pkg.dependencies });
+const nonbundledDependencies = Object.keys({
+  ...pkg.dependencies,
+  'preact/compat': true,
+  'preact/hooks': true,
+  'preact/jsx-runtime': true
+});
 
 export default [
   {
