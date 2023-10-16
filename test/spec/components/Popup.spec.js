@@ -429,7 +429,7 @@ describe('<Popup>', function() {
             <input id="foo" name="foo" />
           </Popup.Body>
           <Popup.Footer>
-            <button>OK</button>
+            <button type="button">OK</button>
           </Popup.Footer>
         </Popup>,
         { container }

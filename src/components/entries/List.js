@@ -107,6 +107,7 @@ export default function List(props) {
           class="bio-properties-panel-list-entry-header-buttons"
         >
           <button
+            type="button"
             title="Create new list item"
             onClick={ addItem }
             class="bio-properties-panel-add-entry"
@@ -132,6 +133,7 @@ export default function List(props) {
           {
             hasItems && (
               <button
+                type="button"
                 title="Toggle list item"
                 class="bio-properties-panel-arrow"
               >

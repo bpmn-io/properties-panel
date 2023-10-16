@@ -63,6 +63,7 @@ export default function CollapsibleEntry(props) {
           { label || placeholderLabel }
         </div>
         <button
+          type="button"
           title="Toggle list item"
           class="bio-properties-panel-arrow  bio-properties-panel-collapsible-entry-arrow"
         >
@@ -72,7 +73,7 @@ export default function CollapsibleEntry(props) {
           remove
             ?
             (
-              <button title="Delete item" class="bio-properties-panel-remove-entry" onClick={ remove }>
+              <button type="button" title="Delete item" class="bio-properties-panel-remove-entry" onClick={ remove }>
                 <DeleteIcon />
               </button>
             )

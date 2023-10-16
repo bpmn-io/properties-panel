@@ -31,6 +31,7 @@ export default function FeelIcon(props) {
 
   return (
     <button
+      type="button"
       class={ classNames('bio-properties-panel-feel-icon',
         active ? 'active' : null,
         feel === 'required' ? 'required' : 'optional') }
