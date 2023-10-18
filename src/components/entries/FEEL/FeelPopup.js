@@ -14,6 +14,7 @@ import { Popup } from '../../Popup';
 import CodeEditor from './FeelEditor';
 
 import TemplatingEditor from '../templating/TemplatingEditor';
+import { HelpIcon } from '../../icons';
 
 export const FEEL_POPUP_WIDTH = 700;
 export const FEEL_POPUP_HEIGHT = 250;
@@ -179,6 +180,14 @@ function FeelPopupComponent(props) {
     return () => emit('close', { domNode: popupRef.current });
   }, []);
 
+  useEffect(() => {
+
+    // Set focus on editor when popup is opened
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+  }, [ editorRef ]);
+
   return (
     <Popup
       container={ container }
@@ -200,7 +209,22 @@ function FeelPopupComponent(props) {
       <Popup.Title
         title={ title }
         emit={ emit }
-        draggable />
+        draggable>
+        {type === 'feel' && (
+          <a href="https://docs.camunda.io/docs/components/modeler/feel/what-is-feel/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
+            Learn FEEL expressions
+            <HelpIcon />
+          </a>
+        )
+        }
+        {type === 'feelers' && (
+          <a href="https://docs.camunda.io/docs/components/modeler/forms/configuration/forms-config-templating-syntax/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
+            Learn templating
+            <HelpIcon />
+          </a>
+        )
+        }
+      </Popup.Title>
       <Popup.Body>
         <div
           onKeyDownCapture={ onKeyDownCapture }

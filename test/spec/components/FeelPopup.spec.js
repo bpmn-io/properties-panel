@@ -412,6 +412,25 @@ describe('<FeelPopup>', function() {
     });
 
 
+    it('should link to <feel> documentation', async function() {
+
+      // given
+      createFeelPopup({ type: 'feel' }, container);
+
+      const childComponent = domQuery('.child-component', container);
+      const btn = domQuery('button', childComponent);
+
+      // when
+      await act(() => {
+        btn.click();
+      });
+
+      // then
+      const link = domQuery('.bio-properties-panel-feel-popup__title-link', document.body);
+      expect(link).to.exist;
+    });
+
+
     it('should focus <feel> editor', async function() {
 
       // given
@@ -565,6 +584,25 @@ describe('<FeelPopup>', function() {
 
       // then
       expect(getFeelersEditor(document.body)).to.exist;
+    });
+
+
+    it('should link to <feelers> documentation', async function() {
+
+      // given
+      createFeelPopup({ type: 'feelers' }, container);
+
+      const childComponent = domQuery('.child-component', container);
+      const btn = domQuery('button', childComponent);
+
+      // when
+      await act(() => {
+        btn.click();
+      });
+
+      // then
+      const link = domQuery('.bio-properties-panel-feel-popup__title-link', document.body);
+      expect(link).to.exist;
     });
 
 
