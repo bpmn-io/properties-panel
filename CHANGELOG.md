@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.12.0
+
+* `FEAT`: add link to learning resources from the FEEL popup editor ([#308](https://github.com/bpmn-io/properties-panel/pull/308))
+* `CHORE`: add `type="button"` to buttons types ([#299](https://github.com/bpmn-io/properties-panel/issues/299))
+
 ## 3.11.0
 
 * `CHORE`: deduce duplicated dependencies in bundle
