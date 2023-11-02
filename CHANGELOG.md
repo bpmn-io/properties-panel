@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.13.0
+
+* `DEPS`: update to `@bpmn-io/feel-editor@1.0.0`
+
 ## 3.12.0
 
 * `FEAT`: add link to learning resources from the FEEL popup editor ([#308](https://github.com/bpmn-io/properties-panel/pull/308))
