@@ -1,6 +1,7 @@
 import {
   useCallback,
   useContext,
+  useEffect,
   useState
 } from 'preact/hooks';
 
@@ -26,11 +27,22 @@ export default function CollapsibleEntry(props) {
     remove
   } = props;
 
+  const { onShow } = useContext(PropertiesPanelContext);
+
   const [ open, setOpen ] = useState(shouldOpen);
 
-  const toggleOpen = () => setOpen(!open);
+  useEffect(() => {
+    if (shouldOpen) {
+      setOpen(shouldOpen);
+    }
+  }, [ shouldOpen ]);
 
-  const { onShow } = useContext(PropertiesPanelContext);
+  const toggleOpen = useCallback(() => setOpen(!open), [ open ]);
+
+  console.log('CollapsibleEntry', {
+    shouldOpen,
+    open
+  });
 
   const propertiesPanelContext = {
     ...useContext(PropertiesPanelContext),
@@ -45,6 +57,8 @@ export default function CollapsibleEntry(props) {
 
   // todo(pinussilvestrus): translate once we have a translate mechanism for the core
   const placeholderLabel = '<empty>';
+
+  console.log('RENDER', open, props);
 
   return (
     <div

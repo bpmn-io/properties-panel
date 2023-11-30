@@ -1,5 +1,5 @@
 import {
-  useEffect
+  useLayoutEffect
 } from 'preact/hooks';
 
 import {
@@ -20,11 +20,20 @@ export default function ListItem(props) {
   } = props;
 
   // focus specified entry on auto open
-  useEffect(() => {
+  useLayoutEffect(() => {
+
+    console.log({
+      props,
+      autoOpen,
+      autoFocusEntry
+    });
+
     if (autoOpen && autoFocusEntry) {
       const entry = domQuery(`[data-entry-id="${autoFocusEntry}"]`);
 
       const focusableInput = domQuery('.bio-properties-panel-input', entry);
+
+      console.log('FOCUS!', props, entry, focusableInput);
 
       if (focusableInput) {
 
@@ -38,6 +47,7 @@ export default function ListItem(props) {
     }
   }, [ autoOpen, autoFocusEntry ]);
 
+  console.log('ListItem', { autoOpen });
 
   return (
     <div class="bio-properties-panel-list-item">
