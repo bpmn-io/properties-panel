@@ -1399,10 +1399,6 @@ textarea.bio-properties-panel-input {
   cursor: pointer;
 }
 
-.bio-properties-panel-open-feel-popup svg {
-  background: var(--feel-open-popup-background-color);
-}
-
 .bio-properties-panel-feelers-editor-container:hover .bio-properties-panel-open-feel-popup,
 .bio-properties-panel-feel-container:hover .bio-properties-panel-open-feel-popup,
 .bio-properties-panel-feelers-editor-container:focus-within .bio-properties-panel-open-feel-popup,
