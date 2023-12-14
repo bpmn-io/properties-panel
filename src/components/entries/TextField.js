@@ -35,11 +35,11 @@ function Textfield(props) {
   const ref = useShowEntryEvent(id);
 
   const handleInputCallback = useMemo(() => {
-    return debounce(({ target }) => onInput(target.value.length ? target.value : undefined));
+    return debounce((target) => onInput(target.value.length ? target.value : undefined));
   }, [ onInput, debounce ]);
 
   const handleInput = e => {
-    handleInputCallback(e);
+    handleInputCallback(e.target);
     setLocalValue(e.target.value);
   };
 

@@ -35,21 +35,16 @@ export function NumberField(props) {
   const [ localValue, setLocalValue ] = useState(value);
 
   const handleInputCallback = useMemo(() => {
-    return debounce(event => {
+    return debounce((target) => {
 
-      const {
-        validity,
-        value
-      } = event.target;
-
-      if (validity.valid) {
-        onInput(value ? parseFloat(value) : undefined);
+      if (target.validity.valid) {
+        onInput(target.value ? parseFloat(target.value) : undefined);
       }
     });
   }, [ onInput, debounce ]);
 
   const handleInput = e => {
-    handleInputCallback(e);
+    handleInputCallback(e.target);
     setLocalValue(e.target.value);
   };
 

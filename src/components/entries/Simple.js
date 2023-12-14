@@ -32,11 +32,11 @@ export default function Simple(props) {
   const [ localValue, setLocalValue ] = useState(value);
 
   const handleInputCallback = useMemo(() => {
-    return debounce(({ target }) => setValue(target.value.length ? target.value : undefined));
+    return debounce((target) => setValue(target.value.length ? target.value : undefined));
   }, [ setValue, debounce ]);
 
   const handleInput = e => {
-    handleInputCallback(e);
+    handleInputCallback(e.target);
     setLocalValue(e.target.value);
   };
 
