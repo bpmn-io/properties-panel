@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.14.0
+
+* `FEAT`: improve FEEL popup editor icon ([#310](https://github.com/bpmn-io/properties-panel/issues/310))
+* `FIX`: prevent error inside web component ([#313](https://github.com/bpmn-io/properties-panel/issues/313))
+
 ## 3.13.0
 
 * `DEPS`: update to `@bpmn-io/feel-editor@1.0.0`
