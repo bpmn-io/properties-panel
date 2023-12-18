@@ -12,6 +12,8 @@ ___Note:__ Yet to be released changes appear here._
 * `FIX`: prevent error inside web component ([#313](https://github.com/bpmn-io/properties-panel/issues/313))
 * `DEPS`: update to `feelers@1.2.0`
 * `DEPS`: update to `diagram-js@13.4.0`
+* `DEPS`: update to `preact@10.19.3`
+* `DEPS`: update to `diagram-js@13.4.0`
 
 ## 3.13.0
 
