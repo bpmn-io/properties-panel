@@ -48,7 +48,6 @@
     "min-dom": "^4.0.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.14.5",
     "@babel/core": "^7.14.3",
     "@babel/plugin-transform-react-jsx": "^7.14.3",
     "@rollup/plugin-babel": "^6.0.4",
