@@ -6,6 +6,14 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.15.0
+
+* `FEAT`: add contextual keyword completion
+* `FIX`: correct parsing of nested lists
+* `FIX`: correct parsing of incomplete `QuantifiedExpression`
+* `FIX`: only allow legal `Name` start characters
+* `DEPS`: update to `@bpmn-io/feel-editor@1.1.0`
+
 ## 3.14.0
 
 * `FEAT`: improve FEEL popup editor icon ([#310](https://github.com/bpmn-io/properties-panel/issues/310))
