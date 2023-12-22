@@ -753,6 +753,8 @@ function calculatePopupPosition(element) {
 
 // todo(pinussilvestrus): make this configurable in the future
 function getPopupTitle(element, label) {
+  return label;
+  
   let popupTitle = '';
 
   if (element && element.type) {
