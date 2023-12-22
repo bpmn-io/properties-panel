@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState, useContext } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 
 import FeelEditor from '@bpmn-io/feel-editor';
@@ -9,6 +9,8 @@ import { lineNumbers } from '@codemirror/view';
 import { useStaticCallback } from '../../../hooks';
 
 import { PopupIcon } from '../../icons';
+
+import { FeelPopupContext } from './context';
 
 const noop = () => {};
 
@@ -67,6 +69,10 @@ const CodeEditor = forwardRef((props, ref) => {
     setLocalValue(newValue);
   });
 
+  const {
+    feelEditorExtensions: extensions = []
+  } = useContext(FeelPopupContext);
+
   useEffect(() => {
 
     let editor;
@@ -89,6 +95,8 @@ const CodeEditor = forwardRef((props, ref) => {
       }
     };
 
+    console.log('FEEL editor extensions', extensions);
+
     editor = new FeelEditor({
       container: inputRef.current,
       onChange: handleInput,
@@ -98,7 +106,8 @@ const CodeEditor = forwardRef((props, ref) => {
       value: localValue,
       variables: variables,
       extensions: [
-        ...enableGutters ? [ lineNumbers() ] : []
+        ...enableGutters ? [ lineNumbers() ] : [],
+        ...extensions
       ]
     });
 

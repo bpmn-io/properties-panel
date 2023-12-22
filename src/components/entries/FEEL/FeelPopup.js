@@ -31,7 +31,8 @@ export default function FEELPopupRoot(props) {
   const {
     element,
     eventBus = { fire() {}, on() {}, off() {} },
-    popupContainer
+    popupContainer,
+    feelEditorExtensions
   } = props;
 
   const prevElement = usePrevious(element);
@@ -71,7 +72,8 @@ export default function FEELPopupRoot(props) {
   const feelPopupContext = {
     open: handleOpen,
     close: handleClose,
-    source
+    source,
+    feelEditorExtensions
   };
 
   // close popup on element change, cf. https://github.com/bpmn-io/properties-panel/issues/270

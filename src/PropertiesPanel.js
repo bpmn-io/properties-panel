@@ -133,7 +133,8 @@ export default function PropertiesPanel(props) {
     tooltipConfig,
     tooltipLoaded,
     feelPopupContainer,
-    eventBus
+    eventBus,
+    feelEditorExtensions
   } = props;
 
   // set-up layout context
@@ -244,7 +245,8 @@ export default function PropertiesPanel(props) {
                 <FeelPopupRoot
                   element={ element }
                   eventBus={ eventBus }
-                  popupContainer={ feelPopupContainer }>
+                  popupContainer={ feelPopupContainer }
+                  feelEditorExtensions={ feelEditorExtensions }>
                   <div class="bio-properties-panel">
                     <Header
                       element={ element }
