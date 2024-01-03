@@ -1361,6 +1361,10 @@ textarea.bio-properties-panel-input {
   min-width: 100%;
 }
 
+.bio-properties-panel-feel-popup .bio-properties-panel-feel-editor-container .cm-scroller {
+  overflow: auto !important;
+}
+
 .bio-properties-panel-feel-popup .bio-properties-panel-feelers-editor-container {
   width: 100%;
   display: flex;
