@@ -34,7 +34,9 @@ function Tooltip(props) {
   const {
     forId,
     value,
-    parent
+    parent,
+    direction = 'right',
+    position
   } = props;
 
   const [ visible, setShow ] = useState(false);
@@ -117,11 +119,11 @@ function Tooltip(props) {
   const renderTooltip = () => {
     return (
       <div
-        class="bio-properties-panel-tooltip"
+        class={ `bio-properties-panel-tooltip ${direction}` }
         role="tooltip"
         id="bio-properties-panel-tooltip"
         aria-labelledby={ forId }
-        style={ getTooltipPosition(wrapperRef.current) }
+        style={ position || getTooltipPosition(wrapperRef.current) }
         ref={ tooltipRef }
         onClick={ (e)=> e.stopPropagation() }
       >

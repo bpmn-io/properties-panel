@@ -18,3 +18,4 @@ export { default as SimpleEntry, isEdited as isSimpleEntryEdited } from './Simpl
 export { default as TextAreaEntry, isEdited as isTextAreaEntryEdited } from './TextArea';
 export { default as TextFieldEntry, isEdited as isTextFieldEntryEdited } from './TextField';
 export { default as ToggleSwitchEntry, isEdited as isToggleSwitchEntryEdited } from './ToggleSwitch';
+export { default as TooltipEntry } from './Tooltip';
