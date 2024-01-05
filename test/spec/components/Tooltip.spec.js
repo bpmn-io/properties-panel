@@ -162,6 +162,58 @@ describe('<Tooltip>', function() {
       expect(tooltipRect.right).to.equal(elementRect.x);
     });
 
+
+    it('should allow position override', async function() {
+
+      // given
+      createTooltip({ container, position: 'right: 100px; top: 0' });
+
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+      // when
+      await openTooltip(wrapper);
+
+      // then
+      const tooltip = domQuery('.bio-properties-panel-tooltip');
+      expect(tooltip.style.right).to.equal('100px');
+      expect(tooltip.style.top).to.equal('0px');
+
+    });
+
+  });
+
+
+  describe('direction', function() {
+
+    it('should render to the right by default', async function() {
+
+      // given
+      createTooltip({ container });
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+      // when
+      await openTooltip(wrapper);
+
+      // then
+      const tooltip = domQuery('.bio-properties-panel-tooltip');
+      expect(tooltip.classList.contains('right')).to.be.true;
+    });
+
+
+    it('should attach direction class to tooltip', async function() {
+
+      // given
+      createTooltip({ container, direction: 'left' });
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+      // when
+      await openTooltip(wrapper);
+
+      // then
+      const tooltip = domQuery('.bio-properties-panel-tooltip');
+      expect(tooltip.classList.contains('left')).to.be.true;
+    });
+
   });
 
 
@@ -404,7 +456,9 @@ function TooltipComponent(props) {
     id = 'componentId',
     tooltipConfig = {},
     getTooltipForId = ()=>{},
-    parent
+    parent,
+    direction,
+    position
   } = props;
 
   const tooltipContext = {
@@ -414,7 +468,7 @@ function TooltipComponent(props) {
 
   return (
     <TooltipContext.Provider value={ tooltipContext }>
-      <Tooltip forId={ id } value={ value } parent={ parent }>
+      <Tooltip forId={ id } value={ value } parent={ parent } direction={ direction } position={ position }>
         <div id={ id }>foo</div>
       </Tooltip>
     </TooltipContext.Provider>

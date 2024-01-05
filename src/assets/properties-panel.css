@@ -1,7 +1,8 @@
 /**
  * Theming
  */
-.bio-properties-panel {
+ .bio-properties-panel,
+ .djs-parent {
   --color-grey-225-10-15: hsl(225, 10%, 15%);
   --color-grey-225-10-35: hsl(225, 10%, 35%);
   --color-grey-225-10-55: hsl(225, 10%, 55%);
@@ -26,11 +27,13 @@
   --color-red-360-100-45: hsl(360, 100%, 45%);
   --color-red-360-100-92: hsl(360, 100%, 92%);
   --color-red-360-100-97: hsl(360, 100%, 97%);
-
   --color-white: white;
   --color-black: black;
   --color-transparent: transparent;
 
+}
+
+.bio-properties-panel {
   --text-base-color: var(--color-grey-225-10-15);
   --text-error-color: var(--color-red-360-100-45);
   --link-color: var(--color-blue-205-100-50);
@@ -118,12 +121,6 @@
 
   --feelers-select-color:  var(--color-blue-205-100-85);
 
-  --tooltip-underline-color: var(--color-blue-219-99-53);
-  --tooltip-background-color: var(--color-grey-0-0-22);
-  --tooltip-link: var(--color-blue-218-100-74);
-  --tooltip-code-background-color: var(--color-grey-225-10-97);
-  --tooltip-code-border-color: var(--color-grey-225-10-85);
-  
   --text-size-base: 14px;
   --text-size-small: 13px;
   --text-size-smallest: 12px;
@@ -1149,17 +1146,33 @@ textarea.bio-properties-panel-input {
   text-decoration-style: dotted;
   text-underline-offset: 2px;
   font: inherit;
+  display: flex;
+  justify-content: center;
+  width: fit-content;
 }
 
 .bio-properties-panel-tooltip {
+  --tooltip-underline-color: var(--color-blue-219-99-53);
+  --tooltip-background-color: var(--color-grey-0-0-22);
+  --tooltip-link: var(--color-blue-218-100-74);
+  --tooltip-code-background-color: var(--color-grey-225-10-97);
+  --tooltip-code-border-color: var(--color-grey-225-10-85);
+
   display: flex;
   color: var(--color-white, white);
   position: fixed;
   z-index: 1000;
-  padding-right: 6px;
   max-width: 300px;
   font-size: var(--text-size-small);
   font-family: var(--font-family);
+
+  &.right {
+    padding-right: 6px;
+  }
+
+  &.top {
+    flex-direction: column;
+  }
 }
 
 .bio-properties-panel-tooltip-content {
@@ -1205,6 +1218,12 @@ textarea.bio-properties-panel-input {
   border-bottom: 5px solid transparent;
   border-left: 5px solid var(--tooltip-background-color);
   margin-top: 16px;
+}
+
+.bio-properties-panel-tooltip.top .bio-properties-panel-tooltip-arrow {
+  margin-top: -3px;
+  margin-left: calc(50% - 2.5px);
+  transform: rotate(90deg);
 }
 
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-feelers-editor__open-popup-placeholder,
