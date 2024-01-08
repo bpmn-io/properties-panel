@@ -1277,6 +1277,8 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-popup .bio-properties-panel-popup__body:not(:first-child) {
   padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .bio-properties-panel-popup .bio-properties-panel-popup__header {
@@ -1382,7 +1384,6 @@ textarea.bio-properties-panel-input {
   width: 100%;
   resize: none;
   padding: 0;
-  margin-left: -12px;
   overflow: hidden;
   overflow-y: auto
 }
