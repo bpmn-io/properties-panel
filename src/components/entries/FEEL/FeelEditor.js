@@ -4,7 +4,7 @@ import { forwardRef } from 'preact/compat';
 
 import FeelEditor from '@bpmn-io/feel-editor';
 
-import { lineNumbers } from '@codemirror/view';
+import { EditorView, lineNumbers } from '@codemirror/view';
 
 import { useStaticCallback } from '../../../hooks';
 
@@ -98,7 +98,8 @@ const CodeEditor = forwardRef((props, ref) => {
       value: localValue,
       variables: variables,
       extensions: [
-        ...enableGutters ? [ lineNumbers() ] : []
+        ...enableGutters ? [ lineNumbers() ] : [],
+        EditorView.lineWrapping
       ]
     });
 
