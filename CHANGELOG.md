@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.16.0
+
+* `FEAT`: allow tooltip re-usablitity ([#321](https://github.com/bpmn-io/properties-panel/pull/321))
+* `FEAT`: automatically add line-breaks for FEEL expressions ([#319](https://github.com/bpmn-io/properties-panel/pull/319))
+* `FIX`: show scroll bars in feel popup editor ([#319](https://github.com/bpmn-io/properties-panel/pull/319))
+
 ## 3.15.0
 
 * `FEAT`: add contextual keyword completion
