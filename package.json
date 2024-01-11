@@ -59,7 +59,7 @@
     "babel-plugin-inline-react-svg": "^2.0.2",
     "babel-plugin-istanbul": "^6.1.1",
     "babel-plugin-module-resolver": "^5.0.0",
-    "chai": "^4.3.10",
+    "chai": "^5.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
     "del-cli": "^5.1.0",
