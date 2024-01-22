@@ -17,7 +17,7 @@ import {
 } from 'test/TestHelper';
 
 import { Popup } from 'src/components/Popup';
-import { EventContext } from '../../../src/context';
+import { EventContext } from 'src/context';
 
 insertCoreStyles();
 
