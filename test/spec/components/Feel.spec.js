@@ -2288,7 +2288,7 @@ describe('<FeelField>', function() {
     });
 
 
-    describe('open popup editor', function() {
+    describe('popup editor', function() {
 
       it('should render open popup action', async function() {
 
@@ -2327,6 +2327,29 @@ describe('<FeelField>', function() {
         // then
         expect(spy).to.have.been.called;
         expect(spy.args[0][1].type).to.eql('feel');
+      });
+
+
+      it('should close popup editor on unmount', async function() {
+
+        const closeSpy = sinon.spy();
+
+        const props = {
+          container,
+          element: { type: 'foo' },
+          feel: 'required',
+          getValue: () => 'foo',
+          openPopup: () => {},
+          closePopup: closeSpy
+        };
+
+        const result = createFeelField(props);
+
+        // when
+        createFeelField({ Component: 'div', ...props }, result.render);
+
+        // then
+        expect(closeSpy).to.have.been.called;
       });
 
 
@@ -2529,6 +2552,7 @@ function createFeelField(options = {}, renderFn = render) {
     errors = {},
     variables,
     openPopup = noop,
+    closePopup = noop,
     getPopupSource = noop,
     Component = FeelField,
     ...rest
@@ -2553,6 +2577,7 @@ function createFeelField(options = {}, renderFn = render) {
 
   const feelPopupContext = {
     open: openPopup,
+    close: closePopup,
     source: getPopupSource()
   };
 

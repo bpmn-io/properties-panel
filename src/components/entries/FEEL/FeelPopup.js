@@ -63,7 +63,12 @@ export default function FEELPopupRoot(props) {
     emit('open');
   };
 
-  const handleClose = () => {
+  const handleClose = (event = { }) => {
+    const { id } = event;
+    if (id && id !== source) {
+      return;
+    }
+
     setOpen(false);
     setSource(null);
   };
@@ -267,7 +272,7 @@ function FeelPopupComponent(props) {
       <Popup.Footer>
         <button
           type="button"
-          onClick={ onClose }
+          onClick={ () => onClose() }
           title="Close pop-up editor"
           class="bio-properties-panel-feel-popup__close-btn">Close</button>
       </Popup.Footer>

@@ -37,7 +37,7 @@ import Tooltip from '../Tooltip';
 
 const noop = () => { };
 
-function FeelTextfield(props) {
+function FeelTextfieldComponent(props) {
   const {
     debounce,
     id,
@@ -266,6 +266,8 @@ function FeelTextfield(props) {
     </div>
   );
 }
+
+const FeelTextfield = withAutoClosePopup(FeelTextfieldComponent);
 
 const OptionalFeelInput = forwardRef((props, ref) => {
   const {
@@ -761,3 +763,24 @@ function getPopupTitle(element, label) {
 
   return `${popupTitle}${label}`;
 }
+
+
+function withAutoClosePopup(Component) {
+  return function(props) {
+    const { id } = props;
+    const {
+      close
+    } = useContext(FeelPopupContext);
+
+    const closePopup = useStaticCallback(close);
+
+    useEffect(() => {
+      return () => {
+        closePopup({ id });
+      };
+    }, [ ]);
+
+    return <Component { ...props } />;
+  };
+}
+
