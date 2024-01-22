@@ -17,6 +17,7 @@ import {
 } from 'test/TestHelper';
 
 import { Popup } from 'src/components/Popup';
+import { EventContext } from '../../../src/context';
 
 insertCoreStyles();
 
@@ -142,6 +143,48 @@ describe('<Popup>', function() {
 
     // then
     expect(focusSpy).to.have.been.called;
+  });
+
+
+  it('should close on detach', async function() {
+
+    // given
+    const closeSpy = sinon.spy();
+
+    const MockEventBus = (() => {
+      let callback;
+
+      return {
+        on: (ev, cb) => {
+          if (ev !== 'propertiesPanel.detach') {
+            return;
+          }
+          callback = cb;
+        },
+        off: () => {},
+        fire: () => {
+          callback();
+        }
+      };
+    })();
+
+
+    const eventContext = {
+      eventBus: MockEventBus
+    };
+
+    await act(() => {
+      render(
+        <EventContext.Provider value={ eventContext }>
+          <Popup onClose={ closeSpy }><input name="foo"></input></Popup>
+        </EventContext.Provider>, { container });
+    });
+
+    // when
+    MockEventBus.fire('propertiesPanel.detach');
+
+    // then
+    expect(closeSpy).to.have.been.called;
   });
 
 
