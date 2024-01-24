@@ -1113,7 +1113,7 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-feel-editor-container .bio-properties-panel-input {
-  resize: vertical;
+  resize: none;
   overflow: hidden;
   overflow-y: auto;
 }
