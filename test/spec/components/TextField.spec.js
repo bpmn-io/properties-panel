@@ -279,6 +279,26 @@ describe('<TextField>', function() {
       expect(setValueSpy).to.have.been.calledWith('bar', 'error');
     });
 
+
+    it('should check again if validation function changes', function() {
+
+      // given
+      let validate = () => 'error';
+
+      const result = createTextField({ container, validate });
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+      // assume
+      expect(isValid(entry)).to.be.false;
+
+      // when
+      validate = () => null;
+      createTextField({ container, validate }, result.render);
+
+      // then
+      expect(isValid(entry)).to.be.true;
+    });
+
   });
 
 

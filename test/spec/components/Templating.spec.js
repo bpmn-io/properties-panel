@@ -395,6 +395,26 @@ describe('<Templating>', function() {
         });
       });
 
+
+      it('should check again if validation function changes', function() {
+
+        // given
+        let validate = () => 'error';
+
+        const result = createTemplatingEntry({ container, validate });
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+        // assume
+        expect(isValid(entry)).to.be.false;
+
+        // when
+        validate = () => null;
+        createTemplatingEntry({ container, validate }, result.render);
+
+        // then
+        expect(isValid(entry)).to.be.true;
+      });
+
     });
 
 
