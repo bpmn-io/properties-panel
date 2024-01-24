@@ -145,7 +145,7 @@ export default function TextAreaEntry(props) {
 
       setLocalError(newValidationError);
     }
-  }, [ value ]);
+  }, [ value, validate ]);
 
   const onInput = (newValue) => {
     let newValidationError = null;

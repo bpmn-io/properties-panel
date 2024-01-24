@@ -156,7 +156,7 @@ export default function SelectEntry(props) {
 
       setLocalError(newValidationError);
     }
-  }, [ value ]);
+  }, [ value, validate ]);
 
 
   const onChange = (newValue) => {

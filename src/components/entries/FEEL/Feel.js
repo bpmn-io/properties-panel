@@ -545,7 +545,7 @@ export default function FeelEntry(props) {
 
       setValidationError(newValidationError);
     }
-  }, [ value ]);
+  }, [ value, validate ]);
 
   const onInput = useStaticCallback((newValue) => {
     let newValidationError = null;

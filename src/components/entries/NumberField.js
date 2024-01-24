@@ -125,7 +125,7 @@ export default function NumberFieldEntry(props) {
 
       setLocalError(newValidationError);
     }
-  }, [ value ]);
+  }, [ value, validate ]);
 
   const onInput = (newValue) => {
     let newValidationError = null;

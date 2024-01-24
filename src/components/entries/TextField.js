@@ -117,7 +117,7 @@ export default function TextfieldEntry(props) {
 
       setLocalError(newValidationError);
     }
-  }, [ value ]);
+  }, [ value, validate ]);
 
   const onInput = (newValue) => {
     let newValidationError = null;
