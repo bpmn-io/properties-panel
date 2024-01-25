@@ -1165,14 +1165,14 @@ textarea.bio-properties-panel-input {
   max-width: 300px;
   font-size: var(--text-size-small);
   font-family: var(--font-family);
+}
 
-  &.right {
-    padding-right: 6px;
-  }
+.bio-properties-panel-tooltip.right {
+  padding-right: 6px;
+}
 
-  &.top {
-    flex-direction: column;
-  }
+.bio-properties-panel-tooltip.top {
+  flex-direction: column;
 }
 
 .bio-properties-panel-tooltip-content {
