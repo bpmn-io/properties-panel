@@ -1414,9 +1414,12 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup,
 .bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup {
   position: absolute;
-  display: none;
+  top: 0;
   right: 0;
-  bottom: -1px;
+  line-height: 1;
+  padding: 2px 4px;
+  margin: 3px;
+  display: none;
   background: none;
   border: none;
   color: var(--feel-open-popup-color);
