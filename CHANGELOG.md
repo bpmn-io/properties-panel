@@ -6,6 +6,17 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.17.0
+
+* `FEAT`: remove unnecessary resizer ([`b2f6752`](https://github.com/bpmn-io/properties-panel/commit/b2f6752de3827384452d4b4c0b27bd269b7b5ad4))
+* `FIX`: attach popup editor toggle to the top ([`e6681f7`](https://github.com/bpmn-io/properties-panel/commit/e6681f74ad6268c8f533a721351bdeea376dac26))
+* `FIX`: close popup editor when properties panel gets detached ([`7defc52`](https://github.com/bpmn-io/properties-panel/commit/7defc525400c62f253651cda589fe2f5058518a6))
+* `FIX`: close popup editor when source component gets unmounted ([`1fa3330`](https://github.com/bpmn-io/properties-panel/commit/1fa3330ebdcbc7c0ac405a49eb510817fc3aa71c))
+* `FIX`: correct re-validation of entries when validator changes ([`e93e986`](https://github.com/bpmn-io/properties-panel/commit/e93e986573d32adc361c64a1bc53cf1e38454715))
+* `CHORE`: remove unnecessary CSS nesting ([`42b59d8`](https://github.com/bpmn-io/properties-panel/commit/42b59d8e688de3d55eef6115dc3c53bc20bbe9b3))
+* `DEPS`: update to `feelers@1.3.0`
+* `DEPS`: update to `@bpmn-io/feel-editor@1.2.0`
+
 ## 3.16.0
 
 * `FEAT`: allow tooltip re-usablitity ([#321](https://github.com/bpmn-io/properties-panel/pull/321))
