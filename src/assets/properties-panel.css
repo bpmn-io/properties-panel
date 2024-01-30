@@ -1433,10 +1433,6 @@ textarea.bio-properties-panel-input {
   display: block;
 }
 
-.bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup {
-  bottom: 0;
-}
-
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup:hover,
 .bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup:hover {
   color: var(--feel-open-popup-hover-color);
