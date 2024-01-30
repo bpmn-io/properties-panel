@@ -1946,7 +1946,9 @@ describe('<FeelField>', function() {
 
         // then
         await waitFor(() => {
-          expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+          const errorField = domQuery('.bio-properties-panel-error', result.container);
+          expect(errorField).to.exist;
+          expect(errorField.textContent).to.eql('Unparsable FEEL expression.');
         });
       });
 
