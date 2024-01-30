@@ -135,10 +135,8 @@ function FeelTextfieldComponent(props) {
       onError(undefined);
       return;
     }
-    const error = lint[0];
-    const message = `${error.source}: ${error.message}`;
 
-    onError(message);
+    onError('Unparsable FEEL expression.');
   });
 
   const handlePopupOpen = (type = 'feel') => {
