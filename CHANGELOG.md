@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.18.1
+
+* `FIX`: correctly place popup editor toggle in feelers editor ([#341](https://github.com/bpmn-io/properties-panel/pull/341))
+
 ## 3.18.0
 
 * `FEAT`: simplify FEEL editor external error ([#97](https://github.com/camunda/linting/pull/97))
