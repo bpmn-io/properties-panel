@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.18.2
+
+* `FIX`: provide accessible label to FEEL editor ([#349](https://github.com/bpmn-io/properties-panel/pull/349))
+* `DEPS`: update to `@bpmn-io/feel-editor@1.3.0`
+
 ## 3.18.1
 
 * `FIX`: correctly place popup editor toggle in feelers editor ([#341](https://github.com/bpmn-io/properties-panel/pull/341))
@@ -84,7 +89,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 3.7.1
 
-* `FIX`: remove `undefined` in FEEL popup label ([#288](https://github.com/bpmn-io/properties-panel/pull/288)) 
+* `FIX`: remove `undefined` in FEEL popup label ([#288](https://github.com/bpmn-io/properties-panel/pull/288))
 
 ## 3.7.0
 
@@ -103,7 +108,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 3.4.0
 
-* `CHORE`: publish css in `dist/assets` 
+* `CHORE`: publish css in `dist/assets`
 
 ## 3.3.2
 
@@ -151,7 +156,7 @@ __Breaking Changes__
 
 * `FIX`: improve FX toggle styles ([#249](https://github.com/bpmn-io/properties-panel/pull/249))
 
-## 2.2.0 
+## 2.2.0
 
 * `FEAT`: add FEEL entry for number field ([#248](https://github.com/bpmn-io/properties-panel/pull/248))
 
