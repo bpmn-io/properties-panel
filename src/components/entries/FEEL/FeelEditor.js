@@ -44,6 +44,7 @@ const useBufferedFocus = function(editor, ref) {
 const CodeEditor = forwardRef((props, ref) => {
 
   const {
+    contentAttributes,
     enableGutters,
     value,
     onInput,
@@ -100,7 +101,8 @@ const CodeEditor = forwardRef((props, ref) => {
       extensions: [
         ...enableGutters ? [ lineNumbers() ] : [],
         EditorView.lineWrapping
-      ]
+      ],
+      contentAttributes
     });
 
     setEditor(
