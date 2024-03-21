@@ -2496,9 +2496,7 @@ describe('<FeelField>', function() {
     });
 
 
-    // TODO: fix a11y violations when feel editor supports content attribute extensions
-    // cf. https://github.com/bpmn-io/feel-editor/issues/36
-    it.skip('should have no violations (feel)', async function() {
+    it('should have no violations (feel)', async function() {
 
       // given
       this.timeout(5000);

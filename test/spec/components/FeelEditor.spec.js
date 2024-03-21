@@ -139,6 +139,22 @@ describe('<FeelEditor>', function() {
     expect(gutters).to.exist;
   });
 
+
+  it('should set content attributes', async function() {
+
+    // given
+    const contentAttributes = {
+      'aria-label': 'foo'
+    };
+
+    // when
+    render(<Wrapper contentAttributes={ contentAttributes } />, { container });
+
+    // then
+    const ariaLabel = domQuery('[aria-label=foo] ', container);
+    expect(ariaLabel).to.exist;
+  });
+
 });
 
 

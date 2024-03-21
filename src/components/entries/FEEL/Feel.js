@@ -236,9 +236,9 @@ function FeelTextfieldComponent(props) {
         />
         {feelActive ?
           <CodeEditor
-            id={ prefixId(id) }
             name={ id }
             onInput={ handleLocalInput }
+            contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             disabled={ disabled }
             popupOpen={ popuOpen }
             onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
