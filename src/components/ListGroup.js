@@ -47,7 +47,9 @@ export default function ListGroup(props) {
   } = props;
 
   useEffect(() => {
-    console.warn('the property \'shouldSort\' is no longer supported');
+    if (props.shouldSort != undefined) {
+      console.warn('the property \'shouldSort\' is no longer supported');
+    }
   }, [props.shouldSort]);
 
   const groupRef = useRef(null);
@@ -204,9 +206,7 @@ export default function ListGroup(props) {
       <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
 
         {
-          items.map((o, index) => {
-            const item = getItem(items, o);
-
+          items.map((item, index) => {
             if (!item) {
               return;
             }
@@ -230,11 +230,4 @@ export default function ListGroup(props) {
       </PropertiesPanelContext.Provider>
     </div>
   </div>;
-}
-
-
-// helpers ////////////////////
-
-function getItem(items, id) {
-  return find(items, i => i.id === id);
 }
