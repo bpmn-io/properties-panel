@@ -62,7 +62,6 @@ const DEFAULT_TOOLTIP = {};
  *    id: String,
  *    items: Array<ListItemDefinition>,
  *    label: String,
- *    shouldSort?: Boolean,
  *    shouldOpen?: Boolean
  * } } ListGroupDefinition
  *
