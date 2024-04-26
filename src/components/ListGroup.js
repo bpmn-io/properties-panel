@@ -11,10 +11,6 @@ import Tooltip from './entries/Tooltip';
 import classnames from 'classnames';
 
 import {
-  find,
-} from 'min-dash';
-
-import {
   useErrors,
   useLayoutState,
   usePrevious
@@ -50,7 +46,7 @@ export default function ListGroup(props) {
     if (props.shouldSort != undefined) {
       console.warn('the property \'shouldSort\' is no longer supported');
     }
-  }, [props.shouldSort]);
+  }, [ props.shouldSort ]);
 
   const groupRef = useRef(null);
 
@@ -81,6 +77,7 @@ export default function ListGroup(props) {
     setAddTriggered(false);
 
     if (shouldHandleEffects && prevItems && items.length > prevItems.length) {
+
       // open if not open, configured and triggered by add button
       //
       // TODO(marstamm): remove once we refactor layout handling for listGroups.
