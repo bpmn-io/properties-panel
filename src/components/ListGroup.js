@@ -2,6 +2,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState
 } from 'preact/hooks';
@@ -59,8 +60,6 @@ export default function ListGroup(props) {
 
   const onShow = useCallback(() => setOpen(true), [ setOpen ]);
 
-  const [ newItemAdded, setNewItemAdded ] = useState(false);
-
   // Flag to mark that add button was clicked in the last render cycle
   const [ addTriggered, setAddTriggered ] = useState(false);
 
@@ -70,12 +69,8 @@ export default function ListGroup(props) {
   const elementChanged = element !== prevElement;
   const shouldHandleEffects = !elementChanged && shouldOpen;
 
-  // (0) items were added
+  // (0) open parent container when items were added
   useEffect(() => {
-
-    // reset addTriggered flag
-    setAddTriggered(false);
-
     if (shouldHandleEffects && prevItems && items.length > prevItems.length) {
 
       // open if not open, configured and triggered by add button
@@ -86,12 +81,27 @@ export default function ListGroup(props) {
       if (addTriggered && !open && shouldOpen) {
         toggleOpen();
       }
-
-      setNewItemAdded(addTriggered);
-    } else {
-      setNewItemAdded(false);
     }
   }, [ items, open, shouldHandleEffects, addTriggered ]);
+
+  // (1) open new child containers when items were added
+  //
+  // we need to it with a useMemo hook so it is detected
+  // in the same render cycle as the new item is added.
+  // This is important, because the autoOpen property can
+  // only set per list item on an item's very first render.
+  const autoOpenItemIds = useMemo(() => {
+
+    // auto open only if configured and triggered by add button
+    if (!shouldHandleEffects || !shouldOpen || !addTriggered || !prevItems) {
+      return [];
+    }
+
+    const previousItemIds = prevItems.map(item => item.id);
+    const currentItemsIds = items.map(item => item.id);
+
+    return currentItemsIds.filter(id => !previousItemIds.includes(id));
+  }, [ items ]);
 
   // set css class when group is sticky to top
   useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
@@ -212,7 +222,7 @@ export default function ListGroup(props) {
 
             // if item was added, open it
             // Existing items will not be affected as autoOpen is only applied on first render
-            const autoOpen = newItemAdded;
+            const autoOpen = autoOpenItemIds.includes(item.id);
 
             return (
               <ListItem
