@@ -2,7 +2,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState
 } from 'preact/hooks';
@@ -89,18 +88,17 @@ export default function ListGroup(props) {
     setAddTriggered(false);
 
     if (shouldHandleEffects && prevItems) {
-      const previousItemIds = prevItems.map(item => item.id);
-      const currentItemsIds = items.map(item => item.id);
-      const newItemIds = currentItemsIds.filter(itemId => !previousItemIds.includes(itemId))
-
       if (addTriggered) {
+        const previousItemIds = prevItems.map(item => item.id);
+        const currentItemsIds = items.map(item => item.id);
+        const newItemIds = currentItemsIds.filter(itemId => !previousItemIds.includes(itemId));
 
         // open if not open, configured and triggered by add button
         //
         // TODO(marstamm): remove once we refactor layout handling for listGroups.
         // Ideally, opening should be handled as part of the `add` callback and
         // not be a concern for the ListGroup component.
-        if (!open && shouldOpen) {
+        if (!open && shouldOpen && newItemIds.length > 0) {
           toggleOpen();
         }
 
