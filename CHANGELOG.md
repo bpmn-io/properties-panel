@@ -4,6 +4,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ## Unreleased
 
+___Note:__ Yet to be released changes appear here._
+
 * `FIX`: removed sorting for list grops ([#353](https://github.com/bpmn-io/properties-panel/pull/353))
 
 ## 3.18.2
