@@ -65,7 +65,6 @@ export default function ListGroup(props) {
   // Flag to mark that add button was clicked in the last render cycle
   const [ addTriggered, setAddTriggered ] = useState(false);
 
-  const prevItems = usePrevious(items);
   const prevElement = usePrevious(element);
 
   const elementChanged = element !== prevElement;
@@ -87,9 +86,9 @@ export default function ListGroup(props) {
     // reset addTriggered flag
     setAddTriggered(false);
 
-    if (shouldHandleEffects && prevItems) {
+    if (shouldHandleEffects && localItems) {
       if (addTriggered) {
-        const previousItemIds = prevItems.map(item => item.id);
+        const previousItemIds = localItems.map(item => item.id);
         const currentItemsIds = items.map(item => item.id);
         const newItemIds = currentItemsIds.filter(itemId => !previousItemIds.includes(itemId));
 
@@ -109,7 +108,7 @@ export default function ListGroup(props) {
         setNewlyAddedItemIds([]);
       }
     }
-  }, [ items, open, shouldHandleEffects, addTriggered ]);
+  }, [ items, open, shouldHandleEffects, addTriggered, localItems ]);
 
   // set css class when group is sticky to top
   useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
@@ -186,7 +185,7 @@ export default function ListGroup(props) {
           hasItems
             ? (
               <div
-                title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
+                title={ `List contains ${localItems.length} item${localItems.length != 1 ? 's' : ''}` }
                 class={
                   classnames(
                     'bio-properties-panel-list-badge',
@@ -194,7 +193,7 @@ export default function ListGroup(props) {
                   )
                 }
               >
-                { items.length }
+                { localItems.length }
               </div>
             )
             : null
