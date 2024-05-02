@@ -115,7 +115,7 @@ export default function ListGroup(props) {
 
   const toggleOpen = () => setOpen(!open);
 
-  const hasItems = !!localItems.length;
+  const hasItems = !!items.length;
 
   const propertiesPanelContext = {
     ...useContext(PropertiesPanelContext),
@@ -128,7 +128,7 @@ export default function ListGroup(props) {
   };
 
   const allErrors = useErrors();
-  const hasError = localItems.some(item => {
+  const hasError = items.some(item => {
     if (allErrors[item.id]) {
       return true;
     }
@@ -185,7 +185,7 @@ export default function ListGroup(props) {
           hasItems
             ? (
               <div
-                title={ `List contains ${localItems.length} item${localItems.length != 1 ? 's' : ''}` }
+                title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
                 class={
                   classnames(
                     'bio-properties-panel-list-badge',
@@ -193,7 +193,7 @@ export default function ListGroup(props) {
                   )
                 }
               >
-                { localItems.length }
+                { items.length }
               </div>
             )
             : null
