@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useRef,
   useState
 } from 'preact/hooks';
 
@@ -37,7 +36,6 @@ import {
  * @param {Item[]} [props.items]
  * @param {boolean} [props.open]
  * @param {string|boolean} [props.autoFocusEntry] either a custom selector string or true to focus the first input
- * @param {(a: Item, b: Item) => -1 | 0 | 1} [props.compareFn]
  * @returns
  */
 export default function List(props) {
@@ -51,7 +49,6 @@ export default function List(props) {
     onAdd,
     onRemove,
     autoFocusEntry,
-    compareFn,
     ...restProps
   } = props;
 
@@ -60,11 +57,7 @@ export default function List(props) {
   const hasItems = !!items.length;
   const toggleOpen = () => hasItems && setOpen(!open);
 
-  const opening = !usePrevious(open) && open;
   const elementChanged = usePrevious(element) !== element;
-  const shouldReset = opening || elementChanged;
-  const sortedItems = useSortedItems(items, compareFn, shouldReset);
-
   const newItems = useNewItems(items, elementChanged);
 
   useEffect(() => {
@@ -151,7 +144,7 @@ export default function List(props) {
             component={ component }
             element={ element }
             id={ id }
-            items={ sortedItems }
+            items={ items }
             newItems={ newItems }
             onRemove={ onRemove }
             open={ open }
@@ -234,44 +227,6 @@ function ItemsList(props) {
       })
     }
   </ol>;
-}
-
-/**
- * Place new items in the beginning of the list and sort the rest with provided function.
- *
- * @template Item
- * @param {Item[]} currentItems
- * @param {(a: Item, b: Item) => 0 | 1 | -1} [compareFn] function used to sort items
- * @param {boolean} [shouldReset=false] set to `true` to reset state of the hook
- * @returns {Item[]}
- */
-function useSortedItems(currentItems, compareFn, shouldReset = false) {
-  const itemsRef = useRef(currentItems.slice());
-
-  // (1) Reset and optionally sort.
-  if (shouldReset) {
-    itemsRef.current = currentItems.slice();
-
-    if (compareFn) {
-      itemsRef.current.sort(compareFn);
-    }
-  } else {
-    const items = itemsRef.current;
-
-    // (2) Add new item to the list.
-    for (const item of currentItems) {
-      if (!items.includes(item)) {
-
-        // Unshift or push depending on whether we have a compareFn
-        compareFn ? items.unshift(item) : items.push(item);
-      }
-    }
-
-    // (3) Filter out removed items.
-    itemsRef.current = items.filter(item => currentItems.includes(item));
-  }
-
-  return itemsRef.current;
 }
 
 function useNewItems(items = [], shouldReset) {

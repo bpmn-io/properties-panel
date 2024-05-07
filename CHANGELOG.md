@@ -7,6 +7,7 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 ___Note:__ Yet to be released changes appear here._
 
 * `FIX`: removed sorting for list grops ([#353](https://github.com/bpmn-io/properties-panel/pull/353))
+* `FIX`: removed parameter `compareFn` for `List` component, the caller may decide on insertion points of new items ([#353](https://github.com/bpmn-io/properties-panel/pull/353))
 
 ## 3.18.2
 
