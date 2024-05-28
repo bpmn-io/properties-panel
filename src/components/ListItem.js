@@ -34,6 +34,7 @@ export default function ListItem(props) {
           focusableInput.focus();
         }
 
+        focusableInput.scrollIntoView();
       }
     }
   }, [ autoOpen, autoFocusEntry ]);
