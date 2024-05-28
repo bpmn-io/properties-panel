@@ -155,6 +155,36 @@ describe('<FeelEditor>', function() {
     expect(ariaLabel).to.exist;
   });
 
+
+  it('should set placeholder', async function() {
+
+    // given
+    const placeholder = 'foo';
+
+    // when
+    render(<Wrapper placeholder={ placeholder } />, { container });
+
+    // then
+    const editor = domQuery('[role="textbox"]', container);
+
+    expect(editor.textContent).to.eql(placeholder);
+  });
+
+
+  it('should update placeholder when changed', async function() {
+
+    // given
+    const placeholder = 'foo';
+    const component = render(<Wrapper placeholder={ placeholder } />, { container });
+
+    // when
+    component.rerender(<Wrapper placeholder="bar" />);
+
+    // then
+    const editor = domQuery('[role="textbox"]', container);
+
+    expect(editor.textContent).to.eql('bar');
+  });
 });
 
 

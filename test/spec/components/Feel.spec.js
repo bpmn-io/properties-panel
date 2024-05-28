@@ -64,6 +64,17 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should render placeholder', function() {
+
+      // given
+      const result = createFeelField({ container, placeholder: 'foo' });
+
+      // then
+      const input = domQuery('[placeholder=foo]', result.container);
+      expect(input).to.exist;
+    });
+
+
     it('should update', function() {
 
       // given
@@ -1026,6 +1037,17 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should render placeholder', function() {
+
+      // given
+      const result = createFeelTextArea({ container, placeholder: 'foo' });
+
+      // then
+      const input = domQuery('[placeholder=foo]', result.container);
+      expect(input).to.exist;
+    });
+
+
     // https://github.com/bpmn-io/bpmn-js-properties-panel/issues/810
     it('should be flagged with data-gramm="false"', function() {
 
@@ -1720,6 +1742,17 @@ describe('<FeelField>', function() {
 
       // then
       expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+    });
+
+
+    it('should render placeholder', function() {
+
+      // given
+      const result = createFeelField({ container, placeholder: 'foo', feel: 'required' });
+
+      // then
+      const input = domQuery('[role="textbox"]', result.container);
+      expect(input.textContent).to.eql('foo');
     });
 
 

@@ -46,6 +46,7 @@ function FeelTextfieldComponent(props) {
     hostLanguage,
     onInput,
     onError,
+    placeholder,
     feel,
     value = '',
     disabled = false,
@@ -244,6 +245,7 @@ function FeelTextfieldComponent(props) {
             onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
             onLint={ handleLint }
             onPopupOpen={ handlePopupOpen }
+            placeholder={ placeholder }
             value={ feelOnlyValue }
             variables={ variables }
             ref={ editorRef }
@@ -274,7 +276,8 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     onInput,
     value,
     onFocus,
-    onBlur
+    onBlur,
+    placeholder
   } = props;
 
   const inputRef = useRef();
@@ -311,6 +314,7 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     onInput={ e => onInput(e.target.value) }
     onFocus={ onFocus }
     onBlur={ onBlur }
+    placeholder={ placeholder }
     value={ value || '' } />;
 });
 
@@ -375,7 +379,8 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
     onInput,
     value,
     onFocus,
-    onBlur
+    onBlur,
+    placeholder
   } = props;
 
   const inputRef = useRef();
@@ -406,6 +411,7 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
     onInput={ e => onInput(e.target.value) }
     onFocus={ onFocus }
     onBlur={ onBlur }
+    placeholder={ placeholder }
     value={ value || '' }
     data-gramm="false"
   />;
@@ -507,6 +513,7 @@ const OptionalFeelCheckbox = forwardRef((props, ref) => {
  * @param {Function} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
+ * @param {string} [props.placeholder]
  * @param {string|import('preact').Component} props.tooltip
  */
 export default function FeelEntry(props) {
@@ -529,6 +536,7 @@ export default function FeelEntry(props) {
     variables,
     onFocus,
     onBlur,
+    placeholder,
     tooltip
   } = props;
 
@@ -588,6 +596,7 @@ export default function FeelEntry(props) {
         onError={ onError }
         onFocus={ onFocus }
         onBlur={ onBlur }
+        placeholder={ placeholder }
         example={ example }
         hostLanguage={ hostLanguage }
         singleLine={ singleLine }
@@ -647,6 +656,7 @@ export function FeelNumberEntry(props) {
  * @param {Function} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
+ * @param {string} [props.placeholder]
  */
 export function FeelTextAreaEntry(props) {
   return <FeelEntry class="bio-properties-panel-feel-textarea" OptionalComponent={ OptionalFeelTextArea } { ...props } />;

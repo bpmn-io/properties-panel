@@ -77,6 +77,16 @@ describe('<TextArea>', function() {
   });
 
 
+  it('should render placeholder', function() {
+
+    // given
+    const result = createTextArea({ container, placeholder: 'test' });
+
+    // then
+    expect(domQuery('[placeholder=test]', result.container)).to.exist;
+  });
+
+
   it('should update', function() {
 
     // given
