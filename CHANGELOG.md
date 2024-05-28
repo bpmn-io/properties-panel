@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.19.0
+
 * `FEAT`: do not sort list items alphabetically ([#311](https://github.com/bpmn-io/properties-panel/issues/311))
 * `FEAT`: scroll focused list item entry into view ([#360](https://github.com/bpmn-io/properties-panel/pull/360))
 * `CHORE`: remove `shouldSort` behavior for list groups ([#353](https://github.com/bpmn-io/properties-panel/pull/353))
