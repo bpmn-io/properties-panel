@@ -11,11 +11,6 @@ import Tooltip from './entries/Tooltip';
 import classnames from 'classnames';
 
 import {
-  find,
-  sortBy
-} from 'min-dash';
-
-import {
   useErrors,
   useLayoutState,
   usePrevious
@@ -44,10 +39,14 @@ export default function ListGroup(props) {
     id,
     items,
     label,
-    shouldOpen = true,
-    shouldSort = true
+    shouldOpen = true
   } = props;
 
+  useEffect(() => {
+    if (props.shouldSort != undefined) {
+      console.warn('the property \'shouldSort\' is no longer supported');
+    }
+  }, [ props.shouldSort ]);
 
   const groupRef = useRef(null);
 
@@ -60,101 +59,56 @@ export default function ListGroup(props) {
 
   const onShow = useCallback(() => setOpen(true), [ setOpen ]);
 
-  const [ ordering, setOrdering ] = useState([]);
-  const [ newItemAdded, setNewItemAdded ] = useState(false);
+  const [ localItems, setLocalItems ] = useState([]);
+  const [ newlyAddedItemIds, setNewlyAddedItemIds ] = useState([]);
 
   // Flag to mark that add button was clicked in the last render cycle
   const [ addTriggered, setAddTriggered ] = useState(false);
 
-  const prevItems = usePrevious(items);
   const prevElement = usePrevious(element);
 
   const elementChanged = element !== prevElement;
-  const shouldHandleEffects = !elementChanged && (shouldSort || shouldOpen);
+  const shouldHandleEffects = !elementChanged && shouldOpen;
 
-  // reset initial ordering when element changes (before first render)
-  if (elementChanged) {
-    setOrdering(createOrdering(shouldSort ? sortItems(items) : items));
-  }
-
-  // keep ordering in sync to items - and open changes
-
-  // (0) set initial ordering from given items
+  // (0) delay setting items
+  //
+  // We need to this to align the render cycles of items
+  // with the detection of newly added items.
+  // This is important, because the autoOpen property can
+  // only set per list item on its very first render.
   useEffect(() => {
-    if (!prevItems || !shouldSort) {
-      setOrdering(createOrdering(items));
-    }
-  }, [ items, element ]);
+    setLocalItems(items);
+  }, [ items ]);
 
-  // (1) items were added
+  // (1) handle auto opening when items were added
   useEffect(() => {
 
     // reset addTriggered flag
     setAddTriggered(false);
 
-    if (shouldHandleEffects && prevItems && items.length > prevItems.length) {
+    if (shouldHandleEffects && localItems) {
+      if (addTriggered) {
+        const previousItemIds = localItems.map(item => item.id);
+        const currentItemsIds = items.map(item => item.id);
+        const newItemIds = currentItemsIds.filter(itemId => !previousItemIds.includes(itemId));
 
-      let add = [];
-
-      items.forEach(item => {
-        if (!ordering.includes(item.id)) {
-          add.push(item.id);
+        // open if not open, configured and triggered by add button
+        //
+        // TODO(marstamm): remove once we refactor layout handling for listGroups.
+        // Ideally, opening should be handled as part of the `add` callback and
+        // not be a concern for the ListGroup component.
+        if (!open && shouldOpen && newItemIds.length > 0) {
+          toggleOpen();
         }
-      });
 
-      let newOrdering = ordering;
-
-      // open if not open, configured and triggered by add button
-      //
-      // TODO(marstamm): remove once we refactor layout handling for listGroups.
-      // Ideally, opening should be handled as part of the `add` callback and
-      // not be a concern for the ListGroup component.
-      if (addTriggered && !open && shouldOpen) {
-        toggleOpen();
-      }
-
-      // filter when not open and configured
-      if (!open && shouldSort) {
-        newOrdering = createOrdering(sortItems(items));
-      }
-
-      // add new items on top or bottom depending on sorting behavior
-      newOrdering = newOrdering.filter(item => !add.includes(item));
-      if (shouldSort) {
-        newOrdering.unshift(...add);
+        setNewlyAddedItemIds(newItemIds);
       } else {
-        newOrdering.push(...add);
+
+        // ignore newly added items that do not result from a triggered add
+        setNewlyAddedItemIds([]);
       }
-
-      setOrdering(newOrdering);
-      setNewItemAdded(addTriggered);
-    } else {
-      setNewItemAdded(false);
     }
-  }, [ items, open, shouldHandleEffects, addTriggered ]);
-
-  // (2) sort items on open if shouldSort is set
-  useEffect(() => {
-
-    if (shouldSort && open && !newItemAdded) {
-      setOrdering(createOrdering(sortItems(items)));
-    }
-  }, [ open, shouldSort ]);
-
-  // (3) items were deleted
-  useEffect(() => {
-    if (shouldHandleEffects && prevItems && items.length < prevItems.length) {
-      let keep = [];
-
-      ordering.forEach(o => {
-        if (getItem(items, o)) {
-          keep.push(o);
-        }
-      });
-
-      setOrdering(keep);
-    }
-  }, [ items, shouldHandleEffects ]);
+  }, [ items, open, shouldHandleEffects, addTriggered, localItems ]);
 
   // set css class when group is sticky to top
   useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
@@ -266,9 +220,7 @@ export default function ListGroup(props) {
       <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
 
         {
-          ordering.map((o, index) => {
-            const item = getItem(items, o);
-
+          localItems.map((item, index) => {
             if (!item) {
               return;
             }
@@ -277,7 +229,7 @@ export default function ListGroup(props) {
 
             // if item was added, open it
             // Existing items will not be affected as autoOpen is only applied on first render
-            const autoOpen = newItemAdded;
+            const autoOpen = newlyAddedItemIds.includes(item.id);
 
             return (
               <ListItem
@@ -292,22 +244,4 @@ export default function ListGroup(props) {
       </PropertiesPanelContext.Provider>
     </div>
   </div>;
-}
-
-
-// helpers ////////////////////
-
-/**
- * Sorts given items alphanumeric by label
- */
-function sortItems(items) {
-  return sortBy(items, i => i.label.toLowerCase());
-}
-
-function getItem(items, id) {
-  return find(items, i => i.id === id);
-}
-
-function createOrdering(items) {
-  return items.map(i => i.id);
 }
