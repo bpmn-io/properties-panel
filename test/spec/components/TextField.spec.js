@@ -52,6 +52,16 @@ describe('<TextField>', function() {
   });
 
 
+  it('should render placeholder', function() {
+
+    // given
+    const result = createTextField({ container, placeholder: 'test' });
+
+    // then
+    expect(domQuery('[placeholder=test]', result.container)).to.exist;
+  });
+
+
   it('should update', function() {
 
     // given
@@ -467,7 +477,8 @@ function createTextField(options = {}, renderFn = render) {
     container,
     eventBus = new EventBus(),
     onShow = noop,
-    errors = {}
+    errors = {},
+    ...restProps
   } = options;
 
   const errorsContext = {
@@ -493,6 +504,7 @@ function createTextField(options = {}, renderFn = render) {
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
           <DescriptionContext.Provider value={ descriptionContext }>
             <TextField
+              { ...restProps }
               element={ element }
               id={ id }
               label={ label }

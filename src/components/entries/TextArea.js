@@ -38,6 +38,7 @@ function TextArea(props) {
     onFocus,
     onBlur,
     autoResize,
+    placeholder,
     rows = autoResize ? 1 : 2,
     tooltip
   } = props;
@@ -90,6 +91,7 @@ function TextArea(props) {
         onInput={ handleInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
+        placeholder={ placeholder }
         rows={ rows }
         value={ localValue }
         disabled={ disabled }
@@ -130,6 +132,7 @@ export default function TextAreaEntry(props) {
     validate,
     onFocus,
     onBlur,
+    placeholder,
     autoResize,
     tooltip
   } = props;
@@ -181,6 +184,7 @@ export default function TextAreaEntry(props) {
         debounce={ debounce }
         monospace={ monospace }
         disabled={ disabled }
+        placeholder={ placeholder }
         autoResize={ autoResize }
         tooltip={ tooltip }
         element={ element } />

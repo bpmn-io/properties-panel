@@ -26,6 +26,7 @@ function Textfield(props) {
     onInput,
     onFocus,
     onBlur,
+    placeholder,
     value = '',
     tooltip
   } = props;
@@ -70,6 +71,7 @@ function Textfield(props) {
         onInput={ handleInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
+        placeholder={ placeholder }
         value={ localValue } />
     </div>
   );
@@ -103,6 +105,7 @@ export default function TextfieldEntry(props) {
     validate,
     onFocus,
     onBlur,
+    placeholder,
     tooltip
   } = props;
 
@@ -150,6 +153,7 @@ export default function TextfieldEntry(props) {
         onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
+        placeholder={ placeholder }
         value={ value }
         tooltip={ tooltip }
         element={ element } />

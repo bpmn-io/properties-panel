@@ -51,6 +51,7 @@ const CodeEditor = forwardRef((props, ref) => {
     onFeelToggle = noop,
     onLint = noop,
     onPopupOpen = noop,
+    placeholder,
     popupOpen,
     disabled,
     tooltipContainer,
@@ -95,6 +96,7 @@ const CodeEditor = forwardRef((props, ref) => {
       onChange: handleInput,
       onKeyDown: onKeyDown,
       onLint: onLint,
+      placeholder: placeholder,
       tooltipContainer: tooltipContainer,
       value: localValue,
       variables: variables,
@@ -136,6 +138,14 @@ const CodeEditor = forwardRef((props, ref) => {
 
     editor.setVariables(variables);
   }, [ variables ]);
+
+  useEffect(() => {
+    if (!editor) {
+      return;
+    }
+
+    editor.setPlaceholder(placeholder);
+  }, [ placeholder ]);
 
   const handleClick = () => {
     ref.current.focus();
