@@ -45,7 +45,8 @@ export default function ListGroup(props) {
     items,
     label,
     shouldOpen = true,
-    shouldSort = true
+    shouldSort = true,
+    translate = (str) => str
   } = props;
 
 
@@ -212,14 +213,14 @@ export default function ListGroup(props) {
             ? (
               <button
                 type="button"
-                title="Create new list item"
+                title={ translate('Create new list item') }
                 class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
                 onClick={ handleAddClick }
               >
                 <CreateIcon />
                 {
                   !hasItems ? (
-                    <span class="bio-properties-panel-add-entry-label">Create</span>
+                    <span class="bio-properties-panel-add-entry-label">{ translate('Create') }</span>
                   )
                     : null
                 }
@@ -231,7 +232,7 @@ export default function ListGroup(props) {
           hasItems
             ? (
               <div
-                title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
+                title={ translate(`List contains ${items.length} item${items.length != 1 ? 's' : ''}`) }
                 class={
                   classnames(
                     'bio-properties-panel-list-badge',
@@ -249,7 +250,7 @@ export default function ListGroup(props) {
             ? (
               <button
                 type="button"
-                title="Toggle section"
+                title={ translate('Toggle section') }
                 class="bio-properties-panel-group-header-button bio-properties-panel-arrow"
               >
                 <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
@@ -285,7 +286,8 @@ export default function ListGroup(props) {
                 autoOpen={ autoOpen }
                 element={ element }
                 index={ index }
-                key={ id } />
+                key={ id }
+                translate={ translate } />
             );
           })
         }

@@ -23,6 +23,8 @@ import Collapsible from 'src/components/entries/Collapsible';
 
 insertCoreStyles();
 
+const noop = () => {};
+
 
 describe('<Collapsible>', function() {
 
@@ -196,6 +198,48 @@ describe('<Collapsible>', function() {
 
   });
 
+
+  describe('translation', function() {
+
+    const translate = (str) => `Translated: ${str}`;
+
+    it('should render translated remove button title', function() {
+
+      // given
+      const { container } = createCollapsible({ container: parentContainer, remove: noop, translate });
+
+      const removeEntry = domQuery('.bio-properties-panel-remove-entry', container);
+
+      // then
+      expect(removeEntry.title).to.eql('Translated: Delete item');
+    });
+
+
+    it('should render translated placeholder label', function() {
+
+      // given
+      const { container } = createCollapsible({ container: parentContainer, label: '', translate });
+
+      const headerTitle = domQuery('.bio-properties-panel-collapsible-entry-header-title', container);
+
+      // then
+      expect(headerTitle.innerText).to.eql('Translated: <empty>');
+    });
+
+
+    it('should render translated toggle button title', function() {
+
+      // given
+      const { container } = createCollapsible({ container: parentContainer, translate });
+
+      const toggleButton = domQuery('.bio-properties-panel-collapsible-entry-arrow', container);
+
+      // then
+      expect(toggleButton.title).to.eql('Translated: Toggle list item');
+    });
+  });
+
+
 });
 
 
@@ -208,7 +252,8 @@ function createCollapsible(options = {}) {
     open,
     entries = [],
     remove,
-    container
+    container,
+    translate
   } = options;
 
   return render(
@@ -217,7 +262,8 @@ function createCollapsible(options = {}) {
       open={ open }
       label={ label }
       remove={ remove }
-      entries={ entries } />,
+      entries={ entries }
+      translate={ translate } />,
     {
       container
     }
