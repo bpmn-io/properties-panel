@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.20.0
+
+* `FEAT`: support `placeholder` property in text and FEEL text entries ([#363](https://github.com/bpmn-io/properties-panel/pull/363))
+* `DEPS`: update to `@bpmn-io/feel-editor@1.5.0`
+
 ## 3.19.0
 
 * `FEAT`: do not sort list items alphabetically ([#311](https://github.com/bpmn-io/properties-panel/issues/311))
