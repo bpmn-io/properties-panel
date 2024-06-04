@@ -5,7 +5,7 @@ import { forwardRef } from 'preact/compat';
 import { FeelersEditor } from 'feelers';
 import { useStaticCallback } from '../../../hooks';
 
-import { ExternalLinkIcon } from '../../icons';
+import { PopupIcon } from '../../icons';
 
 const noop = () => {};
 
@@ -125,7 +125,7 @@ const CodeEditor = forwardRef((props, ref) => {
       type="button"
       title="Open pop-up editor"
       class="bio-properties-panel-open-feel-popup"
-      onClick={ () => onPopupOpen('feelers') }><ExternalLinkIcon /></button>
+      onClick={ () => onPopupOpen('feelers') }><PopupIcon /></button>
   </div>;
 });
 
