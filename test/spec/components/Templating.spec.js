@@ -77,6 +77,23 @@ describe('<Templating>', function() {
     });
 
 
+    it('should break line on very long text', async function() {
+
+      // given
+      const result = createTemplatingEntry({ container });
+
+      const input = domQuery('[role="textbox"]', result.container);
+
+      // when
+      await act(() => input.textContent = 'Muda '.repeat(200));
+
+      // then
+      return waitFor(() => {
+        expect(input.clientHeight).to.be.above(100);
+      });
+    });
+
+
     describe('#isEdited', function() {
 
       it('should NOT be edited', function() {
