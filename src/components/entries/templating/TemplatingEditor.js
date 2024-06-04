@@ -78,7 +78,8 @@ const CodeEditor = forwardRef((props, ref) => {
       tooltipContainer,
       enableGutters,
       hostLanguage,
-      singleLine
+      singleLine,
+      lineWrap: true,
     });
 
     setEditor(
