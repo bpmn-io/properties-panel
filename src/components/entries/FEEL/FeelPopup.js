@@ -214,6 +214,9 @@ function FeelPopupComponent(props) {
       <Popup.Title
         title={ title }
         emit={ emit }
+        showCloseButton={ true }
+        closeButtonTooltip="Save and close"
+        onClose={ onClose }
         draggable>
         {type === 'feel' && (
           <a href="https://docs.camunda.io/docs/components/modeler/feel/what-is-feel/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
@@ -269,13 +272,6 @@ function FeelPopupComponent(props) {
           }
         </div>
       </Popup.Body>
-      <Popup.Footer>
-        <button
-          type="button"
-          onClick={ () => onClose() }
-          title="Close pop-up editor"
-          class="bio-properties-panel-feel-popup__close-btn">Close</button>
-      </Popup.Footer>
     </Popup>
   );
 }
