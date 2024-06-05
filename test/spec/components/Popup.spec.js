@@ -264,6 +264,26 @@ describe('<Popup>', function() {
     });
 
 
+    it('should render close button', function() {
+
+      // when
+      render(
+        <Popup container={ container }>
+          <Popup.Title title={ 'test close button' } showCloseButton={ true } closeButtonTooltip={ 'test close button tooltip' } />
+        </Popup>,
+        { container }
+      );
+
+      const header = domQuery('.bio-properties-panel-popup__header', document.body);
+      const closeButton = domQuery('.bio-properties-panel-popup__close', header);
+      const closeButonTitle = closeButton.getAttribute('title');
+
+      // then
+      expect(closeButton).to.exist;
+      expect(closeButonTitle).to.eql('test close button tooltip');
+    });
+
+
     it('should render custom class', function() {
 
       // when

@@ -90,7 +90,7 @@ describe('<FeelPopup>', function() {
       btn.click();
     });
 
-    const closeBtn = domQuery('.bio-properties-panel-feel-popup__close-btn', document.body);
+    const closeBtn = domQuery('.bio-properties-panel-popup__close', document.body);
 
     // when
     await act(() => {
@@ -550,7 +550,7 @@ describe('<FeelPopup>', function() {
       // assume
       expect(getFeelEditor(document.body)).to.exist;
 
-      const closeBtn = domQuery('.bio-properties-panel-feel-popup__close-btn', document.body);
+      const closeBtn = domQuery('.bio-properties-panel-popup__close', document.body);
 
       // when
       await act(() => {
@@ -663,7 +663,7 @@ describe('<FeelPopup>', function() {
       // assume
       expect(getFeelersEditor(document.body)).to.exist;
 
-      const closeBtn = domQuery('.bio-properties-panel-feel-popup__close-btn', document.body);
+      const closeBtn = domQuery('.bio-properties-panel-popup__close', document.body);
 
       // when
       await act(() => {

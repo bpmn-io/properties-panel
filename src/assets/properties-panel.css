@@ -1334,6 +1334,31 @@ textarea.bio-properties-panel-input {
   text-transform: capitalize;
 }
 
+.bio-properties-panel-popup .bio-properties-panel-popup__close {
+  margin: -12px;
+  margin-left: 12px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: var(--popup-header-background-color);
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__close:hover,
+.bio-properties-panel-popup .bio-properties-panel-popup__close:focus-visible {
+  background-color: var(--popup-background-color);
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__close:focus-visible {
+  outline-offset: -2px;
+}
+
+.bio-properties-panel-popup .bio-properties-panel-popup__close svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  margin-top: 2px;
+}
+
 .bio-properties-panel-popup .bio-properties-panel-popup__header .bio-properties-panel-popup__drag-handle svg {
   margin-left: -4px;
 }

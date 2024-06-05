@@ -8,7 +8,7 @@ import { query as domQuery } from 'min-dom';
 
 import * as focusTrap from 'focus-trap';
 
-import { DragIcon } from './icons';
+import { DragIcon, CloseIcon } from './icons';
 
 import { createDragger } from './util/dragger';
 import { useEvent } from '../hooks/useEvent';
@@ -145,6 +145,9 @@ function Title(props) {
     draggable,
     emit = () => {},
     title,
+    showCloseButton = false,
+    closeButtonTooltip = 'Close popup',
+    onClose,
     ...rest
   } = props;
 
@@ -227,6 +230,14 @@ function Title(props) {
       )}
       <div class="bio-properties-panel-popup__title">{ title }</div>
       { children }
+      { showCloseButton && (
+        <button
+          title={ closeButtonTooltip }
+          class="bio-properties-panel-popup__close"
+          onClick={ onClose }>
+          <CloseIcon />
+        </button>
+      )}
     </div>
   );
 }
