@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.20.1
+
+* `FIX`: move popup close button to header ([#364](https://github.com/bpmn-io/properties-panel/issues/364))
+* `FIX`: correct popout icon for template editor ([#342](https://github.com/bpmn-io/properties-panel/issues/342))
+* `FIX`: wrap lines in FEEL template editor ([#365](https://github.com/bpmn-io/properties-panel/issues/365))
+
 ## 3.20.0
 
 * `FEAT`: support `placeholder` property in text and FEEL text entries ([#363](https://github.com/bpmn-io/properties-panel/pull/363))
