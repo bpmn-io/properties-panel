@@ -915,6 +915,64 @@ describe('<ListGroup>', function() {
 
   });
 
+  describe('translation', function() {
+
+    const translate = (str) => `Translated: ${str}`;
+
+    it('should render translated create button title', function() {
+
+      // given
+      const { container } = createListGroup({ container: parentContainer, add: noop, translate });
+
+      const addButton = domQuery('.bio-properties-panel-add-entry', container);
+
+      // then
+      expect(addButton.title).to.eql('Translated: Create new list item');
+    });
+
+
+    it('should render translated create button label', function() {
+
+      // given
+      const { container } = createListGroup({ container: parentContainer, add: noop, translate });
+
+      const addButtonLabel = domQuery('.bio-properties-panel-add-entry-label', container);
+
+      // then
+      expect(addButtonLabel.textContent).to.eql('Translated: Create');
+    });
+
+
+    it('should render translated toggle section button title', function() {
+
+      // given
+      const items = [ { id: 'item-1', label: 'Item 1' } ];
+      const { container } = createListGroup({ container: parentContainer, items, translate });
+
+      const toggleButton = domQuery('.bio-properties-panel-arrow', container);
+
+      // then
+      expect(toggleButton.title).to.eql('Translated: Toggle section');
+    });
+
+
+    it('should render translated item count title', function() {
+
+      // given
+      const items = [
+        { id: 'item-1', label: 'Item 1' },
+        { id: 'item-2', label: 'Item 2' }
+      ];
+
+      const { container } = createListGroup({ container: parentContainer, items, translate });
+
+      const listBadge = domQuery('.bio-properties-panel-list-badge', container);
+
+      // then
+      expect(listBadge.title).to.eql('Translated: List contains 2 items');
+    });
+  });
+
 });
 
 
@@ -929,7 +987,8 @@ function TestGroup(props) {
     items = [],
     add,
     shouldOpen,
-    tooltip
+    tooltip,
+    translate
   } = props;
 
   return (
@@ -942,7 +1001,9 @@ function TestGroup(props) {
           items={ items }
           add={ add }
           shouldOpen={ shouldOpen }
-          tooltip={ tooltip } />
+          tooltip={ tooltip }
+          translate={ translate }
+        />
       </MockLayout>
     </ErrorsContext.Provider>
   );
@@ -958,7 +1019,8 @@ function createListGroup(options = {}, renderFn = render) {
     add,
     shouldOpen,
     container,
-    tooltip
+    tooltip,
+    translate
   } = options;
 
   return renderFn(
@@ -971,7 +1033,7 @@ function createListGroup(options = {}, renderFn = render) {
       add={ add }
       shouldOpen={ shouldOpen }
       tooltip={ tooltip }
-    /> ,
+      translate={ translate } /> ,
     {
       container
     }

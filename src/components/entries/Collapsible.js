@@ -23,7 +23,8 @@ export default function CollapsibleEntry(props) {
     id,
     label,
     open: shouldOpen,
-    remove
+    remove,
+    translate = (str) => str
   } = props;
 
   const [ open, setOpen ] = useState(shouldOpen);
@@ -43,8 +44,8 @@ export default function CollapsibleEntry(props) {
     }, [ onShow, setOpen ])
   };
 
-  // todo(pinussilvestrus): translate once we have a translate mechanism for the core
-  const placeholderLabel = '<empty>';
+
+  const placeholderLabel = translate('<empty>');
 
   return (
     <div
@@ -64,7 +65,7 @@ export default function CollapsibleEntry(props) {
         </div>
         <button
           type="button"
-          title="Toggle list item"
+          title={ translate('Toggle list item') }
           class="bio-properties-panel-arrow  bio-properties-panel-collapsible-entry-arrow"
         >
           <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
@@ -73,7 +74,7 @@ export default function CollapsibleEntry(props) {
           remove
             ?
             (
-              <button type="button" title="Delete item" class="bio-properties-panel-remove-entry" onClick={ remove }>
+              <button type="button" title={ translate('Delete item') } class="bio-properties-panel-remove-entry" onClick={ remove }>
                 <DeleteIcon />
               </button>
             )
