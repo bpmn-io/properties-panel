@@ -917,7 +917,26 @@ describe('<ListGroup>', function() {
 
   describe('translation', function() {
 
-    const translate = (str) => `Translated: ${str}`;
+    const translations = {
+      'Create new list item': 'Translated: Create new list item',
+      'Create': 'Translated: Create',
+      'Toggle section': 'Translated: Toggle section',
+      'List contains {numOfItems} items': 'Translated: List contains {numOfItems} items'
+    };
+
+    function translate(template, replacements = {}) {
+
+      // Translate
+      let transTemplate = translations[template] || template;
+
+      // Replace
+      return transTemplate.replace(/{([^}]+)}/g, function(_, key) {
+        return key in replacements ? replacements[key] : '{' + key + '}';
+      });
+    }
+
+
+
 
     it('should render translated create button title', function() {
 
