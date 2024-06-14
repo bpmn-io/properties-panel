@@ -14,6 +14,7 @@ import {
 } from '../icons';
 
 import { PropertiesPanelContext } from '../../context';
+import translateFallback from '../util/translateFallback';
 
 
 export default function CollapsibleEntry(props) {
@@ -24,7 +25,7 @@ export default function CollapsibleEntry(props) {
     label,
     open: shouldOpen,
     remove,
-    translate = (str) => str
+    translate = translateFallback
   } = props;
 
   const [ open, setOpen ] = useState(shouldOpen);

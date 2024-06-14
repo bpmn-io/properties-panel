@@ -26,6 +26,7 @@ import {
 import { PropertiesPanelContext } from '../context';
 
 import { useStickyIntersectionObserver } from '../hooks';
+import translateFallback from './util/translateFallback';
 
 const noop = () => {};
 
@@ -40,7 +41,7 @@ export default function ListGroup(props) {
     items,
     label,
     shouldOpen = true,
-    translate
+    translate = translateFallback
   } = props;
 
   useEffect(() => {
@@ -168,14 +169,14 @@ export default function ListGroup(props) {
             ? (
               <button
                 type="button"
-                title={ translate ? translate('Create new list item') : 'Create new list item' }
+                title={ translate('Create new list item') }
                 class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
                 onClick={ handleAddClick }
               >
                 <CreateIcon />
                 {
                   !hasItems ? (
-                    <span class="bio-properties-panel-add-entry-label">{ translate ? translate('Create') : 'Create' }</span>
+                    <span class="bio-properties-panel-add-entry-label">{ translate('Create') }</span>
                   )
                     : null
                 }
@@ -187,11 +188,7 @@ export default function ListGroup(props) {
           hasItems
             ? (
               <div
-                title={
-                  translate
-                    ? translate(`List contains {numOfItems} item${items.length != 1 ? 's' : ''}`, { numOfItems: items.length })
-                    : `List contains ${items.length} item${items.length != 1 ? 's' : ''}`
-                }
+                title={ translate(`List contains {numOfItems} item${items.length != 1 ? 's' : ''}`, { numOfItems: items.length }) }
                 class={
                   classnames(
                     'bio-properties-panel-list-badge',
@@ -209,7 +206,7 @@ export default function ListGroup(props) {
             ? (
               <button
                 type="button"
-                title={ translate ? translate('Toggle section') : 'Toggle section'}
+                title={ translate('Toggle section') }
                 class="bio-properties-panel-group-header-button bio-properties-panel-arrow"
               >
                 <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />

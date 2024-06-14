@@ -9,6 +9,7 @@ import {
 import { isFunction } from 'min-dash';
 
 import CollapsibleEntry from './entries/Collapsible';
+import translateFallback from './util/translateFallback';
 
 /**
  * @param {import('../PropertiesPanel').ListItemDefinition} props
@@ -17,7 +18,7 @@ export default function ListItem(props) {
   const {
     autoFocusEntry,
     autoOpen,
-    translate = (str) => str
+    translate = translateFallback
   } = props;
 
   // focus specified entry on auto open
