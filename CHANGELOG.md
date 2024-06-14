@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.21.0
+
+* `FEAT`: add translation option to `List` and `Collapsible` ([#362](https://github.com/bpmn-io/properties-panel/pull/362))
+
 ## 3.20.1
 
 * `FIX`: move popup close button to header ([#364](https://github.com/bpmn-io/properties-panel/issues/364))
