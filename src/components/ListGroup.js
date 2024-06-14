@@ -26,6 +26,7 @@ import {
 import { PropertiesPanelContext } from '../context';
 
 import { useStickyIntersectionObserver } from '../hooks';
+
 import translateFallback from './util/translateFallback';
 
 const noop = () => {};

@@ -14,6 +14,7 @@ import {
 } from '../icons';
 
 import { PropertiesPanelContext } from '../../context';
+
 import translateFallback from '../util/translateFallback';
 
 
