@@ -27,6 +27,8 @@ import { PropertiesPanelContext } from '../context';
 
 import { useStickyIntersectionObserver } from '../hooks';
 
+import translateFallback from './util/translateFallback';
+
 const noop = () => {};
 
 /**
@@ -39,7 +41,8 @@ export default function ListGroup(props) {
     id,
     items,
     label,
-    shouldOpen = true
+    shouldOpen = true,
+    translate = translateFallback
   } = props;
 
   useEffect(() => {
@@ -142,6 +145,7 @@ export default function ListGroup(props) {
   }
   );
 
+
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
     <div
       class={ classnames(
@@ -166,14 +170,14 @@ export default function ListGroup(props) {
             ? (
               <button
                 type="button"
-                title="Create new list item"
+                title={ translate('Create new list item') }
                 class="bio-properties-panel-group-header-button bio-properties-panel-add-entry"
                 onClick={ handleAddClick }
               >
                 <CreateIcon />
                 {
                   !hasItems ? (
-                    <span class="bio-properties-panel-add-entry-label">Create</span>
+                    <span class="bio-properties-panel-add-entry-label">{ translate('Create') }</span>
                   )
                     : null
                 }
@@ -185,7 +189,7 @@ export default function ListGroup(props) {
           hasItems
             ? (
               <div
-                title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
+                title={ translate(`List contains {numOfItems} item${items.length != 1 ? 's' : ''}`, { numOfItems: items.length }) }
                 class={
                   classnames(
                     'bio-properties-panel-list-badge',
@@ -203,7 +207,7 @@ export default function ListGroup(props) {
             ? (
               <button
                 type="button"
-                title="Toggle section"
+                title={ translate('Toggle section') }
                 class="bio-properties-panel-group-header-button bio-properties-panel-arrow"
               >
                 <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
@@ -237,7 +241,8 @@ export default function ListGroup(props) {
                 autoOpen={ autoOpen }
                 element={ element }
                 index={ index }
-                key={ id } />
+                key={ id }
+                translate={ translate } />
             );
           })
         }
