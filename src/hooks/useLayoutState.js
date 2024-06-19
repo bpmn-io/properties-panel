@@ -30,7 +30,7 @@ export function useLayoutState(path, defaultValue) {
 
   const layoutForKey = getLayoutForKey(path, defaultValue);
 
-  const setState = useCallback ((newValue) => {
+  const setState = useCallback((newValue) => {
     setLayoutForKey(path, newValue);
   }, [ setLayoutForKey ]);
 
