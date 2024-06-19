@@ -41,7 +41,7 @@ export default function ListGroup(props) {
     id,
     items,
     label,
-    shouldOpen = true,
+    shouldOpen = false,
     translate = translateFallback
   } = props;
 
@@ -55,7 +55,7 @@ export default function ListGroup(props) {
 
   const [ open, setOpen ] = useLayoutState(
     [ 'groups', id, 'open' ],
-    false
+    shouldOpen
   );
 
   const [ sticky, setSticky ] = useState(false);
@@ -63,60 +63,26 @@ export default function ListGroup(props) {
   const onShow = useCallback(() => setOpen(true), [ setOpen ]);
 
   const [ localItems, setLocalItems ] = useState([]);
-  const [ newlyAddedItemIds, setNewlyAddedItemIds ] = useState([]);
 
   // Flag to mark that add button was clicked in the last render cycle
   const [ addTriggered, setAddTriggered ] = useState(false);
 
   const prevElement = usePrevious(element);
 
-  const elementChanged = element !== prevElement;
-  const shouldHandleEffects = !elementChanged && shouldOpen;
+  const toggleOpen = useCallback(() => setOpen(!open), [ open ]);
 
-  // (0) delay setting items
-  //
-  // We need to this to align the render cycles of items
-  // with the detection of newly added items.
-  // This is important, because the autoOpen property can
-  // only set per list item on its very first render.
+  const openItemIds = (element === prevElement && open && addTriggered)
+    ? getNewItemIds(items, localItems)
+    : [];
+
+  // reset local state after items changed
   useEffect(() => {
     setLocalItems(items);
-  }, [ items ]);
-
-  // (1) handle auto opening when items were added
-  useEffect(() => {
-
-    // reset addTriggered flag
     setAddTriggered(false);
-
-    if (shouldHandleEffects && localItems) {
-      if (addTriggered) {
-        const previousItemIds = localItems.map(item => item.id);
-        const currentItemsIds = items.map(item => item.id);
-        const newItemIds = currentItemsIds.filter(itemId => !previousItemIds.includes(itemId));
-
-        // open if not open, configured and triggered by add button
-        //
-        // TODO(marstamm): remove once we refactor layout handling for listGroups.
-        // Ideally, opening should be handled as part of the `add` callback and
-        // not be a concern for the ListGroup component.
-        if (!open && shouldOpen && newItemIds.length > 0) {
-          toggleOpen();
-        }
-
-        setNewlyAddedItemIds(newItemIds);
-      } else {
-
-        // ignore newly added items that do not result from a triggered add
-        setNewlyAddedItemIds([]);
-      }
-    }
-  }, [ items, open, shouldHandleEffects, addTriggered, localItems ]);
+  }, [ items ]);
 
   // set css class when group is sticky to top
   useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
-
-  const toggleOpen = () => setOpen(!open);
 
   const hasItems = !!items.length;
 
@@ -127,6 +93,8 @@ export default function ListGroup(props) {
 
   const handleAddClick = e => {
     setAddTriggered(true);
+    setOpen(true);
+
     add(e);
   };
 
@@ -142,8 +110,7 @@ export default function ListGroup(props) {
 
     // also check if the error is nested, e.g. for name-value entries
     return item.entries.some(entry => allErrors[entry.id]);
-  }
-  );
+  });
 
 
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
@@ -224,7 +191,7 @@ export default function ListGroup(props) {
       <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
 
         {
-          localItems.map((item, index) => {
+          items.map((item, index) => {
             if (!item) {
               return;
             }
@@ -232,8 +199,9 @@ export default function ListGroup(props) {
             const { id } = item;
 
             // if item was added, open it
-            // Existing items will not be affected as autoOpen is only applied on first render
-            const autoOpen = newlyAddedItemIds.includes(item.id);
+            // existing items will not be affected as autoOpen
+            // is only applied on first render
+            const autoOpen = openItemIds.includes(item.id);
 
             return (
               <ListItem
@@ -249,4 +217,12 @@ export default function ListGroup(props) {
       </PropertiesPanelContext.Provider>
     </div>
   </div>;
+}
+
+
+function getNewItemIds(newItems, oldItems) {
+  const newIds = newItems.map(item => item.id);
+  const oldIds = oldItems.map(item => item.id);
+
+  return newIds.filter(itemId => !oldIds.includes(itemId));
 }
