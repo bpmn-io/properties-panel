@@ -589,6 +589,28 @@ describe('<ListGroup>', function() {
 
     describe('open', function() {
 
+      function expectItemOpen(container, item, expected) {
+        const itemEl = domQuery(`[data-entry-id="${item.id || item}"]`, container);
+
+        expect(domClasses(itemEl).has('open'), `[data-entry-id="${item.id || item}"] open=${expected}`).to.eql(expected);
+      }
+
+      function expectListOpen(container, expected) {
+        const list = domQuery('.bio-properties-panel-list', container);
+
+        expect(domClasses(list).has('open'), `.bio-properties-panel-list open=${expected}`).to.eql(expected);
+      }
+
+      function triggerAdd(container) {
+
+        const addButton = domQuery('.bio-properties-panel-add-entry', container);
+
+        return act(() => {
+          addButton.click();
+        });
+      }
+
+
       it('should open on adding new item per default', async function() {
 
         // given
@@ -621,31 +643,24 @@ describe('<ListGroup>', function() {
           container
         } = render(<Component />, parentContainer);
 
-        const list = domQuery('.bio-properties-panel-list', container);
-        const addButton = domQuery('.bio-properties-panel-add-entry', container);
-
         // assume
-        expect(domClasses(list).has('open')).to.be.false;
-
+        expectListOpen(container, false);
 
         // when
-        await act(() => {
-          addButton.click();
-        });
+        await triggerAdd(container);
 
         // then
-        const newItem = domQuery('[data-entry-id="item-2"]', container);
-        const oldItem = domQuery('[data-entry-id="item-1"]', container);
+        expectItemOpen(container, 'item-1', false);
+        expectItemOpen(container, 'item-2', true);
 
-        expect(domClasses(newItem).has('open')).to.be.true;
-        expect(domClasses(oldItem).has('open')).to.be.false;
-        expect(domClasses(list).has('open')).to.be.true;
+        expectListOpen(container, true);
       });
+
 
       it('should open on adding new item in the middle', async function() {
 
         // given
-        const newItems = [
+        let initialItems = [
           {
             id: 'item-1',
             label: 'Item 1'
@@ -653,18 +668,26 @@ describe('<ListGroup>', function() {
           {
             id: 'item-2',
             label: 'Item 2'
+          }
+        ];
+
+        let newItems = [
+          {
+            id: 'item-1',
+            label: 'Item 1'
           },
           {
             id: 'item-3',
             label: 'Item 3'
+          },
+          {
+            id: 'item-2',
+            label: 'Item 2'
           }
         ];
 
-        const items = [ newItems[0], newItems[2] ];
-
-
         const Component = () => {
-          const [ testItems, setTestItems ] = useState(items);
+          const [ testItems, setTestItems ] = useState(initialItems);
 
           const add = () => {
             setTestItems(newItems);
@@ -675,28 +698,20 @@ describe('<ListGroup>', function() {
 
         const {
           container
-        } = render(<Component />, parentContainer);
-
-        const list = domQuery('.bio-properties-panel-list', container);
-        const addButton = domQuery('.bio-properties-panel-add-entry', container);
+        } = render(<Component />, { container: parentContainer });
 
         // assume
-        expect(domClasses(list).has('open')).to.be.false;
+        expectListOpen(container, false);
 
         // when
-        await act(() => {
-          addButton.click();
-        });
+        await triggerAdd(container);
 
         // then
-        const newItem = domQuery('[data-entry-id="item-2"]', container);
-        const oldItem = domQuery('[data-entry-id="item-1"]', container);
-        const otherOldItem = domQuery('[data-entry-id="item-3"]', container);
+        expectListOpen(container, true);
 
-        expect(domClasses(newItem).has('open')).to.be.true;
-        expect(domClasses(oldItem).has('open')).to.be.false;
-        expect(domClasses(otherOldItem).has('open')).to.be.false;
-        expect(domClasses(list).has('open')).to.be.true;
+        expectItemOpen(container, 'item-1', false);
+        expectItemOpen(container, 'item-3', true);
+        expectItemOpen(container, 'item-2', false);
       });
 
 
