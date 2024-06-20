@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.22.0
+
+* `FIX`: do not render `ListGroup` with outdated components ([#369](https://github.com/bpmn-io/properties-panel/pull/369))
+* `DEPS`: update to `@bpmn-io/feel-editor@1.6.0`
+* `CHORE`: rework `ListGroup` auto open logic ([#369](https://github.com/bpmn-io/properties-panel/pull/369))
+
 ## 3.21.0
 
 * `FEAT`: add translation option to `List` and `Collapsible` ([#362](https://github.com/bpmn-io/properties-panel/pull/362))
