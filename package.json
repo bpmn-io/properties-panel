@@ -82,7 +82,7 @@
     "preact": "^10.19.3",
     "puppeteer": "^22.0.0",
     "raw-loader": "^4.0.2",
-    "replace-in-file": "^7.0.2",
+    "replace-in-file": "^8.0.0",
     "rollup": "^4.9.1",
     "rollup-plugin-copy": "^3.5.0",
     "sinon": "^17.0.1",
