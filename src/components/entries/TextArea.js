@@ -61,7 +61,7 @@ function TextArea(props) {
 
   useLayoutEffect(() => {
     autoResize && resizeToContents(ref.current);
-  });
+  }, []);
 
   useEffect(() => {
     if (value === localValue) {

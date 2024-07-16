@@ -3,7 +3,6 @@ import { act } from 'preact/test-utils';
 import {
   render
 } from '@testing-library/preact/pure';
-import { waitFor } from '@testing-library/dom';
 
 import TestContainer from 'mocha-test-container-support';
 
@@ -488,37 +487,6 @@ GEHTS
 
       // then
       expect(shrinkedHeight).to.be.lessThan(enlargedHeight);
-    });
-
-
-    it('should resize when container display toggles', function() {
-
-      // given
-      const result = createTextArea({
-        container,
-        id: 'textarea',
-        autoResize: true
-      });
-
-      const input = domQuery('.bio-properties-panel-input', result.container);
-      const initialHeight = input.clientHeight;
-
-      // when
-      container.style.display = 'none';
-      changeInput(input, 'foo\nbar\nbar\nbar');
-      const hiddenHeight = input.clientHeight;
-
-      // then
-      expect(hiddenHeight).to.be.eq(0);
-
-      // when
-      container.style.display = 'block';
-      const visibleHeight = input.clientHeight;
-
-      // then
-      waitFor(() => {
-        expect(visibleHeight).to.be.greaterThan(initialHeight);
-      });
     });
 
 
