@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.22.2
+
+* `CHORE`: revert autoresize of text area ([#372](https://github.com/bpmn-io/properties-panel/pull/372))
+
 ## 3.22.1
 
 * `FIX`: text area will auto resize on every render ([#372](https://github.com/bpmn-io/properties-panel/pull/372))
