@@ -8,3 +8,4 @@ export { useShowEntryEvent } from './useShowEntryEvent';
 export { useStickyIntersectionObserver } from './useStickyIntersectionObserver';
 export { useStaticCallback } from './useStaticCallback';
 export { useTooltipContext } from './useTooltipContext';
+export { useElementVisible } from './useElementVisible';

@@ -4,6 +4,8 @@ import {
   render
 } from '@testing-library/preact/pure';
 
+import { waitFor } from '@testing-library/dom';
+
 import TestContainer from 'mocha-test-container-support';
 
 import {
@@ -458,7 +460,9 @@ GEHTS
       const initialHeight = input.clientHeight;
 
       // then
-      expect(initialHeight).to.be.greaterThan(60);
+      waitFor(() => {
+        expect(initialHeight).to.be.greaterThan(60);
+      });
     });
 
 
@@ -515,6 +519,37 @@ GEHTS
       // then
       // no visual resize took place
       expect(input.clientHeight).to.be.lessThan(35);
+    });
+
+
+    it('should resize when becomes visible', function() {
+
+      // given
+      const result = createTextArea({
+        container,
+        id: 'textarea',
+        autoResize: true
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+      const initialHeight = input.clientHeight;
+
+      // when
+      container.style.display = 'none';
+      changeInput(input, 'foo\nbar\nbar\nbar');
+      const hiddenHeight = input.clientHeight;
+
+      // then
+      expect(hiddenHeight).to.be.eq(0);
+
+      // when
+      container.style.display = 'block';
+      const visibleHeight = input.clientHeight;
+
+      // then
+      waitFor(() => {
+        expect(visibleHeight).to.be.greaterThan(initialHeight);
+      });
     });
 
   });

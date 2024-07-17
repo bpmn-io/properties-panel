@@ -11,7 +11,8 @@ import classnames from 'classnames';
 
 import {
   useError,
-  useShowEntryEvent
+  useShowEntryEvent,
+  useElementVisible,
 } from '../../hooks';
 
 import { isFunction } from 'min-dash';
@@ -47,6 +48,8 @@ function TextArea(props) {
 
   const ref = useShowEntryEvent(id);
 
+  const visible = useElementVisible(ref.current);
+
   const handleInputCallback = useMemo(() => {
     return debounce((target) => onInput(target.value.length ? target.value : undefined));
   }, [ onInput, debounce ]);
@@ -60,8 +63,8 @@ function TextArea(props) {
   };
 
   useLayoutEffect(() => {
-    autoResize && resizeToContents(ref.current);
-  }, []);
+    visible && autoResize && resizeToContents(ref.current);
+  }, [ visible ]);
 
   useEffect(() => {
     if (value === localValue) {
