@@ -23,10 +23,11 @@ describe('hooks/useElementVisible', function() {
     container.appendChild(element);
 
     // when
-    const { result } = renderHook(() => useElementVisible(element));
+    const { rerender, result } = renderHook(() => useElementVisible(element));
 
     // then
     await waitFor(() => {
+      rerender();
       expect(result.current).to.be.true;
     });
   });
@@ -38,10 +39,11 @@ describe('hooks/useElementVisible', function() {
     const element = global.document.createElement('div');
 
     // when
-    const { result } = renderHook(() => useElementVisible(element));
+    const { rerender, result } = renderHook(() => useElementVisible(element));
 
     // then
     await waitFor(() => {
+      rerender();
       expect(result.current).to.be.false;
     });
   });
@@ -53,10 +55,11 @@ describe('hooks/useElementVisible', function() {
     const element = undefined;
 
     // when
-    const { result } = renderHook(() => useElementVisible(element));
+    const { rerender, result } = renderHook(() => useElementVisible(element));
 
     // then
     await waitFor(() => {
+      rerender();
       expect(result.current).to.be.false;
     });
   });
