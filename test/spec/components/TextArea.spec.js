@@ -437,6 +437,34 @@ describe('<TextArea>', function() {
 
   describe('auto resize', function() {
 
+    it('should resize initially', async function() {
+
+      // given
+      const result = createTextArea({
+        container,
+        id: 'textarea',
+        getValue() {
+          return `
+            1
+            2
+            3
+            4`;
+        },
+        autoResize: true
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      const initialHeight = input.clientHeight;
+
+      // then
+      await waitFor(() => {
+        expect(initialHeight).to.be.greaterThan(60);
+      });
+    });
+
+
     it('should resize on input', function() {
 
       // given

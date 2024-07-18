@@ -63,6 +63,10 @@ function TextArea(props) {
   };
 
   useLayoutEffect(() => {
+    autoResize && resizeToContents(ref.current);
+  }, []);
+
+  useLayoutEffect(() => {
     visible && autoResize && resizeToContents(ref.current);
   }, [ visible ]);
 
