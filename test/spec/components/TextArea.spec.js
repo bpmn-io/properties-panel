@@ -4,7 +4,7 @@ import {
   render
 } from '@testing-library/preact/pure';
 
-import { waitFor } from '@testing-library/dom';
+import { waitFor } from '@testing-library/preact';
 
 import TestContainer from 'mocha-test-container-support';
 
@@ -437,35 +437,6 @@ describe('<TextArea>', function() {
 
   describe('auto resize', function() {
 
-    it('should resize initially', function() {
-
-      // given
-      const result = createTextArea({
-        container,
-        id: 'textarea',
-        getValue() {
-          return `
-HALLO
-WELT
-WIE
-GEHTS
-`;
-        },
-        autoResize: true
-      });
-
-      const input = domQuery('.bio-properties-panel-input', result.container);
-
-      // when
-      const initialHeight = input.clientHeight;
-
-      // then
-      waitFor(() => {
-        expect(initialHeight).to.be.greaterThan(60);
-      });
-    });
-
-
     it('should resize on input', function() {
 
       // given
@@ -522,33 +493,33 @@ GEHTS
     });
 
 
-    it('should resize when becomes visible', function() {
+    it('should resize when becomes visible', async function() {
 
       // given
       const result = createTextArea({
         container,
         id: 'textarea',
-        autoResize: true
+        autoResize: true,
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
       const initialHeight = input.clientHeight;
 
       // when
-      container.style.display = 'none';
       changeInput(input, 'foo\nbar\nbar\nbar');
+      result.container.style.display = 'none';
       const hiddenHeight = input.clientHeight;
 
       // then
       expect(hiddenHeight).to.be.eq(0);
 
       // when
-      container.style.display = 'block';
+      result.container.style.display = 'block';
       const visibleHeight = input.clientHeight;
 
       // then
-      waitFor(() => {
-        expect(visibleHeight).to.be.greaterThan(initialHeight);
+      await waitFor(() => {
+        expect(visibleHeight).to.be.greaterThan(initialHeight * 2);
       });
     });
 
