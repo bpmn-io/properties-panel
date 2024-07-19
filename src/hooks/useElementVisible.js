@@ -8,10 +8,12 @@ export function useElementVisible(element) {
     if (!element) return;
 
     const resizeObserver = new ResizeObserver(([ entry ]) => {
-      const newVisible = !!entry.contentRect.height;
-      if (newVisible !== visible) {
-        setVisible(newVisible);
-      }
+      requestAnimationFrame(() => {
+        const newVisible = !!entry.contentRect.height;
+        if (newVisible !== visible) {
+          setVisible(newVisible);
+        }
+      });
     });
 
     resizeObserver.observe(element);
