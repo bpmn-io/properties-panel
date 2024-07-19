@@ -22,13 +22,10 @@ describe('hooks/useElementVisible', function() {
     container.appendChild(element);
 
     // when
-    const { rerender, result } = renderHook(() => useElementVisible(element));
+    const { result } = renderHook(() => useElementVisible(element));
 
     // then
-    await waitFor(() => {
-      rerender();
-      expect(result.current).to.be.true;
-    });
+    expect(result.current).to.be.true;
   });
 
 
@@ -38,13 +35,10 @@ describe('hooks/useElementVisible', function() {
     const element = global.document.createElement('div');
 
     // when
-    const { rerender, result } = renderHook(() => useElementVisible(element));
+    const { result } = renderHook(() => useElementVisible(element));
 
     // then
-    await waitFor(() => {
-      rerender();
-      expect(result.current).to.be.false;
-    });
+    expect(result.current).to.be.false;
   });
 
 
@@ -54,13 +48,10 @@ describe('hooks/useElementVisible', function() {
     const element = undefined;
 
     // when
-    const { rerender, result } = renderHook(() => useElementVisible(element));
+    const { result } = renderHook(() => useElementVisible(element));
 
     // then
-    await waitFor(() => {
-      rerender();
-      expect(result.current).to.be.false;
-    });
+    expect(result.current).to.be.false;
   });
 
 
@@ -91,7 +82,7 @@ describe('hooks/useElementVisible', function() {
   });
 
 
-  it('should return true when element becomes hidden', async function() {
+  it('should return false when element becomes hidden', async function() {
 
     // given
     const element = global.document.createElement('div');
