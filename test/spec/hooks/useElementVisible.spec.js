@@ -19,7 +19,6 @@ describe('hooks/useElementVisible', function() {
 
     // given
     const element = global.document.createElement('div');
-    element.innerText = 'foo';
     container.appendChild(element);
 
     // when
@@ -56,6 +55,59 @@ describe('hooks/useElementVisible', function() {
 
     // when
     const { rerender, result } = renderHook(() => useElementVisible(element));
+
+    // then
+    await waitFor(() => {
+      rerender();
+      expect(result.current).to.be.false;
+    });
+  });
+
+
+  it('should return true when element becomes visible', async function() {
+
+    // given
+    const element = global.document.createElement('div');
+    container.appendChild(element);
+    element.style.display = 'none';
+
+    // when
+    const { rerender, result } = renderHook(() => useElementVisible(element));
+
+    // then
+    await waitFor(() => {
+      rerender();
+      expect(result.current).to.be.false;
+    });
+
+    // when
+    element.style.display = 'block';
+
+    // then
+    await waitFor(() => {
+      rerender();
+      expect(result.current).to.be.true;
+    });
+  });
+
+
+  it('should return true when element becomes hidden', async function() {
+
+    // given
+    const element = global.document.createElement('div');
+    container.appendChild(element);
+
+    // when
+    const { rerender, result } = renderHook(() => useElementVisible(element));
+
+    // then
+    await waitFor(() => {
+      rerender();
+      expect(result.current).to.be.true;
+    });
+
+    // when
+    element.style.display = 'none';
 
     // then
     await waitFor(() => {
