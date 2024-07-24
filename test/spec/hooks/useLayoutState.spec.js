@@ -1,7 +1,7 @@
 import {
   act,
   renderHook
-} from '@testing-library/preact-hooks';
+} from '@testing-library/preact';
 
 import {
   assign,

@@ -1,6 +1,4 @@
-import { renderHook } from '@testing-library/preact-hooks';
-
-import { waitFor } from '@testing-library/preact';
+import { renderHook, waitFor } from '@testing-library/preact';
 
 import { useElementVisible } from 'src/hooks';
 
@@ -63,11 +61,10 @@ describe('hooks/useElementVisible', function() {
     element.style.display = 'none';
 
     // when
-    const { rerender, result } = renderHook(() => useElementVisible(element));
+    const { result } = renderHook(() => useElementVisible(element));
 
     // then
     await waitFor(() => {
-      rerender();
       expect(result.current).to.be.false;
     });
 
@@ -76,7 +73,6 @@ describe('hooks/useElementVisible', function() {
 
     // then
     await waitFor(() => {
-      rerender();
       expect(result.current).to.be.true;
     });
   });
@@ -89,11 +85,10 @@ describe('hooks/useElementVisible', function() {
     container.appendChild(element);
 
     // when
-    const { rerender, result } = renderHook(() => useElementVisible(element));
+    const { result } = renderHook(() => useElementVisible(element));
 
     // then
     await waitFor(() => {
-      rerender();
       expect(result.current).to.be.true;
     });
 
@@ -102,7 +97,6 @@ describe('hooks/useElementVisible', function() {
 
     // then
     await waitFor(() => {
-      rerender();
       expect(result.current).to.be.false;
     });
   });

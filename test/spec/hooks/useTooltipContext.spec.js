@@ -1,6 +1,6 @@
 import {
   renderHook
-} from '@testing-library/preact-hooks';
+} from '@testing-library/preact';
 
 import {
   useTooltipContext

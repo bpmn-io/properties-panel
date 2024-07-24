@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/preact-hooks';
+import { renderHook } from '@testing-library/preact';
 
 import { useError } from 'src/hooks';
 

@@ -2,8 +2,7 @@ import EventBus from 'diagram-js/lib/core/EventBus';
 
 import { useStickyIntersectionObserver } from 'src/hooks';
 
-import { waitFor } from '@testing-library/preact';
-import { renderHook } from '@testing-library/preact-hooks';
+import { renderHook, waitFor } from '@testing-library/preact';
 
 import TestContainer from 'mocha-test-container-support';
 import { EventContext } from '../../../src/context';
