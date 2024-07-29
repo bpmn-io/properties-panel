@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.22.4
+
+* `CHORE`: add styles for tooltip headings ([#376](https://github.com/bpmn-io/properties-panel/pull/376))
+
 ## 3.22.3
 
 * `FIX`: fix text area autoresize behavior ([#374](https://github.com/bpmn-io/properties-panel/pull/374))
