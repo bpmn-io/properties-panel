@@ -38,7 +38,7 @@ function TextArea(props) {
     monospace,
     onFocus,
     onBlur,
-    autoResize,
+    autoResize = true,
     placeholder,
     rows = autoResize ? 1 : 2,
     tooltip
