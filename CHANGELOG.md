@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.23.0
+
+* `FEAT`: make text area auto resize by default ([#377](https://github.com/bpmn-io/properties-panel/pull/377))
+
 ## 3.22.4
 
 * `CHORE`: add styles for tooltip headings ([#376](https://github.com/bpmn-io/properties-panel/pull/376))
