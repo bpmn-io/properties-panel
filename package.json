@@ -16,8 +16,7 @@
     "build:watch": "npm run build -- --watch",
     "lint": "eslint .",
     "dev": "npm test -- --auto-watch --no-single-run",
-    "test": "karma start karma.config.js",
-    "prepare": "run-s build"
+    "test": "karma start karma.config.js"
   },
   "repository": {
     "type": "git",

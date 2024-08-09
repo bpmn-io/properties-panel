@@ -228,10 +228,10 @@ export default function PropertiesPanel(props) {
     return <Placeholder { ...placeholderProvider.getEmpty() } />;
   }
 
-  // multiple state
-  if (placeholderProvider && isArray(element)) {
-    return <Placeholder { ...placeholderProvider.getMultiple() } />;
-  }
+  // // multiple state
+  // if (placeholderProvider && isArray(element)) {
+  //   return <Placeholder { ...placeholderProvider.getMultiple() } />;
+  // }
 
   return (
     <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
