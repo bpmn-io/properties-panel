@@ -517,6 +517,14 @@ textarea.bio-properties-panel-input {
   --input-border-color: var(--input-focus-border-color);
 }
 
+.bio-properties-panel-select-option-disabled {
+  color: var(--input-disabled-color);
+
+  option {
+    color: var(--text-base-color);
+  }
+}
+
 .bio-properties-panel-input:disabled {
   border-color: var(--input-disabled-border-color);
   background-color: var(--input-disabled-background-color);

@@ -67,6 +67,8 @@ function Select(props) {
     setLocalValue(value);
   }, [ value ]);
 
+  const selectedOptionDisabled = options.find(option => option.value === value && option.disabled);
+
   return (
     <div class="bio-properties-panel-select">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
@@ -78,7 +80,7 @@ function Select(props) {
         ref={ ref }
         id={ prefixId(id) }
         name={ id }
-        class="bio-properties-panel-input"
+        class={ classNames('bio-properties-panel-input', { 'bio-properties-panel-select-option-disabled': selectedOptionDisabled }) }
         onInput={ handleChange }
         onFocus={ onFocus }
         onBlur={ onBlur }
@@ -94,6 +96,7 @@ function Select(props) {
                     key={ idx }
                     value={ child.value }
                     disabled={ child.disabled }
+                    hidden={ child.hidden }
                   >
                     {child.label}
                   </option>
@@ -103,7 +106,7 @@ function Select(props) {
           }
 
           return (
-            <option key={ idx } value={ option.value } disabled={ option.disabled }>
+            <option key={ idx } value={ option.value } disabled={ option.disabled } hidden={ option.hidden }>
               {option.label}
             </option>
           );
