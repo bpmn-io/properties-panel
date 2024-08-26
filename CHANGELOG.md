@@ -6,6 +6,9 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: lint first item access ([feel-lint#25](https://github.com/bpmn-io/feel-lint/issues/25)
+* `DEPS`: update to `@bpmn-io/feel-editor@1.7.0`
+
 ## 3.23.0
 
 * `FEAT`: make text area auto resize by default ([#377](https://github.com/bpmn-io/properties-panel/pull/377))
