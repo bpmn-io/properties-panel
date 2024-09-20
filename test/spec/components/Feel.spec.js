@@ -1986,6 +1986,26 @@ describe('<FeelField>', function() {
       });
 
 
+      it('should not indicate field error on non-syntax errors', async function() {
+
+        // given
+        const clock = sinon.useFakeTimers();
+        const result = createFeelField({ container, getValue: () => '= friend[0]', feel: 'required' });
+
+        // when
+        // trigger debounced validation
+        await act(() => { clock.tick(1000); });
+        await act(() => { clock.restore(); });
+
+        // then
+        await waitFor(() => {
+          const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+          expect(isValid(entry)).to.be.true;
+        });
+      });
+
+
       it('should show global error over local error', async function() {
 
         // given

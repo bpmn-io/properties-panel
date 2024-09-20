@@ -130,14 +130,15 @@ function FeelTextfieldComponent(props) {
     }
   };
 
-  const handleLint = useStaticCallback(lint => {
+  const handleLint = useStaticCallback((lint = []) => {
 
-    if (!(lint && lint.length)) {
+    const syntaxError = lint.some(report => report.type === 'Syntax Error');
+
+    if (syntaxError) {
+      onError('Unparsable FEEL expression.');
+    } else {
       onError(undefined);
-      return;
     }
-
-    onError('Unparsable FEEL expression.');
   });
 
   const handlePopupOpen = (type = 'feel') => {
