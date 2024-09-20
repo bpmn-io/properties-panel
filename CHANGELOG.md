@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.24.1
+
+* `FIX`: validate first item access gracefully ([#381](https://github.com/bpmn-io/properties-panel/pull/381))
+
 ## 3.24.0
 
 * `FEAT`: lint first item access ([feel-lint#25](https://github.com/bpmn-io/feel-lint/issues/25)
