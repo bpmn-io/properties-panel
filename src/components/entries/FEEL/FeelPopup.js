@@ -14,7 +14,7 @@ import { Popup } from '../../Popup';
 import CodeEditor from './FeelEditor';
 
 import TemplatingEditor from '../templating/TemplatingEditor';
-import { HelpIcon } from '../../icons';
+import { LaunchIcon } from '../../icons';
 
 export const FEEL_POPUP_WIDTH = 700;
 export const FEEL_POPUP_HEIGHT = 250;
@@ -31,7 +31,8 @@ export default function FEELPopupRoot(props) {
   const {
     element,
     eventBus = { fire() {}, on() {}, off() {} },
-    popupContainer
+    popupContainer,
+    getPopupLinks = () => []
   } = props;
 
   const prevElement = usePrevious(element);
@@ -121,6 +122,7 @@ export default function FEELPopupRoot(props) {
         <FeelPopupComponent
           onClose={ handleClose }
           container={ popupContainer }
+          getLinks={ getPopupLinks }
           sourceElement={ sourceElement }
           emit={ emit }
           { ...popupConfig } />
@@ -133,6 +135,7 @@ export default function FEELPopupRoot(props) {
 function FeelPopupComponent(props) {
   const {
     container,
+    getLinks,
     id,
     hostLanguage,
     onInput,
@@ -218,28 +221,16 @@ function FeelPopupComponent(props) {
         closeButtonTooltip="Save and close"
         onClose={ onClose }
         draggable>
-        {type === 'feel' && (
-          <a
-            rel="noreferrer"
-            href="https://docs.camunda.io/docs/components/modeler/feel/what-is-feel/"
-            target="_blank"
-            class="bio-properties-panel-feel-popup__title-link">
-            Learn FEEL expressions
-            <HelpIcon />
-          </a>
-        )
-        }
-        {type === 'feelers' && (
-          <a
-            rel="noreferrer"
-            href="https://docs.camunda.io/docs/components/modeler/forms/configuration/forms-config-templating-syntax/"
-            target="_blank"
-            class="bio-properties-panel-feel-popup__title-link">
-            Learn templating
-            <HelpIcon />
-          </a>
-        )
-        }
+        <>
+          {
+            getLinks(type).map((link, index) => {
+              return <a key={ index } rel="noreferrer" href={ link.href } target="_blank" class="bio-properties-panel-feel-popup__title-link">
+                { link.title}
+                <LaunchIcon />
+              </a>;
+            })
+          }
+        </>
       </Popup.Title>
       <Popup.Body>
         <div
