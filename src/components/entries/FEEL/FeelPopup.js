@@ -14,7 +14,7 @@ import { Popup } from '../../Popup';
 import CodeEditor from './FeelEditor';
 
 import TemplatingEditor from '../templating/TemplatingEditor';
-import { HelpIcon } from '../../icons';
+import { LaunchIcon } from '../../icons';
 
 export const FEEL_POPUP_WIDTH = 700;
 export const FEEL_POPUP_HEIGHT = 250;
@@ -219,16 +219,22 @@ function FeelPopupComponent(props) {
         onClose={ onClose }
         draggable>
         {type === 'feel' && (
-          <a href="https://docs.camunda.io/docs/components/modeler/feel/what-is-feel/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
-            Learn FEEL expressions
-            <HelpIcon />
-          </a>
+          <>
+            <a href="https://docs.camunda.io/docs/components/modeler/feel/what-is-feel/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
+              Learn FEEL expressions
+              <LaunchIcon />
+            </a>
+            <a href="https://feel-copilot.camunda.com/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
+              Try FEEL Copilot
+              <LaunchIcon />
+            </a>
+          </>
         )
         }
         {type === 'feelers' && (
           <a href="https://docs.camunda.io/docs/components/modeler/forms/configuration/forms-config-templating-syntax/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
             Learn templating
-            <HelpIcon />
+            <LaunchIcon />
           </a>
         )
         }
