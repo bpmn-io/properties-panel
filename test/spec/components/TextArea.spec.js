@@ -394,7 +394,7 @@ describe('<TextArea>', function() {
     });
 
 
-    it('should call validate with error', function() {
+    it('should NOT discard invalid input', function() {
 
       // given
       const setValueSpy = sinon.spy();
