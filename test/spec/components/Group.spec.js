@@ -43,11 +43,11 @@ describe('<Group>', function() {
     container = TestContainer.get(this);
   });
 
-  beforeEach(() => {
+  beforeEach(function() {
     sinon.replace(window, 'requestAnimationFrame', cb => cb());
   });
 
-  afterEach(() => {
+  afterEach(function() {
     sinon.restore();
   });
 

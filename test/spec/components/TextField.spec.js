@@ -271,7 +271,7 @@ describe('<TextField>', function() {
     });
 
 
-    it('should set invalid', function() {
+    it('should call validate with error', function() {
 
       // given
       const setValueSpy = sinon.spy();

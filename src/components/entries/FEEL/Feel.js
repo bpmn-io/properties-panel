@@ -219,7 +219,7 @@ function FeelTextfieldComponent(props) {
       'bio-properties-panel-feel-entry',
       { 'feel-active': feelActive }
     ) }>
-      <label for={ prefixId(id) } class="bio-properties-panel-label" onClick={ () => setFocus() }>
+      <label htmlFor={ prefixId(id) } class="bio-properties-panel-label" onClick={ () => setFocus() }>
         <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           {label}
         </Tooltip>
@@ -787,7 +787,7 @@ function withAutoClosePopup(Component) {
       return () => {
         closePopup({ id });
       };
-    }, [ ]);
+    }, []);
 
     return <Component { ...props } />;
   };

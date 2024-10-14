@@ -80,7 +80,7 @@ function TextArea(props) {
 
   return (
     <div class="bio-properties-panel-textarea">
-      <label for={ prefixId(id) } class="bio-properties-panel-label">
+      <label htmlFor={ prefixId(id) } class="bio-properties-panel-label">
         <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           { label }
         </Tooltip>

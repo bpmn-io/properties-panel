@@ -488,7 +488,7 @@ describe('<Popup>', function() {
         <Popup title="my popup" container={ container }>
           <Popup.Title draggable title="My popup" />
           <Popup.Body>
-            <label for="foo">bar</label>
+            <label htmlFor="foo">bar</label>
             <input id="foo" name="foo" />
           </Popup.Body>
           <Popup.Footer>
