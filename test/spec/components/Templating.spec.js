@@ -392,7 +392,7 @@ describe('<Templating>', function() {
       });
 
 
-      it('should call validate with error', async function() {
+      it('should NOT discard invalid input', async function() {
 
         // given
         const setValueSpy = sinon.spy();
