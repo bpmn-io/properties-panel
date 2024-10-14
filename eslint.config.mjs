@@ -39,6 +39,7 @@ export default [
       'import/no-webpack-loader-syntax': 'error',
       'react-hooks/exhaustive-deps': 'off',
       'react/display-name': 'off',
+      'react/no-unknown-property': 'off',
     },
   },
   {

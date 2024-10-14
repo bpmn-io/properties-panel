@@ -284,7 +284,7 @@ describe('<PropertiesPanel>', function() {
     it('should notify on initial layout loaded (default layout)', async function() {
 
       // given
-      const DEFAULT_LAYOUT = { };
+      const DEFAULT_LAYOUT = {};
       const layoutChangedSpy = sinon.spy();
 
       // when

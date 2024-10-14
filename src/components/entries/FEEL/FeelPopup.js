@@ -30,7 +30,7 @@ export const FEEL_POPUP_HEIGHT = 250;
 export default function FEELPopupRoot(props) {
   const {
     element,
-    eventBus = { fire() { }, on() { }, off() { } },
+    eventBus = { fire() {}, on() {}, off() {} },
     popupContainer
   } = props;
 

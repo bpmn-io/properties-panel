@@ -58,7 +58,7 @@ export function NumberField(props) {
 
   return (
     <div class="bio-properties-panel-numberfield">
-      {displayLabel && <label htmlFor={ prefixId(id) } class="bio-properties-panel-label">{ label }</label> }
+      {displayLabel && <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label> }
       <input
         id={ prefixId(id) }
         ref={ inputRef }

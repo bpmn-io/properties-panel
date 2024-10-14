@@ -47,7 +47,7 @@ export function ToggleSwitch(props) {
       { inline }
     ) }>
       <label class="bio-properties-panel-label"
-        htmlFor={ prefixId(id) }>
+        for={ prefixId(id) }>
         <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           { label }
         </Tooltip>

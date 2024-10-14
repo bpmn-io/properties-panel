@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import Description from '../Description';
 import TemplatingEditor from './TemplatingEditor';
 
-const noop = () => { };
+const noop = () => {};
 
 /**
  * @param {Object} props

@@ -54,7 +54,7 @@ function Textfield(props) {
 
   return (
     <div class="bio-properties-panel-textfield">
-      <label htmlFor={ prefixId(id) } class="bio-properties-panel-label">
+      <label for={ prefixId(id) } class="bio-properties-panel-label">
         <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           { label }
         </Tooltip>
