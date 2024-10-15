@@ -63,7 +63,7 @@ export default function FEELPopupRoot(props) {
     emit('open');
   };
 
-  const handleClose = (event = { }) => {
+  const handleClose = (event = {}) => {
     const { id } = event;
     if (id && id !== source) {
       return;
@@ -117,7 +117,7 @@ export default function FEELPopupRoot(props) {
 
   return (
     <FeelPopupContext.Provider value={ feelPopupContext }>
-      { open && (
+      {open && (
         <FeelPopupComponent
           onClose={ handleClose }
           container={ popupContainer }
@@ -125,7 +125,7 @@ export default function FEELPopupRoot(props) {
           emit={ emit }
           { ...popupConfig } />
       )}
-      { props.children }
+      {props.children}
     </FeelPopupContext.Provider>
   );
 }
@@ -219,14 +219,22 @@ function FeelPopupComponent(props) {
         onClose={ onClose }
         draggable>
         {type === 'feel' && (
-          <a href="https://docs.camunda.io/docs/components/modeler/feel/what-is-feel/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
+          <a
+            rel="noreferrer"
+            href="https://docs.camunda.io/docs/components/modeler/feel/what-is-feel/"
+            target="_blank"
+            class="bio-properties-panel-feel-popup__title-link">
             Learn FEEL expressions
             <HelpIcon />
           </a>
         )
         }
         {type === 'feelers' && (
-          <a href="https://docs.camunda.io/docs/components/modeler/forms/configuration/forms-config-templating-syntax/" target="_blank" class="bio-properties-panel-feel-popup__title-link">
+          <a
+            rel="noreferrer"
+            href="https://docs.camunda.io/docs/components/modeler/forms/configuration/forms-config-templating-syntax/"
+            target="_blank"
+            class="bio-properties-panel-feel-popup__title-link">
             Learn templating
             <HelpIcon />
           </a>

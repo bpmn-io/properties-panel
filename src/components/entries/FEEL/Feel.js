@@ -35,7 +35,7 @@ import { ToggleSwitch } from '../ToggleSwitch';
 import { NumberField } from '../NumberField';
 import Tooltip from '../Tooltip';
 
-const noop = () => { };
+const noop = () => {};
 
 function FeelTextfieldComponent(props) {
   const {
@@ -787,7 +787,7 @@ function withAutoClosePopup(Component) {
       return () => {
         closePopup({ id });
       };
-    }, [ ]);
+    }, []);
 
     return <Component { ...props } />;
   };

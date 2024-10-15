@@ -8,6 +8,7 @@ import TestContainer from 'mocha-test-container-support';
 describe('hooks/useElementVisible', function() {
 
   let container;
+
   beforeEach(function() {
     container = TestContainer.get(this);
   });
