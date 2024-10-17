@@ -1397,8 +1397,12 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-feel-popup__title-link {
-  margin-left: auto; 
+  margin-left: 8px; 
   display: flex;
+}
+
+.bio-properties-panel-feel-popup__title-link:first-of-type {
+  margin-left: auto;
 }
 
 .bio-properties-panel-feel-popup__title-link svg {
