@@ -117,6 +117,7 @@ const DEFAULT_TOOLTIP = {};
  * @param {TooltipConfig} [props.tooltipConfig]
  * @param {Function} [props.tooltipLoaded]
  * @param {HTMLElement} [props.feelPopupContainer]
+ * @param {Function} [props.getFeelPopupLinks]
  * @param {Object} [props.eventBus]
  */
 export default function PropertiesPanel(props) {
@@ -132,6 +133,7 @@ export default function PropertiesPanel(props) {
     tooltipConfig,
     tooltipLoaded,
     feelPopupContainer,
+    getFeelPopupLinks,
     eventBus
   } = props;
 
@@ -243,7 +245,8 @@ export default function PropertiesPanel(props) {
                 <FeelPopupRoot
                   element={ element }
                   eventBus={ eventBus }
-                  popupContainer={ feelPopupContainer }>
+                  popupContainer={ feelPopupContainer }
+                  getPopupLinks={ getFeelPopupLinks }>
                   <div class="bio-properties-panel">
                     <Header
                       element={ element }
