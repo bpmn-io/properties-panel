@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: links shown in FEEL popup are configurable ([#382](https://github.com/bpmn-io/properties-panel/pull/382))
+
 ## 3.24.1
 
 * `FIX`: validate first item access gracefully ([#381](https://github.com/bpmn-io/properties-panel/pull/381))
