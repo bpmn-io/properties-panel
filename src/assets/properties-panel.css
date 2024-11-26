@@ -17,6 +17,7 @@
   --color-blue-205-100-35: hsl(205, 100%, 35%);
   --color-blue-205-100-45: hsl(205, 100%, 45%);
   --color-blue-205-100-50: hsl(205, 100%, 50%);
+  --color-blue-205-100-40: hsl(205, 100%, 40%);
   --color-blue-205-100-85: hsl(205, 100%, 85%);
   --color-blue-205-100-95: hsl(205, 100%, 95%);
   --color-blue-219-99-53: hsl(219, 99%, 53%);
@@ -78,6 +79,7 @@
 
   --input-focus-background-color: var(--color-blue-205-100-95);
   --input-focus-border-color: var(--color-blue-205-100-50);
+  --focus-outline-color: var(--color-blue-205-100-40);
 
   --input-error-background-color: var(--color-red-360-100-97);
   --input-error-border-color: var(--color-red-360-100-45);
@@ -297,6 +299,11 @@
   padding: 0 3px;
   border: none;
   background: none;
+}
+
+.bio-properties-panel-group-header-button:focus {
+  outline-offset: 2px;
+  outline-color: var(--focus-outline-color);
 }
 
 .bio-properties-panel-group-header-buttons .bio-properties-panel-group-header-buttons:last-child {
@@ -537,8 +544,9 @@ select.bio-properties-panel-input {
 }
 
 .bio-properties-panel-input[type="checkbox"]:focus {
-  outline: 2px solid var(--input-focus-border-color);
-  outline-offset: 0;
+  outline: auto;
+  outline-color: var(--focus-outline-color);
+  outline-offset: 2px;
 }
 
 .bio-properties-panel-checkbox > .bio-properties-panel-label {
