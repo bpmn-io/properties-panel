@@ -6,7 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.25.1
+
 * `FEAT`: support for `diagram-js` v15
+* `FIX`: add focus to checkboxes and buttons ([#390](https://github.com/bpmn-io/properties-panel/pull/390))
 
 ## 3.25.0
 
