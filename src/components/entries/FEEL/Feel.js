@@ -35,6 +35,8 @@ import { ToggleSwitch } from '../ToggleSwitch';
 import { NumberField } from '../NumberField';
 import Tooltip from '../Tooltip';
 
+import AutoCompletionInput from '../AutoCompletionInput';
+
 const noop = () => {};
 
 function FeelTextfieldComponent(props) {
@@ -303,8 +305,8 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     }
   };
 
-  return <input
-    id={ prefixId(id) }
+  return <AutoCompletionInput
+    id={ id }
     type="text"
     ref={ inputRef }
     name={ id }

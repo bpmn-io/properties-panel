@@ -499,6 +499,46 @@
   font-family: inherit;
 }
 
+.bio-properties-panel-textfield-dropdown-wrapper {
+  position: relative;
+}
+
+.bio-properties-panel-textfield-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: var(--color-grey-225-10-95);
+  border: 1px solid var(--color-grey-225-10-75);
+}
+
+.bio-properties-panel-textfield-dropdown-open {
+  display: block;
+}
+
+.bio-properties-panel-textfield-dropdown-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bio-properties-panel-textfield-dropdown-option {
+  padding: 2px 6px;
+}
+
+.bio-properties-panel-textfield-dropdown-option-text {
+  font-weight: bold;
+}
+
+.bio-properties-panel-textfield-dropdown-option:focus,
+.bio-properties-panel-textfield-dropdown-option:hover,
+.bio-properties-panel-textfield-dropdown-option-selected {
+  background-color: var(--color-blue-205-100-50);
+  color: var(--color-white);
+}
+
 .bio-properties-panel-input[type=number],
 select.bio-properties-panel-input,
 textarea.bio-properties-panel-input,

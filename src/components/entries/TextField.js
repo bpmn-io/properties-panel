@@ -16,6 +16,8 @@ import {
   useShowEntryEvent
 } from '../../hooks';
 
+import AutoCompletionInput from './AutoCompletionInput';
+
 function Textfield(props) {
 
   const {
@@ -59,9 +61,9 @@ function Textfield(props) {
           { label }
         </Tooltip>
       </label>
-      <input
+      <AutoCompletionInput
         ref={ ref }
-        id={ prefixId(id) }
+        id={ id }
         type="text"
         name={ id }
         spellCheck="false"

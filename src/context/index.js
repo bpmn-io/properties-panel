@@ -1,3 +1,4 @@
+export { default as AutoCompletionContext } from './AutoCompletionContext';
 export { default as DescriptionContext } from './DescriptionContext';
 export { default as ErrorsContext } from './ErrorsContext';
 export { default as EventContext } from './EventContext';

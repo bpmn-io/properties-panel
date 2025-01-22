@@ -20,6 +20,7 @@ import Group from './components/Group';
 import Placeholder from './components/Placeholder';
 
 import {
+  AutoCompletionContext,
   DescriptionContext,
   ErrorsContext,
   EventContext,
@@ -119,6 +120,7 @@ const DEFAULT_TOOLTIP = {};
  * @param {HTMLElement} [props.feelPopupContainer]
  * @param {Function} [props.getFeelPopupLinks]
  * @param {Object} [props.eventBus]
+ * @param {Function} [props.getCompletions]
  */
 export default function PropertiesPanel(props) {
   const {
@@ -134,7 +136,8 @@ export default function PropertiesPanel(props) {
     tooltipLoaded,
     feelPopupContainer,
     getFeelPopupLinks,
-    eventBus
+    eventBus,
+    getCompletions
   } = props;
 
   // set-up layout context
@@ -225,6 +228,10 @@ export default function PropertiesPanel(props) {
     element
   };
 
+  const autoCompletionContext = {
+    getCompletions
+  };
+
   // empty state
   if (placeholderProvider && !element) {
     return <Placeholder { ...placeholderProvider.getEmpty() } />;
@@ -240,38 +247,40 @@ export default function PropertiesPanel(props) {
       <ErrorsContext.Provider value={ errorsContext }>
         <DescriptionContext.Provider value={ descriptionContext }>
           <TooltipContext.Provider value={ tooltipContext }>
-            <LayoutContext.Provider value={ layoutContext }>
-              <EventContext.Provider value={ eventContext }>
-                <FeelPopupRoot
-                  element={ element }
-                  eventBus={ eventBus }
-                  popupContainer={ feelPopupContainer }
-                  getPopupLinks={ getFeelPopupLinks }>
-                  <div class="bio-properties-panel">
-                    <Header
-                      element={ element }
-                      headerProvider={ headerProvider } />
-                    <div class="bio-properties-panel-scroll-container">
-                      {
-                        groups.map(group => {
-                          const {
-                            component: Component = Group,
-                            id
-                          } = group;
+            <AutoCompletionContext.Provider value={ autoCompletionContext }>
+              <LayoutContext.Provider value={ layoutContext }>
+                <EventContext.Provider value={ eventContext }>
+                  <FeelPopupRoot
+                    element={ element }
+                    eventBus={ eventBus }
+                    popupContainer={ feelPopupContainer }
+                    getPopupLinks={ getFeelPopupLinks }>
+                    <div class="bio-properties-panel">
+                      <Header
+                        element={ element }
+                        headerProvider={ headerProvider } />
+                      <div class="bio-properties-panel-scroll-container">
+                        {
+                          groups.map(group => {
+                            const {
+                              component: Component = Group,
+                              id
+                            } = group;
 
-                          return (
-                            <Component
-                              { ...group }
-                              key={ id }
-                              element={ element } />
-                          );
-                        })
-                      }
+                            return (
+                              <Component
+                                { ...group }
+                                key={ id }
+                                element={ element } />
+                            );
+                          })
+                        }
+                      </div>
                     </div>
-                  </div>
-                </FeelPopupRoot>
-              </EventContext.Provider>
-            </LayoutContext.Provider>
+                  </FeelPopupRoot>
+                </EventContext.Provider>
+              </LayoutContext.Provider>
+            </AutoCompletionContext.Provider>
           </TooltipContext.Provider>
         </DescriptionContext.Provider>
       </ErrorsContext.Provider>

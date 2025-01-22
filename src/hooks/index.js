@@ -1,3 +1,4 @@
+export { useAutoCompletionContext } from './useAutoCompletionContext';
 export { useDescriptionContext } from './useDescriptionContext';
 export { useError, useErrors } from './useError';
 export { useEvent } from './useEvent';
