@@ -55,7 +55,12 @@ const CodeEditor = forwardRef((props, ref) => {
     popupOpen,
     disabled,
     tooltipContainer,
-    variables
+    variables,
+    languageContext : {
+      builtins,
+      dialect,
+      parserDialect
+    } = { }
   } = props;
 
   const inputRef = useRef();
@@ -99,7 +104,10 @@ const CodeEditor = forwardRef((props, ref) => {
       placeholder: placeholder,
       tooltipContainer: tooltipContainer,
       value: localValue,
-      variables: variables,
+      variables,
+      builtins,
+      dialect,
+      parserDialect,
       extensions: [
         ...enableGutters ? [ lineNumbers() ] : [],
         EditorView.lineWrapping
