@@ -1970,7 +1970,7 @@ describe('<FeelField>', function() {
 
         // given
         const clock = sinon.useFakeTimers();
-        const result = createFeelField({ container, getValue: () => '= foo == bar', feel: 'required' });
+        const result = createFeelField({ container, getValue: () => '= ...syntax error...', feel: 'required' });
 
         // when
         // trigger debounced validation

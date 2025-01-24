@@ -190,7 +190,7 @@ describe('<Templating>', function() {
       it('should show syntax error (FEEL)', async function() {
 
         // given
-        let result = createTemplatingEntry({ container, getValue: () => '= foo == bar' });
+        let result = createTemplatingEntry({ container, getValue: () => '= ...syntax error...' });
 
         // when
         await act(() => clock.tick(1000));
@@ -207,7 +207,7 @@ describe('<Templating>', function() {
       it('should show syntax error (feelers)', async function() {
 
         // given
-        const result = createTemplatingEntry({ container, getValue: () => 'Template {{foo == bar}}' });
+        const result = createTemplatingEntry({ container, getValue: () => 'Template {{...syntax error...}}' });
 
         // when
         // trigger debounced validation
@@ -250,7 +250,7 @@ describe('<Templating>', function() {
           id: 'foo',
           container,
           errors,
-          getValue: () => '= foo == bar'
+          getValue: () => '= ....syntax error....'
         });
 
         // assume
