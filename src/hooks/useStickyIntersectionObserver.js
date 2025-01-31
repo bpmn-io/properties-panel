@@ -25,8 +25,9 @@ import { useEvent } from './useEvent';
  * @param {Object} ref
  * @param {string} scrollContainerSelector
  * @param {setSticky} setSticky
+ * @param {number} rootMarginTop
  */
-export function useStickyIntersectionObserver(ref, scrollContainerSelector, setSticky) {
+export function useStickyIntersectionObserver(ref, scrollContainerSelector, setSticky, rootMarginTop = 0) {
 
   const [ scrollContainer, setScrollContainer ] = useState(domQuery(scrollContainerSelector));
 
@@ -76,7 +77,7 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
     },
     {
       root: scrollContainer,
-      rootMargin: '0px 0px 999999% 0px', // Use bottom margin to avoid stickyness when scrolling out to bottom
+      rootMargin: `${rootMarginTop}px 0px 999999% 0px`, // Use bottom margin to avoid stickyness when scrolling out to bottom
       threshold: [ 1 ]
     });
     observer.observe(ref.current);
