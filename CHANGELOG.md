@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.26.1
+
+* `FIX`: remove input border from popups ([#398](https://github.com/bpmn-io/properties-panel/pull/398))
+
 ## 3.26.0
 
 * `FEAT`: suggest latest Camunda FEEL built-ins ([@bpmn-io/feel-editor#65](https://github.com/bpmn-io/feel-editor/pull/65))
