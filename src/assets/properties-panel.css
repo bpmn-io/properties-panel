@@ -1502,6 +1502,10 @@ textarea.bio-properties-panel-input {
   padding-left: 4px;
 }
 
+.bio-properties-panel-feel-popup .bio-properties-panel-input {
+  border: none;
+}
+
 .bio-properties-panel-feel-popup .cm-gutters {
   background-color: var(--feel-popup-gutters-background-color);
   border: none;
