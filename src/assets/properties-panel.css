@@ -827,7 +827,6 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-list-entry-header.position-sticky {
-  position: -webkit-sticky;  /* for safari */
   position: sticky;
   top: 0;
   z-index: 5;
