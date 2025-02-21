@@ -94,30 +94,7 @@ describe('<Tooltip>', function() {
       expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
 
       // when
-      fireEvent.mouseMove(container, {
-        clientX: 16,
-        clientY: 16,
-      });
-
-      // expect
-      expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
-    });
-
-
-    it('should not render if trigger element no longer hovered - scroll', async function() {
-
-      // given
-      createTooltip({ container });
-      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
-
-      // when
-      await openTooltip(wrapper);
-
-      // then
-      expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
-
-      // when
-      fireEvent.wheel(container);
+      fireEvent.mouseLeave(wrapper);
 
       // expect
       expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
@@ -336,7 +313,7 @@ describe('<Tooltip>', function() {
         await openTooltip(wrapper);
 
         // when
-        fireEvent.mouseMove(container);
+        fireEvent.mouseLeave(wrapper);
 
         // then
         expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
@@ -355,7 +332,7 @@ describe('<Tooltip>', function() {
 
         // when
         wrapper.focus();
-        fireEvent.mouseMove(container);
+        fireEvent.mouseLeave(wrapper);
 
         // then
         expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
@@ -414,7 +391,7 @@ describe('<Tooltip>', function() {
         const link = domQuery('#link', container);
 
         link.focus();
-        fireEvent.mouseMove(container);
+        fireEvent.mouseLeave(wrapper);
 
         // then
         expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
