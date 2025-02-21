@@ -1,6 +1,5 @@
 import {
   useRef,
-  useEffect,
   useState
 } from 'preact/hooks';
 
@@ -27,7 +26,7 @@ export default function TooltipWrapper(props) {
     return props.children;
   }
 
-  return <Tooltip { ...props } value={ value } forId={ prefixId(forId) } />;
+  return <Tooltip { ...props } value={ value } forId={ `bio-properties-panel-${ forId }` } />;
 }
 
 function Tooltip(props) {
@@ -39,82 +38,59 @@ function Tooltip(props) {
     position
   } = props;
 
-  const [ visible, setShow ] = useState(false);
-  const [ focusedViaKeyboard, setFocusedViaKeyboard ] = useState(false);
+  const [ visible, setVisible ] = useState(false);
 
+  // Tooltip will be shown after SHOW_DELAY ms from hovering over the source element.
+  const SHOW_DELAY = 200;
   let timeout = null;
 
   const wrapperRef = useRef(null);
   const tooltipRef = useRef(null);
 
-  const showTooltip = async (event) => {
-    const show = () => setShow(true);
+  const show = (_, delay) => {
+    if (visible) return;
 
-    if (!visible && !timeout) {
-      if (event instanceof MouseEvent) {
-        timeout = setTimeout(show, 200);
-      } else {
-        show();
-        setFocusedViaKeyboard(true);
-      }
+    if (delay) {
+      timeout = setTimeout(() => {
+        setVisible(true);
+      }, SHOW_DELAY);
+    } else {
+      setVisible(true);
     }
   };
 
-  const hideTooltip = () => {
-    setShow(false);
-    setFocusedViaKeyboard(false);
+  const hide = () => {
+    clearTimeout(timeout);
+    setVisible(false);
   };
 
-  const hideTooltipViaEscape = (e) => {
-    e.code === 'Escape' && hideTooltip();
-  };
+  const handleMouseLeave = ({ relatedTarget }) => {
 
-  const isTooltipHovered = ({ x, y }) => {
-    const tooltip = tooltipRef.current;
-    const wrapper = wrapperRef.current;
-
-    return tooltip && (
-      inBounds(x, y, wrapper.getBoundingClientRect()) ||
-      inBounds(x, y, tooltip.getBoundingClientRect())
-    );
-  };
-
-  useEffect(() => {
-    const { current } = wrapperRef;
-
-    if (!current) {
+    // Don't hide the tooltip when moving mouse between the wrapper and the tooltip.
+    if (relatedTarget === wrapperRef.current || relatedTarget === tooltipRef.current || relatedTarget?.parentElement === tooltipRef.current) {
       return;
     }
 
-    const hideHoveredTooltip = (e) => {
-      const isFocused = document.activeElement === wrapperRef.current
-                        || document.activeElement.closest('.bio-properties-panel-tooltip');
+    hide();
+  };
 
-      if (visible && !isTooltipHovered({ x: e.x, y: e.y }) && !(isFocused && focusedViaKeyboard)) {
-        hideTooltip();
-      }
-    };
+  const handleFocusOut = (e) => {
+    const { target } = e;
 
-    const hideFocusedTooltip = (e) => {
-      const { relatedTarget } = e;
-      const isTooltipChild = (el) => !!el.closest('.bio-properties-panel-tooltip');
+    // Don't hide the tooltip if the wrapper or the tooltip itself is clicked.
+    const isHovered = target.matches(':hover') || tooltipRef.current?.matches(':hover');
 
+    if (target === wrapperRef.current && isHovered) {
+      e.stopPropagation();
+      return;
+    }
 
-      if (visible && !isHovered(wrapperRef.current) && relatedTarget && !isTooltipChild(relatedTarget)) {
-        hideTooltip();
-      }
-    };
+    hide();
+  };
 
-    document.addEventListener('wheel', hideHoveredTooltip);
-    document.addEventListener('focusout', hideFocusedTooltip);
-    document.addEventListener('mousemove', hideHoveredTooltip);
-
-    return () => {
-      document.removeEventListener('wheel', hideHoveredTooltip);
-      document.removeEventListener('mousemove', hideHoveredTooltip);
-      document.removeEventListener('focusout', hideFocusedTooltip);
-    };
-  }, [ wrapperRef.current, visible, focusedViaKeyboard ]);
+  const hideTooltipViaEscape = (e) => {
+    e.code === 'Escape' && hide();
+  };
 
   const renderTooltip = () => {
     return (
@@ -126,6 +102,7 @@ function Tooltip(props) {
         style={ position || getTooltipPosition(wrapperRef.current) }
         ref={ tooltipRef }
         onClick={ (e)=> e.stopPropagation() }
+        onMouseLeave={ handleMouseLeave }
       >
         <div class="bio-properties-panel-tooltip-content">
           {value}
@@ -137,12 +114,10 @@ function Tooltip(props) {
   return (
     <div class="bio-properties-panel-tooltip-wrapper" tabIndex="0"
       ref={ wrapperRef }
-      onMouseEnter={ showTooltip }
-      onMouseLeave={ ()=> {
-        clearTimeout(timeout);
-        timeout = null;
-      } }
-      onFocus={ showTooltip }
+      onMouseEnter={ (e) => show(e, true) }
+      onMouseLeave={ handleMouseLeave }
+      onFocus={ show }
+      onBlur={ handleFocusOut }
       onKeyDown={ hideTooltipViaEscape }
     >
       {props.children}
@@ -158,10 +133,6 @@ function Tooltip(props) {
 
 
 // helper
-function inBounds(x, y, bounds) {
-  const { top, right, bottom, left } = bounds;
-  return x >= left && x <= right && y >= top && y <= bottom;
-}
 
 function getTooltipPosition(refElement) {
   const refPosition = refElement.getBoundingClientRect();
@@ -170,12 +141,4 @@ function getTooltipPosition(refElement) {
   const top = `${refPosition.top - 10}px`;
 
   return `right: ${right}; top: ${top};`;
-}
-
-function isHovered(element) {
-  return element.matches(':hover');
-}
-
-function prefixId(id) {
-  return `bio-properties-panel-${ id }`;
 }
