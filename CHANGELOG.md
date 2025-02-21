@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.26.2
+
+* `FIX`: make tooltip persist when trying to copy from it ([#399](https://github.com/bpmn-io/properties-panel/pull/399))
+
 ## 3.26.1
 
 * `FIX`: remove input border from popups ([#398](https://github.com/bpmn-io/properties-panel/pull/398))
