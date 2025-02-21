@@ -39,6 +39,13 @@ function Textfield(props) {
     return debounce((target) => onInput(target.value.length ? target.value : undefined));
   }, [ onInput, debounce ]);
 
+  const handleOnBlur = e => {
+    if (onBlur) {
+      onBlur(e);
+    }
+    setLocalValue(e.target.value.trim());
+  };
+
   const handleInput = e => {
     handleInputCallback(e.target);
     setLocalValue(e.target.value);
@@ -70,7 +77,7 @@ function Textfield(props) {
         class="bio-properties-panel-input"
         onInput={ handleInput }
         onFocus={ onFocus }
-        onBlur={ onBlur }
+        onBlur={ handleOnBlur }
         placeholder={ placeholder }
         value={ localValue } />
     </div>
