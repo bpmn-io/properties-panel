@@ -136,6 +136,27 @@ describe('<TextArea>', function() {
   });
 
 
+  it('should have no trailing spaces', async function() {
+
+    // given
+    const result = createTextArea({ container });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    changeInput(input, 'foo    ');
+
+    input.focus();
+    input.blur();
+
+    // then
+    await waitFor(() => {
+      expect(input.value).to.equal('foo');
+    });
+
+  });
+
+
   describe('events', function() {
 
     it('should show entry', function() {

@@ -62,6 +62,13 @@ function TextArea(props) {
     setLocalValue(e.target.value);
   };
 
+  const handleOnBlur = e => {
+    if (onBlur) {
+      onBlur(e);
+    }
+    setLocalValue(e.target.value.trim());
+  };
+
   useLayoutEffect(() => {
     autoResize && resizeToContents(ref.current);
   }, []);
@@ -97,7 +104,7 @@ function TextArea(props) {
         }
         onInput={ handleInput }
         onFocus={ onFocus }
-        onBlur={ onBlur }
+        onBlur={ handleOnBlur }
         placeholder={ placeholder }
         rows={ rows }
         value={ localValue }
