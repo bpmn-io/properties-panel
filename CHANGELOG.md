@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.26.3
+
+* `FIX`: trim trailing whitespaces from all input fields except expressions ([#401](https://github.com/bpmn-io/properties-panel/pull/401), [#402](https://github.com/bpmn-io/properties-panel/pull/402))
+
 ## 3.26.2
 
 * `FIX`: make tooltip persist when trying to copy from it ([#399](https://github.com/bpmn-io/properties-panel/pull/399))
