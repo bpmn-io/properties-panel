@@ -40,6 +40,8 @@ import FeelField, {
   isEdited
 } from 'src/components/entries/FEEL';
 
+import debounceInput from '../../../src/features/debounce-input/debounceInput';
+
 insertCoreStyles();
 
 const noop = () => {};
@@ -1868,6 +1870,47 @@ describe('<FeelField>', function() {
 
       // then
       expect(copyEvent.clipboardData.getData('application/FEEL')).to.exist;
+    });
+
+
+    it('should have no trailing spaces', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelField({ container, setValue: setValueSpy });
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'foo  ');
+      input.blur();
+
+      // then
+      expect(setValueSpy).to.have.been.calledTwice;
+      expect(setValueSpy).to.have.been.calledWith('foo');
+    });
+
+    it('should have no trailing spaces - with debounce', async function() {
+
+      // given
+      const clock = sinon.useFakeTimers();
+      const setValueSpy = sinon.spy();
+      const debounce = debounceInput();
+
+      const result = createFeelField({ id :'feel-1',container, debounce, setValue: setValueSpy });
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'foo  ');
+      clock.tick(2000);
+      input.blur();
+
+      // then
+      expect(setValueSpy).to.have.been.calledTwice; // once for initial value, once for debounced value
+      expect(setValueSpy).to.have.been.calledWith('foo');
+      clock.restore();
     });
 
 
