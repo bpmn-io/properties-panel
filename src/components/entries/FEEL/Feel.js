@@ -28,7 +28,7 @@ import FeelIcon from './FeelIcon';
 
 import { FEEL_POPUP_WIDTH } from './FeelPopup';
 
-import { FeelPopupContext } from './context';
+import { FeelLanguageContext, FeelPopupContext } from './context';
 
 import { ToggleSwitch } from '../ToggleSwitch';
 
@@ -67,6 +67,8 @@ function FeelTextfieldComponent(props) {
   const feelOnlyValue = (isString(localValue) && localValue.startsWith('=')) ? localValue.substring(1) : localValue;
 
   const [ focus, _setFocus ] = useState(undefined);
+
+  const languageContext = useContext(FeelLanguageContext);
 
   const {
     open: openPopup,
@@ -257,6 +259,7 @@ function FeelTextfieldComponent(props) {
             placeholder={ placeholder }
             value={ feelOnlyValue }
             variables={ variables }
+            languageContext={ languageContext }
             ref={ editorRef }
             tooltipContainer={ tooltipContainer }
           /> :
