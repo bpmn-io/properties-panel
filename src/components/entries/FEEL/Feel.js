@@ -84,6 +84,9 @@ function FeelTextfieldComponent(props) {
     _setFocus(position + offset);
   };
 
+  /**
+   * @type { import('min-dash').DebouncedFunction }
+   */
   const handleInputCallback = useMemo(() => {
     return debounce((newValue) => {
       onInput(newValue);
