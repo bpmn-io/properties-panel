@@ -134,16 +134,19 @@ function FeelTextfieldComponent(props) {
   };
 
   const handleOnBlur = e => {
-    if (onBlur) {
-      onBlur(e);
-    }
-
     const value = e.target.value;
 
     // we trim the value, if it is needed
     // and update input accordingly
     if (value.trim() !== value) {
       setLocalValue(value.trim());
+    }
+
+    // at last, we trigger on blur, so other
+    // components can react. at this point, the
+    // model values are already submitted.
+    if (onBlur) {
+      onBlur(e);
     }
   };
 
