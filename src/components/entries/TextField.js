@@ -35,20 +35,40 @@ function Textfield(props) {
 
   const ref = useShowEntryEvent(id);
 
+  /**
+   * @type { import('min-dash').DebouncedFunction }
+   */
   const handleInputCallback = useMemo(() => {
-    return debounce((target) => onInput(target.value.length ? target.value : undefined));
+    return debounce((newValue) => {
+      onInput(newValue);
+    });
   }, [ onInput, debounce ]);
 
   const handleOnBlur = e => {
+    const value = e.target.value;
+
+    if (value.trim() !== value) {
+      setLocalValue(value.trim());
+      handleInput(value.trim());
+    }
+
+    // we ensure that any in flight updates
+    // are being commited
+    handleInputCallback.flush();
+
     if (onBlur) {
       onBlur(e);
     }
-    setLocalValue(e.target.value.trim());
   };
 
-  const handleInput = e => {
-    handleInputCallback(e.target);
+  const handleInput = newValue => {
+    const newModelValue = newValue === '' ? undefined : newValue;
+    handleInputCallback(newModelValue);
+  };
+
+  const handleLocalInput = e => {
     setLocalValue(e.target.value);
+    handleInput(e.target.value);
   };
 
   useEffect(() => {
@@ -75,7 +95,7 @@ function Textfield(props) {
         autoComplete="off"
         disabled={ disabled }
         class="bio-properties-panel-input"
-        onInput={ handleInput }
+        onInput={ handleLocalInput }
         onFocus={ onFocus }
         onBlur={ handleOnBlur }
         placeholder={ placeholder }
