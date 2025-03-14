@@ -142,6 +142,13 @@ function FeelTextfieldComponent(props) {
       setLocalValue(value.trim());
     }
 
+    // we ensure that any in flight updates
+    // are being commited
+    // we check if function is debounced
+    if (handleInputCallback.flush) {
+      handleInputCallback.flush();
+    }
+
     // at last, we trigger on blur, so other
     // components can react. at this point, the
     // model values are already submitted.
