@@ -96,12 +96,11 @@ function FeelTextfieldComponent(props) {
   const setLocalValue = newValue => {
     _setLocalValue(newValue);
 
-    if (typeof newValue === 'undefined' || newValue === '' || newValue === '=') {
-      handleInputCallback(undefined);
-    } else {
-      handleInputCallback(newValue);
-    }
+    // we don't commit empty FEEL expressions,
+    // but instead serialize them as <undefined>
+    const newModelValue = (newValue === '' || newValue === '=') ? undefined : newValue;
 
+    handleInputCallback(newModelValue);
   };
 
   const handleFeelToggle = useStaticCallback(() => {
