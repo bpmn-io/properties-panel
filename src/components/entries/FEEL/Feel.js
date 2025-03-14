@@ -137,7 +137,14 @@ function FeelTextfieldComponent(props) {
     if (onBlur) {
       onBlur(e);
     }
-    setLocalValue(e.target.value.trim());
+
+    const value = e.target.value;
+
+    // we trim the value, if it is needed
+    // and update input accordingly
+    if (value.trim() !== value) {
+      setLocalValue(value.trim());
+    }
   };
 
   const handleLint = useStaticCallback((lint = []) => {
