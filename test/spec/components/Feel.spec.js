@@ -1875,8 +1875,14 @@ describe('<FeelField>', function() {
     it('should have no trailing spaces', async function() {
 
       // given
-      const result = createFeelField({ container });
+      const flushSpy = sinon.spy();
 
+      const debounce = (fn) => {
+        fn.flush = flushSpy;
+        return fn;
+      };
+
+      const result = createFeelField({ container, debounce: debounce });
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
@@ -1888,6 +1894,7 @@ describe('<FeelField>', function() {
       // then
       await waitFor(() => {
         expect(input.value).to.equal('foo');
+        expect(flushSpy).to.have.been.called; // ensure that input changes are quick
       });
 
     });
