@@ -18,7 +18,8 @@ import EventBus from 'diagram-js/lib/core/EventBus';
 import {
   changeInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  debounceFn
 } from 'test/TestHelper';
 
 import {
@@ -489,7 +490,7 @@ function createTextField(options = {}, renderFn = render) {
     element,
     id,
     description,
-    debounce = fn => fn,
+    debounce = debounceFn,
     disabled,
     label,
     getValue = noop,

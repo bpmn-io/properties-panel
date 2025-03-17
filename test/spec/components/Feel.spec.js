@@ -18,7 +18,8 @@ import {
   changeInput,
   clickInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  debounceFn
 } from 'test/TestHelper';
 
 import {
@@ -2631,7 +2632,7 @@ function createFeelField(options = {}, renderFn = render) {
     element,
     id = 'feel',
     description,
-    debounce = fn => fn,
+    debounce = debounceFn,
     disabled,
     feel = 'optional',
     label,

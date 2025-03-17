@@ -12,7 +12,8 @@ import {
 import {
   changeInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  debounceFn
 } from 'test/TestHelper';
 
 import NumberField, { isEdited } from 'src/components/entries/NumberField';
@@ -473,7 +474,7 @@ describe('<NumberField>', function() {
 function createNumberField(options = {}, renderFn = render) {
   const {
     element,
-    debounce = fn => fn,
+    debounce = debounceFn,
     description,
     disabled,
     getValue = noop,

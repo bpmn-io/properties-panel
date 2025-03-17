@@ -11,7 +11,8 @@ import {
 import {
   changeInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  debounceFn
 } from 'test/TestHelper';
 
 import Simple, { isEdited } from 'src/components/entries/Simple';
@@ -210,7 +211,7 @@ function createSimple(options = {}, renderFn = render) {
   const {
     element,
     id,
-    debounce = fn => fn,
+    debounce = debounceFn,
     disabled,
     getValue = noop,
     setValue = noop,

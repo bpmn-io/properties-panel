@@ -19,7 +19,8 @@ import EventBus from 'diagram-js/lib/core/EventBus';
 import {
   changeInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  debounceFn
 } from 'test/TestHelper';
 
 import {
@@ -603,7 +604,7 @@ function createTextArea(options = {}, renderFn = render) {
     element,
     id,
     description,
-    debounce = fn => fn,
+    debounce = debounceFn,
     label,
     getValue = noop,
     setValue = noop,
