@@ -5,6 +5,8 @@ import {
   render
 } from '@testing-library/preact/pure';
 
+import userEvent from '@testing-library/user-event';
+
 import TestContainer from 'mocha-test-container-support';
 
 import {
@@ -1875,28 +1877,24 @@ describe('<FeelField>', function() {
     it('should have no trailing spaces', async function() {
 
       // given
-      const flushSpy = sinon.spy();
+      const setValueSpy = sinon.spy();
+      const setValueSpy2 = sinon.spy();
 
-      const debounce = (fn) => {
-        fn.flush = flushSpy;
-        return fn;
-      };
+      const field1 = createFeelField({ id :'feel-1',container, setValue: setValueSpy });
+      const input1 = domQuery('.bio-properties-panel-input', field1.container);
 
-      const result = createFeelField({ container, debounce: debounce });
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const field2 = createFeelField({ id :'feel-2', container, setValue: setValueSpy2 });
+      const input2 = domQuery('.bio-properties-panel-input', field2.container);
 
       // when
-      changeInput(input, 'foo    ');
-
-      input.focus();
-      input.blur();
+      input1.focus();
+      changeInput(input1, 'foo  ');
+      input1.blur();
+      input2.focus();
 
       // then
-      await waitFor(() => {
-        expect(input.value).to.equal('foo');
-        expect(flushSpy).to.have.been.called; // ensure that input changes are quick
-      });
-
+      expect(setValueSpy).to.have.been.calledWith('foo');
+      expect(setValueSpy2).to.not.have.been.called;
     });
 
 
