@@ -16,7 +16,8 @@ import EventBus from 'diagram-js/lib/core/EventBus';
 
 import {
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  debounceFn
 } from 'test/TestHelper';
 
 import {
@@ -598,7 +599,7 @@ function createTemplatingEntry(options = {}, renderFn = render) {
     element,
     id,
     description,
-    debounce = fn => fn,
+    debounce = debounceFn,
     disabled,
     label,
     getValue = noop,

@@ -19,7 +19,8 @@ import EventBus from 'diagram-js/lib/core/EventBus';
 import {
   changeInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  debounceFn
 } from 'test/TestHelper';
 
 import {
@@ -139,8 +140,14 @@ describe('<TextArea>', function() {
   it('should have no trailing spaces', async function() {
 
     // given
-    const result = createTextArea({ container });
+    const flushSpy = sinon.spy();
 
+    const debounce = (fn) => {
+      fn.flush = flushSpy;
+      return fn;
+    };
+
+    const result = createTextArea({ container, debounce: debounce });
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
@@ -152,6 +159,7 @@ describe('<TextArea>', function() {
     // then
     await waitFor(() => {
       expect(input.value).to.equal('foo');
+      expect(flushSpy).to.have.been.called; // ensure that input changes are quick
     });
 
   });
@@ -603,7 +611,7 @@ function createTextArea(options = {}, renderFn = render) {
     element,
     id,
     description,
-    debounce = fn => fn,
+    debounce = debounceFn,
     label,
     getValue = noop,
     setValue = noop,

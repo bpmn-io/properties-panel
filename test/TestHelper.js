@@ -75,3 +75,9 @@ export async function expectNoViolations(node, options = {}) {
 
   expect(results.violations).to.be.empty;
 }
+
+export function debounceFn(fn) {
+  fn.flush = () => {};
+  fn.cancel = () => {};
+  return fn;
+};

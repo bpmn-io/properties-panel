@@ -5,6 +5,8 @@ import {
   render
 } from '@testing-library/preact/pure';
 
+import userEvent from '@testing-library/user-event';
+
 import TestContainer from 'mocha-test-container-support';
 
 import {
@@ -18,7 +20,8 @@ import {
   changeInput,
   clickInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  debounceFn
 } from 'test/TestHelper';
 
 import {
@@ -39,6 +42,8 @@ import FeelField, {
   FeelToggleSwitchEntry,
   isEdited
 } from 'src/components/entries/FEEL';
+
+import debounceInput from '../../../src/features/debounce-input/debounceInput';
 
 insertCoreStyles();
 
@@ -1874,21 +1879,50 @@ describe('<FeelField>', function() {
     it('should have no trailing spaces', async function() {
 
       // given
-      const result = createFeelField({ container });
+      const setValueSpy = sinon.spy();
+      const setValueSpy2 = sinon.spy();
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const field1 = createFeelField({ id :'feel-1',container, setValue: setValueSpy });
+      const input1 = domQuery('.bio-properties-panel-input', field1.container);
+
+      const field2 = createFeelField({ id :'feel-2', container, setValue: setValueSpy2 });
+      const input2 = domQuery('.bio-properties-panel-input', field2.container);
 
       // when
-      changeInput(input, 'foo    ');
-
-      input.focus();
-      input.blur();
+      input1.focus();
+      changeInput(input1, 'foo  ');
+      input1.blur();
+      input2.focus();
 
       // then
-      await waitFor(() => {
-        expect(input.value).to.equal('foo');
-      });
+      expect(setValueSpy).to.have.been.calledWith('foo');
+      expect(setValueSpy2).to.not.have.been.called;
+    });
 
+    it('should have no trailing spaces - with debounce', async function() {
+
+      // given
+      const clock = sinon.useFakeTimers();
+      const setValueSpy = sinon.spy();
+      const setValueSpy2 = sinon.spy();
+      const debounce = debounceInput();
+
+      const result = createFeelField({ id :'feel-1',container, debounce, setValue: setValueSpy });
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      const field2 = createFeelField({ id :'feel-2', container, debounce, setValue: setValueSpy2 });
+      const input2 = domQuery('.bio-properties-panel-input', field2.container);
+
+      // when
+      changeInput(input, 'foo  ');
+      input.blur();
+      input2.focus();
+      clock.tick(5000);
+
+      // then
+      expect(setValueSpy).to.have.been.calledTwice; // once for initial value, once for debounced value
+      expect(setValueSpy).to.have.been.calledWith('foo');
+      expect(setValueSpy2).to.not.have.been.called;
     });
 
 
@@ -2631,7 +2665,7 @@ function createFeelField(options = {}, renderFn = render) {
     element,
     id = 'feel',
     description,
-    debounce = fn => fn,
+    debounce = debounceFn,
     disabled,
     feel = 'optional',
     label,

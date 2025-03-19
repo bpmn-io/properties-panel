@@ -84,8 +84,12 @@ function FeelTextfieldComponent(props) {
     _setFocus(position + offset);
   };
 
+  /**
+   * @type { import('min-dash').DebouncedFunction }
+   */
   const handleInputCallback = useMemo(() => {
     return debounce((newValue) => {
+      console.log('called input callback', newValue);
       onInput(newValue);
     });
   }, [ onInput, debounce ]);
@@ -93,12 +97,12 @@ function FeelTextfieldComponent(props) {
   const setLocalValue = newValue => {
     _setLocalValue(newValue);
 
-    if (typeof newValue === 'undefined' || newValue === '' || newValue === '=') {
-      handleInputCallback(undefined);
-    } else {
-      handleInputCallback(newValue);
-    }
+    // we don't commit empty FEEL expressions,
+    // but instead serialize them as <undefined>
+    const newModelValue = (newValue === '' || newValue === '=') ? undefined : newValue;
 
+    console.log('calling input callback now');
+    handleInputCallback(newModelValue);
   };
 
   const handleFeelToggle = useStaticCallback(() => {
@@ -114,6 +118,7 @@ function FeelTextfieldComponent(props) {
   });
 
   const handleLocalInput = (newValue) => {
+    console.log('handling local input');
     if (feelActive) {
       newValue = '=' + newValue;
     }
@@ -132,10 +137,25 @@ function FeelTextfieldComponent(props) {
   };
 
   const handleOnBlur = e => {
+    const value = e.target.value;
+
+    console.log('handleOnBlur');
+    // we trim the value, if it is needed
+    // and update input accordingly
+    if (value.trim() !== value) {
+      setLocalValue(value.trim());
+    }
+
+    // we ensure that any in flight updates
+    // are being commited
+    handleInputCallback.flush();
+
+    // at last, we trigger on blur, so other
+    // components can react. at this point, the
+    // model values are already submitted.
     if (onBlur) {
       onBlur(e);
     }
-    setLocalValue(e.target.value.trim());
   };
 
   const handleLint = useStaticCallback((lint = []) => {
@@ -572,6 +592,7 @@ export default function FeelEntry(props) {
 
     // don't create multiple commandStack entries for the same value
     if (newValue !== value) {
+      console.log('setting value', newValue);
       setValue(newValue, newValidationError);
     }
 
