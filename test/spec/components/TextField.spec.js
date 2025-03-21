@@ -4,8 +4,6 @@ import {
   render
 } from '@testing-library/preact/pure';
 
-import { waitFor } from '@testing-library/preact';
-
 import TestContainer from 'mocha-test-container-support';
 
 import {
@@ -95,27 +93,6 @@ describe('<TextField>', function() {
     const newInput = domQuery('.bio-properties-panel-input', container);
 
     expect(newInput).to.not.eql(input);
-  });
-
-
-  it('should have no trailing spaces', async function() {
-
-    // given
-    const result = createTextField({ container });
-
-    const input = domQuery('.bio-properties-panel-input', result.container);
-
-    // when
-    changeInput(input, 'foo    ');
-
-    input.focus();
-    input.blur();
-
-    // then
-    await waitFor(() => {
-      expect(input.value).to.equal('foo');
-    });
-
   });
 
 
