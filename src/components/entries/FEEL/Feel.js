@@ -45,7 +45,6 @@ function FeelTextfieldComponent(props) {
     label,
     hostLanguage,
     onInput,
-    onBlur,
     onError,
     placeholder,
     feel,
@@ -129,13 +128,6 @@ function FeelTextfieldComponent(props) {
       // focus is behind `=` sign that will be removed
       setFocus(-1);
     }
-  };
-
-  const handleOnBlur = e => {
-    if (onBlur) {
-      onBlur(e);
-    }
-    setLocalValue(e.target.value.trim());
   };
 
   const handleLint = useStaticCallback((lint = []) => {
@@ -264,7 +256,6 @@ function FeelTextfieldComponent(props) {
             { ...props }
             popupOpen={ popuOpen }
             onInput={ handleLocalInput }
-            onBlur={ handleOnBlur }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }

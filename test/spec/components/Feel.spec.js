@@ -1871,27 +1871,6 @@ describe('<FeelField>', function() {
     });
 
 
-    it('should have no trailing spaces', async function() {
-
-      // given
-      const result = createFeelField({ container });
-
-      const input = domQuery('.bio-properties-panel-input', result.container);
-
-      // when
-      changeInput(input, 'foo    ');
-
-      input.focus();
-      input.blur();
-
-      // then
-      await waitFor(() => {
-        expect(input.value).to.equal('foo');
-      });
-
-    });
-
-
     describe('#isEdited', function() {
 
       it('should NOT be edited', function() {
