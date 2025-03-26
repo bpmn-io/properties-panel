@@ -1886,44 +1886,59 @@ describe('<FeelField>', function() {
     });
 
 
-    it('should have no trailing spaces', async function() {
+    it('should trim whitespace on blur', async function() {
 
       // given
       const setValueSpy = sinon.spy();
 
-      const result = createFeelField({ container, setValue: setValueSpy });
+      const result = createFeelField({
+        container,
+        setValue: setValueSpy,
+        debounce: debounceInput()
+      });
+
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
-      changeInput(input, 'foo  ');
+      changeInput(input, '  foo  ');
       input.blur();
 
       // then
-      expect(setValueSpy).to.have.been.calledTwice;
+      expect(setValueSpy).to.have.been.calledOnce;
       expect(setValueSpy).to.have.been.calledWith('foo');
     });
 
-    it('should have no trailing spaces - with debounce', async function() {
+
+    it('should trigger update debounced', async function() {
 
       // given
       const clock = useClock();
-      const setValueSpy = sinon.spy();
-      const debounce = debounceInput();
 
-      const result = createFeelField({ id :'feel-1',container, debounce, setValue: setValueSpy });
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelField({
+        id :'feel-1',
+        container,
+        debounce: debounceInput(),
+        setValue: setValueSpy
+      });
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
-      changeInput(input, 'foo  ');
-      clock.tick(2000);
-      input.blur();
+      changeInput(input, 'foo');
+      changeInput(input, 'fooba');
+
+      clock.tick(500);
+
+      changeInput(input, 'foobab');
+
+      clock.tick(500);
 
       // then
-      expect(setValueSpy).to.have.been.calledTwice; // once for initial value, once for debounced value
-      expect(setValueSpy).to.have.been.calledWith('foo');
-      clock.restore();
+      expect(setValueSpy).to.have.been.calledTwice;
+      expect(setValueSpy).to.have.been.calledWith('foobab');
     });
 
 
