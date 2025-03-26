@@ -40,11 +40,23 @@ const noop = () => {};
 
 describe('<TextArea>', function() {
 
+  let clock;
+
   let container;
 
   beforeEach(function() {
     container = TestContainer.get(this);
   });
+
+  afterEach(function() {
+    clock && clock.restore();
+
+    clock = undefined;
+  });
+
+  function useClock() {
+    return (clock = sinon.useFakeTimers());
+  }
 
 
   it('should render', function() {
@@ -138,44 +150,84 @@ describe('<TextArea>', function() {
   });
 
 
-  it('should have no trailing spaces', async function() {
+  it('should trim whitespace on blur', async function() {
 
     // given
     const setValueSpy = sinon.spy();
 
-    const result = createTextArea({ container, setValue: setValueSpy });
+    const result = createTextArea({
+      container,
+      setValue: setValueSpy,
+      debounce: debounceInput()
+    });
+
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
     input.focus();
-    changeInput(input, 'foo  ');
+    changeInput(input, '  foo  ');
     input.blur();
 
     // then
-    expect(setValueSpy).to.have.been.calledTwice;
+    expect(setValueSpy).to.have.been.calledOnce;
     expect(setValueSpy).to.have.been.calledWith('foo');
   });
 
-  it('should have no trailing spaces - with debounce', async function() {
+
+  it('should trigger update debounced', async function() {
 
     // given
-    const clock = sinon.useFakeTimers();
-    const setValueSpy = sinon.spy();
-    const debounce = debounceInput();
+    const clock = useClock();
 
-    const result = createTextArea({ container, debounce, setValue: setValueSpy });
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({
+      id :'feel-1',
+      container,
+      debounce: debounceInput(),
+      setValue: setValueSpy
+    });
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
     input.focus();
-    changeInput(input, 'foo  ');
-    clock.tick(2000);
+    changeInput(input, 'foo');
+    changeInput(input, 'fooba');
+
+    clock.tick(500);
+
+    changeInput(input, 'foobab');
+
+    clock.tick(500);
+
+    // then
+    expect(setValueSpy).to.have.been.calledTwice;
+    expect(setValueSpy).to.have.been.calledWith('foobab');
+  });
+
+
+  it('should not trigger noop update on blur', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({
+      container,
+      setValue: setValueSpy,
+      getValue: () => 'foo',
+      debounce: debounceInput(2000)
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'foobar');
+    changeInput(input, 'foo');
     input.blur();
 
     // then
-    expect(setValueSpy).to.have.been.calledTwice; // once for initial value, once for debounced value
-    expect(setValueSpy).to.have.been.calledWith('foo');
-    clock.restore();
+    expect(setValueSpy).not.to.have.been.called;
   });
 
 

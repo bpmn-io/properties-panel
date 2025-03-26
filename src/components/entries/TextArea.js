@@ -66,6 +66,11 @@ function TextArea(props) {
 
   const handleLocalInput = e => {
     autoResize && resizeToContents(e.target);
+
+    if (e.target.value === localValue) {
+      return;
+    }
+
     setLocalValue(e.target.value);
     handleInput(e.target.value);
   };
@@ -191,7 +196,9 @@ export default function TextAreaEntry(props) {
       newValidationError = validate(newValue) || null;
     }
 
-    setValue(newValue, newValidationError);
+    if (newValue !== value) {
+      setValue(newValue, newValidationError);
+    }
 
     setLocalError(newValidationError);
   };
