@@ -58,7 +58,7 @@ function FeelTextfieldComponent(props) {
     tooltip
   } = props;
 
-  const [ localValue, _setLocalValue ] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
@@ -93,8 +93,7 @@ function FeelTextfieldComponent(props) {
     });
   }, [ onInput, debounce ]);
 
-  const setLocalValue = newValue => {
-    _setLocalValue(newValue);
+  const handleInput = newValue => {
 
     // we don't commit empty FEEL expressions,
     // but instead serialize them as <undefined>
@@ -110,8 +109,10 @@ function FeelTextfieldComponent(props) {
 
     if (!feelActive) {
       setLocalValue('=' + localValue);
+      handleInput('=' + localValue);
     } else {
       setLocalValue(feelOnlyValue);
+      handleInput(feelOnlyValue);
     }
   });
 
@@ -125,6 +126,7 @@ function FeelTextfieldComponent(props) {
     }
 
     setLocalValue(newValue);
+    handleInput(newValue);
 
     if (!feelActive && isString(newValue) && newValue.startsWith('=')) {
 
@@ -140,6 +142,7 @@ function FeelTextfieldComponent(props) {
     // and update input accordingly
     if (value.trim() !== value) {
       setLocalValue(value.trim());
+      handleInput(value.trim());
     }
 
     // we ensure that any in flight updates
@@ -199,11 +202,11 @@ function FeelTextfieldComponent(props) {
 
     // External value change removed content => keep FEEL configuration
     if (!value) {
-      setLocalValue(feelActive ? '=' : '');
+      handleInput(feelActive ? '=' : '');
       return;
     }
 
-    setLocalValue(value);
+    handleInput(value);
   }, [ value ]);
 
 
