@@ -48,11 +48,24 @@ const noop = () => {};
 
 describe('<FeelField>', function() {
 
+  let clock;
+
   let container;
 
   beforeEach(function() {
     container = TestContainer.get(this);
   });
+
+  afterEach(function() {
+    clock && clock.restore();
+
+    clock = undefined;
+  });
+
+  function useClock() {
+    return (clock = sinon.useFakeTimers());
+  }
+
 
   describe('FEEL disabled (TextInput)', function() {
 
@@ -1894,7 +1907,7 @@ describe('<FeelField>', function() {
     it('should have no trailing spaces - with debounce', async function() {
 
       // given
-      const clock = sinon.useFakeTimers();
+      const clock = useClock();
       const setValueSpy = sinon.spy();
       const debounce = debounceInput();
 
@@ -2012,13 +2025,12 @@ describe('<FeelField>', function() {
       it('should show syntax error', async function() {
 
         // given
-        const clock = sinon.useFakeTimers();
+        const clock = useClock();
         const result = createFeelField({ container, getValue: () => '= ...syntax error...', feel: 'required' });
 
         // when
         // trigger debounced validation
         await act(() => { clock.tick(1000); });
-        await act(() => { clock.restore(); });
 
         // then
         await waitFor(() => {
@@ -2032,13 +2044,12 @@ describe('<FeelField>', function() {
       it('should not indicate field error on non-syntax errors', async function() {
 
         // given
-        const clock = sinon.useFakeTimers();
+        const clock = useClock();
         const result = createFeelField({ container, getValue: () => '= friend[0]', feel: 'required' });
 
         // when
         // trigger debounced validation
         await act(() => { clock.tick(1000); });
-        await act(() => { clock.restore(); });
 
         // then
         await waitFor(() => {
@@ -2052,7 +2063,7 @@ describe('<FeelField>', function() {
       it('should show global error over local error', async function() {
 
         // given
-        const clock = sinon.useFakeTimers();
+        const clock = useClock();
         const errors = {
           foo: 'bar'
         };
@@ -2073,8 +2084,6 @@ describe('<FeelField>', function() {
         // when
         // trigger debounced validation
         await act(() => { clock.tick(1000); });
-        await act(() => { clock.restore(); });
-
 
         // then
         return waitFor(() => {
