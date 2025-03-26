@@ -50,16 +50,43 @@ function TextArea(props) {
 
   const visible = useElementVisible(ref.current);
 
+  /**
+   * @type { import('min-dash').DebouncedFunction }
+   */
   const handleInputCallback = useMemo(() => {
-    return debounce((target) => onInput(target.value.length ? target.value : undefined));
+    return debounce((newValue) => {
+      onInput(newValue);
+    });
   }, [ onInput, debounce ]);
 
-  const handleInput = e => {
-    handleInputCallback(e.target);
+  const handleInput = newValue => {
+    const newModelValue = newValue === '' ? undefined : newValue;
+    handleInputCallback(newModelValue);
+  };
 
+  const handleLocalInput = e => {
     autoResize && resizeToContents(e.target);
-
     setLocalValue(e.target.value);
+    handleInput(e.target.value);
+  };
+
+  const handleOnBlur = e => {
+    const value = e.target.value;
+
+    if (value.trim() !== value) {
+      setLocalValue(value.trim());
+      handleInput(value.trim());
+    }
+
+    // we ensure that any in flight updates
+    // are being commited
+    if (handleInputCallback.flush) {
+      handleInputCallback.flush();
+    }
+
+    if (onBlur) {
+      onBlur(e);
+    }
   };
 
   useLayoutEffect(() => {
@@ -95,9 +122,9 @@ function TextArea(props) {
           monospace ? 'bio-properties-panel-input-monospace' : '',
           autoResize ? 'auto-resize' : '')
         }
-        onInput={ handleInput }
+        onInput={ handleLocalInput }
         onFocus={ onFocus }
-        onBlur={ onBlur }
+        onBlur={ handleOnBlur }
         placeholder={ placeholder }
         rows={ rows }
         value={ localValue }

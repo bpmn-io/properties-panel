@@ -29,6 +29,8 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
+import debounceInput from '../../../src/features/debounce-input/debounceInput';
+
 import TextArea, { isEdited } from 'src/components/entries/TextArea';
 
 insertCoreStyles();
@@ -133,6 +135,47 @@ describe('<TextArea>', function() {
 
     // then
     expect(input.dataset.gramm).to.eql('false');
+  });
+
+
+  it('should have no trailing spaces', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({ container, setValue: setValueSpy });
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'foo  ');
+    input.blur();
+
+    // then
+    expect(setValueSpy).to.have.been.calledTwice;
+    expect(setValueSpy).to.have.been.calledWith('foo');
+  });
+
+  it('should have no trailing spaces - with debounce', async function() {
+
+    // given
+    const clock = sinon.useFakeTimers();
+    const setValueSpy = sinon.spy();
+    const debounce = debounceInput();
+
+    const result = createTextArea({ container, debounce, setValue: setValueSpy });
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'foo  ');
+    clock.tick(2000);
+    input.blur();
+
+    // then
+    expect(setValueSpy).to.have.been.calledTwice; // once for initial value, once for debounced value
+    expect(setValueSpy).to.have.been.calledWith('foo');
+    clock.restore();
   });
 
 
