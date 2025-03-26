@@ -1942,6 +1942,31 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should not trigger noop update on blur', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelField({
+        container,
+        setValue: setValueSpy,
+        getValue: () => 'foo',
+        debounce: debounceInput()
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'foobar');
+      changeInput(input, 'foo');
+      input.blur();
+
+      // then
+      expect(setValueSpy).not.to.have.been.called;
+    });
+
+
     describe('#isEdited', function() {
 
       it('should NOT be edited', function() {
