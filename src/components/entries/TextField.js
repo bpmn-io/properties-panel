@@ -69,6 +69,11 @@ function Textfield(props) {
   };
 
   const handleLocalInput = e => {
+
+    if (e.target.value === localValue) {
+      return;
+    }
+
     setLocalValue(e.target.value);
     handleInput(e.target.value);
   };
@@ -158,7 +163,9 @@ export default function TextfieldEntry(props) {
       newValidationError = validate(newValue) || null;
     }
 
-    setValue(newValue, newValidationError);
+    if (newValue !== value) {
+      setValue(newValue, newValidationError);
+    }
 
     setLocalError(newValidationError);
   };
