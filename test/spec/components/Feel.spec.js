@@ -1172,6 +1172,86 @@ describe('<FeelField>', function() {
       expect(updateSpy).to.have.been.calledWith('foo');
     });
 
+    it('should trim whitespace on blur', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelTextArea({
+        container,
+        setValue: setValueSpy,
+        debounce: debounceInput()
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, '  foo  ');
+      input.blur();
+
+      // then
+      expect(setValueSpy).to.have.been.calledOnce;
+      expect(setValueSpy).to.have.been.calledWith('foo');
+    });
+
+
+    it('should trigger update debounced', async function() {
+
+      // given
+      const clock = useClock();
+
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelTextArea({
+        id :'feel-1',
+        container,
+        debounce: debounceInput(),
+        setValue: setValueSpy
+      });
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'foo');
+      changeInput(input, 'fooba');
+
+      clock.tick(500);
+
+      changeInput(input, 'foobab');
+
+      clock.tick(500);
+
+      // then
+      expect(setValueSpy).to.have.been.calledTwice;
+      expect(setValueSpy).to.have.been.calledWith('foobab');
+    });
+
+
+    it('should not trigger noop update on blur', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelTextArea({
+        container,
+        setValue: setValueSpy,
+        getValue: () => 'foo',
+        debounce: debounceInput()
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'foobar');
+      changeInput(input, 'foo');
+      input.blur();
+
+      // then
+      expect(setValueSpy).not.to.have.been.called;
+    });
+
 
     describe('#isEdited', function() {
 
