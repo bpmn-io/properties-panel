@@ -147,10 +147,8 @@ function FeelTextfieldComponent(props) {
 
     // we ensure that any in flight updates
     // are being commited
-    // we check if function is debounced
-    if (handleInputCallback.flush) {
-      handleInputCallback.flush();
-    }
+    // we check if function is debounced\
+    handleInputCallback.flush();
 
     // at last, we trigger on blur, so other
     // components can react. at this point, the
