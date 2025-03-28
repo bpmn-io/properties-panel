@@ -52,8 +52,12 @@ describe('<FeelField>', function() {
 
   let container;
 
+  let debounce;
+
   beforeEach(function() {
     container = TestContainer.get(this);
+    clock = sinon.useFakeTimers();
+    debounce = debounceInput();
   });
 
   afterEach(function() {
@@ -61,10 +65,6 @@ describe('<FeelField>', function() {
 
     clock = undefined;
   });
-
-  function useClock() {
-    return (clock = sinon.useFakeTimers());
-  }
 
 
   describe('FEEL disabled (TextInput)', function() {
@@ -95,12 +95,13 @@ describe('<FeelField>', function() {
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelField({ container, setValue: updateSpy });
+      const result = createFeelField({ container, debounce, setValue: updateSpy });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 'foo');
+      clock.tick(500);
 
       // then
       expect(updateSpy).to.have.been.calledWith('foo');
@@ -114,7 +115,7 @@ describe('<FeelField>', function() {
       const result = createFeelField({
         container,
         setValue: setValueSpy,
-        debounce: debounceInput()
+        debounce
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -133,14 +134,12 @@ describe('<FeelField>', function() {
     it('should trigger update debounced', async function() {
 
       // given
-      const clock = useClock();
-
       const setValueSpy = sinon.spy();
 
       const result = createFeelField({
         id :'feel-1',
         container,
-        debounce: debounceInput(),
+        debounce,
         setValue: setValueSpy
       });
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -171,7 +170,7 @@ describe('<FeelField>', function() {
         container,
         setValue: setValueSpy,
         getValue: () => 'foo',
-        debounce: debounceInput()
+        debounce
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -222,7 +221,7 @@ describe('<FeelField>', function() {
       it('should be edited after update', function() {
 
         // given
-        const result = createFeelField({ container });
+        const result = createFeelField({ container, debounce });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -231,6 +230,7 @@ describe('<FeelField>', function() {
 
         // when
         changeInput(input, 'foo');
+        clock.tick(500);
 
         // then
         expect(isEdited(input)).to.be.true;
@@ -301,7 +301,7 @@ describe('<FeelField>', function() {
         // given
         const validate = () => null;
 
-        const result = createFeelField({ container, validate });
+        const result = createFeelField({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
 
@@ -309,6 +309,7 @@ describe('<FeelField>', function() {
 
         // when
         changeInput(input, 'foo');
+        clock.tick(500);
 
         // then
         expect(isValid(entry)).to.be.true;
@@ -320,13 +321,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate });
+        const result = createFeelField({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
+        clock.tick(500);
 
         // then
         expect(isValid(entry)).to.be.false;
@@ -338,13 +340,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate });
+        const result = createFeelField({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
+        clock.tick(500);
 
         // then
         expect(input.value).to.eql('bar');
@@ -356,13 +359,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate });
+        const result = createFeelField({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
+        clock.tick(500);
 
         const error = domQuery('.bio-properties-panel-error', entry);
 
@@ -378,13 +382,14 @@ describe('<FeelField>', function() {
         const setValueSpy = sinon.spy();
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate, setValue: setValueSpy });
+        const result = createFeelField({ container, validate, setValue: setValueSpy, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
+        clock.tick(500);
 
         // then
         expect(setValueSpy).to.have.been.calledWith('bar', 'error');
@@ -567,6 +572,7 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => 'foo',
+          debounce,
           setValue: updateSpy
         });
 
@@ -576,6 +582,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           icon.click();
+          clock.tick(500);
         });
 
         // then
@@ -592,6 +599,7 @@ describe('<FeelField>', function() {
         const result = createFeelField({
           container,
           getValue: () => 'foo',
+          debounce,
           setValue: updateSpy
         });
 
@@ -599,6 +607,7 @@ describe('<FeelField>', function() {
 
         // when
         changeInput(input, '=foo');
+        clock.tick(500);
 
         // then
         expect(updateSpy).to.have.been.calledWith('=foo');
@@ -616,6 +625,7 @@ describe('<FeelField>', function() {
           container,
           feel: 'optional',
           getValue: () => 'foo',
+          debounce,
           setValue: updateSpy
         });
 
@@ -631,6 +641,7 @@ describe('<FeelField>', function() {
 
         // when
         input.dispatchEvent(paste);
+        clock.tick(500);
 
         // then
         return waitFor(() => {
@@ -660,12 +671,13 @@ describe('<FeelField>', function() {
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelNumber({ container, setValue: updateSpy });
+      const result = createFeelNumber({ container, setValue: updateSpy, debounce });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 2);
+      clock.tick(600);
 
       // then
       expect(updateSpy).to.have.been.calledWith(2);
@@ -677,12 +689,13 @@ describe('<FeelField>', function() {
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
+      const result = createFeelNumber({ container, setValue: updateSpy, step: 'any', debounce });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 20.5);
+      clock.tick(600);
 
       // then
       expect(updateSpy).to.have.been.calledWith(20.5);
@@ -694,12 +707,13 @@ describe('<FeelField>', function() {
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
+      const result = createFeelNumber({ container, setValue: updateSpy, step: 'any', debounce });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 0);
+      clock.tick(600);
 
       // then
       expect(updateSpy).to.have.been.calledWith(0);
@@ -741,7 +755,7 @@ describe('<FeelField>', function() {
       it('should be edited after update', function() {
 
         // given
-        const result = createFeelNumber({ container });
+        const result = createFeelNumber({ container, debounce });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -750,6 +764,7 @@ describe('<FeelField>', function() {
 
         // when
         changeInput(input, 2);
+        clock.tick(500);
 
         // then
         expect(isEdited(input)).to.be.true;
@@ -820,7 +835,7 @@ describe('<FeelField>', function() {
         // given
         const validate = () => null;
 
-        const result = createFeelNumber({ container, validate });
+        const result = createFeelNumber({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
 
@@ -828,6 +843,7 @@ describe('<FeelField>', function() {
 
         // when
         changeInput(input, 2);
+        clock.tick(500);
 
         // then
         expect(isValid(entry)).to.be.true;
@@ -839,13 +855,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelNumber({ container, validate });
+        const result = createFeelNumber({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 3);
+        clock.tick(500);
 
         // then
         expect(isValid(entry)).to.be.false;
@@ -857,13 +874,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelNumber({ container, validate });
+        const result = createFeelNumber({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 3);
+        clock.tick(500);
 
         // then
         expect(input.value).to.eql('3');
@@ -875,13 +893,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelNumber({ container, validate });
+        const result = createFeelNumber({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 3);
+        clock.tick(500);
 
         const error = domQuery('.bio-properties-panel-error', entry);
 
@@ -897,13 +916,14 @@ describe('<FeelField>', function() {
         const setValueSpy = sinon.spy();
         const validate = () => 'error';
 
-        const result = createFeelNumber({ container, validate, setValue: setValueSpy });
+        const result = createFeelNumber({ container, validate, setValue: setValueSpy, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 3);
+        clock.tick(600);
 
         // then
         expect(setValueSpy).to.have.been.calledWith(3, 'error');
@@ -1065,7 +1085,8 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => 2,
-          setValue: updateSpy
+          setValue: updateSpy,
+          debounce
         });
 
         const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
@@ -1074,6 +1095,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           icon.click();
+          clock.tick(500);
         });
 
         // then
@@ -1093,6 +1115,7 @@ describe('<FeelField>', function() {
           container,
           feel: 'optional',
           getValue: () => 2,
+          debounce,
           setValue: updateSpy
         });
 
@@ -1108,6 +1131,7 @@ describe('<FeelField>', function() {
 
         // when
         input.dispatchEvent(paste);
+        clock.tick(500);
 
         // then
         return waitFor(() => {
@@ -1161,12 +1185,13 @@ describe('<FeelField>', function() {
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelTextArea({ container, setValue: updateSpy });
+      const result = createFeelTextArea({ container, setValue: updateSpy, debounce });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 'foo');
+      clock.tick(500);
 
       // then
       expect(updateSpy).to.have.been.calledWith('foo');
@@ -1180,7 +1205,7 @@ describe('<FeelField>', function() {
       const result = createFeelTextArea({
         container,
         setValue: setValueSpy,
-        debounce: debounceInput()
+        debounce
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -1199,14 +1224,12 @@ describe('<FeelField>', function() {
     it('should trigger update debounced', async function() {
 
       // given
-      const clock = useClock();
-
       const setValueSpy = sinon.spy();
 
       const result = createFeelTextArea({
         id :'feel-1',
         container,
-        debounce: debounceInput(),
+        debounce,
         setValue: setValueSpy
       });
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -1237,7 +1260,7 @@ describe('<FeelField>', function() {
         container,
         setValue: setValueSpy,
         getValue: () => 'foo',
-        debounce: debounceInput()
+        debounce
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -1288,7 +1311,7 @@ describe('<FeelField>', function() {
       it('should be edited after update', function() {
 
         // given
-        const result = createFeelTextArea({ container });
+        const result = createFeelTextArea({ container, debounce });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -1297,6 +1320,7 @@ describe('<FeelField>', function() {
 
         // when
         changeInput(input, 'foo');
+        clock.tick(500);
 
         // then
         expect(isEdited(input)).to.be.true;
@@ -1370,13 +1394,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelTextArea({ container, validate });
+        const result = createFeelTextArea({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
+        clock.tick(500);
 
         // then
         expect(isValid(entry)).to.be.false;
@@ -1388,13 +1413,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelTextArea({ container, validate });
+        const result = createFeelTextArea({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
+        clock.tick(500);
 
         // then
         expect(input.value).to.eql('bar');
@@ -1406,13 +1432,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelTextArea({ container, validate });
+        const result = createFeelTextArea({ container, validate, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
+        clock.tick(500);
 
         const error = domQuery('.bio-properties-panel-error', entry);
 
@@ -1428,13 +1455,14 @@ describe('<FeelField>', function() {
         const setValueSpy = sinon.spy();
         const validate = () => 'error';
 
-        const result = createFeelTextArea({ container, validate, setValue: setValueSpy });
+        const result = createFeelTextArea({ container, validate, setValue: setValueSpy, debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
+        clock.tick(500);
 
         // then
         expect(setValueSpy).to.have.been.calledWith('bar', 'error');
@@ -1597,7 +1625,8 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => 'foo',
-          setValue: updateSpy
+          setValue: updateSpy,
+          debounce
         });
 
         const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
@@ -1606,6 +1635,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           icon.click();
+          clock.tick(500);
         });
 
         // then
@@ -1622,13 +1652,15 @@ describe('<FeelField>', function() {
         const result = createFeelTextArea({
           container,
           getValue: () => 'foo',
-          setValue: updateSpy
+          setValue: updateSpy,
+          debounce
         });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
         // when
         changeInput(input, '=foo');
+        clock.tick(500);
 
         // then
         expect(updateSpy).to.have.been.calledWith('=foo');
@@ -1658,13 +1690,18 @@ describe('<FeelField>', function() {
 
       // given
       const updateSpy = sinon.spy();
-
-      const result = createFeelToggleSwitch({ container, setValue: updateSpy, getValue: () => false });
+      const result = createFeelToggleSwitch({
+        container,
+        setValue: updateSpy,
+        debounce,
+        getValue: () => false
+      });
 
       const slider = domQuery('.bio-properties-panel-toggle-switch__slider', result.container);
 
       // when
       clickInput(slider);
+      clock.tick(500);
 
       // then
       expect(updateSpy).to.have.been.calledWith(true);
@@ -1706,7 +1743,7 @@ describe('<FeelField>', function() {
       it('should be edited after update', function() {
 
         // given
-        const result = createFeelToggleSwitch({ container });
+        const result = createFeelToggleSwitch({ container, debounce });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -1717,6 +1754,7 @@ describe('<FeelField>', function() {
         const slider = domQuery('.bio-properties-panel-toggle-switch__slider', result.container);
 
         clickInput(slider);
+        clock.tick(500);
 
         // then
         expect(isEdited(input)).to.be.true;
@@ -1753,7 +1791,8 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => true,
-          setValue: updateSpy
+          setValue: updateSpy,
+          debounce
         });
 
         const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
@@ -1762,6 +1801,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           icon.click();
+          clock.tick(500);
         });
 
         // then
@@ -1793,12 +1833,18 @@ describe('<FeelField>', function() {
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelCheckbox({ container, setValue: updateSpy, getValue: () => false });
+      const result = createFeelCheckbox({
+        container,
+        setValue: updateSpy,
+        getValue: () => false,
+        debounce
+      });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
       clickInput(input);
+      clock.tick(500);
 
       // then
       expect(updateSpy).to.have.been.calledWith(true);
@@ -1840,7 +1886,7 @@ describe('<FeelField>', function() {
       it('should be edited after update', function() {
 
         // given
-        const result = createFeelCheckbox({ container });
+        const result = createFeelCheckbox({ container, debounce });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -1849,6 +1895,7 @@ describe('<FeelField>', function() {
 
         // when
         clickInput(input);
+        clock.tick(500);
 
         // then
         expect(isEdited(input)).to.be.true;
@@ -1885,7 +1932,8 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => true,
-          setValue: updateSpy
+          setValue: updateSpy,
+          debounce
         });
 
         const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
@@ -1894,6 +1942,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           icon.click();
+          clock.tick(500);
         });
 
         // then
@@ -1936,12 +1985,13 @@ describe('<FeelField>', function() {
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelField({ container, setValue: updateSpy, feel: 'required' });
+      const result = createFeelField({ container, setValue: updateSpy, feel: 'required', debounce });
 
       const input = domQuery('[role="textbox"]', result.container);
 
       // when
       input.textContent = 'foo';
+      clock.tick(500);
 
       // then
       return waitFor(() => {
@@ -1968,12 +2018,13 @@ describe('<FeelField>', function() {
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelField({ container, setValue: updateSpy, getValue: () => 'foo', feel: 'required' });
+      const result = createFeelField({ container, setValue: updateSpy, getValue: () => 'foo', feel: 'required', debounce });
 
       const input = domQuery('[role="textbox"]', result.container);
 
       // when
       input.textContent += 'o';
+      clock.tick(500);
 
       // then
       return waitFor(() => {
@@ -1991,10 +2042,11 @@ describe('<FeelField>', function() {
         setValue: updateSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-input', result.container, debounce);
 
       // when
       changeInput(input, '=');
+      clock.tick(500);
 
       // then
       expect(updateSpy).to.have.been.calledWith(undefined);
@@ -2081,7 +2133,7 @@ describe('<FeelField>', function() {
       it('should be edited after update', async function() {
 
         // given
-        const result = createFeelField({ container, feel: 'required' });
+        const result = createFeelField({ container, feel: 'required', debounce });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
         const contentEditable = domQuery('[role="textbox"]', result.container);
@@ -2092,6 +2144,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           contentEditable.textContent = 'foo';
+          clock.tick(500);
         });
 
         // then
@@ -2144,7 +2197,6 @@ describe('<FeelField>', function() {
       it('should show syntax error', async function() {
 
         // given
-        const clock = useClock();
         const result = createFeelField({ container, getValue: () => '= ...syntax error...', feel: 'required' });
 
         // when
@@ -2163,7 +2215,6 @@ describe('<FeelField>', function() {
       it('should not indicate field error on non-syntax errors', async function() {
 
         // given
-        const clock = useClock();
         const result = createFeelField({ container, getValue: () => '= friend[0]', feel: 'required' });
 
         // when
@@ -2182,7 +2233,6 @@ describe('<FeelField>', function() {
       it('should show global error over local error', async function() {
 
         // given
-        const clock = useClock();
         const errors = {
           foo: 'bar'
         };
@@ -2222,7 +2272,7 @@ describe('<FeelField>', function() {
         // given
         const validate = () => null;
 
-        const result = createFeelField({ container, validate, feel: 'required' });
+        const result = createFeelField({ container, validate, feel: 'required', debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
 
@@ -2230,6 +2280,7 @@ describe('<FeelField>', function() {
 
         // when
         input.textContent = 'foo';
+        clock.tick(500);
 
         // then
         return waitFor(() => {
@@ -2243,7 +2294,7 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate, feel: 'required' });
+        const result = createFeelField({ container, validate, feel: 'required', debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('[role="textbox"]', entry);
@@ -2251,6 +2302,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           input.textContent = 'bar';
+          clock.tick(500);
         });
 
 
@@ -2266,13 +2318,14 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate, feel: 'required' });
+        const result = createFeelField({ container, validate, feel: 'required', debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('[role="textbox"]', entry);
 
         // when
         input.textContent = 'bar';
+        clock.tick(500);
 
         // then
         return waitFor(() => {
@@ -2286,7 +2339,7 @@ describe('<FeelField>', function() {
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate, feel: 'required' });
+        const result = createFeelField({ container, validate, feel: 'required', debounce });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('[role="textbox"]', entry);
@@ -2294,6 +2347,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           input.textContent = 'bar';
+          clock.tick(500);
         });
 
 
@@ -2312,7 +2366,13 @@ describe('<FeelField>', function() {
         const setValueSpy = sinon.spy();
         const validate = () => 'error';
 
-        const result = createFeelTextArea({ container, validate, setValue: setValueSpy, feel: 'required' });
+        const result = createFeelTextArea({
+          container,
+          validate,
+          setValue: setValueSpy,
+          feel: 'required',
+          debounce
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('[role="textbox"]', entry);
@@ -2320,6 +2380,7 @@ describe('<FeelField>', function() {
         // when
         await act(() => {
           input.textContent = 'bar';
+          clock.tick(500);
         });
 
         // then
@@ -2649,6 +2710,7 @@ describe('<FeelField>', function() {
 
       // given
       this.timeout(5000);
+      clock.restore();
 
       const { container: node } = createFeelField({
         container,
@@ -2664,6 +2726,7 @@ describe('<FeelField>', function() {
 
       // given
       this.timeout(5000);
+      clock.restore();
 
       const { container: node } = createFeelNumber({
         container,
@@ -2679,6 +2742,7 @@ describe('<FeelField>', function() {
 
       // given
       this.timeout(5000);
+      clock.restore();
 
       const { container: node } = createFeelTextArea({
         container,
@@ -2694,6 +2758,7 @@ describe('<FeelField>', function() {
 
       // given
       this.timeout(5000);
+      clock.restore();
 
       const { container: node } = createFeelToggleSwitch({
         container,
@@ -2709,6 +2774,7 @@ describe('<FeelField>', function() {
 
       // given
       this.timeout(5000);
+      clock.restore();
 
       const { container: node } = createFeelCheckbox({
         container,
@@ -2724,6 +2790,7 @@ describe('<FeelField>', function() {
 
       // given
       this.timeout(5000);
+      clock.restore();
 
       const { container: node } = createFeelField({
         container,
