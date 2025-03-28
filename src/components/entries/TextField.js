@@ -54,9 +54,7 @@ function Textfield(props) {
 
     // we ensure that any in flight updates
     // are being commited
-    if (handleInputCallback.flush) {
-      handleInputCallback.flush();
-    }
+    handleInputCallback.flush();
 
     if (onBlur) {
       onBlur(e);
