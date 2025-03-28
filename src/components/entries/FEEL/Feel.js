@@ -45,6 +45,7 @@ function FeelTextfieldComponent(props) {
     label,
     hostLanguage,
     onInput,
+    onBlur,
     onError,
     placeholder,
     feel,
@@ -57,7 +58,7 @@ function FeelTextfieldComponent(props) {
     tooltip
   } = props;
 
-  const [ localValue, _setLocalValue ] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
@@ -83,21 +84,22 @@ function FeelTextfieldComponent(props) {
     _setFocus(position + offset);
   };
 
+  /**
+   * @type { import('min-dash').DebouncedFunction }
+   */
   const handleInputCallback = useMemo(() => {
     return debounce((newValue) => {
       onInput(newValue);
     });
   }, [ onInput, debounce ]);
 
-  const setLocalValue = newValue => {
-    _setLocalValue(newValue);
+  const handleInput = newValue => {
 
-    if (typeof newValue === 'undefined' || newValue === '' || newValue === '=') {
-      handleInputCallback(undefined);
-    } else {
-      handleInputCallback(newValue);
-    }
+    // we don't commit empty FEEL expressions,
+    // but instead serialize them as <undefined>
+    const newModelValue = (newValue === '' || newValue === '=') ? undefined : newValue;
 
+    handleInputCallback(newModelValue);
   };
 
   const handleFeelToggle = useStaticCallback(() => {
@@ -107,8 +109,10 @@ function FeelTextfieldComponent(props) {
 
     if (!feelActive) {
       setLocalValue('=' + localValue);
+      handleInput('=' + localValue);
     } else {
       setLocalValue(feelOnlyValue);
+      handleInput(feelOnlyValue);
     }
   });
 
@@ -122,11 +126,35 @@ function FeelTextfieldComponent(props) {
     }
 
     setLocalValue(newValue);
+    handleInput(newValue);
 
     if (!feelActive && isString(newValue) && newValue.startsWith('=')) {
 
       // focus is behind `=` sign that will be removed
       setFocus(-1);
+    }
+  };
+
+  const handleOnBlur = e => {
+    const value = e.target.value;
+
+    // we trim the value, if it is needed
+    // and update input accordingly
+    if (value.trim() !== value) {
+      setLocalValue(value.trim());
+      handleInput(value.trim());
+    }
+
+    // we ensure that any in flight updates
+    // are being commited
+    // we check if function is debounced\
+    handleInputCallback.flush();
+
+    // at last, we trigger on blur, so other
+    // components can react. at this point, the
+    // model values are already submitted.
+    if (onBlur) {
+      onBlur(e);
     }
   };
 
@@ -172,11 +200,11 @@ function FeelTextfieldComponent(props) {
 
     // External value change removed content => keep FEEL configuration
     if (!value) {
-      setLocalValue(feelActive ? '=' : '');
+      handleInput(feelActive ? '=' : '');
       return;
     }
 
-    setLocalValue(value);
+    handleInput(value);
   }, [ value ]);
 
 
@@ -256,6 +284,7 @@ function FeelTextfieldComponent(props) {
             { ...props }
             popupOpen={ popuOpen }
             onInput={ handleLocalInput }
+            onBlur={ handleOnBlur }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }
