@@ -26,6 +26,8 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
+import debounceInput from '../../../src/features/debounce-input/debounceInput';
+
 import TextField, { isEdited } from 'src/components/entries/TextField';
 
 insertCoreStyles();
@@ -35,10 +37,22 @@ const noop = () => {};
 
 describe('<TextField>', function() {
 
+  let clock;
+
   let container;
+
+  let debounce;
 
   beforeEach(function() {
     container = TestContainer.get(this);
+    clock = sinon.useFakeTimers();
+    debounce = debounceInput();
+  });
+
+  afterEach(function() {
+    clock && clock.restore();
+
+    clock = undefined;
   });
 
 
@@ -67,12 +81,13 @@ describe('<TextField>', function() {
     // given
     const updateSpy = sinon.spy();
 
-    const result = createTextField({ container, setValue: updateSpy });
+    const result = createTextField({ container, setValue: updateSpy, debounce });
 
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
     changeInput(input, 'foo');
+    clock.tick(500);
 
     // then
     expect(updateSpy).to.have.been.calledWith('foo');
@@ -93,6 +108,85 @@ describe('<TextField>', function() {
     const newInput = domQuery('.bio-properties-panel-input', container);
 
     expect(newInput).to.not.eql(input);
+  });
+
+
+  it('should trim whitespace on blur', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      setValue: setValueSpy,
+      debounce
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, '  foo  ');
+    input.blur();
+
+    // then
+    expect(setValueSpy).to.have.been.calledOnce;
+    expect(setValueSpy).to.have.been.calledWith('foo');
+  });
+
+
+  it('should trigger update debounced', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      id :'feel-1',
+      container,
+      debounce,
+      setValue: setValueSpy
+    });
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'foo');
+    changeInput(input, 'fooba');
+
+    clock.tick(500);
+
+    changeInput(input, 'foobab');
+
+    clock.tick(500);
+
+    // then
+    expect(setValueSpy).to.have.been.calledTwice;
+    expect(setValueSpy).to.have.been.calledWith('foobab');
+  });
+
+
+  it('should not trigger noop update on blur', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      setValue: setValueSpy,
+      getValue: () => 'foo',
+      debounce
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'foobar');
+    changeInput(input, 'foo');
+    input.blur();
+
+    // then
+    expect(setValueSpy).not.to.have.been.called;
   });
 
 
@@ -131,7 +225,7 @@ describe('<TextField>', function() {
     it('should be edited after update', function() {
 
       // given
-      const result = createTextField({ container });
+      const result = createTextField({ container, debounce });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -140,6 +234,7 @@ describe('<TextField>', function() {
 
       // when
       changeInput(input, 'foo');
+      clock.tick(500);
 
       // then
       expect(isEdited(input)).to.be.true;
@@ -200,7 +295,7 @@ describe('<TextField>', function() {
       // given
       const validate = () => null;
 
-      const result = createTextField({ container, validate });
+      const result = createTextField({ container, validate, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
 
@@ -208,6 +303,7 @@ describe('<TextField>', function() {
 
       // when
       changeInput(input, 'foo');
+      clock.tick(500);
 
       // then
       expect(isValid(entry)).to.be.true;
@@ -219,13 +315,14 @@ describe('<TextField>', function() {
       // given
       const validate = () => 'error';
 
-      const result = createTextField({ container, validate });
+      const result = createTextField({ container, validate, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
       changeInput(input, 'bar');
+      clock.tick(500);
 
       // then
       expect(isValid(entry)).to.be.false;
@@ -237,13 +334,14 @@ describe('<TextField>', function() {
       // given
       const validate = () => 'error';
 
-      const result = createTextField({ container, validate });
+      const result = createTextField({ container, validate, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
       changeInput(input, 'bar');
+      clock.tick(500);
 
       // then
       expect(input.value).to.eql('bar');
@@ -255,13 +353,14 @@ describe('<TextField>', function() {
       // given
       const validate = () => 'error';
 
-      const result = createTextField({ container, validate });
+      const result = createTextField({ container, validate, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
       changeInput(input, 'bar');
+      clock.tick(500);
 
       const error = domQuery('.bio-properties-panel-error', entry);
 
@@ -277,13 +376,14 @@ describe('<TextField>', function() {
       const setValueSpy = sinon.spy();
       const validate = () => 'error';
 
-      const result = createTextField({ container, validate, setValue: setValueSpy });
+      const result = createTextField({ container, validate, setValue: setValueSpy, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
       changeInput(input, 'bar');
+      clock.tick(500);
 
       // then
       expect(setValueSpy).to.have.been.calledWith('bar', 'error');
@@ -444,6 +544,7 @@ describe('<TextField>', function() {
 
       // given
       this.timeout(5000);
+      clock.restore();
 
       const { container: node } = createTextField({
         container,

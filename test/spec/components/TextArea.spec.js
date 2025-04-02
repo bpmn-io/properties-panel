@@ -29,6 +29,8 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
+import debounceInput from '../../../src/features/debounce-input/debounceInput';
+
 import TextArea, { isEdited } from 'src/components/entries/TextArea';
 
 insertCoreStyles();
@@ -38,10 +40,22 @@ const noop = () => {};
 
 describe('<TextArea>', function() {
 
+  let clock;
+
   let container;
+
+  let debounce;
 
   beforeEach(function() {
     container = TestContainer.get(this);
+    clock = sinon.useFakeTimers();
+    debounce = debounceInput();
+  });
+
+  afterEach(function() {
+    clock && clock.restore();
+
+    clock = undefined;
   });
 
 
@@ -94,12 +108,13 @@ describe('<TextArea>', function() {
     // given
     const updateSpy = sinon.spy();
 
-    const result = createTextArea({ container, setValue: updateSpy });
+    const result = createTextArea({ container, setValue: updateSpy, debounce });
 
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
     changeInput(input, 'foo');
+    clock.tick(500);
 
     // then
     expect(updateSpy).to.have.been.calledWith('foo');
@@ -133,6 +148,85 @@ describe('<TextArea>', function() {
 
     // then
     expect(input.dataset.gramm).to.eql('false');
+  });
+
+
+  it('should trim whitespace on blur', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({
+      container,
+      setValue: setValueSpy,
+      debounce
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, '  foo  ');
+    input.blur();
+
+    // then
+    expect(setValueSpy).to.have.been.calledOnce;
+    expect(setValueSpy).to.have.been.calledWith('foo');
+  });
+
+
+  it('should trigger update debounced', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({
+      id :'feel-1',
+      container,
+      debounce,
+      setValue: setValueSpy
+    });
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'foo');
+    changeInput(input, 'fooba');
+
+    clock.tick(500);
+
+    changeInput(input, 'foobab');
+
+    clock.tick(500);
+
+    // then
+    expect(setValueSpy).to.have.been.calledTwice;
+    expect(setValueSpy).to.have.been.calledWith('foobab');
+  });
+
+
+  it('should not trigger noop update on blur', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({
+      container,
+      setValue: setValueSpy,
+      getValue: () => 'foo',
+      debounce
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'foobar');
+    changeInput(input, 'foo');
+    input.blur();
+
+    // then
+    expect(setValueSpy).not.to.have.been.called;
   });
 
 
@@ -216,7 +310,7 @@ describe('<TextArea>', function() {
     it('should be edited after update', function() {
 
       // given
-      const result = createTextArea({ container });
+      const result = createTextArea({ container, debounce });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -225,6 +319,7 @@ describe('<TextArea>', function() {
 
       // when
       changeInput(input, 'foo');
+      clock.tick(500);
 
       // then
       expect(isEdited(input)).to.be.true;
@@ -323,7 +418,7 @@ describe('<TextArea>', function() {
       // given
       const validate = () => null;
 
-      const result = createTextArea({ container, validate });
+      const result = createTextArea({ container, validate, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
 
@@ -331,6 +426,7 @@ describe('<TextArea>', function() {
 
       // when
       changeInput(input, 'foo');
+      clock.tick(500);
 
       // then
       expect(isValid(entry)).to.be.true;
@@ -342,13 +438,14 @@ describe('<TextArea>', function() {
       // given
       const validate = () => 'error';
 
-      const result = createTextArea({ container, validate });
+      const result = createTextArea({ container, validate, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
       changeInput(input, 'bar');
+      clock.tick(500);
 
       // then
       expect(isValid(entry)).to.be.false;
@@ -360,13 +457,14 @@ describe('<TextArea>', function() {
       // given
       const validate = () => 'error';
 
-      const result = createTextArea({ container, validate });
+      const result = createTextArea({ container, validate, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
       changeInput(input, 'bar');
+      clock.tick(500);
 
       // then
       expect(input.value).to.eql('bar');
@@ -378,13 +476,14 @@ describe('<TextArea>', function() {
       // given
       const validate = () => 'error';
 
-      const result = createTextArea({ container, validate });
+      const result = createTextArea({ container, validate, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
       changeInput(input, 'bar');
+      clock.tick(500);
 
       const error = domQuery('.bio-properties-panel-error', entry);
 
@@ -400,13 +499,14 @@ describe('<TextArea>', function() {
       const setValueSpy = sinon.spy();
       const validate = () => 'error';
 
-      const result = createTextArea({ container, validate, setValue: setValueSpy });
+      const result = createTextArea({ container, validate, setValue: setValueSpy, debounce });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('.bio-properties-panel-input', entry);
 
       // when
       changeInput(input, 'bar');
+      clock.tick(500);
 
       // then
       expect(setValueSpy).to.have.been.calledWith('bar', 'error');
@@ -471,7 +571,8 @@ describe('<TextArea>', function() {
       const result = createTextArea({
         container,
         id: 'textarea',
-        autoResize: true
+        autoResize: true,
+        debounce
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -479,6 +580,7 @@ describe('<TextArea>', function() {
 
       // when
       changeInput(input, 'foo\nbar\nbar\nbar');
+      clock.tick(500);
       const enlargedHeight = input.clientHeight;
 
       // then
@@ -486,6 +588,7 @@ describe('<TextArea>', function() {
 
       // when
       changeInput(input, 'foo');
+      clock.tick(500);
       const shrinkedHeight = input.clientHeight;
 
       // then
@@ -528,6 +631,7 @@ describe('<TextArea>', function() {
         container,
         id: 'textarea',
         autoResize: true,
+        debounce
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -535,6 +639,7 @@ describe('<TextArea>', function() {
 
       // when
       changeInput(input, 'foo\nbar\nbar\nbar');
+      clock.tick(500);
       result.container.style.display = 'none';
       const hiddenHeight = input.clientHeight;
 
@@ -560,6 +665,7 @@ describe('<TextArea>', function() {
 
       // given
       this.timeout(5000);
+      clock.restore();
 
       const { container: node } = createTextArea({
         container,
