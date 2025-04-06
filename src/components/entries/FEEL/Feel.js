@@ -200,11 +200,11 @@ function FeelTextfieldComponent(props) {
 
     // External value change removed content => keep FEEL configuration
     if (!value) {
-      handleInput(feelActive ? '=' : '');
+      setLocalValue(feelActive ? '=' : '');
       return;
     }
 
-    handleInput(value);
+    setLocalValue(value);
   }, [ value ]);
 
 
