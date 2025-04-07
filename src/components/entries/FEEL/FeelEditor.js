@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState, useContext } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 
 import FeelEditor from '@bpmn-io/feel-editor';
@@ -7,6 +7,7 @@ import FeelEditor from '@bpmn-io/feel-editor';
 import { EditorView, lineNumbers } from '@codemirror/view';
 
 import { useStaticCallback } from '../../../hooks';
+import { FeelLanguageContext } from './context';
 
 import { PopupIcon } from '../../icons';
 
@@ -62,6 +63,12 @@ const CodeEditor = forwardRef((props, ref) => {
   const [ editor, setEditor ] = useState();
   const [ localValue, setLocalValue ] = useState(value || '');
 
+  const {
+    builtins,
+    dialect,
+    parserDialect
+  } = useContext(FeelLanguageContext);
+
   useBufferedFocus(editor, ref);
 
   const handleInput = useStaticCallback(newValue => {
@@ -99,7 +106,10 @@ const CodeEditor = forwardRef((props, ref) => {
       placeholder: placeholder,
       tooltipContainer: tooltipContainer,
       value: localValue,
-      variables: variables,
+      variables,
+      builtins,
+      dialect,
+      parserDialect,
       extensions: [
         ...enableGutters ? [ lineNumbers() ] : [],
         EditorView.lineWrapping

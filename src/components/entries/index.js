@@ -8,7 +8,8 @@ export {
   FeelTextAreaEntry,
   FeelTemplatingEntry,
   FeelToggleSwitchEntry,
-  isEdited as isFeelEntryEdited
+  isEdited as isFeelEntryEdited,
+  FeelLanguageContext
 } from './FEEL';
 export { default as TemplatingEntry, isEdited as isTemplatingEntryEdited } from './templating';
 export { default as ListEntry } from './List';

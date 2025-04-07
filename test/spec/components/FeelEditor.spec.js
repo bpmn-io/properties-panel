@@ -15,7 +15,8 @@ import {
 import { useEffect, useRef } from 'preact/hooks';
 import { fireEvent, waitFor } from '@testing-library/preact';
 
-import FeelComponent from 'src/components/entries/FEEL/FeelEditor';
+import FeelComponent from '../../../src/components/entries/FEEL/FeelEditor';
+import { FeelLanguageContext } from '../../../src/components/entries/FEEL/context';
 
 insertCoreStyles();
 
@@ -52,6 +53,53 @@ describe('<FeelEditor>', function() {
       return el.textContent === 'foo';
     });
     expect(variableSuggestion).to.exist;
+  });
+
+
+  it('should fail linting without camunda parser dialect',async function() {
+
+    // given
+    const handleLint = sinon.spy();
+
+    const value = '`backtick`';
+
+    // when
+    render(<Wrapper onLint={ handleLint } value={ value } />, { container });
+
+    await waitFor(() => {
+      expect(handleLint).to.have.been.calledOnce;
+    });
+
+    // then
+    expect(handleLint.firstCall.args[0]).to.have.lengthOf(2);
+  });
+
+
+  it('should pass linting with camunda parser dialect',async function() {
+
+    // given
+    const handleLint = sinon.spy();
+
+    const value = '`backtick`';
+    const feelLanguageContext = {
+      parserDialect:'camunda',
+    };
+
+    // when
+    render(
+      <FeelLanguageContext.Provider value={ feelLanguageContext }>
+        <Wrapper onLint={ handleLint } value={ value } />
+      </FeelLanguageContext.Provider>,
+      { container }
+    );
+
+    await waitFor(() => {
+      expect(handleLint).to.have.been.calledOnce;
+    });
+
+    // then
+    expect(handleLint.firstCall.args[0]).to.have.lengthOf(0);
+
   });
 
 
@@ -195,4 +243,3 @@ function Wrapper(props) {
 
   return <FeelComponent { ...props } ref={ ref } />;
 }
-
