@@ -80,7 +80,8 @@ function FeelTextfieldComponent(props) {
     singleLine,
     tooltipContainer,
     OptionalComponent = OptionalFeelInput,
-    tooltip
+    tooltip,
+    feelLanguageContext,
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -197,7 +198,8 @@ function FeelTextfieldComponent(props) {
       tooltipContainer,
       type,
       value: feelOnlyValue,
-      variables
+      variables,
+      feelLanguageContext
     };
 
     openPopup(id, popupOptions, editorRef.current);
@@ -296,6 +298,7 @@ function FeelTextfieldComponent(props) {
             variables={ variables }
             ref={ editorRef }
             tooltipContainer={ tooltipContainer }
+            feelLanguageContext={ feelLanguageContext }
           /> :
           <OptionalComponent
             { ...props }
@@ -584,7 +587,8 @@ export default function FeelEntry(props) {
     onFocus,
     onBlur,
     placeholder,
-    tooltip
+    tooltip,
+    feelLanguageContext
   } = props;
 
   const [ validationError, setValidationError ] = useState(null);
@@ -652,7 +656,9 @@ export default function FeelEntry(props) {
         variables={ variables }
         tooltipContainer={ tooltipContainer }
         OptionalComponent={ props.OptionalComponent }
-        tooltip={ tooltip } />
+        tooltip={ tooltip }
+        feelLanguageContext={ feelLanguageContext }
+      />
       {error && <div class="bio-properties-panel-error">{error}</div>}
       <Description forId={ id } element={ element } value={ description } />
     </div>
