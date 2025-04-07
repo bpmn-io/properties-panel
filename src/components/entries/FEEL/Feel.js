@@ -54,7 +54,8 @@ function FeelTextfieldComponent(props) {
     singleLine,
     tooltipContainer,
     OptionalComponent = OptionalFeelInput,
-    tooltip
+    tooltip,
+    feelParserDialect,
   } = props;
 
   const [ localValue, _setLocalValue ] = useState(value);
@@ -251,6 +252,7 @@ function FeelTextfieldComponent(props) {
             variables={ variables }
             ref={ editorRef }
             tooltipContainer={ tooltipContainer }
+            feelParserDialect={ feelParserDialect }
           /> :
           <OptionalComponent
             { ...props }
@@ -538,7 +540,8 @@ export default function FeelEntry(props) {
     onFocus,
     onBlur,
     placeholder,
-    tooltip
+    tooltip,
+    feelParserDialect
   } = props;
 
   const [ validationError, setValidationError ] = useState(null);
@@ -606,7 +609,9 @@ export default function FeelEntry(props) {
         variables={ variables }
         tooltipContainer={ tooltipContainer }
         OptionalComponent={ props.OptionalComponent }
-        tooltip={ tooltip } />
+        tooltip={ tooltip }
+        feelParserDialect={ feelParserDialect }
+      />
       {error && <div class="bio-properties-panel-error">{error}</div>}
       <Description forId={ id } element={ element } value={ description } />
     </div>
