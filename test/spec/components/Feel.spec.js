@@ -25,6 +25,7 @@ import {
   DescriptionContext,
   ErrorsContext,
   EventContext,
+  FeelLanguageContext,
   PropertiesPanelContext
 } from 'src/context';
 
@@ -2351,6 +2352,51 @@ describe('<FeelEntry>', function() {
 
     });
 
+    describe('feel language contexte', function() {
+
+      it('should fail linting backticks without camunda parser dialect',async function() {
+
+        // given
+        const validate = () => null;
+
+        const result = createFeelField({ container, validate, feel: 'required' });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+        const input = domQuery('[role="textbox"]', entry);
+
+        // when
+        input.textContent = '`backtick`';
+
+        // then
+        return waitFor(() => {
+          expect(isValid(entry)).to.be.false;
+        });
+      });
+
+
+      it('should pass linting backticks with camunda parser dialect',async function() {
+
+        // given
+        const validate = () => null;
+
+        const result = createFeelField({ container, validate, feel: 'required', parserDialect: 'camunda' });
+
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+        const input = domQuery('[role="textbox"]', entry);
+
+        // when
+        input.textContent = '`backtick`';
+
+        // then
+        return waitFor(() => {
+          expect(isValid(entry)).to.be.true;
+        });
+      });
+
+    });
+
 
     describe('disabled', function() {
 
@@ -2831,6 +2877,9 @@ function createFeelField(options = {}, renderFn = render) {
     errors = {},
     variables,
     Component = FeelField,
+    parserDialect,
+    builtins,
+    dialect,
     ...rest
   } = options;
 
@@ -2851,26 +2900,34 @@ function createFeelField(options = {}, renderFn = render) {
     getDescriptionForId
   };
 
+  const feelLanguageContext = {
+    parserDialect,
+    builtins,
+    dialect
+  };
+
   return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
           <DescriptionContext.Provider value={ descriptionContext }>
-            <Component
-              element={ element }
-              id={ id }
-              label={ label }
-              description={ description }
-              disabled={ disabled }
-              getValue={ getValue }
-              setValue={ setValue }
-              onBlur={ onBlur }
-              debounce={ debounce }
-              validate={ validate }
-              feel={ feel }
-              variables={ variables }
-              { ...rest }
-            />
+            <FeelLanguageContext.Provider value={ { feelLanguageContext } }>
+              <Component
+                element={ element }
+                id={ id }
+                label={ label }
+                description={ description }
+                disabled={ disabled }
+                getValue={ getValue }
+                setValue={ setValue }
+                onBlur={ onBlur }
+                debounce={ debounce }
+                validate={ validate }
+                feel={ feel }
+                variables={ variables }
+                { ...rest }
+              />
+            </FeelLanguageContext.Provider>
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>
