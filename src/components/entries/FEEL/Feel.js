@@ -26,7 +26,7 @@ import FeelEditor from './FeelEditor';
 import { FeelIndicator } from './FeelIndicator';
 import FeelIcon from './FeelIcon';
 
-import { EventContext } from '../../../context';
+import { EventContext, FeelLanguageContext } from '../../../context';
 
 import { ToggleSwitch } from '../ToggleSwitch';
 
@@ -87,6 +87,7 @@ function FeelTextfield(props) {
 
   const feelActive = (isString(localValue) && localValue.startsWith('=')) || feel === 'required';
   const feelOnlyValue = (isString(localValue) && localValue.startsWith('=')) ? localValue.substring(1) : localValue;
+  const feelLanguageContext = useContext(FeelLanguageContext);
 
   const [ focus, _setFocus ] = useState(undefined);
 
@@ -186,7 +187,8 @@ function FeelTextfield(props) {
       tooltipContainer,
       type,
       value: feelOnlyValue,
-      variables
+      variables,
+      feelLanguageContext,
     });
 
     if (isOpen) {
@@ -297,6 +299,7 @@ function FeelTextfield(props) {
             placeholder={ placeholder }
             value={ feelOnlyValue }
             variables={ variables }
+            feelLanguageContext={ feelLanguageContext }
             ref={ editorRef }
             tooltipContainer={ tooltipContainer }
           /> :
