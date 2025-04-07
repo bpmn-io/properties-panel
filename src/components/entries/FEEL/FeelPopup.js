@@ -148,7 +148,8 @@ function FeelPopupComponent(props) {
     type,
     value,
     variables,
-    emit
+    emit,
+    feelLanguageContext
   } = props;
 
   const editorRef = useRef();
@@ -249,6 +250,7 @@ function FeelPopupComponent(props) {
                 variables={ variables }
                 ref={ editorRef }
                 tooltipContainer={ tooltipContainer }
+                feelLanguageContext={ feelLanguageContext }
               />
             )
           }
