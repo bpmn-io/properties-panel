@@ -37,6 +37,27 @@ import Tooltip from '../Tooltip';
 
 const noop = () => {};
 
+/**
+ * @param {Object} props
+ * @param {Boolean} props.debounce
+ * @param {String} props.id
+ * @param {Object} props.element
+ * @param {String} props.label
+ * @param {String} props.hostLanguage
+ * @param {Function} props.onInput
+ * @param {Function} props.onBlur
+ * @param {Function} props.onError
+ * @param {Boolean} props.feel
+ * @param {String} props.value
+ * @param {Boolean} props.singleLine
+ * @param {Function} props.tooltipContainer
+ * @param {Function | import('preact').Component} props.OptionalComponent
+ * @param {Boolean} props.disabled
+ * @param {Function} props.variables
+ * @param {string} [props.placeholder]
+ * @param {string | import('preact').Component} props.tooltip
+ */
+
 function FeelTextfieldComponent(props) {
   const {
     debounce,
