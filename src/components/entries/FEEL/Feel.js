@@ -135,7 +135,7 @@ function FeelTextfieldComponent(props) {
     }
   };
 
-  const handleOnBlur = e => {
+  const handleOnBlur = (e) => {
     const value = e.target.value;
 
     // we trim the value, if it is needed
@@ -145,14 +145,6 @@ function FeelTextfieldComponent(props) {
       handleInput(value.trim());
     }
 
-    // we ensure that any in flight updates
-    // are being commited
-    // we check if function is debounced\
-    handleInputCallback.flush();
-
-    // at last, we trigger on blur, so other
-    // components can react. at this point, the
-    // model values are already submitted.
     if (onBlur) {
       onBlur(e);
     }
@@ -583,7 +575,7 @@ export default function FeelEntry(props) {
     }
   }, [ value, validate ]);
 
-  const onInput = useStaticCallback((newValue) => {
+  const onInput = (newValue) => {
     let newValidationError = null;
 
     if (isFunction(validate)) {
@@ -596,7 +588,7 @@ export default function FeelEntry(props) {
     }
 
     setValidationError(newValidationError);
-  });
+  };
 
   const onError = useCallback(err => {
     setLocalError(err);
