@@ -95,6 +95,75 @@ describe('<TextField>', function() {
     expect(newInput).to.not.eql(input);
   });
 
+  it('should trim whitespace on blur', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      setValue: setValueSpy,
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, '  foo  ');
+    input.blur();
+
+    // then
+    expect(setValueSpy).to.have.been.calledTwice;
+    expect(setValueSpy).to.have.been.calledWith('foo');
+  });
+
+
+  it('should call onBlur if provided', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+    const onBlurSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      setValue: setValueSpy,
+      onBlur: onBlurSpy
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, '  foo  ');
+    input.blur();
+
+    // then
+    expect(onBlurSpy).to.have.been.calledOnce;
+  });
+
+
+  it('should not call setValue if the value is same', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      setValue: setValueSpy
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, '');
+    input.blur();
+
+    // then
+    expect(setValueSpy).to.not.have.been.called;
+
+  });
+
 
   describe('#isEdited', function() {
 
@@ -472,6 +541,7 @@ function createTextField(options = {}, renderFn = render) {
     getValue = noop,
     setValue = noop,
     validate = noop,
+    onBlur = noop,
     descriptionConfig = {},
     getDescriptionForId = noop,
     container,
@@ -512,6 +582,7 @@ function createTextField(options = {}, renderFn = render) {
               disabled={ disabled }
               getValue={ getValue }
               setValue={ setValue }
+              onBlur={ onBlur }
               debounce={ debounce }
               validate={ validate } />
           </DescriptionContext.Provider>
