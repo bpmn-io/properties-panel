@@ -2,6 +2,7 @@ import Description from './Description';
 import Tooltip from './Tooltip';
 
 import {
+  useCallback,
   useEffect,
   useMemo,
   useState
@@ -35,13 +36,41 @@ function Textfield(props) {
 
   const ref = useShowEntryEvent(id);
 
+  /**
+   * @type { import('min-dash').DebouncedFunction }
+   */
   const handleInputCallback = useMemo(() => {
-    return debounce((target) => onInput(target.value.length ? target.value : undefined));
+    return debounce((newValue) => {
+      onInput(newValue);
+    });
   }, [ onInput, debounce ]);
 
-  const handleInput = e => {
-    handleInputCallback(e.target);
+  const handleOnBlur = e => {
+    const value = e.target.value;
+
+    if (value.trim() !== value) {
+      setLocalValue(value.trim());
+      handleInput(value.trim());
+    }
+
+    if (onBlur) {
+      onBlur(e);
+    }
+  };
+
+  const handleInput = newValue => {
+    const newModelValue = newValue === '' ? undefined : newValue;
+    handleInputCallback(newModelValue);
+  };
+
+  const handleLocalInput = e => {
+
+    if (e.target.value === localValue) {
+      return;
+    }
+
     setLocalValue(e.target.value);
+    handleInput(e.target.value);
   };
 
   useEffect(() => {
@@ -68,9 +97,9 @@ function Textfield(props) {
         autoComplete="off"
         disabled={ disabled }
         class="bio-properties-panel-input"
-        onInput={ handleInput }
+        onInput={ handleLocalInput }
         onFocus={ onFocus }
-        onBlur={ onBlur }
+        onBlur={ handleOnBlur }
         placeholder={ placeholder }
         value={ localValue } />
     </div>
@@ -122,17 +151,19 @@ export default function TextfieldEntry(props) {
     }
   }, [ value, validate ]);
 
-  const onInput = (newValue) => {
+  const onInput = useCallback((newValue) => {
     let newValidationError = null;
 
     if (isFunction(validate)) {
       newValidationError = validate(newValue) || null;
     }
 
-    setValue(newValue, newValidationError);
+    if (newValue !== value) {
+      setValue(newValue, newValidationError);
+    }
 
     setLocalError(newValidationError);
-  };
+  }, [ element ]);
 
 
   const error = globalError || localError;
