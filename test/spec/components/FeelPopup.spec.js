@@ -21,9 +21,7 @@ import {
   insertCoreStyles
 } from 'test/TestHelper';
 
-import { FeelPopupContext } from 'src/components/entries/FEEL/context';
-
-import FEELPopupRoot from 'src/components/entries/FEEL/FeelPopup';
+import { FeelPopupContext } from '../../../src/context';
 
 insertCoreStyles();
 
@@ -35,12 +33,20 @@ const noopElement = {
 
 describe('<FeelPopup>', function() {
 
-  let container;
+  let container, eventBus, popupManager, popupRenderer;
 
   beforeEach(function() {
-    container = TestContainer.get(this);
+    container = document.createElement('div');
+    document.body.appendChild(container);
+
+    eventBus = new EventBus();
+    popupManager = new PopupManager(eventBus);
+    popupRenderer = new PopupRenderer(eventBus);
   });
 
+  afterEach(function() {
+    document.body.removeChild(container);
+  });
 
   it('should render children', function() {
 
@@ -751,9 +757,9 @@ function createFeelPopup(props, container) {
   } = props;
 
   return render(
-    <FEELPopupRoot popupContainer={ popupContainer } getPopupLinks={ getPopupLinks } element={ element } eventBus={ eventBus }>
+    <FeelPopupRoot popupContainer={ popupContainer } getPopupLinks={ getPopupLinks } element={ element } eventBus={ eventBus }>
       <ChildComponent type={ type } />
-    </FEELPopupRoot>,
+    </FeelPopupRoot>,
     { container }
   );
 }
