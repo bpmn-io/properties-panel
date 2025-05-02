@@ -16,7 +16,7 @@ import {
   insertCoreStyles
 } from 'test/TestHelper';
 
-import { Popup } from 'src/components/Popup';
+import { Popup } from 'src/features/feel-popup/components';
 import { EventContext } from 'src/context';
 
 insertCoreStyles();
