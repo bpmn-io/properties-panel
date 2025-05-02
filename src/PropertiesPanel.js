@@ -28,7 +28,7 @@ import {
   TooltipContext
 } from './context';
 
-import { FeelPopupRoot } from './components/entries/FEEL';
+import { FeelPopupContext } from './context';
 
 import { useEvent } from './hooks';
 
@@ -217,6 +217,18 @@ export default function PropertiesPanel(props) {
     errors
   };
 
+  const [ activePopupEntryIds, setActivePopupEntryIds ] = useState([]);
+
+  const onSetActivePopupEntryIds = ({ activePopupEntryIds }) => setActivePopupEntryIds(activePopupEntryIds);
+
+  useEvent('propertiesPanel.setActivePopupEntryIds', onSetActivePopupEntryIds, eventBus);
+
+  const feelPopupContext = {
+    activePopupEntryIds,
+    popupContainer: feelPopupContainer,
+    getLinks: getFeelPopupLinks,
+  };
+
   const eventContext = {
     eventBus
   };
@@ -242,11 +254,7 @@ export default function PropertiesPanel(props) {
           <TooltipContext.Provider value={ tooltipContext }>
             <LayoutContext.Provider value={ layoutContext }>
               <EventContext.Provider value={ eventContext }>
-                <FeelPopupRoot
-                  element={ element }
-                  eventBus={ eventBus }
-                  popupContainer={ feelPopupContainer }
-                  getPopupLinks={ getFeelPopupLinks }>
+                <FeelPopupContext.Provider value={ feelPopupContext }>
                   <div class="bio-properties-panel">
                     <Header
                       element={ element }
@@ -269,7 +277,7 @@ export default function PropertiesPanel(props) {
                       }
                     </div>
                   </div>
-                </FeelPopupRoot>
+                </FeelPopupContext.Provider>
               </EventContext.Provider>
             </LayoutContext.Provider>
           </TooltipContext.Provider>

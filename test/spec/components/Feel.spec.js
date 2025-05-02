@@ -25,12 +25,9 @@ import {
   DescriptionContext,
   ErrorsContext,
   EventContext,
-  PropertiesPanelContext
-} from 'src/context';
-
-import {
+  PropertiesPanelContext,
   FeelPopupContext
-} from 'src/components/entries/FEEL/context';
+} from 'src/context';
 
 import FeelField, {
   FeelCheckboxEntry,
@@ -2765,9 +2762,9 @@ function createFeelField(options = {}, renderFn = render) {
     onBlur = noop,
     errors = {},
     variables,
-    openPopup = noop,
-    closePopup = noop,
-    getPopupSource = noop,
+    activePopupEntryIds = [],
+    popupContainer = null,
+    getLinks = () => [],
     Component = FeelField,
     ...rest
   } = options;
@@ -2790,9 +2787,9 @@ function createFeelField(options = {}, renderFn = render) {
   };
 
   const feelPopupContext = {
-    open: openPopup,
-    close: closePopup,
-    source: getPopupSource()
+    activePopupEntryIds,
+    popupContainer,
+    getLinks
   };
 
   return renderFn(
