@@ -1226,8 +1226,8 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-tooltip .bio-properties-panel-tooltip-arrow {
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   border-left: 5px solid var(--tooltip-background-color);
@@ -1242,7 +1242,7 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-feelers-editor__open-popup-placeholder,
 .bio-properties-panel-feel-editor-container .bio-properties-panel-feel-editor__open-popup-placeholder {
-  display: none;
+  display: flex;
   justify-content: center;
   flex-direction: column;
   color: hsla(0, 0%, 9%, 0.25);
@@ -1254,16 +1254,6 @@ textarea.bio-properties-panel-input {
   font-family: inherit;
   width: 100%;
   min-height: 100%;
-}
-
-.bio-properties-panel-feelers-editor-container.popupOpen .bio-properties-panel-input,
-.bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-input {
-  display: none;
-}
-
-.bio-properties-panel-feelers-editor-container.popupOpen .bio-properties-panel-feelers-editor__open-popup-placeholder,
-.bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-feel-editor__open-popup-placeholder {
-  display: flex;
 }
 
 .bio-properties-panel-popup {
@@ -1291,9 +1281,9 @@ textarea.bio-properties-panel-input {
   font-size: 14px;
 }
 
-.bio-properties-panel-popup h1, 
-.bio-properties-panel-popup h2, 
-.bio-properties-panel-popup h3, 
+.bio-properties-panel-popup h1,
+.bio-properties-panel-popup h2,
+.bio-properties-panel-popup h3,
 .bio-properties-panel-popup h4 {
   font-weight: 500;
   font-size: inherit;
@@ -1405,7 +1395,7 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-feel-popup__title-link {
-  margin-left: 8px; 
+  margin-left: 8px;
   display: flex;
 }
 

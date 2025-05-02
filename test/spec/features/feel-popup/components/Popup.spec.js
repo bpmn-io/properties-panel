@@ -7,7 +7,6 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
-  domify,
   query as domQuery
 } from 'min-dom';
 
@@ -16,8 +15,7 @@ import {
   insertCoreStyles
 } from 'test/TestHelper';
 
-import { Popup } from 'src/components/Popup';
-import { EventContext } from 'src/context';
+import { Popup } from 'src/features/feel-popup/components';
 
 insertCoreStyles();
 
@@ -36,7 +34,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup />, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     // then
     expect(popup).to.exist;
@@ -51,7 +49,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup width={ width } />, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     const bounds = popup.getBoundingClientRect();
 
@@ -68,7 +66,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup height={ height } />, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     const bounds = popup.getBoundingClientRect();
 
@@ -82,40 +80,10 @@ describe('<Popup>', function() {
     // when
     render(<Popup><div class="foo">bar</div></Popup>, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
-
-    // then
-    expect(popup.querySelector('.foo')).to.exist;
-  });
-
-
-  it('should render in container', function() {
-
-    // when
-    render(<Popup container={ container } />, { container });
-
     const popup = domQuery('.bio-properties-panel-popup', container);
 
     // then
-    expect(popup).to.exist;
-  });
-
-
-  it('should render in container (query selector)', function() {
-
-    // given
-
-    const customContainer = domify('<div class="foo"></div>');
-    container.appendChild(customContainer);
-
-    // when
-
-    render(<Popup container={ '.foo' } />, { container });
-
-    const popup = domQuery('.bio-properties-panel-popup', customContainer);
-
-    // then
-    expect(popup).to.exist;
+    expect(popup.querySelector('.foo')).to.exist;
   });
 
 
@@ -124,7 +92,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup title="foo" />, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     // then
     expect(popup.getAttribute('aria-label')).to.eql('foo');
@@ -146,48 +114,6 @@ describe('<Popup>', function() {
   });
 
 
-  it('should close on detach', async function() {
-
-    // given
-    const closeSpy = sinon.spy();
-
-    const MockEventBus = (() => {
-      let callback;
-
-      return {
-        on: (ev, cb) => {
-          if (ev !== 'propertiesPanel.detach') {
-            return;
-          }
-          callback = cb;
-        },
-        off: () => {},
-        fire: () => {
-          callback();
-        }
-      };
-    })();
-
-
-    const eventContext = {
-      eventBus: MockEventBus
-    };
-
-    await act(() => {
-      render(
-        <EventContext.Provider value={ eventContext }>
-          <Popup onClose={ closeSpy }><input name="foo"></input></Popup>
-        </EventContext.Provider>, { container });
-    });
-
-    // when
-    MockEventBus.fire('propertiesPanel.detach');
-
-    // then
-    expect(closeSpy).to.have.been.called;
-  });
-
-
   it('should close on ESC', async function() {
 
     // given
@@ -197,7 +123,7 @@ describe('<Popup>', function() {
       render(<Popup onClose={ closeSpy }><input name="foo"></input></Popup>, { container });
     });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
     const input = domQuery('input', popup);
 
     // when
@@ -217,7 +143,7 @@ describe('<Popup>', function() {
       render(<Popup closeOnEscape={ false } onClose={ closeSpy }><input name="foo"></input></Popup>, { container });
     });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
     const input = domQuery('input', popup);
 
     // when
@@ -239,7 +165,7 @@ describe('<Popup>', function() {
       render(<Popup container={ container }><input name="foo"></input></Popup>, { container });
     });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
     const input = domQuery('input', popup);
 
     // when
@@ -257,7 +183,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Title><div class="foo">bar</div></Popup.Title>, { container });
 
-      const header = domQuery('.bio-properties-panel-popup__header', document.body);
+      const header = domQuery('.bio-properties-panel-popup__header', container);
 
       // then
       expect(header.querySelector('.foo')).to.exist;
@@ -274,7 +200,7 @@ describe('<Popup>', function() {
         { container }
       );
 
-      const header = domQuery('.bio-properties-panel-popup__header', document.body);
+      const header = domQuery('.bio-properties-panel-popup__header', container);
       const closeButton = domQuery('.bio-properties-panel-popup__close', header);
       const closeButonTitle = closeButton.getAttribute('title');
 
@@ -289,7 +215,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Title className="foo" />, { container });
 
-      const header = domQuery('.bio-properties-panel-popup__header', document.body);
+      const header = domQuery('.bio-properties-panel-popup__header', container);
 
       // then
       expect(header.classList.contains('foo')).to.be.true;
@@ -303,7 +229,7 @@ describe('<Popup>', function() {
         // when
         render(<Popup.Title />, { container });
 
-        const header = domQuery('.bio-properties-panel-popup__header', document.body);
+        const header = domQuery('.bio-properties-panel-popup__header', container);
         const dragger = domQuery('.bio-properties-panel-popup__drag-handle', header);
 
         // then
@@ -316,7 +242,7 @@ describe('<Popup>', function() {
         // when
         render(<Popup.Title draggable={ true } />, { container });
 
-        const header = domQuery('.bio-properties-panel-popup__header', document.body);
+        const header = domQuery('.bio-properties-panel-popup__header', container);
         const dragger = domQuery('.bio-properties-panel-popup__drag-handle', header);
 
         // then
@@ -334,8 +260,8 @@ describe('<Popup>', function() {
           { container }
         );
 
-        const popup = domQuery('.bio-properties-panel-popup', document.body);
-        const header = domQuery('.bio-properties-panel-popup__header', document.body);
+        const popup = domQuery('.bio-properties-panel-popup', container);
+        const header = domQuery('.bio-properties-panel-popup__header', container);
         const dragger = domQuery('.bio-properties-panel-popup__drag-handle', header);
 
         const oldBounds = popup.getBoundingClientRect();
@@ -363,8 +289,8 @@ describe('<Popup>', function() {
           { container }
         );
 
-        const popup = domQuery('.bio-properties-panel-popup', document.body);
-        const header = domQuery('.bio-properties-panel-popup__header', document.body);
+        const popup = domQuery('.bio-properties-panel-popup', container);
+        const header = domQuery('.bio-properties-panel-popup__header', container);
 
         const oldBounds = popup.getBoundingClientRect();
         const headerBounds = header.getBoundingClientRect();
@@ -428,7 +354,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Body><div class="foo">bar</div></Popup.Body>, { container });
 
-      const body = domQuery('.bio-properties-panel-popup__body', document.body);
+      const body = domQuery('.bio-properties-panel-popup__body', container);
 
       // then
       expect(body.querySelector('.foo')).to.exist;
@@ -440,7 +366,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Body className="foo" />, { container });
 
-      const body = domQuery('.bio-properties-panel-popup__body', document.body);
+      const body = domQuery('.bio-properties-panel-popup__body', container);
 
       // then
       expect(body.classList.contains('foo')).to.be.true;
@@ -456,7 +382,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Footer><div class="foo">bar</div></Popup.Footer>, { container });
 
-      const footer = domQuery('.bio-properties-panel-popup__footer', document.body);
+      const footer = domQuery('.bio-properties-panel-popup__footer', container);
 
       // then
       expect(footer.querySelector('.foo')).to.exist;
@@ -468,7 +394,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Footer className="foo" />, { container });
 
-      const footer = domQuery('.bio-properties-panel-popup__footer', document.body);
+      const footer = domQuery('.bio-properties-panel-popup__footer', container);
 
       // then
       expect(footer.classList.contains('foo')).to.be.true;
@@ -485,16 +411,13 @@ describe('<Popup>', function() {
       this.timeout(5000);
 
       const { container: node } = render(
-        <Popup title="my popup" container={ container }>
-          <Popup.Title draggable title="My popup" />
-          <Popup.Body>
-            <label for="foo">bar</label>
-            <input id="foo" name="foo" />
-          </Popup.Body>
-          <Popup.Footer>
-            <button type="button">OK</button>
-          </Popup.Footer>
-        </Popup>,
+        <><Popup title="my popup" container={ container }><Popup.Title draggable title="My popup" /><Popup.Body>
+          <label for="foo">bar</label>
+          <input id="foo" name="foo" />
+        </Popup.Body><Popup.Footer>
+          <button type="button">OK</button>
+        </Popup.Footer>
+        </Popup></>,
         { container }
       );
 

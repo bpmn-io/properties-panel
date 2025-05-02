@@ -22,13 +22,11 @@ import {
   useStaticCallback
 } from '../../../hooks';
 
-import CodeEditor from './FeelEditor';
+import FeelEditor from './FeelEditor';
 import { FeelIndicator } from './FeelIndicator';
 import FeelIcon from './FeelIcon';
 
-import { FEEL_POPUP_WIDTH } from './FeelPopup';
-
-import { FeelPopupContext } from './context';
+import { EventContext } from '../../../context';
 
 import { ToggleSwitch } from '../ToggleSwitch';
 
@@ -61,8 +59,7 @@ const noop = () => {};
  * @param {string} [props.placeholder]
  * @param {string | import('preact').Component} props.tooltip
  */
-
-function FeelTextfieldComponent(props) {
+function FeelTextfield(props) {
   const {
     debounce,
     id,
@@ -94,11 +91,10 @@ function FeelTextfieldComponent(props) {
   const [ focus, _setFocus ] = useState(undefined);
 
   const {
-    open: openPopup,
-    source: popupSource
-  } = useContext(FeelPopupContext);
+    eventBus
+  } = useContext(EventContext);
 
-  const popuOpen = popupSource === id;
+  const [ isPopupOpen, setIsPopupOpen ] = useState(false);
 
   const setFocus = (offset = 0) => {
     const hasFocus = containerRef.current.contains(document.activeElement);
@@ -186,21 +182,23 @@ function FeelTextfieldComponent(props) {
     }
   });
 
-  const handlePopupOpen = (type = 'feel') => {
-    const popupOptions = {
-      id,
-      hostLanguage,
-      onInput: handleLocalInput,
-      position: calculatePopupPosition(containerRef.current),
-      singleLine,
-      title: getPopupTitle(element, label),
-      tooltipContainer,
-      type,
-      value: feelOnlyValue,
-      variables
-    };
-
-    openPopup(id, popupOptions, editorRef.current);
+  const handleOpenPopup = (type = 'feel') => {
+    setIsPopupOpen(eventBus.fire('propertiesPanel.openPopup', {
+      props: {
+        element,
+        entryId: id,
+        hostLanguage,
+        label,
+        onCollapse: () => setIsPopupOpen(false),
+        onInput: handleLocalInput,
+        singleLine,
+        sourceField: editorRef.current,
+        tooltipContainer,
+        type,
+        value: feelOnlyValue,
+        variables
+      }
+    }) === true);
   };
 
   useEffect(() => {
@@ -224,6 +222,11 @@ function FeelTextfieldComponent(props) {
     setLocalValue(value);
   }, [ value ]);
 
+  useEffect(() => {
+    return () => {
+      eventBus.fire('propertiesPanel.closePopup');
+    };
+  }, []);
 
   // copy-paste integration
   useEffect(() => {
@@ -235,7 +238,7 @@ function FeelTextfieldComponent(props) {
     };
 
     const pasteHandler = event => {
-      if (feelActive || popuOpen) {
+      if (feelActive || isPopupOpen) {
         return;
       }
 
@@ -282,15 +285,18 @@ function FeelTextfieldComponent(props) {
           onClick={ handleFeelToggle }
         />
         {feelActive ?
-          <CodeEditor
+          <FeelEditor
             name={ id }
             onInput={ handleLocalInput }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             disabled={ disabled }
-            popupOpen={ popuOpen }
-            onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
+            popupOpen={ isPopupOpen }
+            onFeelToggle={ () => {
+              handleFeelToggle();
+              setFocus(true);
+            } }
             onLint={ handleLint }
-            onPopupOpen={ handlePopupOpen }
+            onOpenPopup={ handleOpenPopup }
             placeholder={ placeholder }
             value={ feelOnlyValue }
             variables={ variables }
@@ -299,13 +305,13 @@ function FeelTextfieldComponent(props) {
           /> :
           <OptionalComponent
             { ...props }
-            popupOpen={ popuOpen }
+            popupOpen={ isPopupOpen }
             onInput={ handleLocalInput }
             onBlur={ handleOnBlur }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }
-            onPopupOpen={ handlePopupOpen }
+            onOpenPopup={ handleOpenPopup }
             containerRef={ containerRef }
           />
         }
@@ -314,7 +320,6 @@ function FeelTextfieldComponent(props) {
   );
 }
 
-const FeelTextfield = withAutoClosePopup(FeelTextfieldComponent);
 
 const OptionalFeelInput = forwardRef((props, ref) => {
   const {
@@ -364,7 +369,6 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     placeholder={ placeholder }
     value={ value || '' } />;
 });
-
 
 const OptionalFeelNumberField = forwardRef((props, ref) => {
   const {
@@ -417,7 +421,6 @@ const OptionalFeelNumberField = forwardRef((props, ref) => {
     onBlur={ onBlur }
   />;
 });
-
 
 const OptionalFeelTextArea = forwardRef((props, ref) => {
   const {
@@ -499,7 +502,6 @@ const OptionalFeelToggleSwitch = forwardRef((props, ref) => {
     switcherLabel={ switcherLabel } />;
 });
 
-
 const OptionalFeelCheckbox = forwardRef((props, ref) => {
   const {
     id,
@@ -541,6 +543,7 @@ const OptionalFeelCheckbox = forwardRef((props, ref) => {
     checked={ value }
     disabled={ disabled } />;
 });
+
 
 /**
  * @param {Object} props
@@ -799,44 +802,3 @@ export function isEdited(node) {
 function prefixId(id) {
   return `bio-properties-panel-${id}`;
 }
-
-function calculatePopupPosition(element) {
-  const { top, left } = element.getBoundingClientRect();
-
-  return {
-    left: left - FEEL_POPUP_WIDTH - 20,
-    top: top
-  };
-}
-
-// todo(pinussilvestrus): make this configurable in the future
-function getPopupTitle(element, label) {
-  let popupTitle = '';
-
-  if (element && element.type) {
-    popupTitle = `${element.type} / `;
-  }
-
-  return `${popupTitle}${label}`;
-}
-
-
-function withAutoClosePopup(Component) {
-  return function(props) {
-    const { id } = props;
-    const {
-      close
-    } = useContext(FeelPopupContext);
-
-    const closePopup = useStaticCallback(close);
-
-    useEffect(() => {
-      return () => {
-        closePopup({ id });
-      };
-    }, []);
-
-    return <Component { ...props } />;
-  };
-}
-

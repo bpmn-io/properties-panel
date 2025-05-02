@@ -2,13 +2,13 @@ import classNames from 'classnames';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 
-import FeelEditor from '@bpmn-io/feel-editor';
+import Editor from '@bpmn-io/feel-editor';
 
 import { EditorView, lineNumbers } from '@codemirror/view';
 
 import { useStaticCallback } from '../../../hooks';
 
-import { FeelPopupButton } from '../../FeelPopupButton';
+import { OpenPopupButton } from '../../OpenPopupButton';
 
 const noop = () => {};
 
@@ -41,7 +41,7 @@ const useBufferedFocus = function(editor, ref) {
   }, [ editor, buffer ]);
 };
 
-const CodeEditor = forwardRef((props, ref) => {
+const FeelEditor = forwardRef((props, ref) => {
 
   const {
     contentAttributes,
@@ -50,7 +50,7 @@ const CodeEditor = forwardRef((props, ref) => {
     onInput,
     onFeelToggle = noop,
     onLint = noop,
-    onPopupOpen = noop,
+    onOpenPopup = noop,
     placeholder,
     popupOpen,
     disabled,
@@ -91,7 +91,7 @@ const CodeEditor = forwardRef((props, ref) => {
       }
     };
 
-    editor = new FeelEditor({
+    editor = new Editor({
       container: inputRef.current,
       onChange: handleInput,
       onKeyDown: onKeyDown,
@@ -156,17 +156,19 @@ const CodeEditor = forwardRef((props, ref) => {
     disabled ? 'disabled' : null,
     popupOpen ? 'popupOpen' : null)
   }>
-    <div class="bio-properties-panel-feel-editor__open-popup-placeholder">Opened in editor</div>
+    {
+      popupOpen && <div class="bio-properties-panel-feel-editor__open-popup-placeholder">Opened in editor</div>
+    }
     <div
       name={ props.name }
       class={ classNames('bio-properties-panel-input', localValue ? 'edited' : null) }
       ref={ inputRef }
       onClick={ handleClick }
     ></div>
-    {!disabled && <FeelPopupButton
-      onClick={ () => onPopupOpen('feelers') }
+    {!disabled && <OpenPopupButton
+      onClick={ () => onOpenPopup('feel') }
     /> }
   </div>;
 });
 
-export default CodeEditor;
+export default FeelEditor;

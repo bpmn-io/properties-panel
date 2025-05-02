@@ -185,6 +185,22 @@ describe('<FeelEditor>', function() {
 
     expect(editor.textContent).to.eql('bar');
   });
+
+
+  it('should call <onOpenPopup> with feel type', async function() {
+
+    // given
+    const spy = sinon.spy();
+    render(<Wrapper onOpenPopup={ spy } />, { container });
+
+    const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', container);
+
+    // when
+    openPopupButton.click();
+
+    // then
+    expect(spy).to.have.been.calledWith('feel');
+  });
 });
 
 

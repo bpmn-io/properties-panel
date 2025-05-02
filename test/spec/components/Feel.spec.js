@@ -28,10 +28,6 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
-import {
-  FeelPopupContext
-} from 'src/components/entries/FEEL/context';
-
 import FeelField, {
   FeelCheckboxEntry,
   FeelNumberEntry,
@@ -44,8 +40,7 @@ insertCoreStyles();
 
 const noop = () => {};
 
-describe('<FeelField>', function() {
-
+describe('<FeelEntry>', function() {
   let container;
 
   beforeEach(function() {
@@ -1117,7 +1112,6 @@ describe('<FeelField>', function() {
       expect(input).to.exist;
     });
 
-
     // https://github.com/bpmn-io/bpmn-js-properties-panel/issues/810
     it('should be flagged with data-gramm="false"', function() {
 
@@ -1129,7 +1123,6 @@ describe('<FeelField>', function() {
       // then
       expect(input.dataset.gramm).to.eql('false');
     });
-
 
     it('should update', function() {
 
@@ -2502,109 +2495,115 @@ describe('<FeelField>', function() {
 
     });
 
+    describe('opening popup', function() {
 
-    describe('popup editor', function() {
-
-      it('should render open popup action', async function() {
+      it('should render open popup button', async function() {
 
         // given
-        const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
-
-        const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
+        const result = createFeelField({
+          container,
+          feel: 'required',
+          getValue: () => 'foo',
+        });
 
         // then
-        expect(openEditor).to.exist;
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        const openPopupButton = domQuery(
+          '.bio-properties-panel-open-feel-popup',
+          entry
+        );
+
+        expect(openPopupButton).to.exist;
       });
 
-
-      it('should open popup editor', async function() {
+      it('should fire <propertiesPanel.openPopup> event when clicking open popup button', async function() {
 
         // given
-        const spy = sinon.spy();
+        const eventBus = new EventBus();
+        const openPopupSpy = sinon.spy();
+        eventBus.on('propertiesPanel.openPopup', openPopupSpy);
 
         const result = createFeelField({
           container,
-          element: { type: 'foo' },
+          eventBus,
           feel: 'required',
-          getValue: () => 'foo',
-          openPopup: spy
+          id: 'testField'
         });
 
-        const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
+        const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
 
         // when
         await act(() => {
-          openEditor.click();
+          clickInput(openPopupButton);
         });
 
         // then
-        expect(spy).to.have.been.called;
-        expect(spy.args[0][1].type).to.eql('feel');
+        expect(openPopupSpy).to.have.been.calledOnce;
+        expect(openPopupSpy.firstCall.args[0].props).to.exist;
+        expect(openPopupSpy.firstCall.args[0].props.entryId).to.equal('testField');
       });
 
-
-      it('should close popup editor on unmount', async function() {
-
-        const closeSpy = sinon.spy();
-
-        const props = {
-          container,
-          element: { type: 'foo' },
-          feel: 'required',
-          getValue: () => 'foo',
-          openPopup: () => {},
-          closePopup: closeSpy
-        };
-
-        const result = createFeelField(props);
-
-        // when
-        createFeelField({ Component: 'div', ...props }, result.render);
-
-        // then
-        expect(closeSpy).to.have.been.called;
-      });
-
-
-      it('should show placeholder while popup open', async function() {
+      it('should fire <propertiesPanel.closePopup> event on component unmount', async function() {
 
         // given
-        const id = 'myPopup';
-        let currentPopupSource;
+        const eventBus = new EventBus();
+        const closePopupSpy = sinon.spy();
+        eventBus.on('propertiesPanel.closePopup', closePopupSpy);
 
-        const props = {
+        const result = createFeelField({
           container,
+          eventBus,
           feel: 'required',
-          id,
-          element: { type: 'foo' },
-          getValue: () => 'foo',
-          openPopup: () => currentPopupSource = id,
-          getPopupSource: () => currentPopupSource
-        };
-
-        const result = createFeelField(props);
-
-        const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
-
-        const placeholder = domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container);
-
-        // assume
-        expect(window.getComputedStyle(placeholder).display).to.eql('none');
+          id: 'testField'
+        });
 
         // when
         await act(() => {
-          openEditor.click();
+          result.unmount();
         });
 
-        createFeelField({
-          ...props,
-        }, result.render);
+        // then
+        expect(closePopupSpy).to.have.been.calledOnce;
+      });
+
+      it('should show placeholder when popup open', async function() {
+
+        // given
+        const id = 'myField';
+        const eventBus = new EventBus();
+        eventBus.on('propertiesPanel.openPopup', () => true);
+
+        const result = createFeelField({
+          container,
+          eventBus,
+          feel: 'required',
+          id
+        });
+
+        const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+        // when
+        await act(() => {
+          clickInput(openPopupButton);
+        });
 
         // then
-        expect(window.getComputedStyle(placeholder).display).to.eql('flex');
+        expect(domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container)).to.exist;
+      });
+
+      it('should not show placeholder when popup closed', async function() {
+
+        // given
+        const id = 'myField';
+
+        const result = createFeelField({
+          container,
+          feel: 'required',
+          id
+        });
+
+        // then
+        expect(domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container)).not.to.exist;
       });
 
     });
@@ -2765,9 +2764,6 @@ function createFeelField(options = {}, renderFn = render) {
     onBlur = noop,
     errors = {},
     variables,
-    openPopup = noop,
-    closePopup = noop,
-    getPopupSource = noop,
     Component = FeelField,
     ...rest
   } = options;
@@ -2789,40 +2785,32 @@ function createFeelField(options = {}, renderFn = render) {
     getDescriptionForId
   };
 
-  const feelPopupContext = {
-    open: openPopup,
-    close: closePopup,
-    source: getPopupSource()
-  };
-
   return renderFn(
     <ErrorsContext.Provider value={ errorsContext }>
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
           <DescriptionContext.Provider value={ descriptionContext }>
-            <FeelPopupContext.Provider value={ feelPopupContext }>
-              <Component
-                element={ element }
-                id={ id }
-                label={ label }
-                description={ description }
-                disabled={ disabled }
-                getValue={ getValue }
-                setValue={ setValue }
-                onBlur={ onBlur }
-                debounce={ debounce }
-                validate={ validate }
-                feel={ feel }
-                variables={ variables }
-                { ...rest }
-              />
-            </FeelPopupContext.Provider>
+            <Component
+              element={ element }
+              id={ id }
+              label={ label }
+              description={ description }
+              disabled={ disabled }
+              getValue={ getValue }
+              setValue={ setValue }
+              onBlur={ onBlur }
+              debounce={ debounce }
+              validate={ validate }
+              feel={ feel }
+              variables={ variables }
+              { ...rest }
+            />
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>
     </ErrorsContext.Provider>,
     {
-      container
+      container,
     }
   );
 }
