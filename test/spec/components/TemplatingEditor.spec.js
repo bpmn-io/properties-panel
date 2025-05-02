@@ -113,7 +113,7 @@ describe('<TemplatingEditor>', function() {
     // given
     const spy = sinon.spy();
 
-    render(<Wrapper value={ '' } onPopupOpen={ spy } />, { container });
+    render(<Wrapper value={ '' } onOpenPopup={ spy } />, { container });
 
     const openPopup = domQuery('.bio-properties-panel-open-feel-popup', container);
 
@@ -130,18 +130,31 @@ describe('<TemplatingEditor>', function() {
     // given
     const result = render(<Wrapper value={ '' } />, { container });
 
-    const placeholder = domQuery('.bio-properties-panel-feelers-editor__open-popup-placeholder', container);
-
     // assume
-    expect(window.getComputedStyle(placeholder).display).to.eql('none');
+    expect(domQuery('.bio-properties-panel-feelers-editor__popup-placeholder', container)).not.to.exist;
 
     // when
     result.rerender(<Wrapper value={ '' } popupOpen={ true } />, { container });
 
     // then
-    expect(window.getComputedStyle(placeholder).display).to.eql('flex');
+    expect(domQuery('.bio-properties-panel-feelers-editor__popup-placeholder', container)).to.exist;
   });
 
+
+  it('should call onOpenPopup with feelers type', async function() {
+
+    // given
+    const spy = sinon.spy();
+    render(<Wrapper onOpenPopup={ spy } />, { container });
+
+    const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', container);
+
+    // when
+    openPopupButton.click();
+
+    // then
+    expect(spy).to.have.been.calledWith('feelers');
+  });
 });
 
 

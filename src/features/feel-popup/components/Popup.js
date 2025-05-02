@@ -1,18 +1,14 @@
-import { createPortal, forwardRef } from 'preact/compat';
+import { forwardRef } from 'preact/compat';
 
-import { useEffect, useMemo, useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
-import { query as domQuery } from 'min-dom';
-
 import * as focusTrap from 'focus-trap';
 
-import { DragIcon, CloseIcon } from './icons';
+import { DragIcon, CloseIcon } from '../../../components/icons';
 
-import { createDragger } from './util/dragger';
-import { useEvent } from '../hooks/useEvent';
-
+import { createDragger } from '../../../components/util/dragger';
 
 const noop = () => {};
 
@@ -20,10 +16,9 @@ const noop = () => {};
  * A generic popup component.
  *
  * @param {Object} props
- * @param {HTMLElement} [props.container]
  * @param {string} [props.className]
  * @param {boolean} [props.delayInitialFocus]
- * @param {{x: number, y: number}} [props.position]
+ * @param {{top: number, left: number}} [props.position]
  * @param {number} [props.width]
  * @param {number} [props.height]
  * @param {Function} props.onClose
@@ -35,9 +30,7 @@ const noop = () => {};
  * @param {Ref} [ref]
  */
 function PopupComponent(props, globalRef) {
-
   const {
-    container,
     className,
     delayInitialFocus,
     position,
@@ -55,9 +48,7 @@ function PopupComponent(props, globalRef) {
   const localRef = useRef(null);
   const popupRef = globalRef || localRef;
 
-  const containerNode = useMemo(() => getContainerNode(container), [ container ]);
-
-  const handleKeydown = event => {
+  const handleKeydown = (event) => {
 
     // do not allow keyboard events to bubble
     event.stopPropagation();
@@ -80,7 +71,7 @@ function PopupComponent(props, globalRef) {
     style = {
       ...style,
       top: position.top + 'px',
-      left: position.left + 'px'
+      left: position.left + 'px',
     };
   }
 
@@ -97,7 +88,11 @@ function PopupComponent(props, globalRef) {
       popupRef.current.addEventListener('focusin', handleFocus);
     }
 
-    return () => { popupRef.current.removeEventListener('focusin', handleFocus); };
+    return () => {
+      if (popupRef.current) {
+        popupRef.current.removeEventListener('focusin', handleFocus);
+      }
+    };
   }, [ popupRef ]);
 
   useEffect(() => {
@@ -108,7 +103,7 @@ function PopupComponent(props, globalRef) {
         fallbackFocus: popupRef.current,
         onPostActivate,
         onPostDeactivate,
-        returnFocusOnDeactivate: returnFocus
+        returnFocusOnDeactivate: returnFocus,
       });
 
       focusTrapRef.current.activate();
@@ -117,9 +112,7 @@ function PopupComponent(props, globalRef) {
     return () => focusTrapRef.current && focusTrapRef.current.deactivate();
   }, [ popupRef ]);
 
-  useEvent('propertiesPanel.detach', onClose);
-
-  return createPortal(
+  return (
     <div
       aria-label={ title }
       tabIndex={ -1 }
@@ -127,8 +120,10 @@ function PopupComponent(props, globalRef) {
       onKeyDown={ handleKeydown }
       role="dialog"
       class={ classNames('bio-properties-panel-popup', className) }
-      style={ style }>{ props.children }</div>
-    , containerNode || document.body
+      style={ style }
+    >
+      {props.children}
+    </div>
   );
 }
 
@@ -143,7 +138,7 @@ function Title(props) {
     children,
     className,
     draggable,
-    emit = () => {},
+    eventBus,
     title,
     showCloseButton = false,
     closeButtonTooltip = 'Close popup',
@@ -155,7 +150,7 @@ function Title(props) {
   // manipulate this inside dragging events
   const context = useRef({
     startPosition: null,
-    newPosition: null
+    newPosition: null,
   });
 
   const dragPreviewRef = useRef();
@@ -169,7 +164,7 @@ function Title(props) {
 
     const newPosition = {
       x: context.current.startPosition.x + dx,
-      y: context.current.startPosition.y + dy
+      y: context.current.startPosition.y + dy,
     };
 
     const popupParent = getPopupParent(titleRef.current);
@@ -177,8 +172,7 @@ function Title(props) {
     popupParent.style.top = newPosition.y + 'px';
     popupParent.style.left = newPosition.x + 'px';
 
-    // notify interested parties
-    emit('dragover', { newPosition, delta });
+    eventBus?.fire('feelPopup.dragover', { newPosition, delta });
   };
 
   const onMoveStart = (event) => {
@@ -194,18 +188,16 @@ function Title(props) {
     const bounds = popupParent.getBoundingClientRect();
     context.current.startPosition = {
       x: bounds.left,
-      y: bounds.top
+      y: bounds.top,
     };
 
-    // notify interested parties
-    emit('dragstart');
+    eventBus?.fire('feelPopup.dragstart');
   };
 
   const onMoveEnd = () => {
     context.current.newPosition = null;
 
-    // notify interested parties
-    emit('dragend');
+    eventBus?.fire('feelPopup.dragend');
   };
 
   return (
@@ -219,22 +211,27 @@ function Title(props) {
       draggable={ draggable }
       onDragStart={ onMoveStart }
       onDragEnd={ onMoveEnd }
-      { ...rest }>
-      { draggable && (
+      { ...rest }
+    >
+      {draggable && (
         <>
-          <div ref={ dragPreviewRef } class="bio-properties-panel-popup__drag-preview"></div>
+          <div
+            ref={ dragPreviewRef }
+            class="bio-properties-panel-popup__drag-preview"
+          ></div>
           <div class="bio-properties-panel-popup__drag-handle">
             <DragIcon />
           </div>
         </>
       )}
-      <div class="bio-properties-panel-popup__title">{ title }</div>
-      { children }
-      { showCloseButton && (
+      <div class="bio-properties-panel-popup__title">{title}</div>
+      {children}
+      {showCloseButton && (
         <button
           title={ closeButtonTooltip }
           class="bio-properties-panel-popup__close"
-          onClick={ onClose }>
+          onClick={ onClose }
+        >
           <CloseIcon />
         </button>
       )}
@@ -243,33 +240,30 @@ function Title(props) {
 }
 
 function Body(props) {
-  const {
-    children,
-    className,
-    ...rest
-  } = props;
+  const { children, className, ...rest } = props;
 
   return (
-    <div class={ classNames('bio-properties-panel-popup__body', className) } { ...rest }>
-      { children }
+    <div
+      class={ classNames('bio-properties-panel-popup__body', className) }
+      { ...rest }
+    >
+      {children}
     </div>
   );
 }
 
 function Footer(props) {
-  const {
-    children,
-    className,
-    ...rest
-  } = props;
+  const { children, className, ...rest } = props;
 
   return (
-    <div class={ classNames('bio-properties-panel-popup__footer', className) } { ...rest }>
-      { props.children }
+    <div
+      class={ classNames('bio-properties-panel-popup__footer', className) }
+      { ...rest }
+    >
+      {props.children}
     </div>
   );
 }
-
 
 // helpers //////////////////////
 
@@ -280,12 +274,4 @@ function getPopupParent(node) {
 function cancel(event) {
   event.preventDefault();
   event.stopPropagation();
-}
-
-function getContainerNode(node) {
-  if (typeof node === 'string') {
-    return domQuery(node);
-  }
-
-  return node;
 }

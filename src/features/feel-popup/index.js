@@ -1,5 +1,8 @@
-import feelPopup from './FeelPopupModule';
+import { FeelPopup } from './FeelPopup';
+import { FeelPopupRenderer } from './FeelPopupRenderer';
 
 export default {
-  feelPopup: [ 'type', feelPopup ]
+  __init__: [ 'feelPopup', 'feelPopupRenderer' ],
+  feelPopup: [ 'type', FeelPopup ],
+  feelPopupRenderer: [ 'type', FeelPopupRenderer ],
 };
