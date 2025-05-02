@@ -240,7 +240,7 @@ function FeelTextfield(props) {
         entryId: id
       });
     };
-  }, [ eventBus, id ]);
+  }, []);
 
   // copy-paste integration
   useEffect(() => {
