@@ -21,7 +21,7 @@ import {
   insertCoreStyles
 } from 'test/TestHelper';
 
-import { FeelPopupContext } from '../../../src/context';
+import { ExpandedEntriesContext } from '../../../src/context';
 
 insertCoreStyles();
 
@@ -771,7 +771,7 @@ function ChildComponent(props) {
 
   const {
     open
-  } = useContext(FeelPopupContext);
+  } = useContext(ExpandedEntriesContext);
 
   const btnRef = useRef(null);
 
