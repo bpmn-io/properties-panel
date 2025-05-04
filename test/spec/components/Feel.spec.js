@@ -1,16 +1,11 @@
 import { act } from 'preact/test-utils';
 
 import { waitFor } from '@testing-library/dom';
-import {
-  render
-} from '@testing-library/preact/pure';
+import { render } from '@testing-library/preact/pure';
 
 import TestContainer from 'mocha-test-container-support';
 
-import {
-  classes as domClasses,
-  query as domQuery
-} from 'min-dom';
+import { classes as domClasses, query as domQuery } from 'min-dom';
 
 import EventBus from 'diagram-js/lib/core/EventBus';
 
@@ -18,7 +13,7 @@ import {
   changeInput,
   clickInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
 } from 'test/TestHelper';
 
 import {
@@ -26,7 +21,7 @@ import {
   ErrorsContext,
   EventContext,
   PropertiesPanelContext,
-  FeelPopupContext
+  ExpandedEntriesContext,
 } from 'src/context';
 
 import FeelField, {
@@ -34,7 +29,7 @@ import FeelField, {
   FeelNumberEntry,
   FeelTextAreaEntry,
   FeelToggleSwitchEntry,
-  isEdited
+  isEdited,
 } from 'src/components/entries/FEEL';
 
 insertCoreStyles();
@@ -42,7 +37,6 @@ insertCoreStyles();
 const noop = () => {};
 
 describe('<FeelField>', function() {
-
   let container;
 
   beforeEach(function() {
@@ -50,16 +44,15 @@ describe('<FeelField>', function() {
   });
 
   describe('FEEL disabled (TextInput)', function() {
-
     it('should render', function() {
 
       // given
       const result = createFeelField({ container });
 
       // then
-      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to
+        .exist;
     });
-
 
     it('should render placeholder', function() {
 
@@ -70,7 +63,6 @@ describe('<FeelField>', function() {
       const input = domQuery('[placeholder=foo]', result.container);
       expect(input).to.exist;
     });
-
 
     it('should update', function() {
 
@@ -88,9 +80,7 @@ describe('<FeelField>', function() {
       expect(updateSpy).to.have.been.calledWith('foo');
     });
 
-
     describe('#isEdited', function() {
-
       it('should NOT be edited', function() {
 
         // given
@@ -105,7 +95,6 @@ describe('<FeelField>', function() {
         expect(edited).to.be.false;
       });
 
-
       it('should be edited', function() {
 
         // given
@@ -119,7 +108,6 @@ describe('<FeelField>', function() {
         // then
         expect(edited).to.be.true;
       });
-
 
       it('should be edited after update', function() {
 
@@ -137,9 +125,7 @@ describe('<FeelField>', function() {
         // then
         expect(isEdited(input)).to.be.true;
       });
-
     });
-
 
     it('should use unique input element on element change', function() {
 
@@ -157,9 +143,7 @@ describe('<FeelField>', function() {
       expect(newInput).to.not.eql(input);
     });
 
-
     describe('events', function() {
-
       it('should show entry', function() {
 
         // given
@@ -175,29 +159,25 @@ describe('<FeelField>', function() {
         // then
         expect(onShowSpy).to.have.been.called;
       });
-
     });
 
-
     describe('errors', function() {
-
       it('should get error', function() {
 
         // given
         const errors = {
-          foo: 'bar'
+          foo: 'bar',
         };
 
         const result = createFeelField({ container, errors, id: 'foo' });
 
         // then
-        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+        expect(domQuery('.bio-properties-panel-error', result.container)).to
+          .exist;
       });
-
     });
 
     describe('validation', function() {
-
       it('should set valid', function() {
 
         // given
@@ -216,7 +196,6 @@ describe('<FeelField>', function() {
         expect(isValid(entry)).to.be.true;
       });
 
-
       it('should set invalid', function() {
 
         // given
@@ -234,7 +213,6 @@ describe('<FeelField>', function() {
         expect(isValid(entry)).to.be.false;
       });
 
-
       it('should keep showing invalid value', function() {
 
         // given
@@ -251,7 +229,6 @@ describe('<FeelField>', function() {
         // then
         expect(input.value).to.eql('bar');
       });
-
 
       it('should show error message', function() {
 
@@ -273,14 +250,17 @@ describe('<FeelField>', function() {
         expect(error.innerText).to.eql('error');
       });
 
-
       it('should pass error to `setValue`', function() {
 
         // given
         const setValueSpy = sinon.spy();
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate, setValue: setValueSpy });
+        const result = createFeelField({
+          container,
+          validate,
+          setValue: setValueSpy,
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
@@ -291,7 +271,6 @@ describe('<FeelField>', function() {
         // then
         expect(setValueSpy).to.have.been.calledWith('bar', 'error');
       });
-
 
       it('should check again if validation function changes', function() {
 
@@ -311,69 +290,71 @@ describe('<FeelField>', function() {
         // then
         expect(isValid(entry)).to.be.true;
       });
-
     });
 
-
     describe('disabled', function() {
-
       it('should render enabled per default', function() {
 
         // given
         const result = createFeelField({ container });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry input',
+          result.container
+        );
         expect(textInput.disabled).to.be.false;
       });
-
 
       it('should render enabled if set', function() {
 
         // given
         const result = createFeelField({
           container,
-          disabled: false
+          disabled: false,
         });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry input',
+          result.container
+        );
         expect(textInput.disabled).to.be.false;
       });
-
 
       it('should render disabled if set', function() {
 
         // given
         const result = createFeelField({
           container,
-          disabled: true
+          disabled: true,
         });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry input',
+          result.container
+        );
         expect(textInput.disabled).to.be.true;
       });
-
     });
 
-
     describe('description', function() {
-
       it('should render without description per default', function() {
 
         // given
         const result = createFeelField({
           container,
-          id: 'noDescriptionTextField'
+          id: 'noDescriptionTextField',
         });
 
         // then
-        const description = domQuery('[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
         expect(description).not.to.exist;
       });
-
 
       it('should render with description if set per props', function() {
 
@@ -382,44 +363,50 @@ describe('<FeelField>', function() {
           container,
           id: 'descriptionTextField',
           label: 'someLabel',
-          description: 'my description'
+          description: 'my description',
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('my description');
       });
 
-
       it('should render with description if set per context', function() {
 
         // given
-        const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+        const descriptionConfig = {
+          descriptionTextField: (element) => 'myContextDesc',
+        };
 
         const result = createFeelField({
           container,
           id: 'descriptionTextField',
           label: 'someLabel',
           descriptionConfig,
-          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+          getDescriptionForId: (id, element) => descriptionConfig[id](element),
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('myContextDesc');
       });
 
-
       it('should render description set per props over context', function() {
 
         // given
-        const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+        const descriptionConfig = {
+          descriptionTextField: (element) => 'myContextDesc',
+        };
 
         const result = createFeelField({
           container,
@@ -427,19 +414,19 @@ describe('<FeelField>', function() {
           label: 'someLabel',
           description: 'myExplicitDescription',
           descriptionConfig,
-          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+          getDescriptionForId: (id, element) => descriptionConfig[id](element),
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('myExplicitDescription');
       });
-
     });
-
 
     it('should render optional feel icon', function() {
 
@@ -447,18 +434,18 @@ describe('<FeelField>', function() {
       const field = createFeelField({
         container,
         id: 'feelField',
-        feel: 'optional'
+        feel: 'optional',
       });
 
       // then
-      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-        field.container);
+      const icon = domQuery(
+        '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container
+      );
       expect(icon).to.exist;
     });
 
-
     describe('toggle', function() {
-
       it('should toggle feel active', async function() {
 
         // given
@@ -469,11 +456,13 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => 'foo',
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
-        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-          field.container);
+        const icon = domQuery(
+          '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container
+        );
 
         // when
         await act(() => {
@@ -483,10 +472,14 @@ describe('<FeelField>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=foo');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(
+            domQuery(
+              '.bio-properties-panel-feel-editor-container',
+              field.container
+            )
+          ).to.exist;
         });
       });
-
 
       it('should toggle on input', function() {
         const updateSpy = sinon.spy();
@@ -494,7 +487,7 @@ describe('<FeelField>', function() {
         const result = createFeelField({
           container,
           getValue: () => 'foo',
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
@@ -504,10 +497,10 @@ describe('<FeelField>', function() {
 
         // then
         expect(updateSpy).to.have.been.calledWith('=foo');
-        expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
-
+        expect(
+          domQuery('.bio-properties-panel-feel-editor-container', container)
+        ).to.exist;
       });
-
 
       it('should toggle on paste with FEEL mime type', function() {
 
@@ -518,7 +511,7 @@ describe('<FeelField>', function() {
           container,
           feel: 'optional',
           getValue: () => 'foo',
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
@@ -528,7 +521,7 @@ describe('<FeelField>', function() {
 
         const paste = new ClipboardEvent('paste', {
           bubbles: true,
-          clipboardData: data
+          clipboardData: data,
         });
 
         // when
@@ -539,23 +532,19 @@ describe('<FeelField>', function() {
           expect(updateSpy).to.have.been.calledWith('=foo');
         });
       });
-
     });
-
   });
 
-
   describe('FEEL disabled (NumberField)', function() {
-
     it('should render', function() {
 
       // given
       const result = createFeelNumber({ container });
 
       // then
-      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to
+        .exist;
     });
-
 
     it('should update', function() {
 
@@ -573,13 +562,16 @@ describe('<FeelField>', function() {
       expect(updateSpy).to.have.been.calledWith(2);
     });
 
-
     it('should update (floating point number)', function() {
 
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
+      const result = createFeelNumber({
+        container,
+        setValue: updateSpy,
+        step: 'any',
+      });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -590,13 +582,16 @@ describe('<FeelField>', function() {
       expect(updateSpy).to.have.been.calledWith(20.5);
     });
 
-
     it('should update (0)', function() {
 
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
+      const result = createFeelNumber({
+        container,
+        setValue: updateSpy,
+        step: 'any',
+      });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -607,9 +602,7 @@ describe('<FeelField>', function() {
       expect(updateSpy).to.have.been.calledWith(0);
     });
 
-
     describe('#isEdited', function() {
-
       it('should NOT be edited', function() {
 
         // given
@@ -624,7 +617,6 @@ describe('<FeelField>', function() {
         expect(edited).to.be.false;
       });
 
-
       it('should be edited', function() {
 
         // given
@@ -638,7 +630,6 @@ describe('<FeelField>', function() {
         // then
         expect(edited).to.be.true;
       });
-
 
       it('should be edited after update', function() {
 
@@ -656,9 +647,7 @@ describe('<FeelField>', function() {
         // then
         expect(isEdited(input)).to.be.true;
       });
-
     });
-
 
     it('should use unique input element on element change', function() {
 
@@ -676,9 +665,7 @@ describe('<FeelField>', function() {
       expect(newInput).to.not.eql(input);
     });
 
-
     describe('events', function() {
-
       it('should show entry', function() {
 
         // given
@@ -694,29 +681,25 @@ describe('<FeelField>', function() {
         // then
         expect(onShowSpy).to.have.been.called;
       });
-
     });
 
-
     describe('errors', function() {
-
       it('should get error', function() {
 
         // given
         const errors = {
-          foo: 'bar'
+          foo: 'bar',
         };
 
         const result = createFeelNumber({ container, errors, id: 'foo' });
 
         // then
-        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+        expect(domQuery('.bio-properties-panel-error', result.container)).to
+          .exist;
       });
-
     });
 
     describe('validation', function() {
-
       it('should set valid', function() {
 
         // given
@@ -735,7 +718,6 @@ describe('<FeelField>', function() {
         expect(isValid(entry)).to.be.true;
       });
 
-
       it('should set invalid', function() {
 
         // given
@@ -752,7 +734,6 @@ describe('<FeelField>', function() {
         // then
         expect(isValid(entry)).to.be.false;
       });
-
 
       it('should keep showing invalid value', function() {
 
@@ -771,7 +752,6 @@ describe('<FeelField>', function() {
         expect(input.value).to.eql('3');
       });
 
-
       it('should show error message', function() {
 
         // given
@@ -792,14 +772,17 @@ describe('<FeelField>', function() {
         expect(error.innerText).to.eql('error');
       });
 
-
       it('should pass error to `setValue`', function() {
 
         // given
         const setValueSpy = sinon.spy();
         const validate = () => 'error';
 
-        const result = createFeelNumber({ container, validate, setValue: setValueSpy });
+        const result = createFeelNumber({
+          container,
+          validate,
+          setValue: setValueSpy,
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
@@ -812,66 +795,69 @@ describe('<FeelField>', function() {
       });
     });
 
-
     describe('disabled', function() {
-
       it('should render enabled per default', function() {
 
         // given
         const result = createFeelNumber({ container });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry input',
+          result.container
+        );
         expect(textInput.disabled).to.be.false;
       });
-
 
       it('should render enabled if set', function() {
 
         // given
         const result = createFeelNumber({
           container,
-          disabled: false
+          disabled: false,
         });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry input',
+          result.container
+        );
         expect(textInput.disabled).to.be.false;
       });
-
 
       it('should render disabled if set', function() {
 
         // given
         const result = createFeelNumber({
           container,
-          disabled: true
+          disabled: true,
         });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry input', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry input',
+          result.container
+        );
         expect(textInput.disabled).to.be.true;
       });
-
     });
 
-
     describe('description', function() {
-
       it('should render without description per default', function() {
 
         // given
         const result = createFeelNumber({
           container,
-          id: 'noDescriptionNumberField'
+          id: 'noDescriptionNumberField',
         });
 
         // then
-        const description = domQuery('[data-entry-id="noDescriptionNumberField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="noDescriptionNumberField"] .bio-properties-panel-description',
+          result.container
+        );
         expect(description).not.to.exist;
       });
-
 
       it('should render with description if set per props', function() {
 
@@ -880,44 +866,50 @@ describe('<FeelField>', function() {
           container,
           id: 'descriptionNumberField',
           label: 'someLabel',
-          description: 'my description'
+          description: 'my description',
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('my description');
       });
 
-
       it('should render with description if set per context', function() {
 
         // given
-        const descriptionConfig = { descriptionNumberField: (element) => 'myContextDesc' };
+        const descriptionConfig = {
+          descriptionNumberField: (element) => 'myContextDesc',
+        };
 
         const result = createFeelNumber({
           container,
           id: 'descriptionNumberField',
           label: 'someLabel',
           descriptionConfig,
-          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+          getDescriptionForId: (id, element) => descriptionConfig[id](element),
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('myContextDesc');
       });
 
-
       it('should render description set per props over context', function() {
 
         // given
-        const descriptionConfig = { descriptionNumberField: (element) => 'myContextDesc' };
+        const descriptionConfig = {
+          descriptionNumberField: (element) => 'myContextDesc',
+        };
 
         const result = createFeelNumber({
           container,
@@ -925,19 +917,19 @@ describe('<FeelField>', function() {
           label: 'someLabel',
           description: 'myExplicitDescription',
           descriptionConfig,
-          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+          getDescriptionForId: (id, element) => descriptionConfig[id](element),
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionNumberField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('myExplicitDescription');
       });
-
     });
-
 
     it('should render optional feel icon', function() {
 
@@ -945,18 +937,18 @@ describe('<FeelField>', function() {
       const field = createFeelNumber({
         container,
         id: 'feelField',
-        feel: 'optional'
+        feel: 'optional',
       });
 
       // then
-      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-        field.container);
+      const icon = domQuery(
+        '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container
+      );
       expect(icon).to.exist;
     });
 
-
     describe('toggle', function() {
-
       it('should toggle feel active', async function() {
 
         // given
@@ -967,11 +959,13 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => 2,
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
-        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-          field.container);
+        const icon = domQuery(
+          '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container
+        );
 
         // when
         await act(() => {
@@ -981,10 +975,14 @@ describe('<FeelField>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=2');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(
+            domQuery(
+              '.bio-properties-panel-feel-editor-container',
+              field.container
+            )
+          ).to.exist;
         });
       });
-
 
       it('should toggle on paste with FEEL mime type', function() {
 
@@ -995,7 +993,7 @@ describe('<FeelField>', function() {
           container,
           feel: 'optional',
           getValue: () => 2,
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
@@ -1005,7 +1003,7 @@ describe('<FeelField>', function() {
 
         const paste = new ClipboardEvent('paste', {
           bubbles: true,
-          clipboardData: data
+          clipboardData: data,
         });
 
         // when
@@ -1016,23 +1014,19 @@ describe('<FeelField>', function() {
           expect(updateSpy).to.have.been.calledWith('=2');
         });
       });
-
     });
-
   });
 
-
   describe('FEEL disabled (TextArea)', function() {
-
     it('should render', function() {
 
       // given
       const result = createFeelTextArea({ container });
 
       // then
-      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to
+        .exist;
     });
-
 
     it('should render placeholder', function() {
 
@@ -1043,7 +1037,6 @@ describe('<FeelField>', function() {
       const input = domQuery('[placeholder=foo]', result.container);
       expect(input).to.exist;
     });
-
 
     // https://github.com/bpmn-io/bpmn-js-properties-panel/issues/810
     it('should be flagged with data-gramm="false"', function() {
@@ -1056,7 +1049,6 @@ describe('<FeelField>', function() {
       // then
       expect(input.dataset.gramm).to.eql('false');
     });
-
 
     it('should update', function() {
 
@@ -1074,9 +1066,7 @@ describe('<FeelField>', function() {
       expect(updateSpy).to.have.been.calledWith('foo');
     });
 
-
     describe('#isEdited', function() {
-
       it('should NOT be edited', function() {
 
         // given
@@ -1091,7 +1081,6 @@ describe('<FeelField>', function() {
         expect(edited).to.be.false;
       });
 
-
       it('should be edited', function() {
 
         // given
@@ -1105,7 +1094,6 @@ describe('<FeelField>', function() {
         // then
         expect(edited).to.be.true;
       });
-
 
       it('should be edited after update', function() {
 
@@ -1123,12 +1111,9 @@ describe('<FeelField>', function() {
         // then
         expect(isEdited(input)).to.be.true;
       });
-
     });
 
-
     describe('events', function() {
-
       it('should show entry', function() {
 
         // given
@@ -1136,7 +1121,12 @@ describe('<FeelField>', function() {
 
         const onShowSpy = sinon.spy();
 
-        createFeelTextArea({ id: 'foo', container, eventBus, onShow: onShowSpy });
+        createFeelTextArea({
+          id: 'foo',
+          container,
+          eventBus,
+          onShow: onShowSpy,
+        });
 
         // when
         act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
@@ -1144,30 +1134,25 @@ describe('<FeelField>', function() {
         // then
         expect(onShowSpy).to.have.been.called;
       });
-
     });
 
-
     describe('errors', function() {
-
       it('should get error', function() {
 
         // given
         const errors = {
-          foo: 'bar'
+          foo: 'bar',
         };
 
         const result = createFeelTextArea({ container, errors, id: 'foo' });
 
         // then
-        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+        expect(domQuery('.bio-properties-panel-error', result.container)).to
+          .exist;
       });
-
     });
 
-
     describe('validation', function() {
-
       it('should set valid', function() {
 
         // given
@@ -1186,7 +1171,6 @@ describe('<FeelField>', function() {
         expect(isValid(entry)).to.be.true;
       });
 
-
       it('should set invalid', function() {
 
         // given
@@ -1204,7 +1188,6 @@ describe('<FeelField>', function() {
         expect(isValid(entry)).to.be.false;
       });
 
-
       it('should keep showing invalid value', function() {
 
         // given
@@ -1221,7 +1204,6 @@ describe('<FeelField>', function() {
         // then
         expect(input.value).to.eql('bar');
       });
-
 
       it('should show error message', function() {
 
@@ -1243,14 +1225,17 @@ describe('<FeelField>', function() {
         expect(error.innerText).to.eql('error');
       });
 
-
       it('should pass error to `setValue`', function() {
 
         // given
         const setValueSpy = sinon.spy();
         const validate = () => 'error';
 
-        const result = createFeelTextArea({ container, validate, setValue: setValueSpy });
+        const result = createFeelTextArea({
+          container,
+          validate,
+          setValue: setValueSpy,
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('.bio-properties-panel-input', entry);
@@ -1261,69 +1246,71 @@ describe('<FeelField>', function() {
         // then
         expect(setValueSpy).to.have.been.calledWith('bar', 'error');
       });
-
     });
 
-
     describe('disabled', function() {
-
       it('should render enabled per default', function() {
 
         // given
         const result = createFeelTextArea({ container });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry textarea', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry textarea',
+          result.container
+        );
         expect(textInput.disabled).to.be.false;
       });
-
 
       it('should render enabled if set', function() {
 
         // given
         const result = createFeelTextArea({
           container,
-          disabled: false
+          disabled: false,
         });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry textarea', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry textarea',
+          result.container
+        );
         expect(textInput.disabled).to.be.false;
       });
-
 
       it('should render disabled if set', function() {
 
         // given
         const result = createFeelTextArea({
           container,
-          disabled: true
+          disabled: true,
         });
 
         // then
-        const textInput = domQuery('.bio-properties-panel-feel-entry textarea', result.container);
+        const textInput = domQuery(
+          '.bio-properties-panel-feel-entry textarea',
+          result.container
+        );
         expect(textInput.disabled).to.be.true;
       });
-
     });
 
-
     describe('description', function() {
-
       it('should render without description per default', function() {
 
         // given
         const result = createFeelTextArea({
           container,
-          id: 'noDescriptionTextField'
+          id: 'noDescriptionTextField',
         });
 
         // then
-        const description = domQuery('[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
         expect(description).not.to.exist;
       });
-
 
       it('should render with description if set per props', function() {
 
@@ -1332,44 +1319,50 @@ describe('<FeelField>', function() {
           container,
           id: 'descriptionTextField',
           label: 'someLabel',
-          description: 'my description'
+          description: 'my description',
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('my description');
       });
 
-
       it('should render with description if set per context', function() {
 
         // given
-        const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+        const descriptionConfig = {
+          descriptionTextField: (element) => 'myContextDesc',
+        };
 
         const result = createFeelTextArea({
           container,
           id: 'descriptionTextField',
           label: 'someLabel',
           descriptionConfig,
-          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+          getDescriptionForId: (id, element) => descriptionConfig[id](element),
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('myContextDesc');
       });
 
-
       it('should render description set per props over context', function() {
 
         // given
-        const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+        const descriptionConfig = {
+          descriptionTextField: (element) => 'myContextDesc',
+        };
 
         const result = createFeelTextArea({
           container,
@@ -1377,19 +1370,19 @@ describe('<FeelField>', function() {
           label: 'someLabel',
           description: 'myExplicitDescription',
           descriptionConfig,
-          getDescriptionForId: (id, element) => descriptionConfig[id](element)
+          getDescriptionForId: (id, element) => descriptionConfig[id](element),
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('myExplicitDescription');
       });
-
     });
-
 
     it('should render optional feel icon', function() {
 
@@ -1397,18 +1390,18 @@ describe('<FeelField>', function() {
       const field = createFeelTextArea({
         container,
         id: 'feelField',
-        feel: 'optional'
+        feel: 'optional',
       });
 
       // then
-      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-        field.container);
+      const icon = domQuery(
+        '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container
+      );
       expect(icon).to.exist;
     });
 
-
     describe('toggle', function() {
-
       it('should toggle feel active', async function() {
 
         // given
@@ -1419,11 +1412,13 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => 'foo',
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
-        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-          field.container);
+        const icon = domQuery(
+          '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container
+        );
 
         // when
         await act(() => {
@@ -1433,10 +1428,14 @@ describe('<FeelField>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=foo');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(
+            domQuery(
+              '.bio-properties-panel-feel-editor-container',
+              field.container
+            )
+          ).to.exist;
         });
       });
-
 
       it('should toggle on input', function() {
         const updateSpy = sinon.spy();
@@ -1444,7 +1443,7 @@ describe('<FeelField>', function() {
         const result = createFeelTextArea({
           container,
           getValue: () => 'foo',
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
@@ -1454,36 +1453,39 @@ describe('<FeelField>', function() {
 
         // then
         expect(updateSpy).to.have.been.calledWith('=foo');
-        expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
-
+        expect(
+          domQuery('.bio-properties-panel-feel-editor-container', container)
+        ).to.exist;
       });
-
-
     });
-
   });
 
-
   describe('FEEL disabled (Toggle Switch)', function() {
-
     it('should render', function() {
 
       // given
       const result = createFeelToggleSwitch({ container });
 
       // then
-      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to
+        .exist;
     });
-
 
     it('should update', function() {
 
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelToggleSwitch({ container, setValue: updateSpy, getValue: () => false });
+      const result = createFeelToggleSwitch({
+        container,
+        setValue: updateSpy,
+        getValue: () => false,
+      });
 
-      const slider = domQuery('.bio-properties-panel-toggle-switch__slider', result.container);
+      const slider = domQuery(
+        '.bio-properties-panel-toggle-switch__slider',
+        result.container
+      );
 
       // when
       clickInput(slider);
@@ -1492,13 +1494,14 @@ describe('<FeelField>', function() {
       expect(updateSpy).to.have.been.calledWith(true);
     });
 
-
     describe('#isEdited', function() {
-
       it('should NOT be edited', function() {
 
         // given
-        const result = createFeelToggleSwitch({ container, getValue: () => false });
+        const result = createFeelToggleSwitch({
+          container,
+          getValue: () => false,
+        });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -1509,11 +1512,13 @@ describe('<FeelField>', function() {
         expect(edited).to.be.false;
       });
 
-
       it('should be edited', function() {
 
         // given
-        const result = createFeelToggleSwitch({ container, getValue: () => true });
+        const result = createFeelToggleSwitch({
+          container,
+          getValue: () => true,
+        });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -1523,7 +1528,6 @@ describe('<FeelField>', function() {
         // then
         expect(edited).to.be.true;
       });
-
 
       it('should be edited after update', function() {
 
@@ -1536,16 +1540,17 @@ describe('<FeelField>', function() {
         expect(isEdited(input)).to.be.false;
 
         // when
-        const slider = domQuery('.bio-properties-panel-toggle-switch__slider', result.container);
+        const slider = domQuery(
+          '.bio-properties-panel-toggle-switch__slider',
+          result.container
+        );
 
         clickInput(slider);
 
         // then
         expect(isEdited(input)).to.be.true;
       });
-
     });
-
 
     it('should render optional feel icon', function() {
 
@@ -1553,18 +1558,18 @@ describe('<FeelField>', function() {
       const field = createFeelToggleSwitch({
         container,
         id: 'feelField',
-        feel: 'optional'
+        feel: 'optional',
       });
 
       // then
-      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-        field.container);
+      const icon = domQuery(
+        '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container
+      );
       expect(icon).to.exist;
     });
 
-
     describe('toggle', function() {
-
       it('should toggle feel active', async function() {
 
         // given
@@ -1575,11 +1580,13 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => true,
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
-        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-          field.container);
+        const icon = domQuery(
+          '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container
+        );
 
         // when
         await act(() => {
@@ -1589,33 +1596,38 @@ describe('<FeelField>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=true');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(
+            domQuery(
+              '.bio-properties-panel-feel-editor-container',
+              field.container
+            )
+          ).to.exist;
         });
       });
-
     });
-
   });
 
-
   describe('FEEL disabled (Checkbox)', function() {
-
     it('should render', function() {
 
       // given
       const result = createFeelCheckbox({ container });
 
       // then
-      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to
+        .exist;
     });
-
 
     it('should update', function() {
 
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelCheckbox({ container, setValue: updateSpy, getValue: () => false });
+      const result = createFeelCheckbox({
+        container,
+        setValue: updateSpy,
+        getValue: () => false,
+      });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -1626,9 +1638,7 @@ describe('<FeelField>', function() {
       expect(updateSpy).to.have.been.calledWith(true);
     });
 
-
     describe('#isEdited', function() {
-
       it('should NOT be edited', function() {
 
         // given
@@ -1643,7 +1653,6 @@ describe('<FeelField>', function() {
         expect(edited).to.be.false;
       });
 
-
       it('should be edited', function() {
 
         // given
@@ -1657,7 +1666,6 @@ describe('<FeelField>', function() {
         // then
         expect(edited).to.be.true;
       });
-
 
       it('should be edited after update', function() {
 
@@ -1675,9 +1683,7 @@ describe('<FeelField>', function() {
         // then
         expect(isEdited(input)).to.be.true;
       });
-
     });
-
 
     it('should render optional feel icon', function() {
 
@@ -1685,18 +1691,18 @@ describe('<FeelField>', function() {
       const field = createFeelCheckbox({
         container,
         id: 'feelField',
-        feel: 'optional'
+        feel: 'optional',
       });
 
       // then
-      const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-        field.container);
+      const icon = domQuery(
+        '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+        field.container
+      );
       expect(icon).to.exist;
     });
 
-
     describe('toggle', function() {
-
       it('should toggle feel active', async function() {
 
         // given
@@ -1707,11 +1713,13 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => true,
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
-        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-          field.container);
+        const icon = domQuery(
+          '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container
+        );
 
         // when
         await act(() => {
@@ -1721,44 +1729,52 @@ describe('<FeelField>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=true');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(
+            domQuery(
+              '.bio-properties-panel-feel-editor-container',
+              field.container
+            )
+          ).to.exist;
         });
       });
-
     });
-
   });
 
-
   describe('FEEL enabled', function() {
-
     it('should render', function() {
 
       // given
       const result = createFeelField({ container, feel: 'required' });
 
       // then
-      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to.exist;
+      expect(domQuery('.bio-properties-panel-feel-entry', result.container)).to
+        .exist;
     });
-
 
     it('should render placeholder', function() {
 
       // given
-      const result = createFeelField({ container, placeholder: 'foo', feel: 'required' });
+      const result = createFeelField({
+        container,
+        placeholder: 'foo',
+        feel: 'required',
+      });
 
       // then
       const input = domQuery('[role="textbox"]', result.container);
       expect(input.textContent).to.eql('foo');
     });
 
-
     it('should update', function() {
 
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelField({ container, setValue: updateSpy, feel: 'required' });
+      const result = createFeelField({
+        container,
+        setValue: updateSpy,
+        feel: 'required',
+      });
 
       const input = domQuery('[role="textbox"]', result.container);
 
@@ -1771,11 +1787,14 @@ describe('<FeelField>', function() {
       });
     });
 
-
     it('should render with missing = sign', async function() {
 
       // given
-      const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
+      const result = createFeelField({
+        container,
+        feel: 'required',
+        getValue: () => 'foo',
+      });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
       const input = domQuery('[role="textbox"]', entry);
@@ -1784,13 +1803,17 @@ describe('<FeelField>', function() {
       expect(input.textContent).to.eql('foo');
     });
 
-
     it('should update with missing = sign', function() {
 
       // given
       const updateSpy = sinon.spy();
 
-      const result = createFeelField({ container, setValue: updateSpy, getValue: () => 'foo', feel: 'required' });
+      const result = createFeelField({
+        container,
+        setValue: updateSpy,
+        getValue: () => 'foo',
+        feel: 'required',
+      });
 
       const input = domQuery('[role="textbox"]', result.container);
 
@@ -1803,14 +1826,13 @@ describe('<FeelField>', function() {
       });
     });
 
-
     it('should not submit empty feel expression', function() {
       const updateSpy = sinon.spy();
 
       const result = createFeelField({
         container,
         getValue: () => 'foo',
-        setValue: updateSpy
+        setValue: updateSpy,
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -1820,14 +1842,18 @@ describe('<FeelField>', function() {
 
       // then
       expect(updateSpy).to.have.been.calledWith(undefined);
-      expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
+      expect(domQuery('.bio-properties-panel-feel-editor-container', container))
+        .to.exist;
     });
-
 
     it('should copy with FEEL mime type', async function() {
 
       // given
-      const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
+      const result = createFeelField({
+        container,
+        feel: 'required',
+        getValue: () => 'foo',
+      });
 
       const contentEditable = domQuery('[role="textbox"]', result.container);
 
@@ -1835,7 +1861,7 @@ describe('<FeelField>', function() {
         dataType: 'text/plain',
         data: 'foo',
         bubbles: true,
-        clipboardData: new DataTransfer()
+        clipboardData: new DataTransfer(),
       });
 
       // when
@@ -1844,12 +1870,15 @@ describe('<FeelField>', function() {
       // then
       expect(copyEvent.clipboardData.getData('application/FEEL')).to.exist;
     });
-
 
     it('should cut with FEEL mime type', async function() {
 
       // given
-      const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
+      const result = createFeelField({
+        container,
+        feel: 'required',
+        getValue: () => 'foo',
+      });
 
       const contentEditable = domQuery('[role="textbox"]', result.container);
 
@@ -1857,7 +1886,7 @@ describe('<FeelField>', function() {
         dataType: 'text/plain',
         data: 'foo',
         bubbles: true,
-        clipboardData: new DataTransfer()
+        clipboardData: new DataTransfer(),
       });
 
       // when
@@ -1867,9 +1896,7 @@ describe('<FeelField>', function() {
       expect(copyEvent.clipboardData.getData('application/FEEL')).to.exist;
     });
 
-
     describe('#isEdited', function() {
-
       it('should NOT be edited', function() {
 
         // given
@@ -1884,11 +1911,14 @@ describe('<FeelField>', function() {
         expect(edited).to.be.false;
       });
 
-
       it('should be edited', function() {
 
         // given
-        const result = createFeelField({ container, getValue: () => 'foo', feel: 'required' });
+        const result = createFeelField({
+          container,
+          getValue: () => 'foo',
+          feel: 'required',
+        });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -1898,7 +1928,6 @@ describe('<FeelField>', function() {
         // then
         expect(edited).to.be.true;
       });
-
 
       it('should be edited after update', async function() {
 
@@ -1921,12 +1950,9 @@ describe('<FeelField>', function() {
           expect(isEdited(input)).to.be.true;
         });
       });
-
     });
 
-
     describe('events', function() {
-
       it('should show entry', function() {
 
         // given
@@ -1934,8 +1960,13 @@ describe('<FeelField>', function() {
 
         const onShowSpy = sinon.spy();
 
-
-        createFeelField({ id: 'foo', container, eventBus, onShow: onShowSpy, feel: 'required' });
+        createFeelField({
+          id: 'foo',
+          container,
+          eventBus,
+          onShow: onShowSpy,
+          feel: 'required',
+        });
 
         // when
         act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
@@ -1943,72 +1974,94 @@ describe('<FeelField>', function() {
         // then
         expect(onShowSpy).to.have.been.called;
       });
-
     });
 
-
     describe('errors', function() {
-
       it('should get error', function() {
 
         // given
         const errors = {
-          foo: 'bar'
+          foo: 'bar',
         };
 
-        const result = createFeelField({ container, errors, id: 'foo', feel: 'required' });
+        const result = createFeelField({
+          container,
+          errors,
+          id: 'foo',
+          feel: 'required',
+        });
 
         // then
-        expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
+        expect(domQuery('.bio-properties-panel-error', result.container)).to
+          .exist;
       });
-
 
       it('should show syntax error', async function() {
 
         // given
         const clock = sinon.useFakeTimers();
-        const result = createFeelField({ container, getValue: () => '= ...syntax error...', feel: 'required' });
+        const result = createFeelField({
+          container,
+          getValue: () => '= ...syntax error...',
+          feel: 'required',
+        });
 
         // when
         // trigger debounced validation
-        await act(() => { clock.tick(1000); });
-        await act(() => { clock.restore(); });
+        await act(() => {
+          clock.tick(1000);
+        });
+        await act(() => {
+          clock.restore();
+        });
 
         // then
         await waitFor(() => {
-          const errorField = domQuery('.bio-properties-panel-error', result.container);
+          const errorField = domQuery(
+            '.bio-properties-panel-error',
+            result.container
+          );
           expect(errorField).to.exist;
           expect(errorField.textContent).to.eql('Unparsable FEEL expression.');
         });
       });
 
-
       it('should not indicate field error on non-syntax errors', async function() {
 
         // given
         const clock = sinon.useFakeTimers();
-        const result = createFeelField({ container, getValue: () => '= friend[0]', feel: 'required' });
+        const result = createFeelField({
+          container,
+          getValue: () => '= friend[0]',
+          feel: 'required',
+        });
 
         // when
         // trigger debounced validation
-        await act(() => { clock.tick(1000); });
-        await act(() => { clock.restore(); });
+        await act(() => {
+          clock.tick(1000);
+        });
+        await act(() => {
+          clock.restore();
+        });
 
         // then
         await waitFor(() => {
-          const entry = domQuery('.bio-properties-panel-entry', result.container);
+          const entry = domQuery(
+            '.bio-properties-panel-entry',
+            result.container
+          );
 
           expect(isValid(entry)).to.be.true;
         });
       });
-
 
       it('should show global error over local error', async function() {
 
         // given
         const clock = sinon.useFakeTimers();
         const errors = {
-          foo: 'bar'
+          foo: 'bar',
         };
 
         const result = createFeelField({
@@ -2016,39 +2069,49 @@ describe('<FeelField>', function() {
           container,
           errors,
           getValue: () => '= foo == bar',
-          feel: 'required'
+          feel: 'required',
         });
 
         // assume
-        let errorField = domQuery('.bio-properties-panel-error', result.container);
+        let errorField = domQuery(
+          '.bio-properties-panel-error',
+          result.container
+        );
         expect(errorField).to.exist;
         expect(errorField.textContent).to.eql('bar');
 
         // when
         // trigger debounced validation
-        await act(() => { clock.tick(1000); });
-        await act(() => { clock.restore(); });
-
+        await act(() => {
+          clock.tick(1000);
+        });
+        await act(() => {
+          clock.restore();
+        });
 
         // then
         return waitFor(() => {
-          errorField = domQuery('.bio-properties-panel-error', result.container);
+          errorField = domQuery(
+            '.bio-properties-panel-error',
+            result.container
+          );
           expect(errorField).to.exist;
           expect(errorField.textContent).to.eql('bar');
         });
       });
-
     });
 
-
     describe('validation', function() {
-
       it('should set valid', function() {
 
         // given
         const validate = () => null;
 
-        const result = createFeelField({ container, validate, feel: 'required' });
+        const result = createFeelField({
+          container,
+          validate,
+          feel: 'required',
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
 
@@ -2063,13 +2126,16 @@ describe('<FeelField>', function() {
         });
       });
 
-
       it('should set invalid', async function() {
 
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate, feel: 'required' });
+        const result = createFeelField({
+          container,
+          validate,
+          feel: 'required',
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('[role="textbox"]', entry);
@@ -2079,20 +2145,22 @@ describe('<FeelField>', function() {
           input.textContent = 'bar';
         });
 
-
         // then
         return waitFor(() => {
           expect(isValid(entry)).to.be.false;
         });
       });
 
-
       it('should keep showing invalid value', function() {
 
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate, feel: 'required' });
+        const result = createFeelField({
+          container,
+          validate,
+          feel: 'required',
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('[role="textbox"]', entry);
@@ -2106,13 +2174,16 @@ describe('<FeelField>', function() {
         });
       });
 
-
       it('should show error message', async function() {
 
         // given
         const validate = () => 'error';
 
-        const result = createFeelField({ container, validate, feel: 'required' });
+        const result = createFeelField({
+          container,
+          validate,
+          feel: 'required',
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('[role="textbox"]', entry);
@@ -2122,7 +2193,6 @@ describe('<FeelField>', function() {
           input.textContent = 'bar';
         });
 
-
         // then
         return waitFor(() => {
           const error = domQuery('.bio-properties-panel-error', entry);
@@ -2131,14 +2201,18 @@ describe('<FeelField>', function() {
         });
       });
 
-
       it('should pass error to `setValue`', async function() {
 
         // given
         const setValueSpy = sinon.spy();
         const validate = () => 'error';
 
-        const result = createFeelTextArea({ container, validate, setValue: setValueSpy, feel: 'required' });
+        const result = createFeelTextArea({
+          container,
+          validate,
+          setValue: setValueSpy,
+          feel: 'required',
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
         const input = domQuery('[role="textbox"]', entry);
@@ -2151,22 +2225,21 @@ describe('<FeelField>', function() {
         // then
         expect(setValueSpy).to.have.been.calledWith('=bar', 'error');
       });
-
     });
 
-
     describe('disabled', function() {
-
       it('should render enabled per default', function() {
 
         // given
         const result = createFeelField({ container, feel: 'required' });
 
         // then
-        const editorContainer = domQuery('.bio-properties-panel-feel-editor-container', result.container);
+        const editorContainer = domQuery(
+          '.bio-properties-panel-feel-editor-container',
+          result.container
+        );
         expect(editorContainer.classList.contains('disabled')).to.be.false;
       });
-
 
       it('should render enabled if set', function() {
 
@@ -2174,14 +2247,16 @@ describe('<FeelField>', function() {
         const result = createFeelField({
           container,
           disabled: false,
-          feel: 'required'
+          feel: 'required',
         });
 
         // then
-        const editorContainer = domQuery('.bio-properties-panel-feel-editor-container', result.container);
+        const editorContainer = domQuery(
+          '.bio-properties-panel-feel-editor-container',
+          result.container
+        );
         expect(editorContainer.classList.contains('disabled')).to.be.false;
       });
-
 
       it('should render disabled if set', function() {
 
@@ -2189,34 +2264,35 @@ describe('<FeelField>', function() {
         const result = createFeelField({
           container,
           disabled: true,
-          feel: 'required'
+          feel: 'required',
         });
 
         // then
-        const editorContainer = domQuery('.bio-properties-panel-feel-editor-container', result.container);
+        const editorContainer = domQuery(
+          '.bio-properties-panel-feel-editor-container',
+          result.container
+        );
         expect(editorContainer.classList.contains('disabled')).to.be.true;
       });
-
     });
 
-
     describe('description', function() {
-
       it('should render without description per default', function() {
 
         // given
         const result = createFeelField({
           container,
           id: 'noDescriptionTextField',
-          feel: 'required'
+          feel: 'required',
         });
 
         // then
-        const description = domQuery('[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="noDescriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
         expect(description).not.to.exist;
       });
-
 
       it('should render with description if set per props', function() {
 
@@ -2226,22 +2302,25 @@ describe('<FeelField>', function() {
           id: 'descriptionTextField',
           label: 'someLabel',
           description: 'my description',
-          feel: 'required'
+          feel: 'required',
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('my description');
       });
 
-
       it('should render with description if set per context', function() {
 
         // given
-        const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+        const descriptionConfig = {
+          descriptionTextField: (element) => 'myContextDesc',
+        };
 
         const result = createFeelField({
           container,
@@ -2249,22 +2328,25 @@ describe('<FeelField>', function() {
           label: 'someLabel',
           descriptionConfig,
           getDescriptionForId: (id, element) => descriptionConfig[id](element),
-          feel: 'required'
+          feel: 'required',
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('myContextDesc');
       });
 
-
       it('should render description set per props over context', function() {
 
         // given
-        const descriptionConfig = { descriptionTextField: (element) => 'myContextDesc' };
+        const descriptionConfig = {
+          descriptionTextField: (element) => 'myContextDesc',
+        };
 
         const result = createFeelField({
           container,
@@ -2273,19 +2355,19 @@ describe('<FeelField>', function() {
           description: 'myExplicitDescription',
           descriptionConfig,
           getDescriptionForId: (id, element) => descriptionConfig[id](element),
-          feel: 'required'
+          feel: 'required',
         });
 
         // then
-        const description = domQuery('[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
-          result.container);
+        const description = domQuery(
+          '[data-entry-id="descriptionTextField"] .bio-properties-panel-description',
+          result.container
+        );
 
         expect(description).to.exist;
         expect(description.innerText).to.equal('myExplicitDescription');
       });
-
     });
-
 
     it('should render required feel icon', function() {
 
@@ -2293,18 +2375,18 @@ describe('<FeelField>', function() {
       const result = createFeelField({
         container,
         id: 'requiredFeelTextField',
-        feel: 'required'
+        feel: 'required',
       });
 
       // then
-      const icon = domQuery('[data-entry-id="requiredFeelTextField"] .bio-properties-panel-feel-icon',
-        result.container);
+      const icon = domQuery(
+        '[data-entry-id="requiredFeelTextField"] .bio-properties-panel-feel-icon',
+        result.container
+      );
       expect(icon).to.exist;
     });
 
-
     describe('toggle', function() {
-
       it('should toggle feel inactive', async function() {
 
         // given
@@ -2315,11 +2397,13 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'optional',
           getValue: () => '=foo',
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
-        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-          field.container);
+        const icon = domQuery(
+          '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container
+        );
 
         // when
         await act(() => {
@@ -2329,7 +2413,6 @@ describe('<FeelField>', function() {
         // then
         expect(updateSpy).to.have.been.calledWith('foo');
       });
-
 
       it('should NOT toggle if FEEL is required', async function() {
 
@@ -2341,11 +2424,13 @@ describe('<FeelField>', function() {
           id: 'feelField',
           feel: 'required',
           getValue: () => '=foo',
-          setValue: updateSpy
+          setValue: updateSpy,
         });
 
-        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
-          field.container);
+        const icon = domQuery(
+          '[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container
+        );
 
         // when
         await act(() => {
@@ -2354,26 +2439,28 @@ describe('<FeelField>', function() {
 
         // then
         expect(updateSpy).not.to.have.been.called;
-
       });
-
     });
 
-
     describe('popup editor', function() {
-
       it('should render open popup action', async function() {
 
         // given
-        const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
+        const result = createFeelField({
+          container,
+          feel: 'required',
+          getValue: () => 'foo',
+        });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
+        const openEditor = domQuery(
+          '.bio-properties-panel-open-feel-popup',
+          entry
+        );
 
         // then
         expect(openEditor).to.exist;
       });
-
 
       it('should open popup editor', async function() {
 
@@ -2385,11 +2472,14 @@ describe('<FeelField>', function() {
           element: { type: 'foo' },
           feel: 'required',
           getValue: () => 'foo',
-          openPopup: spy
+          openPopup: spy,
         });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
+        const openEditor = domQuery(
+          '.bio-properties-panel-open-feel-popup',
+          entry
+        );
 
         // when
         await act(() => {
@@ -2401,9 +2491,7 @@ describe('<FeelField>', function() {
         expect(spy.args[0][1].type).to.eql('feel');
       });
 
-
       it('should close popup editor on unmount', async function() {
-
         const closeSpy = sinon.spy();
 
         const props = {
@@ -2412,7 +2500,7 @@ describe('<FeelField>', function() {
           feel: 'required',
           getValue: () => 'foo',
           openPopup: () => {},
-          closePopup: closeSpy
+          closePopup: closeSpy,
         };
 
         const result = createFeelField(props);
@@ -2423,7 +2511,6 @@ describe('<FeelField>', function() {
         // then
         expect(closeSpy).to.have.been.called;
       });
-
 
       it('should show placeholder while popup open', async function() {
 
@@ -2437,16 +2524,22 @@ describe('<FeelField>', function() {
           id,
           element: { type: 'foo' },
           getValue: () => 'foo',
-          openPopup: () => currentPopupSource = id,
-          getPopupSource: () => currentPopupSource
+          openPopup: () => (currentPopupSource = id),
+          getPopupSource: () => currentPopupSource,
         };
 
         const result = createFeelField(props);
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery('.bio-properties-panel-open-feel-popup', entry);
+        const openEditor = domQuery(
+          '.bio-properties-panel-open-feel-popup',
+          entry
+        );
 
-        const placeholder = domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container);
+        const placeholder = domQuery(
+          '.bio-properties-panel-feel-editor__open-popup-placeholder',
+          result.container
+        );
 
         // assume
         expect(window.getComputedStyle(placeholder).display).to.eql('none');
@@ -2456,21 +2549,20 @@ describe('<FeelField>', function() {
           openEditor.click();
         });
 
-        createFeelField({
-          ...props,
-        }, result.render);
+        createFeelField(
+          {
+            ...props,
+          },
+          result.render
+        );
 
         // then
         expect(window.getComputedStyle(placeholder).display).to.eql('flex');
       });
-
     });
-
   });
 
-
   describe('a11y', function() {
-
     it('should have no violations', async function() {
 
       // given
@@ -2478,13 +2570,12 @@ describe('<FeelField>', function() {
 
       const { container: node } = createFeelField({
         container,
-        label: 'foo'
+        label: 'foo',
       });
 
       // then
       await expectNoViolations(node);
     });
-
 
     it('should have no violations - number', async function() {
 
@@ -2493,13 +2584,12 @@ describe('<FeelField>', function() {
 
       const { container: node } = createFeelNumber({
         container,
-        label: 'foo'
+        label: 'foo',
       });
 
       // then
       await expectNoViolations(node);
     });
-
 
     it('should have no violations - text area', async function() {
 
@@ -2508,13 +2598,12 @@ describe('<FeelField>', function() {
 
       const { container: node } = createFeelTextArea({
         container,
-        label: 'foo'
+        label: 'foo',
       });
 
       // then
       await expectNoViolations(node);
     });
-
 
     it('should have no violations - toggle switch', async function() {
 
@@ -2523,13 +2612,12 @@ describe('<FeelField>', function() {
 
       const { container: node } = createFeelToggleSwitch({
         container,
-        label: 'foo'
+        label: 'foo',
       });
 
       // then
       await expectNoViolations(node);
     });
-
 
     it('should have no violations - checkbox', async function() {
 
@@ -2538,13 +2626,12 @@ describe('<FeelField>', function() {
 
       const { container: node } = createFeelCheckbox({
         container,
-        label: 'foo'
+        label: 'foo',
       });
 
       // then
       await expectNoViolations(node);
     });
-
 
     it('should have no violations (feel)', async function() {
 
@@ -2554,18 +2641,15 @@ describe('<FeelField>', function() {
       const { container: node } = createFeelField({
         container,
         label: 'foo',
-        feel: 'required'
+        feel: 'required',
       });
 
       // then
       await expectNoViolations(node);
     });
-
   });
 
-
   describe('variables', function() {
-
     it('should maintain focus when variables change', function() {
 
       // given
@@ -2575,9 +2659,7 @@ describe('<FeelField>', function() {
         element,
         feel: 'required',
         getValue: () => '=foo',
-        variables: [
-          { name: 'foo', type: 'string' }
-        ]
+        variables: [ { name: 'foo', type: 'string' } ],
       };
       const field = createFeelField(props);
 
@@ -2585,20 +2667,19 @@ describe('<FeelField>', function() {
       input.focus();
 
       // when
-      createFeelField({
-        ...props,
-        variables: [
-          { name: 'bar', type: 'string' }
-        ]
-      }, field.render);
+      createFeelField(
+        {
+          ...props,
+          variables: [ { name: 'bar', type: 'string' } ],
+        },
+        field.render
+      );
 
       // then
       expect(document.activeElement).to.equal(input);
     });
   });
-
 });
-
 
 // helpers ////////////////////
 
@@ -2607,7 +2688,7 @@ function createFeelField(options = {}, renderFn = render) {
     element,
     id = 'feel',
     description,
-    debounce = fn => fn,
+    debounce = (fn) => fn,
     disabled,
     feel = 'optional',
     label,
@@ -2621,7 +2702,7 @@ function createFeelField(options = {}, renderFn = render) {
     onShow = noop,
     errors = {},
     variables,
-    activePopupEntryIds = [],
+    expandedEntries = [],
     popupContainer = null,
     getLinks = () => [],
     Component = FeelField,
@@ -2629,26 +2710,26 @@ function createFeelField(options = {}, renderFn = render) {
   } = options;
 
   const errorsContext = {
-    errors
+    errors,
   };
 
   const eventContext = {
-    eventBus
+    eventBus,
   };
 
   const propertiesPanelContext = {
-    onShow
+    onShow,
   };
 
   const descriptionContext = {
     description: descriptionConfig,
-    getDescriptionForId
+    getDescriptionForId,
   };
 
-  const feelPopupContext = {
-    activePopupEntryIds,
+  const expandedEntriesContext = {
+    expandedEntries,
     popupContainer,
-    getLinks
+    getLinks,
   };
 
   return renderFn(
@@ -2656,7 +2737,9 @@ function createFeelField(options = {}, renderFn = render) {
       <EventContext.Provider value={ eventContext }>
         <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
           <DescriptionContext.Provider value={ descriptionContext }>
-            <FeelPopupContext.Provider value={ feelPopupContext }>
+            <ExpandedEntriesContext.Provider
+              value={ expandedEntriesContext }
+            >
               <Component
                 element={ element }
                 id={ id }
@@ -2671,43 +2754,55 @@ function createFeelField(options = {}, renderFn = render) {
                 variables={ variables }
                 { ...rest }
               />
-            </FeelPopupContext.Provider>
+            </ExpandedEntriesContext.Provider>
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>
     </ErrorsContext.Provider>,
     {
-      container
+      container,
     }
   );
 }
 
 function createFeelNumber(options = {}, renderFn = render) {
-  return createFeelField({
-    ...options,
-    Component: FeelNumberEntry
-  }, renderFn);
+  return createFeelField(
+    {
+      ...options,
+      Component: FeelNumberEntry,
+    },
+    renderFn
+  );
 }
 
 function createFeelTextArea(options = {}, renderFn = render) {
-  return createFeelField({
-    ...options,
-    Component: FeelTextAreaEntry
-  }, renderFn);
+  return createFeelField(
+    {
+      ...options,
+      Component: FeelTextAreaEntry,
+    },
+    renderFn
+  );
 }
 
 function createFeelToggleSwitch(options = {}, renderFn = render) {
-  return createFeelField({
-    ...options,
-    Component: FeelToggleSwitchEntry
-  }, renderFn);
+  return createFeelField(
+    {
+      ...options,
+      Component: FeelToggleSwitchEntry,
+    },
+    renderFn
+  );
 }
 
 function createFeelCheckbox(options = {}, renderFn = render) {
-  return createFeelField({
-    ...options,
-    Component: FeelCheckboxEntry
-  }, renderFn);
+  return createFeelField(
+    {
+      ...options,
+      Component: FeelCheckboxEntry,
+    },
+    renderFn
+  );
 }
 
 function isValid(node) {
