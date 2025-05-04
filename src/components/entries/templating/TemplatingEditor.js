@@ -47,7 +47,7 @@ const CodeEditor = forwardRef((props, ref) => {
     enableGutters,
     value,
     onLint = noop,
-    onPopupOpen = noop,
+    onExpandProperty = noop,
     popupOpen,
     contentAttributes = {},
     hostLanguage = null,
@@ -122,7 +122,7 @@ const CodeEditor = forwardRef((props, ref) => {
       onClick={ handleClick }
     ></div>
     {!disabled && <FeelPopupButton
-      onClick={ () => onPopupOpen('feelers') }
+      onClick={ () => onExpandProperty('feelers') }
     /> }
   </div>;
 });

@@ -28,7 +28,7 @@ import {
   TooltipContext
 } from './context';
 
-import { FeelPopupContext } from './context';
+import { ExpandedEntriesContext } from './context';
 
 import { useEvent } from './hooks';
 
@@ -217,16 +217,20 @@ export default function PropertiesPanel(props) {
     errors
   };
 
-  const [ activePopupEntryIds, setActivePopupEntryIds ] = useState([]);
+  const [ expandedEntries, setexpandedEntries ] = useState([]);
 
-  const onSetActivePopupEntryIds = ({ activePopupEntryIds }) => setActivePopupEntryIds(activePopupEntryIds);
+  const onSetExpandedEntries = ({ expandedEntries }) => setexpandedEntries(expandedEntries);
 
-  useEvent('propertiesPanel.setActivePopupEntryIds', onSetActivePopupEntryIds, eventBus);
+  useEvent('propertiesPanel.setExpandedEntries', onSetExpandedEntries, eventBus);
 
-  const feelPopupContext = {
-    activePopupEntryIds,
-    popupContainer: feelPopupContainer,
-    getLinks: getFeelPopupLinks,
+  const expandedEntriesContext = {
+    expandedEntries,
+
+    // isolating historical opinionated variables in this subcontext, we should see to deprecate them in the future
+    expansionContextProps: {
+      popupContainer: feelPopupContainer,
+      getLinks: getFeelPopupLinks,
+    }
   };
 
   const eventContext = {
@@ -254,7 +258,7 @@ export default function PropertiesPanel(props) {
           <TooltipContext.Provider value={ tooltipContext }>
             <LayoutContext.Provider value={ layoutContext }>
               <EventContext.Provider value={ eventContext }>
-                <FeelPopupContext.Provider value={ feelPopupContext }>
+                <ExpandedEntriesContext.Provider value={ expandedEntriesContext }>
                   <div class="bio-properties-panel">
                     <Header
                       element={ element }
@@ -277,7 +281,7 @@ export default function PropertiesPanel(props) {
                       }
                     </div>
                   </div>
-                </FeelPopupContext.Provider>
+                </ExpandedEntriesContext.Provider>
               </EventContext.Provider>
             </LayoutContext.Provider>
           </TooltipContext.Provider>

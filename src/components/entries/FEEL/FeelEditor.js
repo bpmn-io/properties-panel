@@ -50,7 +50,7 @@ const CodeEditor = forwardRef((props, ref) => {
     onInput,
     onFeelToggle = noop,
     onLint = noop,
-    onPopupOpen = noop,
+    onExpandProperty = noop,
     placeholder,
     popupOpen,
     disabled,
@@ -164,7 +164,7 @@ const CodeEditor = forwardRef((props, ref) => {
       onClick={ handleClick }
     ></div>
     {!disabled && <FeelPopupButton
-      onClick={ () => onPopupOpen('feelers') }
+      onClick={ () => onExpandProperty('feelers') }
     /> }
   </div>;
 });

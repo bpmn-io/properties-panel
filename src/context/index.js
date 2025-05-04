@@ -4,4 +4,4 @@ export { default as EventContext } from './EventContext';
 export { default as LayoutContext } from './LayoutContext';
 export { default as PropertiesPanelContext } from './LayoutContext';
 export { default as TooltipContext } from './TooltipContext';
-export { FeelPopupContext } from './FeelPopupContext';
+export { ExpandedEntriesContext } from './ExpandedEntriesContext';

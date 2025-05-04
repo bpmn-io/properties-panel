@@ -7,12 +7,14 @@ export class FeelPopupManager {
   }
 
   _init() {
-    this._eventBus.on('propertiesPanel.openPopup', ({ entryId, entryElement, context }) => {
+    this._eventBus.on('propertiesPanel.expandEntry', ({ entryId, entryElement, context }) => {
       this.openPopup(entryId, entryElement, context);
     });
 
-    this._eventBus.on('propertiesPanel.closePopup', ({ entryId }) => {
-      this.closePopup(entryId);
+    this._eventBus.on('propertiesPanel.unmountedEntry', ({ entryId }) => {
+      if (this._activePopupEntryId === entryId) {
+        this.closePopup(entryId);
+      }
     });
 
     this._eventBus.on('propertiesPanel.detach', () => {
@@ -24,7 +26,7 @@ export class FeelPopupManager {
 
   openPopup(entryId, entryElement, context) {
     if (this._activePopupEntryId === entryId) {
-      this._eventBus.fire('propertiesPanel.popup.update', { entryId, entryElement, context });
+      this._eventBus.fire('propertiesPanelPopup.update', { entryId, entryElement, context });
       return;
     }
 
@@ -34,23 +36,23 @@ export class FeelPopupManager {
 
     this._activePopupEntryId = entryId;
 
-    this._eventBus.fire('propertiesPanel.popup.open', { entryId, entryElement, context });
-    this._eventBus.fire('propertiesPanel.setActivePopupEntryIds', {
-      activePopupEntryIds: [ entryId ]
+    this._eventBus.fire('propertiesPanelPopup.open', { entryId, entryElement, context });
+    this._eventBus.fire('propertiesPanel.setExpandedEntries', {
+      expandedEntries: [ entryId ]
     });
   }
 
   closePopup(entryId) {
     if (this._activePopupEntryId !== entryId) {
-      console.warn(`Popup with entryId "${entryId}" is not the active propertiesPanel.popup.`);
+      console.warn(`Popup with entryId "${entryId}" is not active.`);
       return;
     }
 
     this._activePopupEntryId = null;
 
-    this._eventBus.fire('propertiesPanel.popup.close', { entryId });
-    this._eventBus.fire('propertiesPanel.setActivePopupEntryIds', {
-      activePopupEntryIds: []
+    this._eventBus.fire('propertiesPanelPopup.close', { entryId });
+    this._eventBus.fire('propertiesPanel.setExpandedEntries', {
+      expandedEntries: []
     });
   }
 

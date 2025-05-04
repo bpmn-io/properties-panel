@@ -113,7 +113,7 @@ describe('<TemplatingEditor>', function() {
     // given
     const spy = sinon.spy();
 
-    render(<Wrapper value={ '' } onPopupOpen={ spy } />, { container });
+    render(<Wrapper value={ '' } onExpandProperty={ spy } />, { container });
 
     const openPopup = domQuery('.bio-properties-panel-open-feel-popup', container);
 

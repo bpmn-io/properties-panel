@@ -26,7 +26,7 @@ import CodeEditor from './FeelEditor';
 import { FeelIndicator } from './FeelIndicator';
 import FeelIcon from './FeelIcon';
 
-import { FeelPopupContext, EventContext } from '../../../context';
+import { ExpandedEntriesContext, EventContext } from '../../../context';
 
 import { ToggleSwitch } from '../ToggleSwitch';
 
@@ -92,16 +92,15 @@ function FeelTextfield(props) {
   const [ focus, _setFocus ] = useState(undefined);
 
   const {
-    activePopupEntryIds,
-    popupContainer,
-    getLinks
-  } = useContext(FeelPopupContext);
+    expandedEntries,
+    expansionContextProps
+  } = useContext(ExpandedEntriesContext);
 
   const {
     eventBus
   } = useContext(EventContext);
 
-  const isOpenInPopup = activePopupEntryIds.includes(id);
+  const isOpenInPopup = expandedEntries.includes(id);
 
   const setFocus = (offset = 0) => {
     const hasFocus = containerRef.current.contains(document.activeElement);
@@ -189,23 +188,22 @@ function FeelTextfield(props) {
     }
   });
 
-  const handlePopupOpen = (type = 'feel') => {
+  const handleExpandProperty = (type = 'feel') => {
     const context = {
       type,
       value: feelOnlyValue,
       variables,
       position: calculatePopupPosition({ sourceElement: containerRef.current }),
       title: getPopupTitle({ element, label }),
-      getLinks,
-      hostLanguage,
       onInput: handleLocalInput,
+      hostLanguage,
       singleLine,
       associatedElement: element,
-      popupContainer,
       tooltipContainer,
+      ...(expansionContextProps || {})
     };
 
-    eventBus.fire('propertiesPanel.openPopup', {
+    eventBus.fire('propertiesPanel.expandEntry', {
       entryId: id,
       entryElement: editorRef.current,
       context,
@@ -236,7 +234,7 @@ function FeelTextfield(props) {
   // close popup on unmount
   useEffect(() => {
     return () => {
-      eventBus.fire('propertiesPanel.closePopup', {
+      eventBus.fire('propertiesPanel.unmountedEntry', {
         entryId: id
       });
     };
@@ -307,7 +305,7 @@ function FeelTextfield(props) {
             popupOpen={ isOpenInPopup }
             onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
             onLint={ handleLint }
-            onPopupOpen={ handlePopupOpen }
+            onExpandProperty={ handleExpandProperty }
             placeholder={ placeholder }
             value={ feelOnlyValue }
             variables={ variables }
@@ -322,7 +320,7 @@ function FeelTextfield(props) {
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }
-            onPopupOpen={ handlePopupOpen }
+            onExpandProperty={ handleExpandProperty }
             containerRef={ containerRef }
           />
         }
