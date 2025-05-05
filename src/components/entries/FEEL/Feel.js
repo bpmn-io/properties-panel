@@ -74,7 +74,7 @@ function FeelTextfield(props) {
     eventBus
   } = useContext(EventContext);
 
-  const isOpenInPopup = expandedEntries.includes(id);
+  const isExpanded = expandedEntries.includes(id);
 
   const setFocus = (offset = 0) => {
     const hasFocus = containerRef.current.contains(document.activeElement);
@@ -205,7 +205,7 @@ function FeelTextfield(props) {
     };
 
     const pasteHandler = event => {
-      if (feelActive || isOpenInPopup) {
+      if (feelActive || isExpanded) {
         return;
       }
 
@@ -257,7 +257,7 @@ function FeelTextfield(props) {
             onInput={ handleLocalInput }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             disabled={ disabled }
-            popupOpen={ isOpenInPopup }
+            popupOpen={ isExpanded }
             onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
             onLint={ handleLint }
             onExpandProperty={ handleExpandProperty }
@@ -269,7 +269,7 @@ function FeelTextfield(props) {
           /> :
           <OptionalComponent
             { ...props }
-            popupOpen={ isOpenInPopup }
+            popupOpen={ isExpanded }
             onInput={ handleLocalInput }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
