@@ -9,7 +9,6 @@ import * as focusTrap from 'focus-trap';
 import { DragIcon, CloseIcon } from '../../../components/icons';
 
 import { createDragger } from '../../../components/util/dragger';
-import { useEvent } from '../../../hooks/useEvent';
 
 const noop = () => {};
 
@@ -112,8 +111,6 @@ function PopupComponent(props, globalRef) {
 
     return () => focusTrapRef.current && focusTrapRef.current.deactivate();
   }, [ popupRef ]);
-
-  useEvent('propertiesPanel.detach', onClose);
 
   return (
     <div
