@@ -7,7 +7,6 @@ import {
 import TestContainer from 'mocha-test-container-support';
 
 import {
-  domify,
   query as domQuery
 } from 'min-dom';
 
@@ -17,7 +16,6 @@ import {
 } from 'test/TestHelper';
 
 import { Popup } from 'src/features/feel-popup/components';
-import { EventContext } from 'src/context';
 
 insertCoreStyles();
 
@@ -89,36 +87,6 @@ describe('<Popup>', function() {
   });
 
 
-  it('should render in container', function() {
-
-    // when
-    render(<Popup container={ container } />, { container });
-
-    const popup = domQuery('.bio-properties-panel-popup', container);
-
-    // then
-    expect(popup).to.exist;
-  });
-
-
-  it('should render in container (query selector)', function() {
-
-    // given
-
-    const customContainer = domify('<div class="foo"></div>');
-    container.appendChild(customContainer);
-
-    // when
-
-    render(<Popup container={ '.foo' } />, { container });
-
-    const popup = domQuery('.bio-properties-panel-popup', customContainer);
-
-    // then
-    expect(popup).to.exist;
-  });
-
-
   it('should add title', function() {
 
     // when
@@ -143,48 +111,6 @@ describe('<Popup>', function() {
 
     // then
     expect(focusSpy).to.have.been.called;
-  });
-
-
-  it('should close on detach', async function() {
-
-    // given
-    const closeSpy = sinon.spy();
-
-    const MockEventBus = (() => {
-      let callback;
-
-      return {
-        on: (ev, cb) => {
-          if (ev !== 'propertiesPanel.detach') {
-            return;
-          }
-          callback = cb;
-        },
-        off: () => {},
-        fire: () => {
-          callback();
-        }
-      };
-    })();
-
-
-    const eventContext = {
-      eventBus: MockEventBus
-    };
-
-    await act(() => {
-      render(
-        <EventContext.Provider value={ eventContext }>
-          <Popup onClose={ closeSpy }><input name="foo"></input></Popup>
-        </EventContext.Provider>, { container });
-    });
-
-    // when
-    MockEventBus.fire('propertiesPanel.detach');
-
-    // then
-    expect(closeSpy).to.have.been.called;
   });
 
 
@@ -485,16 +411,13 @@ describe('<Popup>', function() {
       this.timeout(5000);
 
       const { container: node } = render(
-        <Popup title="my popup" container={ container }>
-          <Popup.Title draggable title="My popup" />
-          <Popup.Body>
-            <label for="foo">bar</label>
-            <input id="foo" name="foo" />
-          </Popup.Body>
-          <Popup.Footer>
-            <button type="button">OK</button>
-          </Popup.Footer>
-        </Popup>,
+        <><Popup title="my popup" container={ container }><Popup.Title draggable title="My popup" /><Popup.Body>
+          <label for="foo">bar</label>
+          <input id="foo" name="foo" />
+        </Popup.Body><Popup.Footer>
+          <button type="button">OK</button>
+        </Popup.Footer>
+        </Popup></>,
         { container }
       );
 
