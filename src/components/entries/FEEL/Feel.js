@@ -37,6 +37,27 @@ import Tooltip from '../Tooltip';
 
 const noop = () => {};
 
+/**
+ * @param {Object} props
+ * @param {Boolean} props.debounce
+ * @param {String} props.id
+ * @param {Object} props.element
+ * @param {String} props.label
+ * @param {String} props.hostLanguage
+ * @param {Function} props.onInput
+ * @param {Function} props.onBlur
+ * @param {Function} props.onError
+ * @param {Boolean} props.feel
+ * @param {String} props.value
+ * @param {Boolean} props.singleLine
+ * @param {Function} props.tooltipContainer
+ * @param {Function | import('preact').Component} props.OptionalComponent
+ * @param {Boolean} props.disabled
+ * @param {Function} props.variables
+ * @param {string} [props.placeholder]
+ * @param {string | import('preact').Component} props.tooltip
+ */
+
 function FeelTextfieldComponent(props) {
   const {
     debounce,
@@ -45,6 +66,7 @@ function FeelTextfieldComponent(props) {
     label,
     hostLanguage,
     onInput,
+    onBlur,
     onError,
     placeholder,
     feel,
@@ -57,7 +79,7 @@ function FeelTextfieldComponent(props) {
     tooltip
   } = props;
 
-  const [ localValue, _setLocalValue ] = useState(value);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
@@ -83,21 +105,22 @@ function FeelTextfieldComponent(props) {
     _setFocus(position + offset);
   };
 
+  /**
+   * @type { import('min-dash').DebouncedFunction }
+   */
   const handleInputCallback = useMemo(() => {
     return debounce((newValue) => {
       onInput(newValue);
     });
   }, [ onInput, debounce ]);
 
-  const setLocalValue = newValue => {
-    _setLocalValue(newValue);
+  const handleInput = newValue => {
 
-    if (typeof newValue === 'undefined' || newValue === '' || newValue === '=') {
-      handleInputCallback(undefined);
-    } else {
-      handleInputCallback(newValue);
-    }
+    // we don't commit empty FEEL expressions,
+    // but instead serialize them as <undefined>
+    const newModelValue = (newValue === '' || newValue === '=') ? undefined : newValue;
 
+    handleInputCallback(newModelValue);
   };
 
   const handleFeelToggle = useStaticCallback(() => {
@@ -107,8 +130,10 @@ function FeelTextfieldComponent(props) {
 
     if (!feelActive) {
       setLocalValue('=' + localValue);
+      handleInput('=' + localValue);
     } else {
       setLocalValue(feelOnlyValue);
+      handleInput(feelOnlyValue);
     }
   });
 
@@ -122,11 +147,27 @@ function FeelTextfieldComponent(props) {
     }
 
     setLocalValue(newValue);
+    handleInput(newValue);
 
     if (!feelActive && isString(newValue) && newValue.startsWith('=')) {
 
       // focus is behind `=` sign that will be removed
       setFocus(-1);
+    }
+  };
+
+  const handleOnBlur = (e) => {
+    const value = e.target.value;
+
+    // we trim the value, if it is needed
+    // and update input accordingly
+    if (value.trim() !== value) {
+      setLocalValue(value.trim());
+      handleInput(value.trim());
+    }
+
+    if (onBlur) {
+      onBlur(e);
     }
   };
 
@@ -256,6 +297,7 @@ function FeelTextfieldComponent(props) {
             { ...props }
             popupOpen={ popuOpen }
             onInput={ handleLocalInput }
+            onBlur={ handleOnBlur }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }
@@ -554,7 +596,7 @@ export default function FeelEntry(props) {
     }
   }, [ value, validate ]);
 
-  const onInput = useStaticCallback((newValue) => {
+  const onInput = useCallback((newValue) => {
     let newValidationError = null;
 
     if (isFunction(validate)) {
@@ -567,7 +609,7 @@ export default function FeelEntry(props) {
     }
 
     setValidationError(newValidationError);
-  });
+  },[ element ]);
 
   const onError = useCallback(err => {
     setLocalError(err);
