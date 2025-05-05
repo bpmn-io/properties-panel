@@ -4,21 +4,43 @@ import TemplatingEditor from '../../../components/entries/templating/TemplatingE
 import { LaunchIcon } from '../../../components/icons';
 import { Popup } from './Popup';
 
+/**
+ * @typedef {Object} FeelPopupProps
+ * @property {string} entryId
+ * @property {Function} onInput
+ * @property {Function} onClose
+ * @property {string} title
+ * @property {'feel'|'feelers'} type
+ * @property {string} value
+ * @property {Array} [links]
+ * @property {Array|Object} [variables]
+ * @property {Object} [position]
+ * @property {string} [hostLanguage]
+ * @property {boolean} [singleLine]
+ * @property {HTMLElement} [sourceElement]
+ * @property {HTMLElement|string} [tooltipContainer]
+ * @property {Object} [eventBus]
+ */
+
+/**
+ * FEEL expression editor popup component
+ * @param {FeelPopupProps} props
+ */
 export function FeelPopup(props) {
   const {
-    getLinks,
-    id,
-    hostLanguage,
+    entryId,
     onInput,
     onClose,
-    position,
-    singleLine,
-    sourceElement,
     title,
-    tooltipContainer,
     type,
     value,
+    links,
     variables,
+    position,
+    hostLanguage,
+    singleLine,
+    sourceElement,
+    tooltipContainer,
     eventBus,
   } = props;
 
@@ -63,7 +85,6 @@ export function FeelPopup(props) {
       className="bio-properties-panel-feel-popup"
       position={ position }
       title={ title }
-      onClose={ onClose }
       returnFocus={ false }
       closeOnEscape={ false }
       delayInitialFocus={ false }
@@ -82,7 +103,7 @@ export function FeelPopup(props) {
         draggable
       >
         <>
-          {getLinks(type).map((link, index) => {
+          {(links || []).map((link, index) => {
             return (
               <a
                 key={ index }
@@ -107,8 +128,8 @@ export function FeelPopup(props) {
           {type === 'feel' && (
             <FeelEditor
               enableGutters={ true }
-              id={ prefixId(id) }
-              name={ id }
+              id={ prefixId(entryId) }
+              name={ entryId }
               onInput={ onInput }
               value={ value }
               variables={ variables }
@@ -119,11 +140,11 @@ export function FeelPopup(props) {
 
           {type === 'feelers' && (
             <TemplatingEditor
-              id={ prefixId(id) }
+              id={ prefixId(entryId) }
               contentAttributes={ { 'aria-label': title } }
               enableGutters={ true }
               hostLanguage={ hostLanguage }
-              name={ id }
+              name={ entryId }
               onInput={ onInput }
               value={ value }
               ref={ editorRef }
