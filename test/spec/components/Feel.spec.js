@@ -2442,8 +2442,8 @@ describe('<FeelField>', function() {
       });
     });
 
-    describe('popup editor', function() {
-      it('should render open popup action', async function() {
+    describe('entry expansion', function() {
+      it('should render expand entry button', async function() {
 
         // given
         const result = createFeelField({
@@ -2451,113 +2451,107 @@ describe('<FeelField>', function() {
           feel: 'required',
           getValue: () => 'foo',
         });
-
-        const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery(
-          '.bio-properties-panel-open-feel-popup',
-          entry
-        );
 
         // then
-        expect(openEditor).to.exist;
-      });
-
-      it('should open popup editor', async function() {
-
-        // given
-        const spy = sinon.spy();
-
-        const result = createFeelField({
-          container,
-          element: { type: 'foo' },
-          feel: 'required',
-          getValue: () => 'foo',
-          openPopup: spy,
-        });
-
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery(
+        const expandButton = domQuery(
           '.bio-properties-panel-open-feel-popup',
           entry
         );
+
+        expect(expandButton).to.exist;
+      });
+
+      it('should fire expand event when clicking expand button', async function() {
+
+        // given
+        const eventBus = new EventBus();
+        const expandSpy = sinon.spy();
+        eventBus.on('propertiesPanel.expandEntry', expandSpy);
+
+        const result = createFeelField({
+          container,
+          feel: 'required',
+          id: 'testField',
+          eventBus: eventBus
+        });
+
+        const expandButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
 
         // when
         await act(() => {
-          openEditor.click();
+          clickInput(expandButton);
         });
 
         // then
-        expect(spy).to.have.been.called;
-        expect(spy.args[0][1].type).to.eql('feel');
+        expect(expandSpy).to.have.been.calledOnce;
+        expect(expandSpy.firstCall.args[0].entryId).to.equal('testField');
       });
 
-      it('should close popup editor on unmount', async function() {
-        const closeSpy = sinon.spy();
-
-        const props = {
-          container,
-          element: { type: 'foo' },
-          feel: 'required',
-          getValue: () => 'foo',
-          openPopup: () => {},
-          closePopup: closeSpy,
-        };
-
-        const result = createFeelField(props);
-
-        // when
-        createFeelField({ Component: 'div', ...props }, result.render);
-
-        // then
-        expect(closeSpy).to.have.been.called;
-      });
-
-      it('should show placeholder while popup open', async function() {
+      it('should fire unmount event on component unmount', async function() {
 
         // given
-        const id = 'myPopup';
-        let currentPopupSource;
+        const eventBus = new EventBus();
+        const unmountSpy = sinon.spy();
+        eventBus.on('propertiesPanel.unmountedEntry', unmountSpy);
 
-        const props = {
+        const result = createFeelField({
+          container,
+          feel: 'required',
+          id: 'testField',
+          eventBus: eventBus
+        });
+
+        // when
+        await act(() => {
+          result.unmount();
+        });
+
+        // then
+        expect(unmountSpy).to.have.been.calledOnce;
+        expect(unmountSpy.firstCall.args[0].entryId).to.equal('testField');
+      });
+
+      it('should show placeholder when entry is expanded', async function() {
+
+        // given
+        const id = 'myField';
+        const expandedEntries = [ id ];
+
+        const result = createFeelField({
           container,
           feel: 'required',
           id,
-          element: { type: 'foo' },
-          getValue: () => 'foo',
-          openPopup: () => (currentPopupSource = id),
-          getPopupSource: () => currentPopupSource,
-        };
+          expandedEntries
+        });
 
-        const result = createFeelField(props);
-
-        const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const openEditor = domQuery(
-          '.bio-properties-panel-open-feel-popup',
-          entry
-        );
-
+        // then
         const placeholder = domQuery(
           '.bio-properties-panel-feel-editor__open-popup-placeholder',
           result.container
         );
+        expect(window.getComputedStyle(placeholder).display).to.eql('flex');
+      });
 
-        // assume
-        expect(window.getComputedStyle(placeholder).display).to.eql('none');
+      it('should hide placeholder when entry is not expanded', async function() {
 
-        // when
-        await act(() => {
-          openEditor.click();
+        // given
+        const id = 'myField';
+        const expandedEntries = [];
+
+        const result = createFeelField({
+          container,
+          feel: 'required',
+          id,
+          expandedEntries
         });
 
-        createFeelField(
-          {
-            ...props,
-          },
-          result.render
-        );
-
         // then
-        expect(window.getComputedStyle(placeholder).display).to.eql('flex');
+        const placeholder = domQuery(
+          '.bio-properties-panel-feel-editor__open-popup-placeholder',
+          result.container
+        );
+        expect(window.getComputedStyle(placeholder).display).to.eql('none');
       });
     });
   });

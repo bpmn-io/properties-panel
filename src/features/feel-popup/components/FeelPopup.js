@@ -168,7 +168,6 @@ function prefixId(id) {
 }
 
 function autoCompletionOpen(element) {
-  return element
-    .closest('.cm-editor')
-    .querySelector('.cm-tooltip-autocomplete');
+  const editor = element.closest('.cm-editor');
+  return editor ? editor.querySelector('.cm-tooltip-autocomplete') : null;
 }
