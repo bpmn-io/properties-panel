@@ -32,7 +32,7 @@ export class FeelPopupManager {
       entryId,
       context: _getPopupOpenContext(
         this._eventBus,
-        this.closePopup,
+        (entryId) => this.closePopup(entryId),
         expandEntryEvent
       ),
     };
@@ -117,8 +117,11 @@ const _getPopupOpenContext = (eventBus, closePopup, expandEntryEvent) => {
     onInput,
     onClose: () => {
       closePopup(entryId);
-      sourceField && sourceField.focus();
-      return;
+
+      // setTimeout to ensure the focus happens after the DOM updates make it focusable
+      setTimeout(() => {
+        sourceField && sourceField.focus();
+      }, 0);
     },
     links: getLinks(type),
     position: calculatePopupPosition({ sourceFieldContainer }),
