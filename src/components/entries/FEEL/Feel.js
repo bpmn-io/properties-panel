@@ -31,7 +31,6 @@ import { ExpandedEntriesContext, EventContext } from '../../../context';
 import { ToggleSwitch } from '../ToggleSwitch';
 
 import { NumberField } from '../NumberField';
-import { calculatePopupPosition, getPopupTitle } from '../../../features/feel-popup/components/helpers';
 import Tooltip from '../Tooltip';
 
 const noop = () => {};
@@ -149,19 +148,19 @@ function FeelTextfield(props) {
       type,
       value: feelOnlyValue,
       variables,
-      position: calculatePopupPosition({ sourceElement: containerRef.current }),
-      title: getPopupTitle({ element, label }),
       onInput: handleLocalInput,
       hostLanguage,
       singleLine,
-      associatedElement: element,
+      element,
+      label,
       tooltipContainer,
+      sourceField: editorRef.current,
+      sourceFieldContainer: containerRef.current,
       ...(expansionContextProps || {})
     };
 
     eventBus.fire('propertiesPanel.expandEntry', {
       entryId: id,
-      entryElement: editorRef.current,
       context,
     });
   };

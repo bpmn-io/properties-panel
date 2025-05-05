@@ -12,21 +12,17 @@ export class FeelPopupRenderer {
   }
 
   _init() {
-    this._eventBus.on('propertiesPanelPopup.open', ({ entryId, context }) => {
+    this._eventBus.on([ 'propertiesPanelPopup.open', 'propertiesPanelPopup.update' ], ({ entryId, context }) => {
       this._renderPopup(entryId, context);
     });
 
     this._eventBus.on('propertiesPanelPopup.close', ({ entryId }) => {
       this._removePopup(entryId);
     });
-
-    this._eventBus.on('propertiesPanelPopup.update', ({ entryId, context }) => {
-      this._renderPopup(entryId, context);
-    });
   }
 
   _renderPopup(entryId, context) {
-    const { popupContainer, ...popupProps } = context;
+    const { popupContainer, onClose, ...popupProps } = context;
     const container = _getContainerNode(popupContainer) || document.body;
 
     let popupNode = this._popupNodes[entryId];
@@ -42,8 +38,8 @@ export class FeelPopupRenderer {
     render(
       <FeelPopup
         key={ entryId }
+        onClose={ onClose }
         { ...popupProps }
-        onClose={ () => this._eventBus.fire('propertiesPanelPopup.close', { entryId }) }
       />,
       popupNode
     );
