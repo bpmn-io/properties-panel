@@ -230,7 +230,6 @@ function FeelTextfield(props) {
     setLocalValue(value);
   }, [ value ]);
 
-  // close popup on unmount
   useEffect(() => {
     return () => {
       eventBus.fire('propertiesPanel.unmountedEntry', {

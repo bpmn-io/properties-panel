@@ -8,7 +8,7 @@ import { EditorView, lineNumbers } from '@codemirror/view';
 
 import { useStaticCallback } from '../../../hooks';
 
-import { FeelPopupButton } from '../../FeelPopupButton';
+import { ExpandEntryButton } from '../../ExpandEntryButton';
 
 const noop = () => {};
 
@@ -163,7 +163,7 @@ const CodeEditor = forwardRef((props, ref) => {
       ref={ inputRef }
       onClick={ handleClick }
     ></div>
-    {!disabled && <FeelPopupButton
+    {!disabled && <ExpandEntryButton
       onClick={ () => onExpandProperty('feelers') }
     /> }
   </div>;
