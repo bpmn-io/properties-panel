@@ -1266,12 +1266,6 @@ textarea.bio-properties-panel-input {
   display: flex;
 }
 
-.bio-properties-panel-popup-container {
-  z-index: var(--z-feel-editor);
-  position: fixed;
-  top: 0;
-  left: 0;
-}
 
 .bio-properties-panel-popup {
   --popup-background-color: hsla(0, 0%, 96%, 1);
