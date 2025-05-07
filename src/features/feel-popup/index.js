@@ -1,9 +1,9 @@
-import { FeelPopupManager } from './FeelPopupManager';
+import { FeelPopup } from './FeelPopup';
 import { FeelPopupRenderer } from './FeelPopupRenderer';
 
 export const FeelPopupModule = {
-  __init__: [ 'feelPopupManager', 'feelPopupRenderer' ],
-  feelPopupManager: [ 'type', FeelPopupManager ],
+  __init__: [ 'feelPopup', 'feelPopupRenderer' ],
+  feelPopup: [ 'type', FeelPopup ],
   feelPopupRenderer: [ 'type', FeelPopupRenderer ],
 };
 

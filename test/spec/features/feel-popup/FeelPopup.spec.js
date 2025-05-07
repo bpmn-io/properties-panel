@@ -1,270 +1,294 @@
-import sinon from 'sinon';
-import { render, fireEvent, cleanup, waitFor } from '@testing-library/preact/pure';
-import { expectNoViolations, insertCoreStyles } from 'test/TestHelper';
-import { FeelPopup, FEEL_POPUP_WIDTH, FEEL_POPUP_HEIGHT } from '../../../../src/features/feel-popup/components';
+import { FeelPopup } from '../../../../src/features/feel-popup/FeelPopup';
 
-insertCoreStyles();
-
-describe('<FeelPopup>', function() {
-  let container;
-  let sourceElement;
+describe('FeelPopup', function() {
+  let feelPopup;
+  let eventBusMock;
+  let onSpy;
+  let fireSpy;
+  let baseContext;
 
   beforeEach(function() {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    sourceElement = document.createElement('button');
-    document.body.appendChild(sourceElement);
-  });
+    onSpy = sinon.spy();
+    fireSpy = sinon.spy();
 
-  afterEach(function() {
-    cleanup();
-    if (document.body.contains(container)) {
-      document.body.removeChild(container);
-    }
-    if (document.body.contains(sourceElement)) {
-      document.body.removeChild(sourceElement);
-    }
-  });
-
-  it('should render the popup with correct dimensions', function() {
-
-    // given
-    const onClose = sinon.spy();
-
-    // when
-    const { container: rendered } = render(
-      <FeelPopup
-        entryId="foo"
-        title="Test Title"
-        type="feel"
-        value="bar"
-        onInput={ () => {} }
-        onClose={ onClose }
-        sourceElement={ sourceElement }
-        position={ { x: 10, y: 20 } }
-      />, { container }
-    );
-
-    // then
-    const popup = rendered.querySelector('.bio-properties-panel-feel-popup');
-    expect(popup).to.exist;
-    expect(popup.style.width).to.equal(`${FEEL_POPUP_WIDTH}px`);
-    expect(popup.style.height).to.equal(`${FEEL_POPUP_HEIGHT}px`);
-  });
-
-  it('should render links when provided', async function() {
-
-    // given
-    const onClose = sinon.spy();
-    const links = [
-      { href: 'https://foo.com', title: 'Foo' },
-      { href: 'https://bar.com', title: 'Bar' }
-    ];
-
-    // when
-    render(
-      <FeelPopup
-        entryId="foo"
-        title="With Links"
-        type="feel"
-        value=""
-        onInput={ () => {} }
-        onClose={ onClose }
-        links={ links }
-        sourceElement={ sourceElement }
-      />, { container }
-    );
-
-    // then
-    const anchors = container.querySelectorAll('.bio-properties-panel-feel-popup__title-link');
-    expect(anchors.length).to.equal(2);
-    expect(anchors[0].href).to.equal('https://foo.com/');
-    expect(anchors[0].textContent).to.contain('Foo');
-    expect(anchors[1].href).to.equal('https://bar.com/');
-    expect(anchors[1].textContent).to.contain('Bar');
-  });
-
-  it('should open FEEL editor when type is "feel" and focus it', async function() {
-
-    // given
-    const onClose = sinon.spy();
-    const onInput = sinon.spy();
-
-    // when
-    render(
-      <FeelPopup
-        entryId="foo"
-        title="Feel"
-        type="feel"
-        value="initial"
-        onInput={ onInput }
-        onClose={ onClose }
-        sourceElement={ sourceElement }
-      />, { container }
-    );
-
-    // then
-    const editor = container.querySelector('.bio-properties-panel-feel-editor-container');
-    expect(editor).to.exist;
-
-    await waitFor(() => {
-      const cm = editor.querySelector('.cm-content');
-      expect(document.activeElement).to.equal(cm);
-    });
-  });
-
-  it('should open FEELERS editor when type is "feelers" and focus it', async function() {
-
-    // given
-    const onClose = sinon.spy();
-    const onInput = sinon.spy();
-
-    // when
-    render(
-      <FeelPopup
-        entryId="foo"
-        title="Feelers"
-        type="feelers"
-        value="templ"
-        onInput={ onInput }
-        onClose={ onClose }
-        sourceElement={ sourceElement }
-      />, { container }
-    );
-
-    // then
-    const editor = container.querySelector('.bio-properties-panel-feelers-editor-container');
-    expect(editor).to.exist;
-
-    await waitFor(() => {
-      const cm = editor.querySelector('.cm-content');
-      expect(document.activeElement).to.equal(cm);
-    });
-  });
-
-  it('should call onClose when close button is clicked', async function() {
-
-    // given
-    const onClose = sinon.spy();
-
-    // when
-    render(
-      <FeelPopup
-        entryId="foo"
-        title="Close Test"
-        type="feel"
-        value=""
-        onInput={ () => {} }
-        onClose={ onClose }
-        sourceElement={ sourceElement }
-      />, { container }
-    );
-
-    // and
-    const closeBtn = container.querySelector('.bio-properties-panel-popup__close');
-    fireEvent.click(closeBtn);
-
-    // then
-    expect(onClose).to.have.been.calledOnce;
-  });
-
-  it('should call onClose on ESC when no autocomplete open', async function() {
-
-    // given
-    const onClose = sinon.spy();
-
-    // when
-    render(
-      <FeelPopup
-        entryId="foo"
-        title="EscTest"
-        type="feel"
-        value=""
-        onInput={ () => {} }
-        onClose={ onClose }
-        sourceElement={ sourceElement }
-      />, { container }
-    );
-
-    // and
-    fireEvent.keyDown(container.querySelector('.bio-properties-panel-feel-popup__body'), { key: 'Escape' });
-
-    // then
-    expect(onClose).to.have.been.calledOnce;
-  });
-
-  it('should restore focus to sourceElement after closing', async function() {
-
-    // given
-    const onClose = () => {
-      cleanup();
+    eventBusMock = {
+      on: onSpy,
+      fire: fireSpy
     };
-    sinon.spy(sourceElement, 'focus');
 
-    // when
-    render(
-      <FeelPopup
-        entryId="foo"
-        title="FocusTest"
-        type="feel"
-        value=""
-        onInput={ () => {} }
-        onClose={ onClose }
-        sourceElement={ sourceElement }
-      />, { container }
-    );
+    feelPopup = new FeelPopup(eventBusMock);
 
-    // and
-    const closeBtn = container.querySelector('.bio-properties-panel-popup__close');
-    fireEvent.click(closeBtn);
+    baseContext = {
+      type: 'feel',
+      value: 'expression value',
+      variables: [],
+      onInput: () => {},
+      element: { id: 'elem1' },
+      label: 'Expression Label',
+      sourceField: document.createElement('input'),
+      sourceFieldContainer: document.createElement('div'),
+      popupContainer: document.createElement('div'),
+      getLinks: (type) => [ { href: 'docs.com', title: 'Docs' } ]
+    };
+  });
+
+  function createExpandEntryEvent(entryId = 'entry1', contextOverrides = {}) {
+    return {
+      entryId,
+      context: {
+        ...baseContext,
+        ...contextOverrides
+      }
+    };
+  }
+
+  it('should subscribe to events on initialization', function() {
 
     // then
-    await waitFor(() => {
-      expect(sourceElement.focus).to.have.been.called;
+    expect(onSpy.calledWith('propertiesPanel.expandEntry')).to.be.true;
+    expect(onSpy.calledWith('propertiesPanel.unmountedEntry')).to.be.true;
+    expect(onSpy.calledWith('propertiesPanel.detach')).to.be.true;
+  });
+
+  describe('openPopup', function() {
+    it('should fire popup open event', function() {
+
+      // given
+      const expandEntryEvent = createExpandEntryEvent();
+
+      // when
+      feelPopup.openPopup(expandEntryEvent);
+
+      // then
+      expect(fireSpy.calledWith('propertiesPanelPopup.open')).to.be.true;
+      expect(fireSpy.calledWith('propertiesPanel.setExpandedEntries')).to.be.true;
+      expect(feelPopup.getActivePopupEntryId()).to.equal('entry1');
+    });
+
+    it('should fire popup update event if reopening same popup', function() {
+
+      // given
+      const expandEntryEvent = createExpandEntryEvent();
+
+      feelPopup.openPopup(expandEntryEvent);
+      fireSpy.resetHistory();
+
+      // when
+      feelPopup.openPopup(expandEntryEvent);
+
+      // then
+      expect(fireSpy.calledWith('propertiesPanelPopup.update')).to.be.true;
+      expect(fireSpy.calledWith('propertiesPanelPopup.open')).to.be.false;
+      expect(feelPopup.getActivePopupEntryId()).to.equal('entry1');
+    });
+
+    it('should close existing popup when opening a new one', function() {
+
+      // given
+      const firstExpandEntryEvent = createExpandEntryEvent('entry1', {
+        label: 'Label 1',
+        value: 'value1'
+      });
+
+      const secondExpandEntryEvent = createExpandEntryEvent('entry2', {
+        label: 'Label 2',
+        value: 'value2'
+      });
+
+      feelPopup.openPopup(firstExpandEntryEvent);
+      fireSpy.resetHistory();
+
+      // when
+      feelPopup.openPopup(secondExpandEntryEvent);
+
+      // then
+      expect(fireSpy.calledWith('propertiesPanelPopup.close')).to.be.true;
+      expect(fireSpy.calledWith('propertiesPanelPopup.open')).to.be.true;
+      expect(feelPopup.getActivePopupEntryId()).to.equal('entry2');
+    });
+
+    it('should include properly formatted context in the open event', function() {
+
+      // given
+      const expandEntryEvent = createExpandEntryEvent('entry1', {
+        variables: [ { name: 'var1', value: 'val1' } ]
+      });
+
+      // when
+      feelPopup.openPopup(expandEntryEvent);
+
+      // then
+      const openEventCall = fireSpy.args.find(call => call[0] === 'propertiesPanelPopup.open');
+      expect(openEventCall).to.exist;
+
+      const openEventPayload = openEventCall[1];
+      expect(openEventPayload).to.have.property('entryId', 'entry1');
+      expect(openEventPayload).to.have.property('context');
+
+      const context = openEventPayload.context;
+      expect(context).to.have.property('type', 'feel');
+      expect(context).to.have.property('value', 'expression value');
+      expect(context).to.have.property('variables').that.deep.equals([ { name: 'var1', value: 'val1' } ]);
+      expect(context).to.have.property('title').that.is.a('string');
+      expect(context).to.have.property('links').that.deep.equals([ { href: 'docs.com', title: 'Docs' } ]);
+      expect(context).to.have.property('position').that.is.an('object');
+      expect(context).to.have.property('onClose').that.is.a('function');
+    });
+
+    it('should include properly formatted context in the update event', function() {
+
+      // given
+      const expandEntryEvent = createExpandEntryEvent('entry1', {
+        value: 'initial value'
+      });
+
+      feelPopup.openPopup(expandEntryEvent);
+
+      const updatedEvent = createExpandEntryEvent('entry1', {
+        value: 'updated value'
+      });
+
+      fireSpy.resetHistory();
+
+      // when
+      feelPopup.openPopup(updatedEvent);
+
+      // then
+      const updateEventCall = fireSpy.args.find(call => call[0] === 'propertiesPanelPopup.update');
+      expect(updateEventCall).to.exist;
+
+      const updateEventPayload = updateEventCall[1];
+      expect(updateEventPayload.context).to.have.property('value', 'updated value');
+    });
+
+    it('should provide a functional onClose handler in the context', function() {
+
+      // given
+      const sourceField = document.createElement('input');
+      const focusSpy = sinon.spy(sourceField, 'focus');
+
+      const expandEntryEvent = createExpandEntryEvent('entry1', {
+        sourceField: sourceField
+      });
+
+      feelPopup.openPopup(expandEntryEvent);
+
+      const openEventCall = fireSpy.args.find(call => call[0] === 'propertiesPanelPopup.open');
+      const onClose = openEventCall[1].context.onClose;
+
+      fireSpy.resetHistory();
+      const clock = sinon.useFakeTimers();
+
+      // when
+      onClose();
+
+      // then
+      expect(fireSpy.calledWith('propertiesPanelPopup.close')).to.be.true;
+      clock.tick(10);
+
+      // then
+      expect(focusSpy.calledOnce).to.be.true;
+
+      // cleanup
+      clock.restore();
+      focusSpy.restore();
     });
   });
 
-  describe('accessibility', function() {
-    it('should have no violations for FEEL popup', async function() {
+  describe('closePopup', function() {
+    it('should close active popup', function() {
+
+      // given
+      const expandEntryEvent = createExpandEntryEvent();
+
+      feelPopup.openPopup(expandEntryEvent);
+      fireSpy.resetHistory();
 
       // when
-      const { container: rendered } = render(
-        <FeelPopup
-          entryId="foo"
-          title="a11y Feel"
-          type="feel"
-          value=""
-          onInput={ () => {} }
-          onClose={ () => {} }
-          sourceElement={ sourceElement }
-        />, { container }
-      );
+      feelPopup.closePopup('entry1');
 
       // then
-      const popup = rendered.querySelector('.bio-properties-panel-feel-popup');
-      await expectNoViolations(popup, {
-        rules: { 'aria-input-field-name': { enabled: false } }
-      });
+      expect(fireSpy.calledWith('propertiesPanelPopup.close')).to.be.true;
+      expect(fireSpy.calledWith('propertiesPanel.setExpandedEntries')).to.be.true;
+      expect(feelPopup.getActivePopupEntryId()).to.be.null;
     });
 
-    it('should have no violations for FEELERS popup', async function() {
+    it('should warn when attempting to close non-active popup', function() {
+
+      // given
+      sinon.stub(console, 'warn');
+      const expandEntryEvent = createExpandEntryEvent();
+
+      feelPopup.openPopup(expandEntryEvent);
 
       // when
-      const { container: rendered } = render(
-        <FeelPopup
-          entryId="foo"
-          title="a11y Feelers"
-          type="feelers"
-          value=""
-          onInput={ () => {} }
-          onClose={ () => {} }
-          sourceElement={ sourceElement }
-        />, { container }
-      );
+      feelPopup.closePopup('entry2');
 
       // then
-      const popup = rendered.querySelector('.bio-properties-panel-feel-popup');
-      await expectNoViolations(popup);
+      expect(console.warn.calledOnce).to.be.true;
+      expect(feelPopup.getActivePopupEntryId()).to.equal('entry1');
+
+      console.warn.restore();
+    });
+
+    it('should pass the correct entryId in the close event', function() {
+
+      // given
+      const expandEntryEvent = createExpandEntryEvent();
+
+      feelPopup.openPopup(expandEntryEvent);
+      fireSpy.resetHistory();
+
+      // when
+      feelPopup.closePopup();
+
+      // then
+      const closeEventCall = fireSpy.args.find(call => call[0] === 'propertiesPanelPopup.close');
+      expect(closeEventCall).to.exist;
+      expect(closeEventCall[1]).to.have.property('entryId', 'entry1');
+    });
+  });
+
+  describe('Event handlers', function() {
+    it('should handle propertiesPanel.unmountedEntry event', function() {
+
+      // given
+      const expandEntryEvent = createExpandEntryEvent();
+
+      feelPopup.openPopup(expandEntryEvent);
+      fireSpy.resetHistory();
+
+      const unmountedEntryHandler = onSpy.args.find(
+        call => call[0] === 'propertiesPanel.unmountedEntry'
+      )[1];
+
+      // when
+      unmountedEntryHandler({ entryId: 'entry1' });
+
+      // then
+      expect(fireSpy.calledWith('propertiesPanelPopup.close')).to.be.true;
+      expect(feelPopup.getActivePopupEntryId()).to.be.null;
+    });
+
+    it('should handle propertiesPanel.detach event', function() {
+
+      // given
+      const expandEntryEvent = createExpandEntryEvent();
+
+      feelPopup.openPopup(expandEntryEvent);
+      fireSpy.resetHistory();
+
+      // Extract the detach handler
+      const detachHandler = onSpy.args.find(
+        call => call[0] === 'propertiesPanel.detach'
+      )[1];
+
+      // when
+      detachHandler();
+
+      // then
+      expect(fireSpy.calledWith('propertiesPanelPopup.close')).to.be.true;
+      expect(feelPopup.getActivePopupEntryId()).to.be.null;
     });
   });
 });

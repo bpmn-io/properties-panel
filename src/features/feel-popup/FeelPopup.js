@@ -1,6 +1,6 @@
 import { calculatePopupPosition, getPopupTitle } from './components/helpers';
 
-export class FeelPopupManager {
+export class FeelPopup {
   constructor(eventBus) {
     this._eventBus = eventBus;
     this._activePopupEntryId = null;
@@ -80,7 +80,7 @@ export class FeelPopupManager {
   }
 }
 
-FeelPopupManager.$inject = [ 'eventBus' ];
+FeelPopup.$inject = [ 'eventBus' ];
 
 // helpers /////////////////
 
