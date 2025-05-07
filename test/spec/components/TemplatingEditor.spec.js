@@ -130,16 +130,14 @@ describe('<TemplatingEditor>', function() {
     // given
     const result = render(<Wrapper value={ '' } />, { container });
 
-    const placeholder = domQuery('.bio-properties-panel-feelers-editor__open-popup-placeholder', container);
-
     // assume
-    expect(window.getComputedStyle(placeholder).display).to.eql('none');
+    expect(domQuery('.bio-properties-panel-feelers-editor__popup-placeholder', container)).not.to.exist;
 
     // when
     result.rerender(<Wrapper value={ '' } popupOpen={ true } />, { container });
 
     // then
-    expect(window.getComputedStyle(placeholder).display).to.eql('flex');
+    expect(domQuery('.bio-properties-panel-feelers-editor__popup-placeholder', container)).to.exist;
   });
 
 

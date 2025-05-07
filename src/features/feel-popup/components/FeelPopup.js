@@ -22,6 +22,9 @@ import { Popup } from './Popup';
  * @property {Object} [eventBus]
  */
 
+export const FEEL_POPUP_WIDTH = 700;
+export const FEEL_POPUP_HEIGHT = 250;
+
 /**
  * FEEL expression editor popup component
  * @param {FeelPopupProps} props
@@ -41,7 +44,7 @@ export function FeelPopup(props) {
     singleLine,
     sourceElement,
     tooltipContainer,
-    eventBus,
+    eventBus
   } = props;
 
   const editorRef = useRef();
@@ -96,7 +99,6 @@ export function FeelPopup(props) {
       <Popup.Title
         title={ title }
         eventBus={ eventBus }
-        eventNamespace="feelPopup"
         showCloseButton={ true }
         closeButtonTooltip="Save and close"
         onClose={ onClose }
@@ -158,11 +160,6 @@ export function FeelPopup(props) {
   );
 }
 
-// constants
-export const FEEL_POPUP_WIDTH = 700;
-export const FEEL_POPUP_HEIGHT = 250;
-
-// helpers
 function prefixId(id) {
   return `bio-properties-panel-${id}`;
 }

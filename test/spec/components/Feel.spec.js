@@ -20,8 +20,7 @@ import {
   DescriptionContext,
   ErrorsContext,
   EventContext,
-  PropertiesPanelContext,
-  ExpandedEntriesContext,
+  PropertiesPanelContext
 } from 'src/context';
 
 import FeelField, {
@@ -36,7 +35,7 @@ insertCoreStyles();
 
 const noop = () => {};
 
-describe('<FeelField>', function() {
+describe('<FeelEntry>', function() {
   let container;
 
   beforeEach(function() {
@@ -2585,6 +2584,7 @@ describe('<FeelField>', function() {
     });
 
     describe('entry expansion', function() {
+
       it('should render expand entry button', async function() {
 
         // given
@@ -2613,9 +2613,9 @@ describe('<FeelField>', function() {
 
         const result = createFeelField({
           container,
+          eventBus,
           feel: 'required',
-          id: 'testField',
-          eventBus: eventBus
+          id: 'testField'
         });
 
         const expandButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
@@ -2627,7 +2627,8 @@ describe('<FeelField>', function() {
 
         // then
         expect(expandSpy).to.have.been.calledOnce;
-        expect(expandSpy.firstCall.args[0].entryId).to.equal('testField');
+        expect(expandSpy.firstCall.args[0].props).to.exist;
+        expect(expandSpy.firstCall.args[0].props.entryId).to.equal('testField');
       });
 
       it('should fire unmount event on component unmount', async function() {
@@ -2639,9 +2640,9 @@ describe('<FeelField>', function() {
 
         const result = createFeelField({
           container,
+          eventBus,
           feel: 'required',
-          id: 'testField',
-          eventBus: eventBus
+          id: 'testField'
         });
 
         // when
@@ -2658,42 +2659,44 @@ describe('<FeelField>', function() {
 
         // given
         const id = 'myField';
-        const expandedEntries = [ id ];
+        const eventBus = new EventBus();
+        eventBus.on('propertiesPanel.expandEntry', () => true);
+          console.log('expand');
+
+          return true;
+        });
 
         const result = createFeelField({
           container,
+          eventBus,
           feel: 'required',
-          id,
-          expandedEntries
+          id
+        });
+
+        const expandButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+        // when
+        await act(() => {
+          clickInput(expandButton);
         });
 
         // then
-        const placeholder = domQuery(
-          '.bio-properties-panel-feel-editor__open-popup-placeholder',
-          result.container
-        );
-        expect(window.getComputedStyle(placeholder).display).to.eql('flex');
+        expect(domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container)).to.exist;
       });
 
       it('should hide placeholder when entry is not expanded', async function() {
 
         // given
         const id = 'myField';
-        const expandedEntries = [];
 
         const result = createFeelField({
           container,
           feel: 'required',
-          id,
-          expandedEntries
+          id
         });
 
         // then
-        const placeholder = domQuery(
-          '.bio-properties-panel-feel-editor__open-popup-placeholder',
-          result.container
-        );
-        expect(window.getComputedStyle(placeholder).display).to.eql('none');
+        expect(domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container)).not.to.exist;
       });
     });
   });
@@ -2839,9 +2842,6 @@ function createFeelField(options = {}, renderFn = render) {
     onBlur = noop,
     errors = {},
     variables,
-    expandedEntries = [],
-    popupContainer = null,
-    getLinks = () => [],
     Component = FeelField,
     ...rest
   } = options;
@@ -2861,12 +2861,6 @@ function createFeelField(options = {}, renderFn = render) {
   const descriptionContext = {
     description: descriptionConfig,
     getDescriptionForId,
-  };
-
-  const expandedEntriesContext = {
-    expandedEntries,
-    popupContainer,
-    getLinks,
   };
 
   return renderFn(

@@ -34,7 +34,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup />, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     // then
     expect(popup).to.exist;
@@ -49,7 +49,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup width={ width } />, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     const bounds = popup.getBoundingClientRect();
 
@@ -66,7 +66,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup height={ height } />, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     const bounds = popup.getBoundingClientRect();
 
@@ -80,7 +80,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup><div class="foo">bar</div></Popup>, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     // then
     expect(popup.querySelector('.foo')).to.exist;
@@ -92,7 +92,7 @@ describe('<Popup>', function() {
     // when
     render(<Popup title="foo" />, { container });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
 
     // then
     expect(popup.getAttribute('aria-label')).to.eql('foo');
@@ -123,7 +123,7 @@ describe('<Popup>', function() {
       render(<Popup onClose={ closeSpy }><input name="foo"></input></Popup>, { container });
     });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
     const input = domQuery('input', popup);
 
     // when
@@ -143,7 +143,7 @@ describe('<Popup>', function() {
       render(<Popup closeOnEscape={ false } onClose={ closeSpy }><input name="foo"></input></Popup>, { container });
     });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
     const input = domQuery('input', popup);
 
     // when
@@ -165,7 +165,7 @@ describe('<Popup>', function() {
       render(<Popup container={ container }><input name="foo"></input></Popup>, { container });
     });
 
-    const popup = domQuery('.bio-properties-panel-popup', document.body);
+    const popup = domQuery('.bio-properties-panel-popup', container);
     const input = domQuery('input', popup);
 
     // when
@@ -183,7 +183,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Title><div class="foo">bar</div></Popup.Title>, { container });
 
-      const header = domQuery('.bio-properties-panel-popup__header', document.body);
+      const header = domQuery('.bio-properties-panel-popup__header', container);
 
       // then
       expect(header.querySelector('.foo')).to.exist;
@@ -200,7 +200,7 @@ describe('<Popup>', function() {
         { container }
       );
 
-      const header = domQuery('.bio-properties-panel-popup__header', document.body);
+      const header = domQuery('.bio-properties-panel-popup__header', container);
       const closeButton = domQuery('.bio-properties-panel-popup__close', header);
       const closeButonTitle = closeButton.getAttribute('title');
 
@@ -215,7 +215,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Title className="foo" />, { container });
 
-      const header = domQuery('.bio-properties-panel-popup__header', document.body);
+      const header = domQuery('.bio-properties-panel-popup__header', container);
 
       // then
       expect(header.classList.contains('foo')).to.be.true;
@@ -229,7 +229,7 @@ describe('<Popup>', function() {
         // when
         render(<Popup.Title />, { container });
 
-        const header = domQuery('.bio-properties-panel-popup__header', document.body);
+        const header = domQuery('.bio-properties-panel-popup__header', container);
         const dragger = domQuery('.bio-properties-panel-popup__drag-handle', header);
 
         // then
@@ -242,7 +242,7 @@ describe('<Popup>', function() {
         // when
         render(<Popup.Title draggable={ true } />, { container });
 
-        const header = domQuery('.bio-properties-panel-popup__header', document.body);
+        const header = domQuery('.bio-properties-panel-popup__header', container);
         const dragger = domQuery('.bio-properties-panel-popup__drag-handle', header);
 
         // then
@@ -260,8 +260,8 @@ describe('<Popup>', function() {
           { container }
         );
 
-        const popup = domQuery('.bio-properties-panel-popup', document.body);
-        const header = domQuery('.bio-properties-panel-popup__header', document.body);
+        const popup = domQuery('.bio-properties-panel-popup', container);
+        const header = domQuery('.bio-properties-panel-popup__header', container);
         const dragger = domQuery('.bio-properties-panel-popup__drag-handle', header);
 
         const oldBounds = popup.getBoundingClientRect();
@@ -289,8 +289,8 @@ describe('<Popup>', function() {
           { container }
         );
 
-        const popup = domQuery('.bio-properties-panel-popup', document.body);
-        const header = domQuery('.bio-properties-panel-popup__header', document.body);
+        const popup = domQuery('.bio-properties-panel-popup', container);
+        const header = domQuery('.bio-properties-panel-popup__header', container);
 
         const oldBounds = popup.getBoundingClientRect();
         const headerBounds = header.getBoundingClientRect();
@@ -354,7 +354,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Body><div class="foo">bar</div></Popup.Body>, { container });
 
-      const body = domQuery('.bio-properties-panel-popup__body', document.body);
+      const body = domQuery('.bio-properties-panel-popup__body', container);
 
       // then
       expect(body.querySelector('.foo')).to.exist;
@@ -366,7 +366,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Body className="foo" />, { container });
 
-      const body = domQuery('.bio-properties-panel-popup__body', document.body);
+      const body = domQuery('.bio-properties-panel-popup__body', container);
 
       // then
       expect(body.classList.contains('foo')).to.be.true;
@@ -382,7 +382,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Footer><div class="foo">bar</div></Popup.Footer>, { container });
 
-      const footer = domQuery('.bio-properties-panel-popup__footer', document.body);
+      const footer = domQuery('.bio-properties-panel-popup__footer', container);
 
       // then
       expect(footer.querySelector('.foo')).to.exist;
@@ -394,7 +394,7 @@ describe('<Popup>', function() {
       // when
       render(<Popup.Footer className="foo" />, { container });
 
-      const footer = domQuery('.bio-properties-panel-popup__footer', document.body);
+      const footer = domQuery('.bio-properties-panel-popup__footer', container);
 
       // then
       expect(footer.classList.contains('foo')).to.be.true;

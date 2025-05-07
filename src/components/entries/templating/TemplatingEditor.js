@@ -38,7 +38,7 @@ const useBufferedFocus = function(editor, ref) {
   }, [ editor, buffer ]);
 };
 
-const CodeEditor = forwardRef((props, ref) => {
+const TemplatingEditor = forwardRef((props, ref) => {
 
   const {
     onInput,
@@ -114,7 +114,9 @@ const CodeEditor = forwardRef((props, ref) => {
     'bio-properties-panel-feelers-editor-container',
     popupOpen ? 'popupOpen' : null
   ) }>
-    <div class="bio-properties-panel-feelers-editor__open-popup-placeholder">Opened in editor</div>
+    {
+      popupOpen && <div class="bio-properties-panel-feelers-editor__popup-placeholder">Opened in popup</div>
+    }
     <div
       name={ props.name }
       class={ classNames('bio-properties-panel-feelers-editor bio-properties-panel-input', localValue ? 'edited' : null, disabled ? 'disabled' : null) }
@@ -127,4 +129,4 @@ const CodeEditor = forwardRef((props, ref) => {
   </div>;
 });
 
-export default CodeEditor;
+export default TemplatingEditor;

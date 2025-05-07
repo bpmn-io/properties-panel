@@ -41,7 +41,7 @@ function PopupComponent(props, globalRef) {
     onPostDeactivate = noop,
     returnFocus = true,
     closeOnEscape = true,
-    title,
+    title
   } = props;
 
   const focusTrapRef = useRef(null);
@@ -139,7 +139,6 @@ function Title(props) {
     className,
     draggable,
     eventBus,
-    eventNamespace = 'popup',
     title,
     showCloseButton = false,
     closeButtonTooltip = 'Close popup',
@@ -173,9 +172,7 @@ function Title(props) {
     popupParent.style.top = newPosition.y + 'px';
     popupParent.style.left = newPosition.x + 'px';
 
-    // notify interested parties
-    eventBus &&
-      eventBus.fire(`${eventNamespace}.dragover`, { newPosition, delta });
+    eventBus?.fire('feelPopup.dragover', { newPosition, delta });
   };
 
   const onMoveStart = (event) => {
@@ -194,15 +191,13 @@ function Title(props) {
       y: bounds.top,
     };
 
-    // notify interested parties
-    eventBus && eventBus.fire(`${eventNamespace}.dragstart`);
+    eventBus?.fire('feelPopup.dragstart');
   };
 
   const onMoveEnd = () => {
     context.current.newPosition = null;
 
-    // notify interested parties
-    eventBus && eventBus.fire(`${eventNamespace}.dragend`);
+    eventBus?.fire('feelPopup.dragend');
   };
 
   return (
