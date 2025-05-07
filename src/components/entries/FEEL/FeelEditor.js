@@ -164,7 +164,7 @@ const CodeEditor = forwardRef((props, ref) => {
       onClick={ handleClick }
     ></div>
     {!disabled && <ExpandEntryButton
-      onClick={ () => onExpandProperty('feelers') }
+      onClick={ () => onExpandProperty('feel') }
     /> }
   </div>;
 });

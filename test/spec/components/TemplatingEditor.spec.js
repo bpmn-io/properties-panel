@@ -142,6 +142,21 @@ describe('<TemplatingEditor>', function() {
     expect(window.getComputedStyle(placeholder).display).to.eql('flex');
   });
 
+
+  it('should call onExpandProperty with feelers type', async function() {
+
+    // given
+    const spy = sinon.spy();
+    render(<Wrapper onExpandProperty={ spy } />, { container });
+
+    const expandButton = domQuery('.bio-properties-panel-open-feel-popup', container);
+
+    // when
+    expandButton.click();
+
+    // then
+    expect(spy).to.have.been.calledWith('feelers');
+  });
 });
 
 
