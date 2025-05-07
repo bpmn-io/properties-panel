@@ -17,7 +17,6 @@ import {
 } from 'test/TestHelper';
 
 import Tooltip from 'src/components/entries/Tooltip';
-import { act } from 'preact/test-utils';
 
 import { TooltipContext } from '../../../src/context';
 import { useRef } from 'preact/hooks';
@@ -27,7 +26,7 @@ insertCoreStyles();
 
 describe('<Tooltip>', function() {
 
-  let container, parent, clock;
+  let container, parent;
 
   beforeEach(function() {
     parent = TestContainer.get(this);
@@ -38,19 +37,16 @@ describe('<Tooltip>', function() {
     container.classList.add('bio-properties-panel');
 
     parent.appendChild(container);
-    clock = sinon.useFakeTimers();
   });
 
   afterEach(function() {
     cleanup();
-    clock.restore();
   });
 
-  function openTooltip(element, viaFocus = false) {
-    return act(() => {
-      viaFocus ? element.focus() : fireEvent.mouseEnter(element);
-      clock.tick(200);
-    });
+  async function openTooltip(element, focus = false) {
+    focus ? element.focus() : fireEvent.mouseEnter(element);
+
+    await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.exist);
   }
 
 
@@ -269,38 +265,6 @@ describe('<Tooltip>', function() {
   });
 
 
-  describe('a11y', function() {
-
-    it('should have no violations', async function() {
-
-      // given
-      const { container: node } = createTooltip({ container });
-
-      // then
-      return waitFor(() => {
-        expectNoViolations(node);
-      }, 5000);
-    });
-
-
-    it('should have no violations - tooltip shown', async function() {
-
-      // given
-      createTooltip({ container });
-
-      // when
-      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
-      await openTooltip(wrapper);
-
-      // then
-      return waitFor(() => {
-        expectNoViolations(domQuery('.bio-properties-panel-tooltip', container));
-      }, 5000);
-    });
-
-  });
-
-
   describe('focus', function() {
 
     describe('trigger element', function() {
@@ -418,6 +382,45 @@ describe('<Tooltip>', function() {
         expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
       });
 
+    });
+
+  });
+
+
+  describe('a11y', function() {
+
+    it('should have no violations (tooltip not shown)', async function() {
+
+      // given
+      createTooltip({ container });
+
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+      expect(wrapper).to.exist;
+
+      // then
+      await expectNoViolations(wrapper);
+    });
+
+
+    it('should have no violations (tooltip shown)', async function() {
+
+      // given
+      createTooltip({ container });
+
+      // when
+      let wrapper;
+
+      await waitFor(() => {
+        wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+        expect(wrapper).to.exist;
+      });
+
+      await openTooltip(wrapper);
+
+      // then
+      await expectNoViolations(wrapper);
     });
 
   });

@@ -5,7 +5,7 @@ import { forwardRef } from 'preact/compat';
 import { FeelersEditor } from 'feelers';
 import { useStaticCallback } from '../../../hooks';
 
-import { PopupIcon } from '../../icons';
+import { ExpandEntryButton } from '../../ExpandEntryButton';
 
 const noop = () => {};
 
@@ -47,7 +47,7 @@ const CodeEditor = forwardRef((props, ref) => {
     enableGutters,
     value,
     onLint = noop,
-    onPopupOpen = noop,
+    onExpandProperty = noop,
     popupOpen,
     contentAttributes = {},
     hostLanguage = null,
@@ -121,12 +121,9 @@ const CodeEditor = forwardRef((props, ref) => {
       ref={ inputRef }
       onClick={ handleClick }
     ></div>
-
-    <button
-      type="button"
-      title="Open pop-up editor"
-      class="bio-properties-panel-open-feel-popup"
-      onClick={ () => onPopupOpen('feelers') }><PopupIcon /></button>
+    {!disabled && <ExpandEntryButton
+      onClick={ () => onExpandProperty('feelers') }
+    /> }
   </div>;
 });
 

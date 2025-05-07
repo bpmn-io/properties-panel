@@ -1266,6 +1266,7 @@ textarea.bio-properties-panel-input {
   display: flex;
 }
 
+
 .bio-properties-panel-popup {
   --popup-background-color: hsla(0, 0%, 96%, 1);
   --popup-header-background-color: white;
