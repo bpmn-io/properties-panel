@@ -185,6 +185,22 @@ describe('<FeelEditor>', function() {
 
     expect(editor.textContent).to.eql('bar');
   });
+
+
+  it('should call onExpandProperty with feel type', async function() {
+
+    // given
+    const spy = sinon.spy();
+    render(<Wrapper onExpandProperty={ spy } />, { container });
+
+    const expandButton = domQuery('.bio-properties-panel-open-feel-popup', container);
+
+    // when
+    expandButton.click();
+
+    // then
+    expect(spy).to.have.been.calledWith('feel');
+  });
 });
 
 
