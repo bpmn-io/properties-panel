@@ -1,135 +1,78 @@
-import { calculatePopupPosition, getPopupTitle } from './components/helpers';
+import { getPopupPosition, getPopupTitle } from './components/helpers';
 
 export class FeelPopup {
-  constructor(eventBus) {
+  constructor(eventBus, config = {}) {
     this._eventBus = eventBus;
-    this._activePopupEntryId = null;
+    this._config = config;
 
-    this._init();
-  }
+    this._entryId = null;
 
-  _init() {
-    this._eventBus.on('propertiesPanel.expandEntry', (expandEntryEvent) => {
-      this.openPopup(expandEntryEvent);
+    eventBus.on('propertiesPanel.expandEntry', (context) => {
+      this._openPopup(context);
+
+      // return true to indicate that entry is expanded
+      return true;
     });
 
-    this._eventBus.on('propertiesPanel.unmountedEntry', ({ entryId }) => {
-      if (this._activePopupEntryId === entryId) {
-        this.closePopup(entryId);
+    eventBus.on('propertiesPanel.unmountedEntry', ({ entryId }) => {
+      if (this._entryId === entryId) {
+        this._closePopup();
       }
     });
 
-    this._eventBus.on('propertiesPanel.detach', () => {
-      if (this._activePopupEntryId) {
-        this.closePopup(this._activePopupEntryId);
+    eventBus.on('propertiesPanel.detach', () => {
+      if (this._entryId) {
+        this._closePopup();
       }
     });
   }
 
-  openPopup(expandEntryEvent) {
-    const { entryId } = expandEntryEvent;
-    const openPopupEvent = {
+  _openPopup(context) {
+    const { props } = context;
+
+    const {
       entryId,
-      context: _getPopupOpenContext(
-        this._eventBus,
-        (entryId) => this.closePopup(entryId),
-        expandEntryEvent
-      ),
-    };
+      element,
+      label,
+      sourceField,
+      onCollapse,
+      type
+    } = props;
 
-    if (this._activePopupEntryId === entryId) {
-      this._eventBus.fire('propertiesPanelPopup.update', openPopupEvent);
-      return;
-    }
+    this._closePopup();
 
-    if (this._activePopupEntryId) {
-      this.closePopup(this._activePopupEntryId);
-    }
+    this._entryId = entryId;
+    this._onCollapse = onCollapse;
 
-    this._activePopupEntryId = entryId;
+    this._eventBus.fire('propertiesPanelPopup.open', {
+      container: this._config.feelPopupContainer,
+      props: {
+        ...props,
+        links: this._config.getFeelPopupLinks?.(type),
+        onClose: () => {
+          this._closePopup();
 
-    this._eventBus.fire('propertiesPanelPopup.open', openPopupEvent);
-    this._eventBus.fire('propertiesPanel.setExpandedEntries', {
-      expandedEntries: [ entryId ],
+          // setTimeout to ensure the focus happens after the DOM updates make it focusable
+          setTimeout(() => {
+            sourceField && sourceField.focus();
+          }, 0);
+        },
+        position: getPopupPosition(),
+        title: getPopupTitle({ element, label })
+      }
     });
   }
 
-  closePopup(entryId = null) {
-    if (!this._activePopupEntryId) {
-      console.warn('No active popup to close.');
-      return;
+  _closePopup() {
+    if (this._entryId) {
+      this._onCollapse?.();
+
+      this._entryId = null;
+      this._onCollapse = null;
+
+      this._eventBus.fire('propertiesPanelPopup.close');
     }
-
-    if (entryId && this._activePopupEntryId !== entryId) {
-      console.warn(`Popup with entryId "${entryId}" is not active.`);
-      return;
-    }
-
-    this._eventBus.fire('propertiesPanelPopup.close', {
-      entryId: this._activePopupEntryId,
-    });
-    this._eventBus.fire('propertiesPanel.setExpandedEntries', {
-      expandedEntries: [],
-    });
-
-    this._activePopupEntryId = null;
-  }
-
-  getActivePopupEntryId() {
-    return this._activePopupEntryId;
   }
 }
 
-FeelPopup.$inject = [ 'eventBus' ];
-
-// helpers /////////////////
-
-/**
- * Prepares the context for the popup.
- *
- * @param {Object} expansionEvent
- * @returns {import('./components/FeelPopup').FeelPopupProps}
- */
-const _getPopupOpenContext = (eventBus, closePopup, expandEntryEvent) => {
-  const { entryId, context } = expandEntryEvent;
-  const {
-    type,
-    value,
-    variables,
-    onInput,
-    hostLanguage,
-    singleLine,
-    element,
-    label,
-    tooltipContainer,
-    sourceField,
-    sourceFieldContainer,
-    ...expansionContextProps
-  } = context;
-  const { popupContainer, getLinks } = expansionContextProps;
-
-  return {
-    entryId,
-    type,
-    title: getPopupTitle({ element, label }),
-    value,
-    variables,
-    onInput,
-    onClose: () => {
-      closePopup(entryId);
-
-      // setTimeout to ensure the focus happens after the DOM updates make it focusable
-      setTimeout(() => {
-        sourceField && sourceField.focus();
-      }, 0);
-    },
-    links: getLinks(type),
-    position: calculatePopupPosition({ sourceFieldContainer }),
-    hostLanguage,
-    singleLine,
-    element,
-    tooltipContainer,
-    popupContainer,
-    eventBus,
-  };
-};
+FeelPopup.$inject = [ 'eventBus', 'config.propertiesPanel' ];

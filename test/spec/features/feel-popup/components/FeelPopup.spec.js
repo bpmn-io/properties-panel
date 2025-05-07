@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { render, fireEvent, cleanup, waitFor } from '@testing-library/preact/pure';
 import { expectNoViolations, insertCoreStyles } from 'test/TestHelper';
-import { FeelPopup, FEEL_POPUP_WIDTH, FEEL_POPUP_HEIGHT } from '../../../../src/features/feel-popup/components';
+import { FeelPopup, FEEL_POPUP_WIDTH, FEEL_POPUP_HEIGHT } from 'src/features/feel-popup/components/FeelPopup';
 
 insertCoreStyles();
 

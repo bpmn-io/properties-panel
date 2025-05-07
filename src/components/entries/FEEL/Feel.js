@@ -22,11 +22,11 @@ import {
   useStaticCallback
 } from '../../../hooks';
 
-import CodeEditor from './FeelEditor';
+import FeelEditor from './FeelEditor';
 import { FeelIndicator } from './FeelIndicator';
 import FeelIcon from './FeelIcon';
 
-import { ExpandedEntriesContext, EventContext } from '../../../context';
+import { EventContext } from '../../../context';
 
 import { ToggleSwitch } from '../ToggleSwitch';
 
@@ -66,15 +66,10 @@ function FeelTextfield(props) {
   const [ focus, _setFocus ] = useState(undefined);
 
   const {
-    expandedEntries,
-    expansionContextProps
-  } = useContext(ExpandedEntriesContext);
-
-  const {
     eventBus
   } = useContext(EventContext);
 
-  const isExpanded = expandedEntries.includes(id);
+  const [ isExpanded, setIsExpanded ] = useState(false);
 
   const setFocus = (offset = 0) => {
     const hasFocus = containerRef.current.contains(document.activeElement);
@@ -144,25 +139,22 @@ function FeelTextfield(props) {
   });
 
   const handleExpandProperty = (type = 'feel') => {
-    const context = {
-      type,
-      value: feelOnlyValue,
-      variables,
-      onInput: handleLocalInput,
-      hostLanguage,
-      singleLine,
-      element,
-      label,
-      tooltipContainer,
-      sourceField: editorRef.current,
-      sourceFieldContainer: containerRef.current,
-      ...(expansionContextProps || {})
-    };
-
-    eventBus.fire('propertiesPanel.expandEntry', {
-      entryId: id,
-      context,
-    });
+    setIsExpanded(eventBus.fire('propertiesPanel.expandEntry', {
+      props: {
+        element,
+        entryId: id,
+        hostLanguage,
+        label,
+        onCollapse: () => setIsExpanded(false),
+        onInput: handleLocalInput,
+        singleLine,
+        sourceField: editorRef.current,
+        tooltipContainer,
+        type,
+        value: feelOnlyValue,
+        variables
+      }
+    }) === true);
   };
 
   useEffect(() => {
@@ -251,13 +243,16 @@ function FeelTextfield(props) {
           onClick={ handleFeelToggle }
         />
         {feelActive ?
-          <CodeEditor
+          <FeelEditor
             name={ id }
             onInput={ handleLocalInput }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             disabled={ disabled }
             popupOpen={ isExpanded }
-            onFeelToggle={ () => { handleFeelToggle(); setFocus(true); } }
+            onFeelToggle={ () => {
+              handleFeelToggle();
+              setFocus(true);
+            } }
             onLint={ handleLint }
             onExpandProperty={ handleExpandProperty }
             placeholder={ placeholder }
