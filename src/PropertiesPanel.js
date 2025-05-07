@@ -28,8 +28,6 @@ import {
   TooltipContext
 } from './context';
 
-import { ExpandedEntriesContext } from './context';
-
 import { useEvent } from './hooks';
 
 const DEFAULT_LAYOUT = {};
@@ -132,8 +130,6 @@ export default function PropertiesPanel(props) {
     descriptionLoaded,
     tooltipConfig,
     tooltipLoaded,
-    feelPopupContainer,
-    getFeelPopupLinks,
     eventBus
   } = props;
 
@@ -217,22 +213,6 @@ export default function PropertiesPanel(props) {
     errors
   };
 
-  const [ expandedEntries, setexpandedEntries ] = useState([]);
-
-  const onSetExpandedEntries = ({ expandedEntries }) => setexpandedEntries(expandedEntries);
-
-  useEvent('propertiesPanel.setExpandedEntries', onSetExpandedEntries, eventBus);
-
-  const expandedEntriesContext = {
-    expandedEntries,
-
-    // isolating historical opinionated variables in this subcontext, we should see to deprecate them in the future
-    expansionContextProps: {
-      popupContainer: feelPopupContainer,
-      getLinks: getFeelPopupLinks,
-    }
-  };
-
   const eventContext = {
     eventBus
   };
@@ -258,30 +238,28 @@ export default function PropertiesPanel(props) {
           <TooltipContext.Provider value={ tooltipContext }>
             <LayoutContext.Provider value={ layoutContext }>
               <EventContext.Provider value={ eventContext }>
-                <ExpandedEntriesContext.Provider value={ expandedEntriesContext }>
-                  <div class="bio-properties-panel">
-                    <Header
-                      element={ element }
-                      headerProvider={ headerProvider } />
-                    <div class="bio-properties-panel-scroll-container">
-                      {
-                        groups.map(group => {
-                          const {
-                            component: Component = Group,
-                            id
-                          } = group;
+                <div class="bio-properties-panel">
+                  <Header
+                    element={ element }
+                    headerProvider={ headerProvider } />
+                  <div class="bio-properties-panel-scroll-container">
+                    {
+                      groups.map(group => {
+                        const {
+                          component: Component = Group,
+                          id
+                        } = group;
 
-                          return (
-                            <Component
-                              { ...group }
-                              key={ id }
-                              element={ element } />
-                          );
-                        })
-                      }
-                    </div>
+                        return (
+                          <Component
+                            { ...group }
+                            key={ id }
+                            element={ element } />
+                        );
+                      })
+                    }
                   </div>
-                </ExpandedEntriesContext.Provider>
+                </div>
               </EventContext.Provider>
             </LayoutContext.Provider>
           </TooltipContext.Provider>

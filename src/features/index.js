@@ -1,2 +1,2 @@
 export { default as DebounceInputModule } from './debounce-input';
-export * from './feel-popup';
+export { default as FeelPopupModule } from './feel-popup';

@@ -1,6 +1,6 @@
 import { FEEL_POPUP_WIDTH, FEEL_POPUP_HEIGHT } from './FeelPopup';
 
-function getPopupTitle({ element, label }) {
+export function getPopupTitle({ element, label }) {
   let popupTitle = '';
 
   if (element && element.type) {
@@ -10,7 +10,7 @@ function getPopupTitle({ element, label }) {
   return `${popupTitle}${label}`;
 }
 
-function calculatePopupPosition() {
+export function getPopupPosition() {
   const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
   const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
@@ -19,5 +19,3 @@ function calculatePopupPosition() {
     top: Math.max(0, (viewportHeight - FEEL_POPUP_HEIGHT) / 2)
   };
 }
-
-export { getPopupTitle, calculatePopupPosition };
