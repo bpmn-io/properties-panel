@@ -5,7 +5,7 @@ export class FeelPopup {
     this._eventBus = eventBus;
     this._config = config;
 
-    this._entryId = null;
+    this._isOpen = false;
 
     eventBus.on('propertiesPanel.openPopup', (context) => {
       this._openPopup(context);
@@ -14,16 +14,12 @@ export class FeelPopup {
       return true;
     });
 
-    eventBus.on('propertiesPanel.unmountedEntry', ({ entryId }) => {
-      if (this._entryId === entryId) {
-        this._closePopup();
-      }
+    eventBus.on('propertiesPanel.closePopup', () => {
+      this._closePopup();
     });
 
     eventBus.on('propertiesPanel.detach', () => {
-      if (this._entryId) {
-        this._closePopup();
-      }
+      this._closePopup();
     });
   }
 
@@ -31,7 +27,6 @@ export class FeelPopup {
     const { props } = context;
 
     const {
-      entryId,
       element,
       label,
       sourceField,
@@ -41,7 +36,7 @@ export class FeelPopup {
 
     this._closePopup();
 
-    this._entryId = entryId;
+    this._isOpen = true;
     this._onCollapse = onCollapse;
 
     this._eventBus.fire('propertiesPanelPopup.open', {
@@ -64,10 +59,10 @@ export class FeelPopup {
   }
 
   _closePopup() {
-    if (this._entryId) {
+    if (this._isOpen) {
       this._onCollapse?.();
 
-      this._entryId = null;
+      this._isOpen = false;
       this._onCollapse = null;
 
       this._eventBus.fire('propertiesPanelPopup.close');

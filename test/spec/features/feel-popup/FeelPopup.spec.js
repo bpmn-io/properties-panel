@@ -53,7 +53,7 @@ describe('FeelPopup', function() {
   }));
 
 
-  it('should fire <propertiesPanelPopup.close> on <propertiesPanel.unmountedEntry>', inject(function(eventBus) {
+  it('should fire <propertiesPanelPopup.close> on <propertiesPanel.closePopup>', inject(function(eventBus) {
 
     // given
     const spy = sinon.spy();
@@ -63,28 +63,22 @@ describe('FeelPopup', function() {
     eventBus.fire('propertiesPanel.openPopup', DEFAULT_OPEN_POPUP_EVENT);
 
     // when
-    eventBus.fire('propertiesPanel.unmountedEntry', {
-      entryId: 'foo'
-    });
+    eventBus.fire('propertiesPanel.closePopup');
 
     // then
     expect(spy).to.have.been.calledOnce;
   }));
 
 
-  it('should not fire <propertiesPanelPopup.close> on <propertiesPanel.unmountedEntry>', inject(function(eventBus) {
+  it('should not fire <propertiesPanelPopup.close> on <propertiesPanel.closePopup>', inject(function(eventBus) {
 
     // given
     const spy = sinon.spy();
 
     eventBus.on('propertiesPanelPopup.close', spy);
 
-    eventBus.fire('propertiesPanel.openPopup', DEFAULT_OPEN_POPUP_EVENT);
-
     // when
-    eventBus.fire('propertiesPanel.unmountedEntry', {
-      entryId: 'bar'
-    });
+    eventBus.fire('propertiesPanel.closePopup');
 
     // then
     expect(spy).not.to.have.been.called;
