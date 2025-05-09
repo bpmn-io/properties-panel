@@ -94,7 +94,7 @@ function FeelTextfield(props) {
     eventBus
   } = useContext(EventContext);
 
-  const [ isExpanded, setIsExpanded ] = useState(false);
+  const [ isPopupOpen, setIsPopupOpen ] = useState(false);
 
   const setFocus = (offset = 0) => {
     const hasFocus = containerRef.current.contains(document.activeElement);
@@ -182,14 +182,14 @@ function FeelTextfield(props) {
     }
   });
 
-  const handleExpandProperty = (type = 'feel') => {
-    setIsExpanded(eventBus.fire('propertiesPanel.expandEntry', {
+  const handleOpenPopup = (type = 'feel') => {
+    setIsPopupOpen(eventBus.fire('propertiesPanel.openPopup', {
       props: {
         element,
         entryId: id,
         hostLanguage,
         label,
-        onCollapse: () => setIsExpanded(false),
+        onCollapse: () => setIsPopupOpen(false),
         onInput: handleLocalInput,
         singleLine,
         sourceField: editorRef.current,
@@ -240,7 +240,7 @@ function FeelTextfield(props) {
     };
 
     const pasteHandler = event => {
-      if (feelActive || isExpanded) {
+      if (feelActive || isPopupOpen) {
         return;
       }
 
@@ -292,13 +292,13 @@ function FeelTextfield(props) {
             onInput={ handleLocalInput }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             disabled={ disabled }
-            popupOpen={ isExpanded }
+            popupOpen={ isPopupOpen }
             onFeelToggle={ () => {
               handleFeelToggle();
               setFocus(true);
             } }
             onLint={ handleLint }
-            onExpandProperty={ handleExpandProperty }
+            onOpenPopup={ handleOpenPopup }
             placeholder={ placeholder }
             value={ feelOnlyValue }
             variables={ variables }
@@ -307,13 +307,13 @@ function FeelTextfield(props) {
           /> :
           <OptionalComponent
             { ...props }
-            popupOpen={ isExpanded }
+            popupOpen={ isPopupOpen }
             onInput={ handleLocalInput }
             onBlur={ handleOnBlur }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }
-            onExpandProperty={ handleExpandProperty }
+            onOpenPopup={ handleOpenPopup }
             containerRef={ containerRef }
           />
         }

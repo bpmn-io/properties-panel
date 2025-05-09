@@ -1,7 +1,7 @@
-import { ExpandEntryIcon } from './icons';
+import { OpenPopupIcon } from './icons';
 
 /**
- * A reusable button component for expanding properties.
+ * Button to open popups.
  *
  * @param {Object} props
  * @param {Function} props.onClick - Callback to trigger when the button is clicked.
@@ -9,7 +9,7 @@ import { ExpandEntryIcon } from './icons';
  * @param {boolean} [props.disabled] - Whether the button is disabled.
  * @param {string} [props.className] - Additional class names for the button.
  */
-export function ExpandEntryButton({
+export function OpenPopupButton({
   onClick,
   title = 'Open pop-up editor',
 }) {
@@ -20,7 +20,7 @@ export function ExpandEntryButton({
       class={ 'bio-properties-panel-open-feel-popup' }
       onClick={ onClick }
     >
-      <ExpandEntryIcon />
+      <OpenPopupIcon />
     </button>
   );
 }

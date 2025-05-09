@@ -7,10 +7,10 @@ export class FeelPopup {
 
     this._entryId = null;
 
-    eventBus.on('propertiesPanel.expandEntry', (context) => {
+    eventBus.on('propertiesPanel.openPopup', (context) => {
       this._openPopup(context);
 
-      // return true to indicate that entry is expanded
+      // return true to indicate that popup was opened
       return true;
     });
 

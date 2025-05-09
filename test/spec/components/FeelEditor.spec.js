@@ -187,16 +187,16 @@ describe('<FeelEditor>', function() {
   });
 
 
-  it('should call onExpandProperty with feel type', async function() {
+  it('should call <onOpenPopup> with feel type', async function() {
 
     // given
     const spy = sinon.spy();
-    render(<Wrapper onExpandProperty={ spy } />, { container });
+    render(<Wrapper onOpenPopup={ spy } />, { container });
 
-    const expandButton = domQuery('.bio-properties-panel-open-feel-popup', container);
+    const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', container);
 
     // when
-    expandButton.click();
+    openPopupButton.click();
 
     // then
     expect(spy).to.have.been.calledWith('feel');
