@@ -2441,9 +2441,9 @@ describe('<FeelEntry>', function() {
       });
     });
 
-    describe('entry expansion', function() {
+    describe('opening popup', function() {
 
-      it('should render expand entry button', async function() {
+      it('should render open popup button', async function() {
 
         // given
         const result = createFeelField({
@@ -2454,20 +2454,20 @@ describe('<FeelEntry>', function() {
 
         // then
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const expandButton = domQuery(
+        const openPopupButton = domQuery(
           '.bio-properties-panel-open-feel-popup',
           entry
         );
 
-        expect(expandButton).to.exist;
+        expect(openPopupButton).to.exist;
       });
 
-      it('should fire expand event when clicking expand button', async function() {
+      it('should fire <propertiesPanel.openPopup> event when clicking open popup button', async function() {
 
         // given
         const eventBus = new EventBus();
-        const expandSpy = sinon.spy();
-        eventBus.on('propertiesPanel.expandEntry', expandSpy);
+        const openPopupSpy = sinon.spy();
+        eventBus.on('propertiesPanel.openPopup', openPopupSpy);
 
         const result = createFeelField({
           container,
@@ -2476,17 +2476,17 @@ describe('<FeelEntry>', function() {
           id: 'testField'
         });
 
-        const expandButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+        const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
 
         // when
         await act(() => {
-          clickInput(expandButton);
+          clickInput(openPopupButton);
         });
 
         // then
-        expect(expandSpy).to.have.been.calledOnce;
-        expect(expandSpy.firstCall.args[0].props).to.exist;
-        expect(expandSpy.firstCall.args[0].props.entryId).to.equal('testField');
+        expect(openPopupSpy).to.have.been.calledOnce;
+        expect(openPopupSpy.firstCall.args[0].props).to.exist;
+        expect(openPopupSpy.firstCall.args[0].props.entryId).to.equal('testField');
       });
 
       it('should fire unmount event on component unmount', async function() {
@@ -2513,16 +2513,12 @@ describe('<FeelEntry>', function() {
         expect(unmountSpy.firstCall.args[0].entryId).to.equal('testField');
       });
 
-      it('should show placeholder when entry is expanded', async function() {
+      it('should show placeholder when popup open', async function() {
 
         // given
         const id = 'myField';
         const eventBus = new EventBus();
-        eventBus.on('propertiesPanel.expandEntry', () => true);
-          console.log('expand');
-
-          return true;
-        });
+        eventBus.on('propertiesPanel.openPopup', () => true);
 
         const result = createFeelField({
           container,
@@ -2531,18 +2527,18 @@ describe('<FeelEntry>', function() {
           id
         });
 
-        const expandButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+        const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
 
         // when
         await act(() => {
-          clickInput(expandButton);
+          clickInput(openPopupButton);
         });
 
         // then
         expect(domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container)).to.exist;
       });
 
-      it('should hide placeholder when entry is not expanded', async function() {
+      it('should not show placeholder when popup closed', async function() {
 
         // given
         const id = 'myField';

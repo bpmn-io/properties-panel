@@ -25,7 +25,7 @@ describe('FeelPopup', function() {
   }));
 
 
-  it('should fire <propertiesPanelPopup.open> on <propertiesPanel.expandEntry>', inject(function(eventBus) {
+  it('should fire <propertiesPanelPopup.open> on <propertiesPanel.openPopup>', inject(function(eventBus) {
 
     // given
     const spy = sinon.spy();
@@ -33,10 +33,10 @@ describe('FeelPopup', function() {
     eventBus.on('propertiesPanelPopup.open', spy);
 
     // when
-    const isExpanded = eventBus.fire('propertiesPanel.expandEntry', DEFAULT_EXPAND_ENTRY_EVENT);
+    const isPopupOpen = eventBus.fire('propertiesPanel.openPopup', DEFAULT_OPEN_POPUP_EVENT);
 
     // then
-    expect(isExpanded).to.be.true;
+    expect(isPopupOpen).to.be.true;
 
     expect(spy).to.have.been.calledOnce;
     expect(spy).to.have.been.calledWith(sinon.match({
@@ -60,7 +60,7 @@ describe('FeelPopup', function() {
 
     eventBus.on('propertiesPanelPopup.close', spy);
 
-    eventBus.fire('propertiesPanel.expandEntry', DEFAULT_EXPAND_ENTRY_EVENT);
+    eventBus.fire('propertiesPanel.openPopup', DEFAULT_OPEN_POPUP_EVENT);
 
     // when
     eventBus.fire('propertiesPanel.unmountedEntry', {
@@ -79,7 +79,7 @@ describe('FeelPopup', function() {
 
     eventBus.on('propertiesPanelPopup.close', spy);
 
-    eventBus.fire('propertiesPanel.expandEntry', DEFAULT_EXPAND_ENTRY_EVENT);
+    eventBus.fire('propertiesPanel.openPopup', DEFAULT_OPEN_POPUP_EVENT);
 
     // when
     eventBus.fire('propertiesPanel.unmountedEntry', {
@@ -98,7 +98,7 @@ describe('FeelPopup', function() {
 
     eventBus.on('propertiesPanelPopup.close', spy);
 
-    eventBus.fire('propertiesPanel.expandEntry', DEFAULT_EXPAND_ENTRY_EVENT);
+    eventBus.fire('propertiesPanel.openPopup', DEFAULT_OPEN_POPUP_EVENT);
 
     // when
     eventBus.fire('propertiesPanel.detach');
@@ -124,7 +124,7 @@ describe('FeelPopup', function() {
 
 });
 
-const DEFAULT_EXPAND_ENTRY_EVENT = {
+const DEFAULT_OPEN_POPUP_EVENT = {
   props: {
     entryId: 'foo',
     type: 'feel'
