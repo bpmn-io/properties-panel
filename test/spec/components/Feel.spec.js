@@ -2489,12 +2489,12 @@ describe('<FeelEntry>', function() {
         expect(openPopupSpy.firstCall.args[0].props.entryId).to.equal('testField');
       });
 
-      it('should fire unmount event on component unmount', async function() {
+      it('should fire <propertiesPanel.closePopup> event on component unmount', async function() {
 
         // given
         const eventBus = new EventBus();
-        const unmountSpy = sinon.spy();
-        eventBus.on('propertiesPanel.unmountedEntry', unmountSpy);
+        const closePopupSpy = sinon.spy();
+        eventBus.on('propertiesPanel.closePopup', closePopupSpy);
 
         const result = createFeelField({
           container,
@@ -2509,8 +2509,7 @@ describe('<FeelEntry>', function() {
         });
 
         // then
-        expect(unmountSpy).to.have.been.calledOnce;
-        expect(unmountSpy.firstCall.args[0].entryId).to.equal('testField');
+        expect(closePopupSpy).to.have.been.calledOnce;
       });
 
       it('should show placeholder when popup open', async function() {

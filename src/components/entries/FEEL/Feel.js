@@ -180,9 +180,7 @@ function FeelTextfield(props) {
 
   useEffect(() => {
     return () => {
-      eventBus.fire('propertiesPanel.unmountedEntry', {
-        entryId: id
-      });
+      eventBus.fire('propertiesPanel.closePopup');
     };
   }, []);
 
