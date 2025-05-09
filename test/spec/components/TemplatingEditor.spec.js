@@ -113,7 +113,7 @@ describe('<TemplatingEditor>', function() {
     // given
     const spy = sinon.spy();
 
-    render(<Wrapper value={ '' } onExpandProperty={ spy } />, { container });
+    render(<Wrapper value={ '' } onOpenPopup={ spy } />, { container });
 
     const openPopup = domQuery('.bio-properties-panel-open-feel-popup', container);
 
@@ -141,16 +141,16 @@ describe('<TemplatingEditor>', function() {
   });
 
 
-  it('should call onExpandProperty with feelers type', async function() {
+  it('should call onOpenPopup with feelers type', async function() {
 
     // given
     const spy = sinon.spy();
-    render(<Wrapper onExpandProperty={ spy } />, { container });
+    render(<Wrapper onOpenPopup={ spy } />, { container });
 
-    const expandButton = domQuery('.bio-properties-panel-open-feel-popup', container);
+    const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', container);
 
     // when
-    expandButton.click();
+    openPopupButton.click();
 
     // then
     expect(spy).to.have.been.calledWith('feelers');
