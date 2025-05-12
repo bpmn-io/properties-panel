@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.27.0-alpha.0
+
+* `FEAT`: allow overriding FEEL popup ([#409](https://github.com/bpmn-io/properties-panel/pull/409))
+
 ## 3.26.4
 
 * `FIX`: revert trim trailing whitespaces from all input fields except expressions ([#401](https://github.com/bpmn-io/properties-panel/pull/401), [#402](https://github.com/bpmn-io/properties-panel/pull/402)) added in v3.26.3 due to an [issue with debounced updates](https://github.com/bpmn-io/properties-panel/issues/404)
