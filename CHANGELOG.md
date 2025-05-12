@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.28.0
+
+* `FEAT`: allow overriding FEEL popup ([#409](https://github.com/bpmn-io/properties-panel/pull/409))
+
 ## 3.27.3
 
 * `FIX`: fix performance issue when typing fast ([#416](https://github.com/bpmn-io/properties-panel/pull/416))
