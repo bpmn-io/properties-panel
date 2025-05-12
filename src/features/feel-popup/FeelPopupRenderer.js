@@ -28,6 +28,12 @@ export class FeelPopupRenderer {
 
     container.appendChild(element);
 
+    // TODO(philippfromme): there is no useService in this context, so we need
+    // to pass the event bus as a prop or create a context provider, however,
+    // a custom renderer would have to use that context provider as well to have
+    // access to the event bus and other services
+    // TODO(philippfromme): there is no guarantee that a custom renderer will
+    // fire any events that we rely on in https://github.com/camunda/camunda-modeler/blob/develop/client/src/app/tabs/bpmn/modeler/features/properties-panel-keyboard-bindings/FeelPopupKeyboardBindings.js
     render(
       <FeelPopup { ...props } eventBus={ this._eventBus } />,
       element
