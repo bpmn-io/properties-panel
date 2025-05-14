@@ -38,6 +38,10 @@ import Tooltip from '../Tooltip';
 const noop = () => {};
 
 /**
+ * @typedef {'required'|'optional'|'static'} FeelType
+ */
+
+/**
  * @param {Object} props
  * @param {Boolean} props.debounce
  * @param {String} props.id
@@ -47,13 +51,13 @@ const noop = () => {};
  * @param {Function} props.onInput
  * @param {Function} props.onBlur
  * @param {Function} props.onError
- * @param {Boolean} props.feel
+ * @param {FeelType} [props.feel]
  * @param {String} props.value
- * @param {Boolean} props.singleLine
+ * @param {Boolean} [props.singleLine]
  * @param {Function} props.tooltipContainer
  * @param {Function | import('preact').Component} props.OptionalComponent
  * @param {Boolean} props.disabled
- * @param {Function} props.variables
+ * @param {Array} props.variables
  * @param {string} [props.placeholder]
  * @param {string | import('preact').Component} props.tooltip
  */
@@ -545,7 +549,7 @@ const OptionalFeelCheckbox = forwardRef((props, ref) => {
  * @param {String} props.description
  * @param {Boolean} props.debounce
  * @param {Boolean} props.disabled
- * @param {Boolean} props.feel
+ * @param {FeelType} [props.feel]
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
@@ -553,7 +557,7 @@ const OptionalFeelCheckbox = forwardRef((props, ref) => {
  * @param {Function} props.validate
  * @param {Function} props.show
  * @param {Function} props.example
- * @param {Function} props.variables
+ * @param {Array} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  * @param {string} [props.placeholder]
@@ -665,7 +669,7 @@ export default function FeelEntry(props) {
  * @param {String} props.max
  * @param {String} props.min
  * @param {String} props.step
- * @param {Boolean} props.feel
+ * @param {FeelType} [props.feel]
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
@@ -673,7 +677,7 @@ export default function FeelEntry(props) {
  * @param {Function} props.validate
  * @param {Function} props.show
  * @param {Function} props.example
- * @param {Function} props.variables
+ * @param {Array} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  */
@@ -688,7 +692,7 @@ export function FeelNumberEntry(props) {
  * @param {String} props.description
  * @param {Boolean} props.debounce
  * @param {Boolean} props.disabled
- * @param {Boolean} props.feel
+ * @param {FeelType} [props.feel]
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
@@ -696,7 +700,7 @@ export function FeelNumberEntry(props) {
  * @param {Function} props.validate
  * @param {Function} props.show
  * @param {Function} props.example
- * @param {Function} props.variables
+ * @param {Array} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  * @param {string} [props.placeholder]
@@ -712,7 +716,7 @@ export function FeelTextAreaEntry(props) {
  * @param {String} props.description
  * @param {Boolean} props.debounce
  * @param {Boolean} props.disabled
- * @param {Boolean} props.feel
+ * @param {FeelType} [props.feel]
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
@@ -720,7 +724,7 @@ export function FeelTextAreaEntry(props) {
  * @param {Function} props.validate
  * @param {Function} props.show
  * @param {Function} props.example
- * @param {Function} props.variables
+ * @param {Array} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  */
@@ -735,7 +739,7 @@ export function FeelToggleSwitchEntry(props) {
  * @param {String} props.description
  * @param {Boolean} props.debounce
  * @param {Boolean} props.disabled
- * @param {Boolean} props.feel
+ * @param {FeelType} [props.feel]
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
@@ -743,7 +747,7 @@ export function FeelToggleSwitchEntry(props) {
  * @param {Function} props.validate
  * @param {Function} props.show
  * @param {Function} props.example
- * @param {Function} props.variables
+ * @param {Array} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  */
@@ -760,7 +764,7 @@ export function FeelCheckboxEntry(props) {
  * @param {Boolean} props.singleLine
  * @param {Boolean} props.debounce
  * @param {Boolean} props.disabled
- * @param {Boolean} props.feel
+ * @param {FeelType} [props.feel]
  * @param {String} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue
@@ -768,7 +772,7 @@ export function FeelCheckboxEntry(props) {
  * @param {Function} props.validate
  * @param {Function} props.show
  * @param {Function} props.example
- * @param {Function} props.variables
+ * @param {Array} props.variables
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  */
