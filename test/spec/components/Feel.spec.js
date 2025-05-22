@@ -92,6 +92,33 @@ describe('<FeelField>', function() {
     });
 
 
+    it('should update in a series of changes', async function() {
+
+      // given
+      let ref = { current: 'aaa' };
+      const updateSpy = sinon.spy(newValue => {
+        ref.current = newValue;
+      });
+      const getValue = () => ref.current;
+
+      const result = createFeelField({ container, getValue, setValue: updateSpy });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      changeInput(input, 'foo');
+      changeInput(input, '');
+      changeInput(input, 'bar');
+
+      // then
+      expect(updateSpy.args).to.eql([
+        [ 'foo', null ],
+        [ undefined, null ],
+        [ 'bar', null ]
+      ]);
+    });
+
+
     it('should trim whitespace on blur', async function() {
 
       // given
