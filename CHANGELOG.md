@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.27.2
+
+* `FIX`: correct completion of lang-feel snippets ([@bpmn-io/feel-editor#70](https://github.com/bpmn-io/feel-editor/pull/75))
+* `DEPS`: update to `@bpmn-io/feel-editor@1.10.1`
+
 ## 3.27.1
 
 * `FIX`: commit erased change ([#414](https://github.com/bpmn-io/properties-panel/pull/414))
