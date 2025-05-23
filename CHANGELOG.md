@@ -17,7 +17,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 3.27.0
 
-* `FEAT`: trim whitespace in text inputs ([#309](https://github.com/bpmn-io/properties-panel/issues/309), (#404)(https://github.com/bpmn-io/properties-panel/issues/404))
+* `FEAT`: trim whitespace in text inputs ([#309](https://github.com/bpmn-io/properties-panel/issues/309), [#404](https://github.com/bpmn-io/properties-panel/issues/404))
 
 ## 3.26.4
 
