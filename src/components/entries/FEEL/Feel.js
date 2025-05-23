@@ -613,7 +613,7 @@ export default function FeelEntry(props) {
     }
 
     setValidationError(newValidationError);
-  },[ element ]);
+  },[ setValidationError, setValue, validate, value ]);
 
   const onError = useCallback(err => {
     setLocalError(err);
