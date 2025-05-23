@@ -196,7 +196,7 @@ export default function TextAreaEntry(props) {
     }
 
     setLocalError(newValidationError);
-  }, [ element ]);
+  }, [ setLocalError, setValue, validate, value ]);
 
 
   const error = globalError || localError;
