@@ -163,7 +163,7 @@ export default function TextfieldEntry(props) {
     }
 
     setLocalError(newValidationError);
-  }, [ element ]);
+  }, [ setValue, validate, value ]);
 
 
   const error = globalError || localError;
