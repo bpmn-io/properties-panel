@@ -12,6 +12,8 @@ import {
   query as domQuery
 } from 'min-dom';
 
+import debounceInput from 'src/features/debounce-input/debounceInput';
+
 import EventBus from 'diagram-js/lib/core/EventBus';
 
 import {
@@ -615,6 +617,48 @@ describe('<FeelField>', function() {
 
     });
 
+
+    describe('debounce', function() {
+
+      let clock;
+
+      beforeEach(function() {
+        clock = sinon.useFakeTimers();
+      });
+
+      afterEach(function() {
+        clock.restore();
+      });
+
+
+      it('should NOT commit old debounce values', async function() {
+
+        // given
+        const debounce = debounceInput(100);
+        const setValueSpy = sinon.spy();
+
+        const result = createFeelField({
+          container,
+          debounce,
+          setValue: setValueSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        input.focus();
+        changeInput(input, 'foo');
+        clock.tick(50);
+        changeInput(input, 'bar');
+        clock.tick(50);
+        changeInput(input, 'baz');
+        clock.tick(100);
+
+        // then
+        expect(setValueSpy).to.have.been.calledOnce;
+        expect(setValueSpy).to.have.been.calledWith('baz');
+      });
+    });
   });
 
 
