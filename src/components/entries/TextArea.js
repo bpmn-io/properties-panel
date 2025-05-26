@@ -185,6 +185,7 @@ export default function TextAreaEntry(props) {
   }, [ value, validate ]);
 
   const onInput = useCallback((newValue) => {
+    const value = getValue(element);
     let newValidationError = null;
 
     if (isFunction(validate)) {
@@ -196,7 +197,7 @@ export default function TextAreaEntry(props) {
     }
 
     setLocalError(newValidationError);
-  }, [ setLocalError, setValue, validate, value ]);
+  }, [ element ]);
 
 
   const error = globalError || localError;

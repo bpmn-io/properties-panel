@@ -601,6 +601,7 @@ export default function FeelEntry(props) {
   }, [ value, validate ]);
 
   const onInput = useCallback((newValue) => {
+    const value = getValue(element);
     let newValidationError = null;
 
     if (isFunction(validate)) {
@@ -613,7 +614,7 @@ export default function FeelEntry(props) {
     }
 
     setValidationError(newValidationError);
-  },[ setValidationError, setValue, validate, value ]);
+  }, [ element ]);
 
   const onError = useCallback(err => {
     setLocalError(err);
