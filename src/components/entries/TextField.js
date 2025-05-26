@@ -4,7 +4,6 @@ import Tooltip from './Tooltip';
 import {
   useCallback,
   useEffect,
-  useMemo,
   useState
 } from 'preact/hooks';
 
@@ -13,6 +12,7 @@ import classnames from 'classnames';
 import { isFunction } from 'min-dash';
 
 import {
+  useDebounce,
   useError,
   useShowEntryEvent
 } from '../../hooks';
@@ -39,11 +39,7 @@ function Textfield(props) {
   /**
    * @type { import('min-dash').DebouncedFunction }
    */
-  const handleInputCallback = useMemo(() => {
-    return debounce((newValue) => {
-      onInput(newValue);
-    });
-  }, [ onInput, debounce ]);
+  const handleInputCallback = useDebounce(onInput, debounce);
 
   const handleOnBlur = e => {
     const value = e.target.value;

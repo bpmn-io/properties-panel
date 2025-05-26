@@ -5,7 +5,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState
 } from 'preact/hooks';
@@ -17,6 +16,7 @@ import classnames from 'classnames';
 import { isFunction, isString } from 'min-dash';
 
 import {
+  useDebounce,
   useShowEntryEvent,
   useError,
   useStaticCallback
@@ -36,6 +36,7 @@ import { NumberField } from '../NumberField';
 import Tooltip from '../Tooltip';
 
 const noop = () => {};
+
 
 /**
  * @typedef {'required'|'optional'|'static'} FeelType
@@ -109,14 +110,7 @@ function FeelTextfieldComponent(props) {
     _setFocus(position + offset);
   };
 
-  /**
-   * @type { import('min-dash').DebouncedFunction }
-   */
-  const handleInputCallback = useMemo(() => {
-    return debounce((newValue) => {
-      onInput(newValue);
-    });
-  }, [ onInput, debounce ]);
+  const handleInputCallback = useDebounce(onInput, debounce);
 
   const handleInput = newValue => {
 
@@ -161,13 +155,13 @@ function FeelTextfieldComponent(props) {
   };
 
   const handleOnBlur = (e) => {
-    const value = e.target.value;
 
     // we trim the value, if it is needed
-    // and update input accordingly
-    if (value.trim() !== value) {
-      setLocalValue(value.trim());
-      handleInput(value.trim());
+    // and flush new value immediately
+    const trimmed = e.target.value.trim();
+    if (trimmed !== value) {
+      handleInputCallback(trimmed);
+      handleInputCallback.flush?.();
     }
 
     if (onBlur) {
