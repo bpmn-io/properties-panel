@@ -261,10 +261,10 @@ describe('FeelPopup', function() {
       const openConfig = {
         type: 'feel'
       };
-      const sourceField = document.createElement('input');
+      const sourceElement = document.createElement('input');
 
       // when
-      feelPopup.open('testEntry', openConfig, sourceField);
+      feelPopup.open('testEntry', openConfig, sourceElement);
 
       // then
       expect(spy).to.have.been.calledOnce;
@@ -273,7 +273,7 @@ describe('FeelPopup', function() {
         props: {
           entryId: 'testEntry',
           type: 'feel',
-          sourceField: sourceField,
+          sourceElement,
           links: [
             { href: 'https://foo.com', title: 'Foo' },
             { href: 'https://bar.com', title: 'Bar' }
@@ -336,10 +336,8 @@ describe('FeelPopup', function() {
 });
 
 const DEFAULT_OPEN_POPUP_EVENT = {
-  props: {
-    entryId: 'foo',
-    type: 'feel'
-  }
+  entryId: 'foo',
+  type: 'feel'
 };
 
 function openPopup(context = DEFAULT_OPEN_POPUP_EVENT) {

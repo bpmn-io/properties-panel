@@ -21,8 +21,8 @@ export class FeelPopup {
 
     this._isOpen = false;
 
-    eventBus.on('propertiesPanel.openPopup', (context) => {
-      this._openPopup(context);
+    eventBus.on('propertiesPanel.openPopup', (_, context) => {
+      this.open(context.entryId, context, context.sourceElement);
 
       // return true to indicate that popup was opened
       return true;
@@ -32,20 +32,48 @@ export class FeelPopup {
       'propertiesPanel.closePopup',
       'propertiesPanel.detach'
     ], () => {
-      this._closePopup();
+      this.close();
     });
   }
 
-  _openPopup(context) {
-    const { props } = context;
+  /**
+   * Check if the FEEL popup is open.
+   * @return {Boolean}
+   */
+  isOpen() {
+    return this._isOpen;
+  }
 
+  /**
+   * Open the FEEL popup.
+   *
+   * @param {String} entryId
+   * @param {Object} popupConfig
+   * @param {HTMLElement} sourceElement
+   */
+  open(entryId, popupConfig, sourceElement) {
+    this._openPopup({
+      ...popupConfig,
+      entryId,
+      sourceElement
+    });
+  }
+
+  /**
+   * Close the FEEL popup.
+   */
+  close() {
+    this._closePopup();
+  }
+
+  _openPopup(context) {
     const {
       element,
       label,
-      sourceField,
+      sourceElement,
       onCollapse,
       type
-    } = props;
+    } = context;
 
     this._closePopup();
 
@@ -55,14 +83,14 @@ export class FeelPopup {
     this._eventBus.fire('propertiesPanelPopup.open', {
       container: this._config.feelPopupContainer,
       props: {
-        ...props,
+        ...context,
         links: this._config.getFeelPopupLinks?.(type),
         onClose: () => {
           this._closePopup();
 
           // setTimeout to ensure the focus happens after the DOM updates make it focusable
           setTimeout(() => {
-            sourceField && sourceField.focus();
+            sourceElement && sourceElement.focus();
           }, 0);
         },
         position: getPopupPosition(),
@@ -80,29 +108,6 @@ export class FeelPopup {
 
       this._eventBus.fire('propertiesPanelPopup.close');
     }
-  }
-
-  /*
-  * @param {String} entryId
-  * @param {Object} popupConfig
-  * @param {HTMLElement} sourceField
-  */
-  open(entryId, popupConfig, sourceField) {
-    this._openPopup({
-      props: {
-        ...popupConfig,
-        entryId,
-        sourceField,
-      },
-    });
-  }
-
-  close() {
-    this._closePopup();
-  }
-
-  isOpen() {
-    return this._isOpen;
   }
 }
 
