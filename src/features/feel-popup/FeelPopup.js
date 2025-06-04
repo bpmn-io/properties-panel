@@ -52,6 +52,10 @@ export class FeelPopup {
    * @param {HTMLElement} sourceElement
    */
   open(entryId, popupConfig, sourceElement) {
+
+    // close before opening a new one
+    this.close();
+
     this._openPopup({
       ...popupConfig,
       entryId,
@@ -73,8 +77,6 @@ export class FeelPopup {
       sourceElement,
       type
     } = context;
-
-    this._closePopup();
 
     this._isOpen = true;
 
