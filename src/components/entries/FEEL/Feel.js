@@ -183,12 +183,11 @@ function FeelTextfield(props) {
   });
 
   const handleOpenPopup = (type = 'feel') => {
-    setIsPopupOpen(eventBus.fire('propertiesPanel.openPopup', {
+    const isOpen = eventBus.fire('propertiesPanel.openPopup', {
       element,
       entryId: id,
       hostLanguage,
       label,
-      onCollapse: () => setIsPopupOpen(false),
       onInput: handleLocalInput,
       singleLine,
       sourceElement: editorRef.current,
@@ -196,7 +195,15 @@ function FeelTextfield(props) {
       type,
       value: feelOnlyValue,
       variables
-    }) === true);
+    });
+
+    if (isOpen) {
+      eventBus.once('propertiesPanelPopup.close', () => {
+        setIsPopupOpen(false);
+      });
+    }
+
+    setIsPopupOpen(isOpen === true);
   };
 
   useEffect(() => {
