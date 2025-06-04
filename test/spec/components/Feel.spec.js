@@ -2495,6 +2495,7 @@ describe('<FeelEntry>', function() {
 
     });
 
+
     describe('opening popup', function() {
 
       it('should render open popup button', async function() {
@@ -2515,6 +2516,7 @@ describe('<FeelEntry>', function() {
 
         expect(openPopupButton).to.exist;
       });
+
 
       it('should fire <propertiesPanel.openPopup> event when clicking open popup button', async function() {
 
@@ -2539,9 +2541,10 @@ describe('<FeelEntry>', function() {
 
         // then
         expect(openPopupSpy).to.have.been.calledOnce;
-        expect(openPopupSpy.firstCall.args[0].props).to.exist;
-        expect(openPopupSpy.firstCall.args[0].props.entryId).to.equal('testField');
+        expect(openPopupSpy.firstCall.args[0]).to.exist;
+        expect(openPopupSpy.firstCall.args[0].entryId).to.equal('testField');
       });
+
 
       it('should fire <propertiesPanel.closePopup> event on component unmount', async function() {
 
@@ -2565,6 +2568,7 @@ describe('<FeelEntry>', function() {
         // then
         expect(closePopupSpy).to.have.been.calledOnce;
       });
+
 
       it('should show placeholder when popup open', async function() {
 
@@ -2590,6 +2594,7 @@ describe('<FeelEntry>', function() {
         // then
         expect(domQuery('.bio-properties-panel-feel-editor__open-popup-placeholder', result.container)).to.exist;
       });
+
 
       it('should not show placeholder when popup closed', async function() {
 

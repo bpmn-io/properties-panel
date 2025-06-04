@@ -184,20 +184,18 @@ function FeelTextfield(props) {
 
   const handleOpenPopup = (type = 'feel') => {
     setIsPopupOpen(eventBus.fire('propertiesPanel.openPopup', {
-      props: {
-        element,
-        entryId: id,
-        hostLanguage,
-        label,
-        onCollapse: () => setIsPopupOpen(false),
-        onInput: handleLocalInput,
-        singleLine,
-        sourceField: editorRef.current,
-        tooltipContainer,
-        type,
-        value: feelOnlyValue,
-        variables
-      }
+      element,
+      entryId: id,
+      hostLanguage,
+      label,
+      onCollapse: () => setIsPopupOpen(false),
+      onInput: handleLocalInput,
+      singleLine,
+      sourceElement: editorRef.current,
+      tooltipContainer,
+      type,
+      value: feelOnlyValue,
+      variables
     }) === true);
   };
 
