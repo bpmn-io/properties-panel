@@ -248,6 +248,91 @@ describe('FeelPopup', function() {
 
     expectDraggingEvent('feelPopup.dragend');
   });
+
+
+  describe('service', function() {
+
+    it('#open should fire <propertiesPanelPopup.open>', inject(function(eventBus, feelPopup) {
+
+      // given
+      const spy = sinon.spy();
+      eventBus.on('propertiesPanelPopup.open', spy);
+
+      const openConfig = {
+        type: 'feel'
+      };
+      const sourceField = document.createElement('input');
+
+      // when
+      feelPopup.open('testEntry', openConfig, sourceField);
+
+      // then
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith(sinon.match({
+        container: container,
+        props: {
+          entryId: 'testEntry',
+          type: 'feel',
+          sourceField: sourceField,
+          links: [
+            { href: 'https://foo.com', title: 'Foo' },
+            { href: 'https://bar.com', title: 'Bar' }
+          ]
+        }
+      }));
+    }));
+
+
+    it('#close should fire <propertiesPanelPopup.close> if popup is open', inject(function(eventBus, feelPopup) {
+
+      // given
+      const spy = sinon.spy();
+      eventBus.on('propertiesPanelPopup.close', spy);
+
+      // open popup first
+      feelPopup.open('testEntry', { type: 'feel' }, document.createElement('input'));
+
+      // when
+      feelPopup.close();
+
+      // then
+      expect(spy).to.have.been.calledOnce;
+    }));
+
+
+    it('#close should NOT fire <propertiesPanelPopup.close> if popup is NOT open', inject(function(eventBus, feelPopup) {
+
+      // given
+      const spy = sinon.spy();
+      eventBus.on('propertiesPanelPopup.close', spy);
+
+      // when
+      feelPopup.close();
+
+      // then
+      expect(spy).not.to.have.been.called;
+    }));
+
+
+    it('#isOpen should return correct state', inject(function(feelPopup) {
+
+      // assume
+      expect(feelPopup.isOpen()).to.be.false;
+
+      // when
+      feelPopup.open('testEntry', { type: 'feel' }, document.createElement('input'));
+
+      // then
+      expect(feelPopup.isOpen()).to.be.true;
+
+      // when
+      feelPopup.close();
+
+      // then
+      expect(feelPopup.isOpen()).to.be.false;
+    }));
+
+  });
 });
 
 const DEFAULT_OPEN_POPUP_EVENT = {
