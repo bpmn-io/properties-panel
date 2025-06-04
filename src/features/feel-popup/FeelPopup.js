@@ -81,6 +81,29 @@ export class FeelPopup {
       this._eventBus.fire('propertiesPanelPopup.close');
     }
   }
+
+  /*
+  * @param {String} entryId
+  * @param {Object} popupConfig
+  * @param {HTMLElement} sourceField
+  */
+  open(entryId, popupConfig, sourceField) {
+    this._openPopup({
+      props: {
+        ...popupConfig,
+        entryId,
+        sourceField,
+      },
+    });
+  }
+
+  close() {
+    this._closePopup();
+  }
+
+  isOpen() {
+    return this._isOpen;
+  }
 }
 
 FeelPopup.$inject = [ 'eventBus', 'config.propertiesPanel' ];
