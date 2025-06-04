@@ -33,7 +33,7 @@ describe('FeelPopupRenderer', function() {
     // when
     eventBus.fire('propertiesPanelPopup.open', {
       container,
-      props: {
+      config: {
         entryId: 'foo',
         links: [
           { href: 'https://foo.com', title: 'Foo' },
@@ -61,7 +61,7 @@ describe('FeelPopupRenderer', function() {
     // when
     eventBus.fire('propertiesPanelPopup.open', {
       container: '.foo',
-      props: {
+      config: {
         entryId: 'foo',
         links: [
           { href: 'https://foo.com', title: 'Foo' },
@@ -86,7 +86,7 @@ describe('FeelPopupRenderer', function() {
     // given
     eventBus.fire('propertiesPanelPopup.open', {
       container,
-      props: {
+      config: {
         entryId: 'foo',
         links: [
           { href: 'https://foo.com', title: 'Foo' },
