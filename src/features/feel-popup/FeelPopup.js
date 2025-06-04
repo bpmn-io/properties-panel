@@ -71,14 +71,12 @@ export class FeelPopup {
       element,
       label,
       sourceElement,
-      onCollapse,
       type
     } = context;
 
     this._closePopup();
 
     this._isOpen = true;
-    this._onCollapse = onCollapse;
 
     this._eventBus.fire('propertiesPanelPopup.open', {
       container: this._config.feelPopupContainer,
@@ -101,10 +99,7 @@ export class FeelPopup {
 
   _closePopup() {
     if (this._isOpen) {
-      this._onCollapse?.();
-
       this._isOpen = false;
-      this._onCollapse = null;
 
       this._eventBus.fire('propertiesPanelPopup.close');
     }
