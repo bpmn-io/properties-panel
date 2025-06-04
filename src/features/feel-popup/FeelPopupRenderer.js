@@ -21,7 +21,7 @@ export class FeelPopupRenderer {
   }
 
   _renderPopup(context) {
-    let { container, props } = context;
+    let { container, config } = context;
 
     container = this._container = getContainer(container) || document.body;
 
@@ -36,7 +36,7 @@ export class FeelPopupRenderer {
     this._emit('feelPopup.open');
 
     render(
-      <FeelPopup { ...props } eventBus={ this._eventBus } />,
+      <FeelPopup { ...config } eventBus={ this._eventBus } />,
       element
     );
 

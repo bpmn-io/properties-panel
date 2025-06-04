@@ -80,7 +80,7 @@ export class FeelPopup {
 
     this._eventBus.fire('propertiesPanelPopup.open', {
       container: this._config.feelPopupContainer,
-      props: {
+      config: {
         ...context,
         links: this._config.getFeelPopupLinks?.(type),
         onClose: () => {

@@ -58,7 +58,7 @@ describe('FeelPopup', function() {
     expect(spy).to.have.been.calledOnce;
     expect(spy).to.have.been.calledWith(sinon.match({
       container: container,
-      props: {
+      config: {
         entryId: 'foo',
         links: [
           { href: 'https://foo.com', title: 'Foo' },
@@ -270,7 +270,7 @@ describe('FeelPopup', function() {
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWith(sinon.match({
         container: container,
-        props: {
+        config: {
           entryId: 'testEntry',
           type: 'feel',
           sourceElement,
