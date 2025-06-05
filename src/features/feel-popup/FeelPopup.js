@@ -84,7 +84,7 @@ export class FeelPopup {
       container: this._config.feelPopupContainer,
       config: {
         ...context,
-        links: this._config.getFeelPopupLinks?.(type),
+        links: this._config.getFeelPopupLinks?.(type) || [],
         onClose: () => {
           this._closePopup();
 
