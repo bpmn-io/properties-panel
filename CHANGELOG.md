@@ -8,7 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 3.28.0
 
-* `FEAT`: allow overriding FEEL popup ([#409](https://github.com/bpmn-io/properties-panel/pull/409))
+* `FEAT`: allow overriding FEEL popup ([#408](https://github.com/bpmn-io/properties-panel/issues/408))
 
 ## 3.27.3
 
