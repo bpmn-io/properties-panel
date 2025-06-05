@@ -165,6 +165,70 @@ describe('<TextField>', function() {
   });
 
 
+  describe('rerendering', function() {
+
+    it('should call new setValue if passed', function() {
+
+      // given
+      const updateSpies = [ sinon.spy(), sinon.spy() ];
+
+      const firstRender = createTextField({ container, setValue: updateSpies[0] });
+
+      // when
+      createTextField({ container, setValue: updateSpies[1] }, firstRender.rerender);
+      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      changeInput(input, 'foo');
+
+      // then
+      expect(updateSpies[0]).not.to.have.been.called;
+      expect(updateSpies[1]).to.have.been.calledWith('foo');
+    });
+
+
+    it('should call new getValue if passed', function() {
+
+      // given
+      const element = undefined;
+      const getValueSpies = [ sinon.spy(), sinon.spy() ];
+
+      const firstRender = createTextField({ container, getValue: getValueSpies[0] });
+
+      // when
+      createTextField({ container, getValue: getValueSpies[1] }, firstRender.rerender);
+      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      getValueSpies[0].resetHistory();
+
+      // and when
+      changeInput(input, 'foo');
+
+      // then
+      expect(getValueSpies[0]).not.to.have.been.called;
+      expect(getValueSpies[1]).to.have.been.calledWith(element);
+    });
+
+
+    it('should call new validate if passed', function() {
+
+      // given
+      const validateSpies = [ sinon.spy(), sinon.spy() ];
+
+      const firstRender = createTextField({ container, validate: validateSpies[0] });
+
+      // when
+      createTextField({ container, validate: validateSpies[1] }, firstRender.rerender);
+      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      validateSpies[0].resetHistory();
+
+      // and when
+      changeInput(input, 'foo');
+
+      // then
+      expect(validateSpies[0]).not.to.have.been.called;
+      expect(validateSpies[1]).to.have.been.calledWith('foo');
+    });
+  });
+
+
   describe('#isEdited', function() {
 
     it('should NOT be edited', function() {
