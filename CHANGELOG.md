@@ -6,9 +6,17 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.28.1
+
+* `FIX`: use new value helpers when rerendering an entry ([#421](https://github.com/bpmn-io/properties-panel/pull/421))
+
 ## 3.28.0
 
 * `FEAT`: allow overriding FEEL popup ([#408](https://github.com/bpmn-io/properties-panel/issues/408))
+
+## 3.27.4
+
+* `FIX`: use new value helpers when rerendering an entry ([#421](https://github.com/bpmn-io/properties-panel/pull/421))
 
 ## 3.27.3
 
