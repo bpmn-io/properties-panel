@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.27.4
+
+* `FIX`: use new value helpers when rerendering an entry ([#421](https://github.com/bpmn-io/properties-panel/pull/421))
+
 ## 3.27.3
 
 * `FIX`: fix performance issue when typing fast ([#416](https://github.com/bpmn-io/properties-panel/pull/416))
