@@ -44,7 +44,8 @@ export function FeelPopup(props) {
     singleLine,
     sourceElement,
     tooltipContainer,
-    eventBus
+    eventBus,
+    feelLanguageContext,
   } = props;
 
   const editorRef = useRef();
@@ -135,6 +136,7 @@ export function FeelPopup(props) {
               onInput={ onInput }
               value={ value }
               variables={ variables }
+              feelLanguageContext={ feelLanguageContext }
               ref={ editorRef }
               tooltipContainer={ tooltipContainer }
             />

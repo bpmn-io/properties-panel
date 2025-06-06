@@ -211,4 +211,3 @@ function Wrapper(props) {
 
   return <FeelComponent { ...props } ref={ ref } />;
 }
-

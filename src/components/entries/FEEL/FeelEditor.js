@@ -55,12 +55,19 @@ const FeelEditor = forwardRef((props, ref) => {
     popupOpen,
     disabled,
     tooltipContainer,
-    variables
+    variables,
+    feelLanguageContext
   } = props;
 
   const inputRef = useRef();
   const [ editor, setEditor ] = useState();
   const [ localValue, setLocalValue ] = useState(value || '');
+
+  const {
+    builtins,
+    dialect,
+    parserDialect
+  } = feelLanguageContext || {};
 
   useBufferedFocus(editor, ref);
 
@@ -99,7 +106,10 @@ const FeelEditor = forwardRef((props, ref) => {
       placeholder: placeholder,
       tooltipContainer: tooltipContainer,
       value: localValue,
-      variables: variables,
+      variables,
+      builtins,
+      dialect,
+      parserDialect,
       extensions: [
         ...enableGutters ? [ lineNumbers() ] : [],
         EditorView.lineWrapping
