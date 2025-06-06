@@ -189,6 +189,7 @@ describe('<TextArea>', function() {
 
     const result = createTextArea({
       container,
+      getValue: () => '',
       setValue: setValueSpy
     });
 

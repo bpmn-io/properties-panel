@@ -141,6 +141,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelField({
         container,
+        getValue: () => '',
         setValue: setValueSpy
       });
 
@@ -1259,6 +1260,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelTextArea({
         container,
+        getValue: () => '',
         setValue: setValueSpy
       });
 
