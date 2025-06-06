@@ -149,6 +149,7 @@ describe('<TextField>', function() {
 
     const result = createTextField({
       container,
+      getValue: () => '',
       setValue: setValueSpy
     });
 
