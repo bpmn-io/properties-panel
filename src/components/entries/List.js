@@ -38,7 +38,6 @@ import {
  * @param {Item[]} [props.items]
  * @param {boolean} [props.open]
  * @param {string|boolean} [props.autoFocusEntry] either a custom selector string or true to focus the first input
- * @param {number} [props.headerNestingLevel]
  * @returns
  */
 export default function List(props) {
@@ -84,27 +83,8 @@ export default function List(props) {
     }
   }
 
-  let headerStyle = {};
-  let headerTop = 0;
-  if (headerNestingLevel) {
-
-    // height of header elements defined in classes bio-properties-panel-group-header and bio-properties-panel-list-entry-header
-    const headersHeight = 32;
-
-    // z-index based on value defined in class bio-properties-panel-group-header
-    const baseZIndex = 10;
-
-    headerTop = headersHeight * headerNestingLevel;
-
-    headerStyle = {
-      top: headerTop,
-      zIndex: baseZIndex - headerNestingLevel,
-    };
-  }
-
   // set css class when entry is sticky to top
-  // fourth parameter sets top margin for intersection observer
-  useStickyIntersectionObserver(entryRef, 'div.bio-properties-panel-scroll-container', setSticky, -headerTop);
+  useStickyIntersectionObserver(entryRef, 'div.bio-properties-panel-scroll-container', setSticky);
 
   return (
     <div
@@ -119,11 +99,9 @@ export default function List(props) {
       <div
         class={ classnames(
           'bio-properties-panel-list-entry-header',
-          headerNestingLevel && 'position-sticky',
-          (headerNestingLevel && sticky && open) ? 'sticky' : ''
+          (sticky && open) ? 'sticky' : ''
         ) }
-        onClick={ toggleOpen }
-        style={ headerStyle }>
+        onClick={ toggleOpen }>
         <div
           title={ label }
           class={ classnames(
