@@ -51,7 +51,6 @@ export default function List(props) {
     onAdd,
     onRemove,
     autoFocusEntry,
-    headerNestingLevel,
     ...restProps
   } = props;
 
