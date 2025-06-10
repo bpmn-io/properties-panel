@@ -5,7 +5,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState
 } from 'preact/hooks';
@@ -17,8 +16,9 @@ import classnames from 'classnames';
 import { isFunction, isString } from 'min-dash';
 
 import {
-  useShowEntryEvent,
+  useDebounce,
   useError,
+  useShowEntryEvent,
   useStaticCallback
 } from '../../../hooks';
 
@@ -112,11 +112,7 @@ function FeelTextfieldComponent(props) {
   /**
    * @type { import('min-dash').DebouncedFunction }
    */
-  const handleInputCallback = useMemo(() => {
-    return debounce((newValue) => {
-      onInput(newValue);
-    });
-  }, [ onInput, debounce ]);
+  const handleInputCallback = useDebounce(onInput, debounce);
 
   const handleInput = newValue => {
 
@@ -161,14 +157,10 @@ function FeelTextfieldComponent(props) {
   };
 
   const handleOnBlur = (e) => {
-    const value = e.target.value;
+    const trimmedValue = e.target.value.trim();;
 
-    // we trim the value, if it is needed
-    // and update input accordingly
-    if (value.trim() !== value) {
-      setLocalValue(value.trim());
-      handleInput(value.trim());
-    }
+    // trim and commit on blur
+    onInput(trimmedValue);
 
     if (onBlur) {
       onBlur(e);

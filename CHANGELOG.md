@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.27.5
+
+* `FIX`: flush debounced function when value helpers change ([#422](https://github.com/bpmn-io/properties-panel/pull/422))
+
 ## 3.27.4
 
 * `FIX`: use new value helpers when rerendering an entry ([#421](https://github.com/bpmn-io/properties-panel/pull/421))
