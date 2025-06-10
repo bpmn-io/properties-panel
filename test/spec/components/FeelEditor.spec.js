@@ -29,6 +29,9 @@ describe('<FeelEditor>', function() {
 
   it('should supply variables to editor', async function() {
 
+    // increased timeout for slow Windows CI
+    this.timeout(5000);
+
     // given
     const variables = [
       { name: 'foo' },
@@ -51,6 +54,7 @@ describe('<FeelEditor>', function() {
     const variableSuggestion = [ ...suggestions.children ].find(el => {
       return el.textContent === 'foo';
     });
+
     expect(variableSuggestion).to.exist;
   });
 
