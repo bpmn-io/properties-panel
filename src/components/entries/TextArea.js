@@ -4,16 +4,16 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useState
 } from 'preact/hooks';
 
 import classnames from 'classnames';
 
 import {
-  useError,
-  useShowEntryEvent,
+  useDebounce,
   useElementVisible,
+  useError,
+  useShowEntryEvent
 } from '../../hooks';
 
 import { isFunction } from 'min-dash';
@@ -54,11 +54,7 @@ function TextArea(props) {
   /**
    * @type { import('min-dash').DebouncedFunction }
    */
-  const handleInputCallback = useMemo(() => {
-    return debounce((newValue) => {
-      onInput(newValue);
-    });
-  }, [ onInput, debounce ]);
+  const handleInputCallback = useDebounce(onInput, debounce);
 
   const handleInput = newValue => {
     const newModelValue = newValue === '' ? undefined : newValue;
@@ -77,12 +73,10 @@ function TextArea(props) {
   };
 
   const handleOnBlur = e => {
-    const value = e.target.value;
+    const trimmedValue = e.target.value.trim();
 
-    if (value.trim() !== value) {
-      setLocalValue(value.trim());
-      handleInput(value.trim());
-    }
+    // trim and commit on blur
+    onInput(trimmedValue);
 
     if (onBlur) {
       onBlur(e);

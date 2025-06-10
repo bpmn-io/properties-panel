@@ -91,9 +91,12 @@ describe('<FeelEntry>', function() {
 
       // given
       const setValueSpy = sinon.spy();
+      const debouncedSpy = sinon.spy();
+      const debounce = () => debouncedSpy;
 
       const result = createFeelField({
         container,
+        debounce,
         setValue: setValueSpy
       });
 
@@ -102,10 +105,45 @@ describe('<FeelEntry>', function() {
       // when
       input.focus();
       changeInput(input, '  foo  ');
+
+      // assume
+      expect(debouncedSpy).to.have.been.calledWith('  foo  ');
+      expect(setValueSpy).not.to.have.been.called;
+
+      // and when
+      debouncedSpy.resetHistory();
       input.blur();
 
       // then
-      expect(setValueSpy).to.have.been.calledTwice;
+      expect(debouncedSpy).not.to.have.been.called;
+      expect(setValueSpy).to.have.been.calledOnce;
+      expect(setValueSpy).to.have.been.calledWith('foo');
+    });
+
+
+    it('should trim whitespace on blur immediately', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+      const debouncedSpy = sinon.spy();
+      const debounce = () => debouncedSpy;
+
+      const result = createFeelField({
+        container,
+        debounce,
+        getValue: () => '  foo  ',
+        setValue: setValueSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      input.blur();
+
+      // then
+      expect(debouncedSpy).not.to.have.been.called;
+      expect(setValueSpy).to.have.been.calledOnce;
       expect(setValueSpy).to.have.been.calledWith('foo');
     });
 
@@ -113,12 +151,10 @@ describe('<FeelEntry>', function() {
     it('should call onBlur if provided', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
       const onBlurSpy = sinon.spy();
 
       const result = createFeelField({
         container,
-        setValue: setValueSpy,
         onBlur: onBlurSpy
       });
 
@@ -126,7 +162,6 @@ describe('<FeelEntry>', function() {
 
       // when
       input.focus();
-      changeInput(input, '  foo  ');
       input.blur();
 
       // then
@@ -154,7 +189,6 @@ describe('<FeelEntry>', function() {
 
       // then
       expect(setValueSpy).to.not.have.been.called;
-
     });
 
 
