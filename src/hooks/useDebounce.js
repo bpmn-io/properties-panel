@@ -6,7 +6,7 @@ import {
 export function useDebounce(callback, debounceFn) {
   const debouncedCallback = useCallback(debounceFn(callback), [ callback, debounceFn ]);
 
-  // cancel previous function when new is created
+  // make sure previous call is not stalled
   useEffect(() => {
     return () => {
       debouncedCallback.flush?.();
