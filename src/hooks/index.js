@@ -1,4 +1,5 @@
 export { useDescriptionContext } from './useDescriptionContext';
+export { useDebounce } from './useDebounce';
 export { useError, useErrors } from './useError';
 export { useEvent } from './useEvent';
 export { useKeyFactory } from './useKeyFactory';
