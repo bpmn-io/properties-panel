@@ -91,12 +91,8 @@ describe('<FeelEntry>', function() {
 
       // given
       const setValueSpy = sinon.spy();
-      const debouncedSpy = sinon.spy();
-      const debounce = () => debouncedSpy;
-
       const result = createFeelField({
         container,
-        debounce,
         setValue: setValueSpy
       });
 
@@ -105,45 +101,10 @@ describe('<FeelEntry>', function() {
       // when
       input.focus();
       changeInput(input, '  foo  ');
-
-      // assume
-      expect(debouncedSpy).to.have.been.calledWith('  foo  ');
-      expect(setValueSpy).not.to.have.been.called;
-
-      // and when
-      debouncedSpy.resetHistory();
       input.blur();
 
       // then
-      expect(debouncedSpy).not.to.have.been.called;
-      expect(setValueSpy).to.have.been.calledOnce;
-      expect(setValueSpy).to.have.been.calledWith('foo');
-    });
-
-
-    it('should trim whitespace on blur immediately', async function() {
-
-      // given
-      const setValueSpy = sinon.spy();
-      const debouncedSpy = sinon.spy();
-      const debounce = () => debouncedSpy;
-
-      const result = createFeelField({
-        container,
-        debounce,
-        getValue: () => '  foo  ',
-        setValue: setValueSpy
-      });
-
-      const input = domQuery('.bio-properties-panel-input', result.container);
-
-      // when
-      input.focus();
-      input.blur();
-
-      // then
-      expect(debouncedSpy).not.to.have.been.called;
-      expect(setValueSpy).to.have.been.calledOnce;
+      expect(setValueSpy).to.have.been.calledTwice;
       expect(setValueSpy).to.have.been.calledWith('foo');
     });
 
@@ -252,6 +213,33 @@ describe('<FeelEntry>', function() {
         // then
         expect(validateSpies[0]).not.to.have.been.called;
         expect(validateSpies[1]).to.have.been.calledWith('foo');
+      });
+
+
+      it('should flush previous change before rerendering', function() {
+
+        // given
+        const flushSpy = sinon.spy();
+        const debounce = () => {
+          const spy = () => {};
+          spy.flush = flushSpy;
+          return spy;
+        };
+
+        const result = createFeelField({
+          container,
+          debounce,
+          setValue() {}
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        changeInput(input, 'foo');
+        createFeelField({ container, setValue() {} }, result.rerender);
+
+        // then
+        expect(flushSpy).to.have.been.calledOnce;
       });
     });
 
