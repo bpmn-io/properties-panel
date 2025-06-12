@@ -2,17 +2,15 @@ import Description from './Description';
 import Tooltip from './Tooltip';
 
 import {
-  useCallback,
   useEffect,
   useState
 } from 'preact/hooks';
 
 import classnames from 'classnames';
 
-import { isFunction } from 'min-dash';
+import { TextInput } from '../shared/TextInput';
 
 import {
-  useDebounce,
   useError,
   useShowEntryEvent
 } from '../../hooks';
@@ -20,7 +18,6 @@ import {
 function Textfield(props) {
 
   const {
-    debounce,
     disabled = false,
     id,
     label,
@@ -36,25 +33,13 @@ function Textfield(props) {
 
   const ref = useShowEntryEvent(id);
 
-  /**
-   * @type { import('min-dash').DebouncedFunction }
-   */
-  const handleInputCallback = useDebounce(onInput, debounce);
-
-  const handleOnBlur = e => {
-    const trimmedValue = e.target.value.trim();
-
-    // trim and commit on blur
-    onInput(trimmedValue);
-
-    if (onBlur) {
-      onBlur(e);
-    }
+  const handleOnBlur = () => {
+    onBlur?.(localValue);
   };
 
   const handleInput = newValue => {
     const newModelValue = newValue === '' ? undefined : newValue;
-    handleInputCallback(newModelValue);
+    onInput(newModelValue);
   };
 
   const handleLocalInput = e => {
@@ -132,34 +117,11 @@ export default function TextfieldEntry(props) {
     tooltip
   } = props;
 
+  const value = getValue(element);
+
   const globalError = useError(id);
-  const [ localError, setLocalError ] = useState(null);
 
-  let value = getValue(element);
-
-  useEffect(() => {
-    if (isFunction(validate)) {
-      const newValidationError = validate(value) || null;
-
-      setLocalError(newValidationError);
-    }
-  }, [ value, validate ]);
-
-  const onInput = useCallback((newValue) => {
-    const value = getValue(element);
-    let newValidationError = null;
-
-    if (isFunction(validate)) {
-      newValidationError = validate(newValue) || null;
-    }
-
-    if (newValue !== value) {
-      setValue(newValue, newValidationError);
-    }
-
-    setLocalError(newValidationError);
-  }, [ element, getValue, setValue, validate ]);
-
+  const localError = validate?.(value) || null;
 
   const error = globalError || localError;
 
@@ -170,16 +132,19 @@ export default function TextfieldEntry(props) {
         error ? 'has-error' : '')
       }
       data-entry-id={ id }>
-      <Textfield
+      <TextInput
+        Component={ Textfield }
         debounce={ debounce }
         disabled={ disabled }
+        getValue={ getValue }
         id={ id }
         key={ element }
         label={ label }
-        onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
         placeholder={ placeholder }
+        setValue={ setValue }
+        validate={ validate }
         value={ value }
         tooltip={ tooltip }
         element={ element } />

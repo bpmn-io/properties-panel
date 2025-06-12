@@ -232,17 +232,17 @@ describe('<TextField>', function() {
     it('should flush previous change before rerendering', function() {
 
       // given
-      const flushSpy = sinon.spy();
-      const debounce = () => {
+      const setValueSpy = sinon.spy();
+      const debounce = fn => {
         const spy = () => {};
-        spy.flush = flushSpy;
+        spy.flush = fn;
         return spy;
       };
 
       const result = createTextField({
         container,
         debounce,
-        setValue() {}
+        setValue: setValueSpy
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -252,7 +252,7 @@ describe('<TextField>', function() {
       createTextField({ container, setValue() {} }, result.rerender);
 
       // then
-      expect(flushSpy).to.have.been.calledOnce;
+      expect(setValueSpy).to.have.been.calledOnce;
     });
   });
 
