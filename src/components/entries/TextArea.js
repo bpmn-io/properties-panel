@@ -1,7 +1,6 @@
 import Description from './Description';
 
 import {
-  useCallback,
   useEffect,
   useLayoutEffect,
   useState
@@ -16,8 +15,8 @@ import {
   useShowEntryEvent
 } from '../../hooks';
 
-import { isFunction } from 'min-dash';
 import Tooltip from './Tooltip';
+import { TextInput } from '../shared/TextInput';
 
 function resizeToContents(element) {
   element.style.height = 'auto';
@@ -72,15 +71,8 @@ function TextArea(props) {
     handleInput(e.target.value);
   };
 
-  const handleOnBlur = e => {
-    const trimmedValue = e.target.value.trim();
-
-    // trim and commit on blur
-    onInput(trimmedValue);
-
-    if (onBlur) {
-      onBlur(e);
-    }
+  const handleOnBlur = () => {
+    onBlur?.(localValue);
   };
 
   useLayoutEffect(() => {
@@ -165,34 +157,11 @@ export default function TextAreaEntry(props) {
     tooltip
   } = props;
 
+  const value = getValue(element);
+
   const globalError = useError(id);
-  const [ localError, setLocalError ] = useState(null);
 
-  let value = getValue(element);
-
-  useEffect(() => {
-    if (isFunction(validate)) {
-      const newValidationError = validate(value) || null;
-
-      setLocalError(newValidationError);
-    }
-  }, [ value, validate ]);
-
-  const onInput = useCallback((newValue) => {
-    const value = getValue(element);
-    let newValidationError = null;
-
-    if (isFunction(validate)) {
-      newValidationError = validate(newValue) || null;
-    }
-
-    if (newValue !== value) {
-      setValue(newValue, newValidationError);
-    }
-
-    setLocalError(newValidationError);
-  }, [ element, getValue, setValue, validate ]);
-
+  const localError = validate?.(value) || null;
 
   const error = globalError || localError;
 
@@ -203,12 +172,15 @@ export default function TextAreaEntry(props) {
         error ? 'has-error' : '')
       }
       data-entry-id={ id }>
-      <TextArea
+      <TextInput
+        Component={ TextArea }
+        getValue={ getValue }
+        setValue={ setValue }
+        validate={ validate }
         id={ id }
         key={ element }
         label={ label }
         value={ value }
-        onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
         rows={ rows }

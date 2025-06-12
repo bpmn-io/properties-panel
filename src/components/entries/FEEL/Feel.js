@@ -2,7 +2,6 @@ import Description from '../Description';
 import TemplatingEditor from '../templating/TemplatingEditor';
 
 import {
-  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -13,10 +12,9 @@ import { forwardRef } from 'preact/compat';
 
 import classnames from 'classnames';
 
-import { isFunction, isString } from 'min-dash';
+import { isString } from 'min-dash';
 
 import {
-  useDebounce,
   useError,
   useShowEntryEvent,
   useStaticCallback
@@ -34,6 +32,8 @@ import { ToggleSwitch } from '../ToggleSwitch';
 
 import { NumberField } from '../NumberField';
 import Tooltip from '../Tooltip';
+
+import { TextInput } from '../../shared/TextInput';
 
 const noop = () => {};
 
@@ -64,7 +64,6 @@ const noop = () => {};
 
 function FeelTextfieldComponent(props) {
   const {
-    debounce,
     id,
     element,
     label,
@@ -109,18 +108,13 @@ function FeelTextfieldComponent(props) {
     _setFocus(position + offset);
   };
 
-  /**
-   * @type { import('min-dash').DebouncedFunction }
-   */
-  const handleInputCallback = useDebounce(onInput, debounce);
-
   const handleInput = newValue => {
 
     // we don't commit empty FEEL expressions,
     // but instead serialize them as <undefined>
     const newModelValue = (newValue === '' || newValue === '=') ? undefined : newValue;
 
-    handleInputCallback(newModelValue);
+    onInput(newModelValue);
   };
 
   const handleFeelToggle = useStaticCallback(() => {
@@ -156,15 +150,8 @@ function FeelTextfieldComponent(props) {
     }
   };
 
-  const handleOnBlur = (e) => {
-    const trimmedValue = e.target.value.trim();;
-
-    // trim and commit on blur
-    onInput(trimmedValue);
-
-    if (onBlur) {
-      onBlur(e);
-    }
+  const handleOnBlur = () => {
+    onBlur?.(localValue);
   };
 
   const handleLint = useStaticCallback((lint = []) => {
@@ -579,38 +566,11 @@ export default function FeelEntry(props) {
     tooltip
   } = props;
 
-  const [ validationError, setValidationError ] = useState(null);
   const [ localError, setLocalError ] = useState(null);
 
-  let value = getValue(element);
+  const value = getValue(element);
 
-  useEffect(() => {
-    if (isFunction(validate)) {
-      const newValidationError = validate(value) || null;
-
-      setValidationError(newValidationError);
-    }
-  }, [ value, validate ]);
-
-  const onInput = useCallback((newValue) => {
-    const value = getValue(element);
-    let newValidationError = null;
-
-    if (isFunction(validate)) {
-      newValidationError = validate(newValue) || null;
-    }
-
-    // don't create multiple commandStack entries for the same value
-    if (newValue !== value) {
-      setValue(newValue, newValidationError);
-    }
-
-    setValidationError(newValidationError);
-  }, [ element, getValue, setValue, validate ]);
-
-  const onError = useCallback(err => {
-    setLocalError(err);
-  }, []);
+  const validationError = validate?.(value) || null;
 
   const temporaryError = useError(id);
 
@@ -624,16 +584,20 @@ export default function FeelEntry(props) {
         error ? 'has-error' : '')
       }
       data-entry-id={ id }>
-      <FeelTextfield
+      <TextInput
         { ...props }
+        Component={ FeelTextfield }
+        element={ element }
+        getValue={ getValue }
         debounce={ debounce }
+        setValue={ setValue }
+        validate={ validate }
         disabled={ disabled }
         feel={ feel }
         id={ id }
         key={ element }
         label={ label }
-        onInput={ onInput }
-        onError={ onError }
+        onError={ setLocalError }
         onFocus={ onFocus }
         onBlur={ onBlur }
         placeholder={ placeholder }
