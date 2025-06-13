@@ -27,6 +27,14 @@ ___Note:__ Yet to be released changes appear here._
 
 * `FEAT`: allow overriding FEEL popup ([#408](https://github.com/bpmn-io/properties-panel/issues/408))
 
+## 3.27.7
+
+* `FIX`: increase default debounce value ([#425](https://github.com/bpmn-io/properties-panel/pull/425))
+
+## 3.27.6
+
+* `FIX`: improve text inputs performance ([#424](https://github.com/bpmn-io/properties-panel/pull/424))
+
 ## 3.27.5
 
 * `FIX`: improve text inputs performance ([#424](https://github.com/bpmn-io/properties-panel/pull/424))
