@@ -1,6 +1,7 @@
 import {
   useEffect,
-  useState
+  useState,
+  useRef
 } from 'preact/hooks';
 
 import {
@@ -11,7 +12,8 @@ import { isFunction } from 'min-dash';
 
 import {
   useKeyFactory,
-  usePrevious
+  usePrevious,
+  useStickyIntersectionObserver
 } from '../../hooks';
 
 import classnames from 'classnames';
@@ -52,7 +54,9 @@ export default function List(props) {
     ...restProps
   } = props;
 
+  const entryRef = useRef(null);
   const [ open, setOpen ] = useState(!!shouldOpen);
+  const [ sticky, setSticky ] = useState(false);
 
   const hasItems = !!items.length;
   const toggleOpen = () => hasItems && setOpen(!open);
@@ -78,6 +82,9 @@ export default function List(props) {
     }
   }
 
+  // set css class when entry is sticky to top
+  useStickyIntersectionObserver(entryRef, 'div.bio-properties-panel-scroll-container', setSticky);
+
   return (
     <div
       data-entry-id={ id }
@@ -86,8 +93,14 @@ export default function List(props) {
         'bio-properties-panel-list-entry',
         hasItems ? '' : 'empty',
         open ? 'open' : ''
-      ) }>
-      <div class="bio-properties-panel-list-entry-header" onClick={ toggleOpen }>
+      ) }
+      ref={ entryRef }>
+      <div
+        class={ classnames(
+          'bio-properties-panel-list-entry-header',
+          (sticky && open) ? 'sticky' : ''
+        ) }
+        onClick={ toggleOpen }>
         <div
           title={ label }
           class={ classnames(
