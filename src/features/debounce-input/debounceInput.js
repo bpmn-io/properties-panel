@@ -3,7 +3,7 @@ import {
   isNumber
 } from 'min-dash';
 
-const DEFAULT_DEBOUNCE_TIME = 300;
+const DEFAULT_DEBOUNCE_TIME = 600;
 
 /**
  * Creates a debounced version of a function, delaying its execution based on `debounceDelay`.
