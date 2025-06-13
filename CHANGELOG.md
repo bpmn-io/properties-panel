@@ -34,10 +34,9 @@ ___Note:__ Yet to be released changes appear here._
 ## 3.27.6
 
 * `FIX`: improve text inputs performance ([#424](https://github.com/bpmn-io/properties-panel/pull/424))
-
 ## 3.27.5
 
-* `FIX`: improve text inputs performance ([#424](https://github.com/bpmn-io/properties-panel/pull/424))
+* `FIX`: flush debounced function when value helpers change ([#422](https://github.com/bpmn-io/properties-panel/pull/422))
 
 ## 3.27.4
 
