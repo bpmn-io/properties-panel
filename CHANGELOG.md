@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.29.1
+
+* `FIX`: fix cursor jumping issue ([#426](https://github.com/bpmn-io/properties-panel/pull/426))
+
 ## 3.29.0
 
 * `FEAT`: make list headers sticky ([#397](https://github.com/bpmn-io/properties-panel/pull/397))
