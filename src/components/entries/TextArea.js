@@ -12,11 +12,12 @@ import {
   useDebounce,
   useElementVisible,
   useError,
-  useShowEntryEvent
+  useShowEntryEvent,
+  useStaticCallback
 } from '../../hooks';
 
+import { isFunction } from 'min-dash';
 import Tooltip from './Tooltip';
-import { TextInput } from '../shared/TextInput';
 
 function resizeToContents(element) {
   element.style.height = 'auto';
@@ -71,8 +72,15 @@ function TextArea(props) {
     handleInput(e.target.value);
   };
 
-  const handleOnBlur = () => {
-    onBlur?.(localValue);
+  const handleOnBlur = e => {
+    const trimmedValue = e.target.value.trim();
+
+    // trim and commit on blur
+    onInput(trimmedValue);
+
+    if (onBlur) {
+      onBlur(e);
+    }
   };
 
   useLayoutEffect(() => {
@@ -157,11 +165,34 @@ export default function TextAreaEntry(props) {
     tooltip
   } = props;
 
-  const value = getValue(element);
-
   const globalError = useError(id);
+  const [ localError, setLocalError ] = useState(null);
 
-  const localError = validate?.(value) || null;
+  let value = getValue(element);
+
+  useEffect(() => {
+    if (isFunction(validate)) {
+      const newValidationError = validate(value) || null;
+
+      setLocalError(newValidationError);
+    }
+  }, [ value, validate ]);
+
+  const onInput = useStaticCallback((newValue) => {
+    const value = getValue(element);
+    let newValidationError = null;
+
+    if (isFunction(validate)) {
+      newValidationError = validate(newValue) || null;
+    }
+
+    if (newValue !== value) {
+      setValue(newValue, newValidationError);
+    }
+
+    setLocalError(newValidationError);
+  });
+
 
   const error = globalError || localError;
 
@@ -172,15 +203,12 @@ export default function TextAreaEntry(props) {
         error ? 'has-error' : '')
       }
       data-entry-id={ id }>
-      <TextInput
-        Component={ TextArea }
-        getValue={ getValue }
-        setValue={ setValue }
-        validate={ validate }
+      <TextArea
         id={ id }
         key={ element }
         label={ label }
         value={ value }
+        onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
         rows={ rows }

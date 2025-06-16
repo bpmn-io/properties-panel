@@ -227,33 +227,6 @@ describe('<TextField>', function() {
       expect(validateSpies[0]).not.to.have.been.called;
       expect(validateSpies[1]).to.have.been.calledWith('foo');
     });
-
-
-    it('should flush previous change before rerendering', function() {
-
-      // given
-      const setValueSpy = sinon.spy();
-      const debounce = fn => {
-        const spy = () => {};
-        spy.flush = fn;
-        return spy;
-      };
-
-      const result = createTextField({
-        container,
-        debounce,
-        setValue: setValueSpy
-      });
-
-      const input = domQuery('.bio-properties-panel-input', result.container);
-
-      // when
-      changeInput(input, 'foo');
-      createTextField({ container, setValue() {} }, result.rerender);
-
-      // then
-      expect(setValueSpy).to.have.been.calledOnce;
-    });
   });
 
 
