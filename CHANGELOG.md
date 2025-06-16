@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.27.8
+
+* `FIX`: fix cursor jumping issue ([#426](https://github.com/bpmn-io/properties-panel/pull/426))
+
 ## 3.27.7
 
 * `FIX`: increase default debounce value ([#425](https://github.com/bpmn-io/properties-panel/pull/425))
