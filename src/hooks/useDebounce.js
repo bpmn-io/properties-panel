@@ -9,7 +9,7 @@ export function useDebounce(callback, debounceFn) {
   // make sure previous call is not stalled
   useEffect(() => {
     return () => {
-      debouncedCallback.flush?.();
+      debouncedCallback.cancel?.();
     };
   }, [ debouncedCallback ]);
 
