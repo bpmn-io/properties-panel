@@ -8,16 +8,19 @@ import {
 
 import classnames from 'classnames';
 
-import { TextInput } from '../shared/TextInput';
+import { isFunction } from 'min-dash';
 
 import {
+  useDebounce,
   useError,
-  useShowEntryEvent
+  useShowEntryEvent,
+  useStaticCallback
 } from '../../hooks';
 
 function Textfield(props) {
 
   const {
+    debounce,
     disabled = false,
     id,
     label,
@@ -33,13 +36,25 @@ function Textfield(props) {
 
   const ref = useShowEntryEvent(id);
 
-  const handleOnBlur = () => {
-    onBlur?.(localValue);
+  /**
+   * @type { import('min-dash').DebouncedFunction }
+   */
+  const handleInputCallback = useDebounce(onInput, debounce);
+
+  const handleOnBlur = e => {
+    const trimmedValue = e.target.value.trim();
+
+    // trim and commit on blur
+    onInput(trimmedValue);
+
+    if (onBlur) {
+      onBlur(e);
+    }
   };
 
   const handleInput = newValue => {
     const newModelValue = newValue === '' ? undefined : newValue;
-    onInput(newModelValue);
+    handleInputCallback(newModelValue);
   };
 
   const handleLocalInput = e => {
@@ -117,11 +132,34 @@ export default function TextfieldEntry(props) {
     tooltip
   } = props;
 
-  const value = getValue(element);
-
   const globalError = useError(id);
+  const [ localError, setLocalError ] = useState(null);
 
-  const localError = validate?.(value) || null;
+  let value = getValue(element);
+
+  useEffect(() => {
+    if (isFunction(validate)) {
+      const newValidationError = validate(value) || null;
+
+      setLocalError(newValidationError);
+    }
+  }, [ value, validate ]);
+
+  const onInput = useStaticCallback((newValue) => {
+    const value = getValue(element);
+    let newValidationError = null;
+
+    if (isFunction(validate)) {
+      newValidationError = validate(newValue) || null;
+    }
+
+    if (newValue !== value) {
+      setValue(newValue, newValidationError);
+    }
+
+    setLocalError(newValidationError);
+  });
+
 
   const error = globalError || localError;
 
@@ -132,19 +170,16 @@ export default function TextfieldEntry(props) {
         error ? 'has-error' : '')
       }
       data-entry-id={ id }>
-      <TextInput
-        Component={ Textfield }
+      <Textfield
         debounce={ debounce }
         disabled={ disabled }
-        getValue={ getValue }
         id={ id }
         key={ element }
         label={ label }
+        onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
         placeholder={ placeholder }
-        setValue={ setValue }
-        validate={ validate }
         value={ value }
         tooltip={ tooltip }
         element={ element } />
