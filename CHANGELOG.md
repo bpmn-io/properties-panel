@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.30.0
+
+* `FEAT`: support providing FEEL language context (parserDialect, dialect, builtins) ([#417](https://github.com/bpmn-io/properties-panel/pull/417))
+
 ## 3.29.1
 
 * `FIX`: fix cursor jumping issue ([#426](https://github.com/bpmn-io/properties-panel/pull/426))
