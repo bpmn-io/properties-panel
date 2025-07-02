@@ -39,6 +39,7 @@ function TextArea(props) {
     monospace,
     onFocus,
     onBlur,
+    onPaste,
     autoResize = true,
     placeholder,
     rows = autoResize ? 1 : 2,
@@ -83,6 +84,19 @@ function TextArea(props) {
     }
   };
 
+  const handleOnPaste = e=>{
+    const trimmedValue = e.clipboardData.getData('text').trim();
+
+    setLocalValue(trimmedValue);
+    handleInput(trimmedValue);
+
+    if (onPaste) {
+      onPaste(e);
+    }
+
+    e.preventDefault();
+  };
+
   useLayoutEffect(() => {
     autoResize && resizeToContents(ref.current);
   }, []);
@@ -119,6 +133,7 @@ function TextArea(props) {
         onInput={ handleLocalInput }
         onFocus={ onFocus }
         onBlur={ handleOnBlur }
+        onPaste={ handleOnPaste }
         placeholder={ placeholder }
         rows={ rows }
         value={ localValue }

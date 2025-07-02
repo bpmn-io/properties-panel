@@ -237,13 +237,31 @@ function FeelTextfield(props) {
     };
 
     const pasteHandler = event => {
+
+      const textData = event.clipboardData.getData('text');
+      if (textData && /^\s|\s$|^=/.test(textData)) {
+        let newValue = textData.trim();
+
+        if (feelActive || newValue.startsWith('=')) {
+          const match = newValue.match(/=?\s*(.*)/);
+          newValue = '=' + match[1];
+        }
+        setTimeout(() => {
+          setLocalValue(newValue);
+          handleInput(newValue);
+        });
+
+        event.preventDefault();
+        return;
+      }
+
       if (feelActive || isPopupOpen) {
         return;
       }
 
-      const data = event.clipboardData.getData('application/FEEL');
+      const feelData = event.clipboardData.getData('application/FEEL');
 
-      if (data) {
+      if (feelData) {
         setTimeout(() => {
           handleFeelToggle();
           setFocus();
