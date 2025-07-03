@@ -1,5 +1,7 @@
 import {
-  render
+  render,
+  fireEvent,
+  findByText
 } from '@testing-library/preact/pure';
 
 import TestContainer from 'mocha-test-container-support';
@@ -447,6 +449,22 @@ describe('<NumberField>', function() {
   });
 
 
+  describe('tooltip', function() {
+
+    it('should render tooltip', async function() {
+
+      // given
+      const result = createNumberField({ container, tooltip: 'tooltip-test' });
+
+      // when
+      fireEvent.mouseEnter(domQuery('.bio-properties-panel-tooltip-wrapper', result.container));
+
+      // then
+      await findByText(result.container, 'tooltip-test');
+    });
+  });
+
+
   describe('a11y', function() {
 
     it('should have no violations', async function() {
@@ -487,7 +505,8 @@ function createNumberField(options = {}, renderFn = render) {
     descriptionConfig = {},
     getDescriptionForId = noop,
     container,
-    errors = {}
+    errors = {},
+    tooltip
   } = options;
 
   const errorsContext = {
@@ -514,7 +533,9 @@ function createNumberField(options = {}, renderFn = render) {
           min={ min }
           setValue={ setValue }
           step={ step }
-          validate={ validate } />
+          validate={ validate }
+          tooltip={ tooltip }
+        />
       </DescriptionContext.Provider>
     </ErrorsContext.Provider>
     ,

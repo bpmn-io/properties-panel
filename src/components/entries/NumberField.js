@@ -1,4 +1,5 @@
 import Description from './Description';
+import Tooltip from './Tooltip';
 
 import {
   useEffect,
@@ -29,7 +30,8 @@ export function NumberField(props) {
     step,
     value = '',
     onFocus,
-    onBlur
+    onBlur,
+    tooltip
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
@@ -58,7 +60,13 @@ export function NumberField(props) {
 
   return (
     <div class="bio-properties-panel-numberfield">
-      {displayLabel && <label for={ prefixId(id) } class="bio-properties-panel-label">{ label }</label> }
+      {displayLabel && (
+        <label for={ prefixId(id) } class="bio-properties-panel-label">
+          <Tooltip value={ tooltip } forId={ id } element={ props.element }>
+            { label }
+          </Tooltip>
+        </label>
+      )}
       <input
         id={ prefixId(id) }
         ref={ inputRef }
@@ -111,7 +119,8 @@ export default function NumberFieldEntry(props) {
     step,
     onFocus,
     onBlur,
-    validate
+    validate,
+    tooltip
   } = props;
 
   const globalError = useError(id);
@@ -156,7 +165,9 @@ export default function NumberFieldEntry(props) {
         max={ max }
         min={ min }
         step={ step }
-        value={ value } />
+        value={ value }
+        tooltip={ tooltip }
+      />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
