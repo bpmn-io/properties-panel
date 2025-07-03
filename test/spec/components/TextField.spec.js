@@ -1,7 +1,9 @@
 import { act } from 'preact/test-utils';
 
 import {
-  render
+  render,
+  fireEvent,
+  findByText
 } from '@testing-library/preact/pure';
 
 import TestContainer from 'mocha-test-container-support';
@@ -572,6 +574,22 @@ describe('<TextField>', function() {
   });
 
 
+  describe('tooltip', function() {
+
+    it('should render tooltip', async function() {
+
+      // given
+      const result = createTextField({ container, tooltip: 'tooltip-test' });
+
+      // when
+      fireEvent.mouseEnter(domQuery('.bio-properties-panel-tooltip-wrapper', result.container));
+
+      // then
+      await findByText(result.container, 'tooltip-test');
+    });
+  });
+
+
   describe('a11y', function() {
 
     it('should have no violations', async function() {
@@ -613,6 +631,7 @@ function createTextField(options = {}, renderFn = render) {
     eventBus = new EventBus(),
     onShow = noop,
     errors = {},
+    tooltip,
     ...restProps
   } = options;
 
@@ -649,7 +668,9 @@ function createTextField(options = {}, renderFn = render) {
               setValue={ setValue }
               onBlur={ onBlur }
               debounce={ debounce }
-              validate={ validate } />
+              validate={ validate }
+              tooltip={ tooltip }
+            />
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>
