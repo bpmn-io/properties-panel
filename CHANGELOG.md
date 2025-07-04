@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.30.1
+
+* `FIX`: allow tooltip on number field ([#429](https://github.com/bpmn-io/properties-panel/pull/429))
+
 ## 3.30.0
 
 * `FEAT`: support providing FEEL language context (parserDialect, dialect, builtins) ([#417](https://github.com/bpmn-io/properties-panel/pull/417))
