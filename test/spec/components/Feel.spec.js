@@ -1821,9 +1821,28 @@ describe('<FeelEntry>', function() {
       clickInput(input);
 
       // then
-      expect(updateSpy).to.have.been.calledWith(true);
+      expect(updateSpy).to.have.been.calledOnceWith(true);
     });
 
+
+    it('should update on blur', async function() {
+
+      // given
+      const updateSpy = sinon.spy();
+
+      const result = createFeelCheckbox({ container, setValue: updateSpy, getValue: () => false });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      clickInput(input);
+      input.blur();
+
+      // then
+      expect(updateSpy).to.have.been.calledTwice;
+      expect(updateSpy).to.have.always.been.calledWith(true);
+    });
 
     describe('#isEdited', function() {
 
