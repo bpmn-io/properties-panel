@@ -167,7 +167,7 @@ function DataMarker(props) {
 
   if (edited) {
     return (
-      <div title="Section contains data" class="bio-properties-panel-dot"></div>
+      <div title="Section contains edits" class="bio-properties-panel-dot"></div>
     );
   }
   return null;
