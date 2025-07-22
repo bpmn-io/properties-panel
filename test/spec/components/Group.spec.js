@@ -294,7 +294,7 @@ describe('<Group>', function() {
       const dataMarker = domQuery('.bio-properties-panel-dot', header);
 
       // then
-      expect(domAttr(dataMarker, 'title')).to.eql('Section contains data');
+      expect(domAttr(dataMarker, 'title')).to.eql('Section contains edits');
     });
 
   });
