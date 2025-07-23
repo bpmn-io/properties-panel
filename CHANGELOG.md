@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.31.0
+
+* `FEAT`: clarify dirty hint ([#432](https://github.com/bpmn-io/properties-panel/pull/432))
+
 ## 3.30.2
 
 * `FIX`: `blur` should emit boolean value for checkboxes ([#430](https://github.com/bpmn-io/properties-panel/pull/430))
