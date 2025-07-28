@@ -230,6 +230,27 @@ describe('<Group>', function() {
     });
 
 
+    it('should not show group as edited when default exists', function() {
+
+      // given
+      const entries = createEntries({
+        isEdited: (node) => !!node.value,
+        value: 'foo',
+        property: { id: 'default-entry', value: 'foo' }
+      });
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const dataMarker = domQuery('.bio-properties-panel-dot', header);
+
+      // then
+      expect(dataMarker).to.not.exist;
+    });
+
+
     it('should show error marker', function() {
 
       // given
@@ -327,7 +348,8 @@ function createEntries(options = {}) {
   const {
     component = TestEntry,
     isEdited = noop,
-    value
+    value,
+    property
   } = options;
 
   return [
@@ -335,7 +357,8 @@ function createEntries(options = {}) {
       id: 'entry-1',
       component,
       isEdited,
-      value
+      value,
+      property
     },
     {
       id: 'entry-2'

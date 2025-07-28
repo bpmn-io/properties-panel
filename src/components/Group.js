@@ -15,7 +15,8 @@ import {
 } from 'min-dom';
 
 import {
-  isFunction
+  isFunction,
+  isUndefined
 } from 'min-dash';
 
 import {
@@ -64,7 +65,8 @@ export default function Group(props) {
       const hasOneEditedEntry = entries.find(entry => {
         const {
           id,
-          isEdited
+          isEdited,
+          property
         } = entry;
 
         const entryNode = domQuery(`[data-entry-id="${id}"]`);
@@ -75,7 +77,7 @@ export default function Group(props) {
 
         const inputNode = domQuery('.bio-properties-panel-input', entryNode);
 
-        return isEdited(inputNode);
+        return isEdited(inputNode) && isUndefined(property);
       });
 
       setEdited(hasOneEditedEntry);
