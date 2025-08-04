@@ -38,6 +38,7 @@ export default function Group(props) {
     entries = [],
     id,
     label,
+    isDefault,
     shouldOpen = false,
   } = props;
 
@@ -115,6 +116,7 @@ export default function Group(props) {
       <div class="bio-properties-panel-group-header-buttons">
         {
           <DataMarker
+            isDefault={ isDefault }
             edited={ edited }
             hasErrors={ hasErrors }
           />
@@ -156,7 +158,8 @@ export default function Group(props) {
 function DataMarker(props) {
   const {
     edited,
-    hasErrors
+    hasErrors,
+    isDefault
   } = props;
 
   if (hasErrors) {
@@ -165,7 +168,7 @@ function DataMarker(props) {
     );
   }
 
-  if (edited) {
+  if (edited && !isDefault) {
     return (
       <div title="Section contains data" class="bio-properties-panel-dot"></div>
     );

@@ -247,6 +247,27 @@ describe('<Group>', function() {
       expect(errorMarker).to.exist;
     });
 
+
+    it('should not show group as edited when default exists', function() {
+
+      // given
+      const entries = createEntries({
+        isEdited: (node) => !!node.value,
+        value: 'foo',
+      });
+
+      // when
+      // this will be the case when element templates are used
+      const result = createGroup({ container, label: 'Group', entries, isDefault: true });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      const dataMarker = domQuery('.bio-properties-panel-dot', header);
+
+      // then
+      expect(dataMarker).to.not.exist;
+    });
+
   });
 
 
