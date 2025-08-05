@@ -287,7 +287,7 @@
   display: flex;
 }
 
-.bio-properties-panel-group-header-buttons .bio-properties-panel-group-header-button {
+.bio-properties-panel-group-header-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
