@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.31.1
+
+* `FIX`: make CSS selector of button in group header less specific to allow overriding ([#436](https://github.com/bpmn-io/properties-panel/pull/436))
+
 ## 3.31.0
 
 * `FEAT`: update camunda built-ins (added `fromAi`) ([@camunda/feel-builtins#1](https://github.com/camunda/feel-builtins/pull/1))
