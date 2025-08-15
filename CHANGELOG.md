@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.32.0
+
 * `FEAT`: clarify dirty hint ([#432](https://github.com/bpmn-io/properties-panel/pull/432))
 
 ## 3.31.1
