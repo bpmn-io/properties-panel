@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.33.0
+
+* `FEAT`: support multiline feel strings in `camunda` dialect ([@bpmn-io/lezer-feel#2](https://github.com/bpmn-io/lezer-feel/pull/2))
+* `FIX`: recognize unclosed feel string literal as syntax error ([nikku/lezer-feel#52](https://github.com/nikku/lezer-feel/pull/52))
+* `DEPS`: update to `@bpmn-io/feel-editor@1.12.0`
+
 ## 3.32.0
 
 * `FEAT`: clarify dirty hint ([#432](https://github.com/bpmn-io/properties-panel/pull/432))
