@@ -1,4 +1,4 @@
 /**
  * Compatibility with @bpmn-io/properties-panel < v3.4.0
  */
-@import '../dist/assets/properties-panel.css'
+@import '../dist/assets/properties-panel.css';
