@@ -1467,13 +1467,19 @@ textarea.bio-properties-panel-input {
   top: 0;
   right: 0;
   line-height: 1;
-  padding: 2px 4px;
+  padding: 3px 4px;
   margin: 3px;
   display: none;
   background: none;
   border: none;
   color: var(--feel-open-popup-color);
   cursor: pointer;
+}
+
+.bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup svg,
+.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup svg {
+  width: 16px;
+  height: 16px;
 }
 
 .bio-properties-panel-feelers-editor-container:hover .bio-properties-panel-open-feel-popup,
