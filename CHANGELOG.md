@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.33.1
+
+* `FIX`: use maximize icon in open popup button ([#438](https://github.com/bpmn-io/properties-panel/pull/444))
+
 ## 3.33.0
 
 * `FEAT`: support multiline feel strings in `camunda` dialect ([@bpmn-io/lezer-feel#2](https://github.com/bpmn-io/lezer-feel/pull/2))
