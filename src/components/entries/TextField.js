@@ -45,7 +45,11 @@ function Textfield(props) {
     const trimmedValue = e.target.value.trim();
 
     // trim and commit on blur
-    onInput(trimmedValue);
+    // Option A
+    handleInput(trimmedValue);
+
+    // Option B
+    onInput(trimmedValue === '' ? undefined : trimmedValue);
 
     if (onBlur) {
       onBlur(e);
