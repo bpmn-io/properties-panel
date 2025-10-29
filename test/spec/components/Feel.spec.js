@@ -110,6 +110,27 @@ describe('<FeelEntry>', function() {
     });
 
 
+    it('should set undefined on blur when trimmed value is empty', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+      const result = createFeelField({
+        container,
+        getValue: () => '   ',
+        setValue: setValueSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      input.blur();
+
+      // then
+      expect(setValueSpy).to.have.been.calledOnceWith(undefined);
+    });
+
+
     it('should call onBlur if provided', async function() {
 
       // given
@@ -138,7 +159,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelField({
         container,
-        getValue: () => '',
+        getValue: () => 'a value',
         setValue: setValueSpy
       });
 
@@ -146,7 +167,7 @@ describe('<FeelEntry>', function() {
 
       // when
       input.focus();
-      changeInput(input, '');
+      changeInput(input, 'a value');
       input.blur();
 
       // then
@@ -1225,6 +1246,28 @@ describe('<FeelEntry>', function() {
     });
 
 
+    it('should set undefined on blur when trimmed value is empty', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelTextArea({
+        container,
+        getValue: () => '   ',
+        setValue: setValueSpy,
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      input.blur();
+
+      // then
+      expect(setValueSpy).to.have.been.calledOnceWith(undefined);
+    });
+
+
     it('should call onBlur if provided', async function() {
 
       // given
@@ -1256,7 +1299,31 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelTextArea({
         container,
-        getValue: () => '',
+        getValue: () => 'a value',
+        setValue: setValueSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'a value');
+      input.blur();
+
+      // then
+      expect(setValueSpy).to.not.have.been.called;
+
+    });
+
+
+    it('should not call setValue if the value stays undefined/""', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelTextArea({
+        container,
+        getValue: () => undefined,
         setValue: setValueSpy
       });
 

@@ -120,6 +120,27 @@ describe('<TextField>', function() {
   });
 
 
+  it('should set undefined on blur when trimmed value is empty', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      getValue: () => '    ',
+      setValue: setValueSpy,
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    input.blur();
+
+    // then
+    expect(setValueSpy).to.have.been.calledOnceWith(undefined);
+  });
+
   it('should call onBlur if provided', async function() {
 
     // given
@@ -151,7 +172,31 @@ describe('<TextField>', function() {
 
     const result = createTextField({
       container,
-      getValue: () => '',
+      getValue: () => 'a value',
+      setValue: setValueSpy
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'a value');
+    input.blur();
+
+    // then
+    expect(setValueSpy).to.not.have.been.called;
+
+  });
+
+
+  it('should not call setValue if the value stays undefined/""', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      getValue: () => undefined,
       setValue: setValueSpy
     });
 

@@ -155,11 +155,12 @@ function FeelTextfield(props) {
 
   const handleOnBlur = (e) => {
     if (e.target.type === 'checkbox') {
-      onInput(e.target.checked);
+      handleInput(e.target.checked);
     } else {
       const trimmedValue = e.target.value.trim();
-      onInput(trimmedValue);
+      handleInput(trimmedValue);
     }
+    handleInputCallback.flush?.();
 
     if (onBlur) {
       onBlur(e);
