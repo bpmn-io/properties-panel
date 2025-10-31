@@ -1,6 +1,7 @@
 import Description from './Description';
 
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useState
@@ -33,7 +34,7 @@ function TextArea(props) {
     id,
     label,
     debounce,
-    onInput,
+    onInput: commitValue,
     value = '',
     disabled,
     monospace,
@@ -49,17 +50,17 @@ function TextArea(props) {
 
   const ref = useShowEntryEvent(id);
 
+  const onInput = useCallback(newValue => {
+    const newModelValue = newValue === '' ? undefined : newValue;
+    commitValue(newModelValue);
+  }, [ commitValue ]);
+
   const visible = useElementVisible(ref.current);
 
   /**
    * @type { import('min-dash').DebouncedFunction }
    */
-  const handleInputCallback = useDebounce(onInput, debounce);
-
-  const handleInput = newValue => {
-    const newModelValue = newValue === '' ? undefined : newValue;
-    handleInputCallback(newModelValue);
-  };
+  const handleInput = useDebounce(onInput, debounce);
 
   const handleLocalInput = e => {
     autoResize && resizeToContents(e.target);
