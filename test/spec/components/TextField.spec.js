@@ -189,7 +189,7 @@ describe('<TextField>', function() {
   });
 
 
-  it('should not call setValue if the value stays undefined/""', async function() {
+  it('should not call setValue if the value stays undefined or empty', async function() {
 
     // given
     const setValueSpy = sinon.spy();
