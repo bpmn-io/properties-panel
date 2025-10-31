@@ -66,7 +66,7 @@ function FeelTextfield(props) {
     element,
     label,
     hostLanguage,
-    onInput,
+    onInput: commitValue,
     onBlur,
     onError,
     placeholder,
@@ -84,6 +84,14 @@ function FeelTextfield(props) {
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
+
+  const onInput = useCallback(newValue => {
+
+    // we don't commit empty FEEL expressions,
+    // but instead serialize them as <undefined>
+    const newModelValue = (newValue === '' || newValue === '=') ? undefined : newValue;
+    commitValue(newModelValue);
+  }, [ commitValue ]);
 
   const feelActive = (isString(localValue) && localValue.startsWith('=')) || feel === 'required';
   const feelOnlyValue = (isString(localValue) && localValue.startsWith('=')) ? localValue.substring(1) : localValue;
@@ -109,16 +117,7 @@ function FeelTextfield(props) {
   /**
    * @type { import('min-dash').DebouncedFunction }
    */
-  const handleInputCallback = useDebounce(onInput, debounce);
-
-  const handleInput = newValue => {
-
-    // we don't commit empty FEEL expressions,
-    // but instead serialize them as <undefined>
-    const newModelValue = (newValue === '' || newValue === '=') ? undefined : newValue;
-
-    handleInputCallback(newModelValue);
-  };
+  const handleInput = useDebounce(onInput, debounce);
 
   const handleFeelToggle = useStaticCallback(() => {
     if (feel === 'required') {
@@ -155,12 +154,11 @@ function FeelTextfield(props) {
 
   const handleOnBlur = (e) => {
     if (e.target.type === 'checkbox') {
-      handleInput(e.target.checked);
+      onInput(e.target.checked);
     } else {
       const trimmedValue = e.target.value.trim();
-      handleInput(trimmedValue);
+      onInput(trimmedValue);
     }
-    handleInputCallback.flush?.();
 
     if (onBlur) {
       onBlur(e);

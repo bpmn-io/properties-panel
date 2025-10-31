@@ -2,6 +2,7 @@ import Description from './Description';
 import Tooltip from './Tooltip';
 
 import {
+  useCallback,
   useEffect,
   useState
 } from 'preact/hooks';
@@ -24,7 +25,7 @@ function Textfield(props) {
     disabled = false,
     id,
     label,
-    onInput,
+    onInput: commitValue,
     onFocus,
     onBlur,
     placeholder,
@@ -36,26 +37,25 @@ function Textfield(props) {
 
   const ref = useShowEntryEvent(id);
 
+  const onInput = useCallback(newValue => {
+    const newModelValue = newValue === '' ? undefined : newValue;
+    commitValue(newModelValue);
+  }, [ commitValue ]);
+
   /**
    * @type { import('min-dash').DebouncedFunction }
    */
-  const handleInputCallback = useDebounce(onInput, debounce);
+  const handleInput = useDebounce(onInput, debounce);
 
   const handleOnBlur = e => {
     const trimmedValue = e.target.value.trim();
 
     // trim and commit on blur
-    handleInput(trimmedValue);
-    handleInputCallback.flush?.();
+    onInput(trimmedValue);
 
     if (onBlur) {
       onBlur(e);
     }
-  };
-
-  const handleInput = newValue => {
-    const newModelValue = newValue === '' ? undefined : newValue;
-    handleInputCallback(newModelValue);
   };
 
   const handleLocalInput = e => {
