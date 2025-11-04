@@ -1,7 +1,8 @@
 import { act } from 'preact/test-utils';
 
 import {
-  render
+  render,
+  fireEvent
 } from '@testing-library/preact/pure';
 
 import { waitFor } from '@testing-library/preact';
@@ -204,6 +205,68 @@ describe('<TextArea>', function() {
 
     // then
     expect(setValueSpy).to.have.been.calledOnceWith('hello');
+  });
+
+
+  it('should immediately commit value on keyboard shortcut (cmd+z) (debounce)', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({
+      container,
+      getValue: () => '',
+      setValue: setValueSpy,
+      debounce: fn => debounce(fn, 50) // 50ms debounce delay
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'test textarea value');
+
+    // simulate Cmd+Z before debounce expires
+    fireEvent.keyDown(input, {
+      key: 'z',
+      metaKey: true, // Cmd key on Mac
+      ctrlKey: false,
+      altKey: false
+    });
+
+    // then - should be called immediately without waiting for debounce
+    expect(setValueSpy).to.have.been.calledOnceWith('test textarea value');
+  });
+
+
+  it('should immediately commit value on keyboard shortcut (ctrl+z) (debounce)', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({
+      container,
+      getValue: () => '',
+      setValue: setValueSpy,
+      debounce: fn => debounce(fn, 50) // 50ms debounce delay
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'test textarea ctrl value');
+
+    // simulate Ctrl+Z before debounce expires (Windows/Linux)
+    fireEvent.keyDown(input, {
+      key: 'z',
+      metaKey: false,
+      ctrlKey: true, // Ctrl key on Windows/Linux
+      altKey: false
+    });
+
+    // then - should be called immediately without waiting for debounce
+    expect(setValueSpy).to.have.been.calledOnceWith('test textarea ctrl value');
   });
 
 

@@ -27,6 +27,7 @@ import { FeelIndicator } from './FeelIndicator';
 import FeelIcon from './FeelIcon';
 
 import { EventContext, FeelLanguageContext } from '../../../context';
+import { isCmdWithChar } from '../../util/keyboardUtils';
 
 import { ToggleSwitch } from '../ToggleSwitch';
 
@@ -166,6 +167,12 @@ function FeelTextfield(props) {
     }
   };
 
+  const handleOnKeyDown = e => {
+    if (isCmdWithChar(e)) {
+      handleInput.flush();
+    }
+  };
+
   const handleLint = useStaticCallback((lint = []) => {
 
     const syntaxError = lint.some(report => report.type === 'Syntax Error');
@@ -289,6 +296,7 @@ function FeelTextfield(props) {
           <FeelEditor
             name={ id }
             onInput={ handleLocalInput }
+            onKeyDown={ handleOnKeyDown }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             disabled={ disabled }
             popupOpen={ isPopupOpen }
@@ -309,6 +317,7 @@ function FeelTextfield(props) {
             { ...props }
             popupOpen={ isPopupOpen }
             onInput={ handleLocalInput }
+            onKeyDown={ handleOnKeyDown }
             onBlur={ handleOnBlur }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
@@ -328,6 +337,7 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     id,
     disabled,
     onInput,
+    onKeyDown,
     value,
     onFocus,
     onBlur,
@@ -367,6 +377,7 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     class="bio-properties-panel-input"
     onInput={ e => onInput(e.target.value) }
     onFocus={ onFocus }
+    onKeyDown={ onKeyDown }
     onBlur={ onBlur }
     placeholder={ placeholder }
     value={ value || '' } />;

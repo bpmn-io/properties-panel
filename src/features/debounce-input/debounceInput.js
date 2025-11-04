@@ -11,7 +11,7 @@ const DEFAULT_DEBOUNCE_TIME = 600;
  * - If `debounceDelay` is `false`, the function executes immediately without debouncing.
  * - If a number is provided, the function execution is delayed by the given time in milliseconds.
  *
- * @param { Boolean | Number } [debounceDelay=300]
+ * @param { Boolean | Number } [debounceDelay=600]
  *
  * @example
  * const debounce = debounceInput();

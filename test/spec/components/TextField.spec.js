@@ -170,6 +170,64 @@ describe('<TextField>', function() {
   });
 
 
+  it('should immediately commit value on keyboard shortcut (cmd+z) (debounce)', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      getValue: () => '',
+      setValue: setValueSpy,
+      debounce: fn => debounce(fn, 50) // 50ms debounce delay
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'test value');
+    fireEvent.keyDown(input, {
+      key: 'z',
+      metaKey: true, // Cmd key on Mac
+      ctrlKey: false,
+      altKey: false
+    });
+
+    // then
+    expect(setValueSpy).to.have.been.calledOnceWith('test value');
+  });
+
+
+  it('should immediately commit value on keyboard shortcut (ctrl+z) (debounce)', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      getValue: () => '',
+      setValue: setValueSpy,
+      debounce: fn => debounce(fn, 50) // 50ms debounce delay
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'test value ctrl');
+    fireEvent.keyDown(input, {
+      key: 'z',
+      metaKey: false,
+      ctrlKey: true,
+      altKey: false
+    });
+
+    // then
+    expect(setValueSpy).to.have.been.calledOnceWith('test value ctrl');
+  });
+
+
   it('should call onBlur if provided', async function() {
 
     // given
