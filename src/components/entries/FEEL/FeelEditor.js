@@ -48,6 +48,7 @@ const FeelEditor = forwardRef((props, ref) => {
     enableGutters,
     value,
     onInput,
+    onKeyDown: onKeyDownProp = noop,
     onFeelToggle = noop,
     onLint = noop,
     onOpenPopup = noop,
@@ -86,6 +87,10 @@ const FeelEditor = forwardRef((props, ref) => {
      * - AND the cursor is at the beginning of the input
      */
     const onKeyDown = e => {
+
+      // Call parent onKeyDown handler first
+      onKeyDownProp(e);
+
       if (e.key !== 'Backspace' || !editor) {
         return;
       }

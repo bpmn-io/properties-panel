@@ -2,7 +2,8 @@ import { act } from 'preact/test-utils';
 
 import { waitFor } from '@testing-library/dom';
 import {
-  render
+  render,
+  fireEvent
 } from '@testing-library/preact/pure';
 
 import TestContainer from 'mocha-test-container-support';
@@ -155,6 +156,65 @@ describe('<FeelEntry>', function() {
 
       // then
       expect(setValueSpy).to.have.been.calledOnceWith('hello');
+    });
+
+
+    it('should immediately commit value on keyboard shortcut (cmd+z) (debounce)', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelField({
+        container,
+        getValue: () => '',
+        setValue: setValueSpy,
+        debounce: fn => debounce(fn, 50)
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'test feel value');
+
+      fireEvent.keyDown(input, {
+        key: 'z',
+        metaKey: true,
+        ctrlKey: false,
+        altKey: false
+      });
+
+      // then
+      expect(setValueSpy).to.have.been.calledOnceWith('test feel value');
+    });
+
+
+    it('should immediately commit value on keyboard shortcut (ctrl+z) (debounce)', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelField({
+        container,
+        getValue: () => '',
+        setValue: setValueSpy,
+        debounce: fn => debounce(fn, 50) // 50ms debounce delay
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'test feel ctrl value');
+      fireEvent.keyDown(input, {
+        key: 'z',
+        metaKey: false,
+        ctrlKey: true,
+        altKey: false
+      });
+
+      // then
+      expect(setValueSpy).to.have.been.calledOnceWith('test feel ctrl value');
     });
 
 

@@ -19,6 +19,7 @@ import {
 
 import { isFunction } from 'min-dash';
 import Tooltip from './Tooltip';
+import { isCmdWithChar } from '../util/keyboardUtils';
 
 function resizeToContents(element) {
   element.style.height = 'auto';
@@ -85,6 +86,12 @@ function TextArea(props) {
     }
   };
 
+  const handleOnKeyDown = e => {
+    if (isCmdWithChar(e)) {
+      handleInput.flush();
+    }
+  };
+
   useLayoutEffect(() => {
     autoResize && resizeToContents(ref.current);
   }, []);
@@ -120,6 +127,7 @@ function TextArea(props) {
         }
         onInput={ handleLocalInput }
         onFocus={ onFocus }
+        onKeyDown={ handleOnKeyDown }
         onBlur={ handleOnBlur }
         placeholder={ placeholder }
         rows={ rows }

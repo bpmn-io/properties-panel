@@ -17,6 +17,7 @@ import {
   useShowEntryEvent,
   useStaticCallback
 } from '../../hooks';
+import { isCmdWithChar } from '../util/keyboardUtils';
 
 function Textfield(props) {
 
@@ -77,6 +78,12 @@ function Textfield(props) {
     setLocalValue(value);
   }, [ value ]);
 
+  const handleOnKeyDown = e => {
+    if (isCmdWithChar(e)) {
+      handleInput.flush();
+    }
+  };
+
   return (
     <div class="bio-properties-panel-textfield">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
@@ -95,6 +102,7 @@ function Textfield(props) {
         class="bio-properties-panel-input"
         onInput={ handleLocalInput }
         onFocus={ onFocus }
+        onKeyDown={ handleOnKeyDown }
         onBlur={ handleOnBlur }
         placeholder={ placeholder }
         value={ localValue } />
