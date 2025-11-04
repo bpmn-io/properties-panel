@@ -30,6 +30,7 @@ import {
 } from 'src/context';
 
 import TextArea, { isEdited } from 'src/components/entries/TextArea';
+import { debounce } from 'min-dash';
 
 insertCoreStyles();
 
@@ -177,6 +178,32 @@ describe('<TextArea>', function() {
 
     // then
     expect(setValueSpy).to.have.been.calledOnceWith(undefined);
+  });
+
+
+  it('should immediately commit value once on blur (debounce)', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextArea({
+      container,
+      getValue: () => '',
+      setValue: setValueSpy,
+      debounce: fn => debounce(fn, 0)
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'hello   ');
+    input.blur();
+
+    await new Promise(resolve => setTimeout(resolve, 1));
+
+    // then
+    expect(setValueSpy).to.have.been.calledOnceWith('hello');
   });
 
 

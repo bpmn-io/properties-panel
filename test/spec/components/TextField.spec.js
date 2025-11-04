@@ -12,6 +12,7 @@ import {
   classes as domClasses,
   query as domQuery
 } from 'min-dom';
+import { debounce } from 'min-dash';
 
 import EventBus from 'diagram-js/lib/core/EventBus';
 
@@ -28,7 +29,8 @@ import {
   PropertiesPanelContext
 } from 'src/context';
 
-import TextField, { isEdited } from 'src/components/entries/TextField';
+import TextField, { isEdited } from '../../../src/components/entries/TextField';
+
 
 insertCoreStyles();
 
@@ -140,6 +142,33 @@ describe('<TextField>', function() {
     // then
     expect(setValueSpy).to.have.been.calledOnceWith(undefined);
   });
+
+
+  it('should immediately commit value once on blur (debounce)', async function() {
+
+    // given
+    const setValueSpy = sinon.spy();
+
+    const result = createTextField({
+      container,
+      getValue: () => '',
+      setValue: setValueSpy,
+      debounce: fn => debounce(fn, 0)
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'hello   ');
+    input.blur();
+
+    await new Promise(resolve => setTimeout(resolve, 1));
+
+    // then
+    expect(setValueSpy).to.have.been.calledOnceWith('hello');
+  });
+
 
   it('should call onBlur if provided', async function() {
 
