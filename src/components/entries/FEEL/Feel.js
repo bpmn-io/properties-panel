@@ -153,6 +153,7 @@ function FeelTextfield(props) {
   };
 
   const handleOnBlur = (e) => {
+    handleInput.cancel?.();
     if (e.target.type === 'checkbox') {
       onInput(e.target.checked);
     } else {

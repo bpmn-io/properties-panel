@@ -36,6 +36,7 @@ import FeelField, {
   FeelToggleSwitchEntry,
   isEdited
 } from 'src/components/entries/FEEL';
+import { debounce } from 'min-dash';
 
 insertCoreStyles();
 
@@ -128,6 +129,32 @@ describe('<FeelEntry>', function() {
 
       // then
       expect(setValueSpy).to.have.been.calledOnceWith(undefined);
+    });
+
+
+    it('should immediately commit value once on blur (debounce)', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelField({
+        container,
+        getValue: () => '',
+        setValue: setValueSpy,
+        debounce: fn => debounce(fn, 0)
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'hello   ');
+      input.blur();
+
+      await new Promise(resolve => setTimeout(resolve, 1));
+
+      // then
+      expect(setValueSpy).to.have.been.calledOnceWith('hello');
     });
 
 
@@ -1265,6 +1292,32 @@ describe('<FeelEntry>', function() {
 
       // then
       expect(setValueSpy).to.have.been.calledOnceWith(undefined);
+    });
+
+
+    it('should immediately commit value once on blur (debounce)', async function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createFeelTextArea({
+        container,
+        getValue: () => '',
+        setValue: setValueSpy,
+        debounce: fn => debounce(fn, 0)
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'hello   ');
+      input.blur();
+
+      await new Promise(resolve => setTimeout(resolve, 1));
+
+      // then
+      expect(setValueSpy).to.have.been.calledOnceWith('hello');
     });
 
 
