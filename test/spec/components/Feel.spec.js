@@ -777,6 +777,78 @@ describe('<FeelEntry>', function() {
         });
       });
 
+
+      it('should trim pasted content when field is empty (non-FEEL)', function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          setValue: updateSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        input.dispatchEvent(createFeelPasteEvent('  trimmed content  '));
+
+        // then
+        expect(updateSpy).to.have.been.calledWith('trimmed content');
+      });
+
+
+      it('should convert to FEEL when pasting content starting with =', function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          setValue: updateSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        input.dispatchEvent(createFeelPasteEvent('  =expression  '));
+
+        // then
+        expect(updateSpy).to.have.been.calledWith('=expression');
+
+        // Should also toggle to FEEL mode
+        return waitFor(() => {
+          expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.exist;
+        });
+      });
+
+
+      it('should trim pasted content when all text is selected (non-FEEL)', function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => 'existing text',
+          setValue: updateSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        input.focus();
+        input.setSelectionRange(0, input.value.length);
+
+        // when
+        input.dispatchEvent(createFeelPasteEvent('  new trimmed content  '));
+
+        // then
+        expect(updateSpy).to.have.been.calledWith('new trimmed content');
+      });
+
     });
 
   });
@@ -1251,6 +1323,53 @@ describe('<FeelEntry>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=2');
+        });
+      });
+
+
+      it('should trim pasted number content when field is empty', function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const result = createFeelNumber({
+          container,
+          feel: 'optional',
+          setValue: updateSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        input.dispatchEvent(createFeelPasteEvent('  123  '));
+
+        // then
+        expect(updateSpy).to.have.been.calledWith('123');
+      });
+
+
+      it('should convert to FEEL when pasting number expression starting with =', function() {
+
+        // given
+        const updateSpy = sinon.spy();
+
+        const result = createFeelNumber({
+          container,
+          feel: 'optional',
+          setValue: updateSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        input.dispatchEvent(createFeelPasteEvent('  =42 + 8  '));
+
+        // then
+        expect(updateSpy).to.have.been.calledWith('=42 + 8');
+
+        // Should also toggle to FEEL mode
+        return waitFor(() => {
+          expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.exist;
         });
       });
 
@@ -3054,6 +3173,21 @@ describe('<FeelEntry>', function() {
 
 
 // helpers ////////////////////
+
+function createFeelPasteEvent(textData, feelData = '') {
+  const pasteEvent = new ClipboardEvent('paste', {
+    bubbles: true,
+    cancelable: true,
+    clipboardData: new DataTransfer()
+  });
+
+  sinon.stub(pasteEvent.clipboardData, 'getData').callsFake((type) => {
+    if (type === 'application/FEEL') return feelData;
+    return textData;
+  });
+
+  return pasteEvent;
+}
 
 function createFeelField(options = {}, renderFn = render) {
   const {

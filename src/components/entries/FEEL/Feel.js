@@ -250,13 +250,26 @@ function FeelTextfield(props) {
         return;
       }
 
-      const data = event.clipboardData.getData('application/FEEL');
-
-      if (data) {
+      const feelData = event.clipboardData.getData('application/FEEL');
+      if (feelData) {
         setTimeout(() => {
           handleFeelToggle();
           setFocus();
         });
+        return;
+      }
+
+      const input = event.target;
+      const isFieldEmpty = !input.value;
+      const isAllSelected = input.selectionStart === 0 && input.selectionEnd === input.value.length;
+
+      if (isFieldEmpty || isAllSelected) {
+        const textData = event.clipboardData.getData('text');
+        const trimmedValue = textData.trim();
+
+        setLocalValue(trimmedValue);
+        handleInput(trimmedValue);
+        event.preventDefault();
       }
     };
     containerRef.current.addEventListener('copy', copyHandler);

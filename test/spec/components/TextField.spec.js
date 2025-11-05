@@ -416,6 +416,124 @@ describe('<TextField>', function() {
   });
 
 
+  describe('paste behavior', function() {
+
+    it('should trim pasted content when field is empty', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createTextField({
+        container,
+        setValue: setValueSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.dispatchEvent(createPasteEvent('  trimmed content  '));
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('trimmed content');
+    });
+
+
+    it('should trim pasted content when all text is selected', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createTextField({
+        container,
+        getValue: () => 'existing text',
+        setValue: setValueSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      input.focus();
+      input.setSelectionRange(0, input.value.length);
+
+      // when
+      input.dispatchEvent(createPasteEvent('  new trimmed content  '));
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('new trimmed content');
+    });
+
+
+    it('should allow default paste behavior when cursor is positioned in text', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+      const onPasteSpy = sinon.spy();
+
+      const result = createTextField({
+        container,
+        getValue: () => 'existing text',
+        setValue: setValueSpy,
+        onPaste: onPasteSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      input.focus();
+      input.setSelectionRange(4, 4);
+
+      // when
+      input.dispatchEvent(createPasteEvent('  content  '));
+
+      // then
+      expect(onPasteSpy).to.have.been.called;
+    });
+
+
+    it('should call onPaste callback when provided', function() {
+
+      // given
+      const onPasteSpy = sinon.spy();
+
+      const result = createTextField({
+        container,
+        onPaste: onPasteSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.dispatchEvent(createPasteEvent('test content'));
+
+      // then
+      expect(onPasteSpy).to.have.been.called;
+    });
+
+
+    it('should handle empty paste data', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createTextField({
+        container,
+        getValue: () => 'initial value',
+        setValue: setValueSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      input.focus();
+      input.setSelectionRange(0, input.value.length);
+
+      // when
+      input.dispatchEvent(createPasteEvent('   '));
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith(undefined);
+    });
+
+  });
+
+
   describe('events', function() {
 
     it('should show entry', function() {
@@ -744,6 +862,18 @@ describe('<TextField>', function() {
 
 
 // helpers ////////////////////
+
+function createPasteEvent(text) {
+  const pasteEvent = new ClipboardEvent('paste', {
+    bubbles: true,
+    cancelable: true,
+    clipboardData: new DataTransfer()
+  });
+
+  sinon.stub(pasteEvent.clipboardData, 'getData').withArgs('text').returns(text);
+
+  return pasteEvent;
+}
 
 function createTextField(options = {}, renderFn = render) {
   const {

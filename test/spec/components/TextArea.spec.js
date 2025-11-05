@@ -406,6 +406,120 @@ describe('<TextArea>', function() {
   });
 
 
+  describe('paste behavior', function() {
+
+    it('should trim pasted content when field is empty', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createTextArea({
+        container,
+        setValue: setValueSpy
+      });
+
+      const textarea = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      textarea.dispatchEvent(createPasteEvent('  trimmed\ncontent  '));
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('trimmed\ncontent');
+    });
+
+
+    it('should trim pasted content when all text is selected', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createTextArea({
+        container,
+        getValue: () => 'existing\ntext',
+        setValue: setValueSpy
+      });
+
+      const textarea = domQuery('.bio-properties-panel-input', result.container);
+
+      textarea.focus();
+      textarea.setSelectionRange(0, textarea.value.length);
+
+      // when
+      textarea.dispatchEvent(createPasteEvent('  new\ntrimmed content  '));
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('new\ntrimmed content');
+    });
+
+
+    it('should allow default paste behavior when cursor is positioned in text', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+      const onPasteSpy = sinon.spy();
+
+      const result = createTextArea({
+        container,
+        getValue: () => 'existing\ntext',
+        setValue: setValueSpy,
+        onPaste: onPasteSpy
+      });
+
+      const textarea = domQuery('.bio-properties-panel-input', result.container);
+
+      textarea.focus();
+      textarea.setSelectionRange(4, 4);
+
+      // when
+      textarea.dispatchEvent(createPasteEvent('  content  '));
+
+      // then
+      expect(onPasteSpy).to.have.been.called;
+    });
+
+
+    it('should call onPaste callback when provided', function() {
+
+      // given
+      const onPasteSpy = sinon.spy();
+
+      const result = createTextArea({
+        container,
+        onPaste: onPasteSpy
+      });
+
+      const textarea = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      textarea.dispatchEvent(createPasteEvent('test\ncontent'));
+
+      // then
+      expect(onPasteSpy).to.have.been.called;
+    });
+
+
+    it('should preserve newlines in pasted content', function() {
+
+      // given
+      const setValueSpy = sinon.spy();
+
+      const result = createTextArea({
+        container,
+        setValue: setValueSpy
+      });
+
+      const textarea = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      textarea.dispatchEvent(createPasteEvent('  line 1  \n  line 2  \n  line 3  '));
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('line 1  \n  line 2  \n  line 3');
+    });
+
+  });
+
+
   describe('events', function() {
 
     it('should show entry', function() {
@@ -846,6 +960,18 @@ describe('<TextArea>', function() {
 
 
 // helpers ////////////////////
+
+function createPasteEvent(text) {
+  const pasteEvent = new ClipboardEvent('paste', {
+    bubbles: true,
+    cancelable: true,
+    clipboardData: new DataTransfer()
+  });
+
+  sinon.stub(pasteEvent.clipboardData, 'getData').withArgs('text').returns(text);
+
+  return pasteEvent;
+}
 
 function createTextArea(options = {}, renderFn = render) {
   const {
