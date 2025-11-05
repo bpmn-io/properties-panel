@@ -1,6 +1,7 @@
 import {
   useRef,
-  useState
+  useState,
+  useEffect
 } from 'preact/hooks';
 
 import { useTooltipContext } from '../../hooks/useTooltipContext';
@@ -43,17 +44,25 @@ function Tooltip(props) {
   const [ visible, setVisible ] = useState(false);
 
   // Tooltip will be shown after SHOW_DELAY ms from hovering over the source element.
-  const SHOW_DELAY = 200;
-  let timeout = null;
+  const SHOW_DELAY = 250;
+
+  // Tooltip will be hidden after HIDE_DELAY ms leaving the source element or tooltip.
+  const HIDE_DELAY = SHOW_DELAY; // to not show double tooltips, those should be the same
+
+  const showTimeoutRef = useRef(null);
+  const hideTimeoutRef = useRef(null);
 
   const wrapperRef = useRef(null);
   const tooltipRef = useRef(null);
 
   const show = (_, delay) => {
+    clearTimeout(showTimeoutRef.current);
+    clearTimeout(hideTimeoutRef.current);
+
     if (visible) return;
 
     if (delay) {
-      timeout = setTimeout(() => {
+      showTimeoutRef.current = setTimeout(() => {
         setVisible(true);
       }, SHOW_DELAY);
     } else {
@@ -61,10 +70,50 @@ function Tooltip(props) {
     }
   };
 
-  const hide = () => {
-    clearTimeout(timeout);
-    setVisible(false);
+  const handleWrapperMouseEnter = (e) => {
+    show(e, true);
   };
+
+  const hide = (delay = false) => {
+    clearTimeout(showTimeoutRef.current);
+    clearTimeout(hideTimeoutRef.current);
+
+    if (delay) {
+      hideTimeoutRef.current = setTimeout(() => {
+        setVisible(false);
+      }, HIDE_DELAY);
+
+    } else {
+      setVisible(false);
+    }
+  };
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      clearTimeout(showTimeoutRef.current);
+      clearTimeout(hideTimeoutRef.current);
+    };
+  }, []);
+
+  // Handle click outside to close tooltip for non-focusable elements
+  useEffect(() => {
+    if (!visible) return;
+
+    const handleClickOutside = (e) => {
+
+      // If clicking outside both the wrapper and tooltip, hide it
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target) &&
+          tooltipRef.current && !tooltipRef.current.contains(e.target)) {
+        hide(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [ visible, hide ]);
 
   const handleMouseLeave = ({ relatedTarget }) => {
 
@@ -73,7 +122,11 @@ function Tooltip(props) {
       return;
     }
 
-    hide();
+    hide(true);
+  };
+
+  const handleTooltipMouseEnter = () => {
+    clearTimeout(hideTimeoutRef.current);
   };
 
   const handleFocusOut = (e) => {
@@ -104,6 +157,7 @@ function Tooltip(props) {
         style={ position || getTooltipPosition(wrapperRef.current) }
         ref={ tooltipRef }
         onClick={ (e)=> e.stopPropagation() }
+        onMouseEnter={ handleTooltipMouseEnter }
         onMouseLeave={ handleMouseLeave }
       >
         <div class="bio-properties-panel-tooltip-content">
@@ -116,7 +170,7 @@ function Tooltip(props) {
   return (
     <div class="bio-properties-panel-tooltip-wrapper" tabIndex="0"
       ref={ wrapperRef }
-      onMouseEnter={ (e) => show(e, true) }
+      onMouseEnter={ handleWrapperMouseEnter }
       onMouseLeave={ handleMouseLeave }
       onFocus={ show }
       onBlur={ handleFocusOut }

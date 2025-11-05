@@ -49,6 +49,12 @@ describe('<Tooltip>', function() {
     await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.exist);
   }
 
+  async function closeTooltip(element, blur = false) {
+    blur ? element.blur() : fireEvent.mouseLeave(element);
+
+    await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist);
+  }
+
 
   describe('render', function() {
 
@@ -90,7 +96,7 @@ describe('<Tooltip>', function() {
       expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
 
       // when
-      fireEvent.mouseLeave(wrapper);
+      await closeTooltip(wrapper);
 
       // expect
       expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
@@ -277,7 +283,7 @@ describe('<Tooltip>', function() {
         await openTooltip(wrapper);
 
         // when
-        fireEvent.mouseLeave(wrapper);
+        await closeTooltip(wrapper);
 
         // then
         expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
@@ -296,7 +302,7 @@ describe('<Tooltip>', function() {
 
         // when
         wrapper.focus();
-        fireEvent.mouseLeave(wrapper);
+        await closeTooltip(wrapper);
 
         // then
         expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
@@ -355,7 +361,7 @@ describe('<Tooltip>', function() {
         const link = domQuery('#link', container);
 
         link.focus();
-        fireEvent.mouseLeave(wrapper);
+        await closeTooltip(wrapper);
 
         // then
         expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
