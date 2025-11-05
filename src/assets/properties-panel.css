@@ -269,7 +269,6 @@
 
 .bio-properties-panel-group-header .bio-properties-panel-group-header-title {
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
   margin: 1px 12px 0;
 }
@@ -1164,6 +1163,16 @@ textarea.bio-properties-panel-input {
   display: flex;
   justify-content: center;
   width: fit-content;
+
+  /* Increase hover area with invisible padding */
+  padding: 5px 4px 4px 12px;
+  margin: -5px -4px -4px -12px;
+}
+
+.bio-properties-panel-tooltip-content-wrapper {
+  /* This element provides the visual bounds for positioning while wrapper handles hover area */
+  /* Use display inline to maintain bounding rect while not affecting layout */
+  display: inline;
 }
 
 .bio-properties-panel-tooltip {

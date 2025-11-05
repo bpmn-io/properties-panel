@@ -45,6 +45,7 @@ function Tooltip(props) {
   let timeout = null;
 
   const wrapperRef = useRef(null);
+  const contentRef = useRef(null);
   const tooltipRef = useRef(null);
 
   const show = (_, delay) => {
@@ -99,7 +100,7 @@ function Tooltip(props) {
         role="tooltip"
         id="bio-properties-panel-tooltip"
         aria-labelledby={ forId }
-        style={ position || getTooltipPosition(wrapperRef.current) }
+        style={ position || getTooltipPosition(contentRef.current) }
         ref={ tooltipRef }
         onClick={ (e)=> e.stopPropagation() }
         onMouseLeave={ handleMouseLeave }
@@ -120,7 +121,9 @@ function Tooltip(props) {
       onBlur={ handleFocusOut }
       onKeyDown={ hideTooltipViaEscape }
     >
+      <span class="bio-properties-panel-tooltip-content-wrapper" ref={ contentRef }>
       {props.children}
+      </span>
       {visible ?
         (parent ?
           createPortal(renderTooltip(), parent.current)
