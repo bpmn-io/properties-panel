@@ -41,6 +41,7 @@ function TextArea(props) {
     monospace,
     onFocus,
     onBlur,
+    onPaste,
     autoResize = true,
     placeholder,
     rows = autoResize ? 1 : 2,
@@ -83,6 +84,32 @@ function TextArea(props) {
 
     if (onBlur) {
       onBlur(e);
+    }
+  };
+
+  const handleOnPaste = e => {
+    const input = e.target;
+    const isFieldEmpty = !input.value;
+    const isAllSelected = input.selectionStart === 0 && input.selectionEnd === input.value.length;
+
+    // Trim and handle paste if field is empty or all content is selected
+    if (isFieldEmpty || isAllSelected) {
+      const trimmedValue = e.clipboardData.getData('text').trim();
+
+      setLocalValue(trimmedValue);
+      handleInput(trimmedValue);
+
+      if (onPaste) {
+        onPaste(e);
+      }
+
+      e.preventDefault();
+      return;
+    }
+
+    // Allow default paste behavior for normal text editing
+    if (onPaste) {
+      onPaste(e);
     }
   };
 
@@ -129,6 +156,7 @@ function TextArea(props) {
         onFocus={ onFocus }
         onKeyDown={ handleOnKeyDown }
         onBlur={ handleOnBlur }
+        onPaste={ handleOnPaste }
         placeholder={ placeholder }
         rows={ rows }
         value={ localValue }
@@ -150,6 +178,7 @@ function TextArea(props) {
  * @param {Function} props.setValue
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
+ * @param {Function} props.onPaste
  * @param {number} props.rows
  * @param {boolean} props.monospace
  * @param {Function} [props.validate]
@@ -170,6 +199,7 @@ export default function TextAreaEntry(props) {
     validate,
     onFocus,
     onBlur,
+    onPaste,
     placeholder,
     autoResize,
     tooltip
@@ -221,6 +251,7 @@ export default function TextAreaEntry(props) {
         onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
+        onPaste={ onPaste }
         rows={ rows }
         debounce={ debounce }
         monospace={ monospace }

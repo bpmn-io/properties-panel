@@ -29,6 +29,7 @@ function Textfield(props) {
     onInput: commitValue,
     onFocus,
     onBlur,
+    onPaste,
     placeholder,
     value = '',
     tooltip
@@ -57,6 +58,32 @@ function Textfield(props) {
 
     if (onBlur) {
       onBlur(e);
+    }
+  };
+
+  const handleOnPaste = e => {
+    const input = e.target;
+    const isFieldEmpty = !input.value;
+    const isAllSelected = input.selectionStart === 0 && input.selectionEnd === input.value.length;
+
+    // Trim and handle paste if field is empty or all content is selected (overwrite)
+    if (isFieldEmpty || isAllSelected) {
+      const trimmedValue = e.clipboardData.getData('text').trim();
+
+      setLocalValue(trimmedValue);
+      handleInput(trimmedValue);
+
+      if (onPaste) {
+        onPaste(e);
+      }
+
+      e.preventDefault();
+      return;
+    }
+
+    // Allow default paste behavior for normal text editing
+    if (onPaste) {
+      onPaste(e);
     }
   };
 
@@ -104,6 +131,7 @@ function Textfield(props) {
         onFocus={ onFocus }
         onKeyDown={ handleOnKeyDown }
         onBlur={ handleOnBlur }
+        onPaste={ handleOnPaste }
         placeholder={ placeholder }
         value={ localValue } />
     </div>
@@ -138,6 +166,7 @@ export default function TextfieldEntry(props) {
     validate,
     onFocus,
     onBlur,
+    onPaste,
     placeholder,
     tooltip
   } = props;
@@ -189,6 +218,7 @@ export default function TextfieldEntry(props) {
         onInput={ onInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
+        onPaste={ onPaste }
         placeholder={ placeholder }
         value={ value }
         tooltip={ tooltip }
