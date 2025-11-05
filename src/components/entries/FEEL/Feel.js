@@ -160,6 +160,7 @@ function FeelTextfield(props) {
     } else {
       const trimmedValue = e.target.value.trim();
       onInput(trimmedValue);
+      setLocalValue(trimmedValue);
     }
 
     if (onBlur) {

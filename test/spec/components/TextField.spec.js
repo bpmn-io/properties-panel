@@ -99,6 +99,7 @@ describe('<TextField>', function() {
     expect(newInput).to.not.eql(input);
   });
 
+
   it('should trim whitespace on blur', async function() {
 
     // given
@@ -112,13 +113,16 @@ describe('<TextField>', function() {
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
-    input.focus();
-    changeInput(input, '  foo  ');
-    input.blur();
+    await act(async () => {
+      input.focus();
+      changeInput(input, '  foo  ');
+      input.blur();
+    });
 
     // then
     expect(setValueSpy).to.have.been.calledTwice;
     expect(setValueSpy).to.have.been.calledWith('foo');
+    expect(input.value).to.equal('foo');
   });
 
 
@@ -159,14 +163,17 @@ describe('<TextField>', function() {
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
-    input.focus();
-    changeInput(input, 'hello   ');
-    input.blur();
+    await act(async () => {
+      input.focus();
+      changeInput(input, 'hello   ');
+      input.blur();
+    });
 
     await new Promise(resolve => setTimeout(resolve, 1));
 
     // then
     expect(setValueSpy).to.have.been.calledOnceWith('hello');
+    expect(input.value).to.equal('hello');
   });
 
 

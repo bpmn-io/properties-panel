@@ -55,6 +55,7 @@ function Textfield(props) {
     // trim and commit on blur
     handleInput.cancel?.();
     onInput(trimmedValue);
+    setLocalValue(trimmedValue);
 
     if (onBlur) {
       onBlur(e);

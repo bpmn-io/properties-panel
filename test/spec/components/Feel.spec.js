@@ -102,13 +102,16 @@ describe('<FeelEntry>', function() {
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
-      input.focus();
-      changeInput(input, '  foo  ');
-      input.blur();
+      await act(() => {
+        input.focus();
+        changeInput(input, '  foo  ');
+        input.blur();
+      });
 
       // then
       expect(setValueSpy).to.have.been.calledTwice;
       expect(setValueSpy).to.have.been.calledWith('foo');
+      expect(input.value).to.equal('foo');
     });
 
 
@@ -1400,6 +1403,7 @@ describe('<FeelEntry>', function() {
       expect(input).to.exist;
     });
 
+
     // https://github.com/bpmn-io/bpmn-js-properties-panel/issues/810
     it('should be flagged with data-gramm="false"', function() {
 
@@ -1411,6 +1415,7 @@ describe('<FeelEntry>', function() {
       // then
       expect(input.dataset.gramm).to.eql('false');
     });
+
 
     it('should update', function() {
 
@@ -1442,13 +1447,16 @@ describe('<FeelEntry>', function() {
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
-      input.focus();
-      changeInput(input, '  foo  ');
-      input.blur();
+      await act(() => {
+        input.focus();
+        changeInput(input, '  foo  ');
+        input.blur();
+      });
 
       // then
       expect(setValueSpy).to.have.been.calledTwice;
       expect(setValueSpy).to.have.been.calledWith('foo');
+      expect(input.value).to.equal('foo');
     });
 
 
@@ -1489,14 +1497,17 @@ describe('<FeelEntry>', function() {
       const input = domQuery('.bio-properties-panel-input', result.container);
 
       // when
-      input.focus();
-      changeInput(input, 'hello   ');
-      input.blur();
+      await act(() => {
+        input.focus();
+        changeInput(input, 'hello   ');
+        input.blur();
+      });
 
       await new Promise(resolve => setTimeout(resolve, 1));
 
       // then
       expect(setValueSpy).to.have.been.calledOnceWith('hello');
+      expect(input.value).to.equal('hello');
     });
 
 
