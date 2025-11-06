@@ -20,6 +20,8 @@ import {
 import { isFunction } from 'min-dash';
 import Tooltip from './Tooltip';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 function resizeToContents(element) {
   element.style.height = 'auto';
 

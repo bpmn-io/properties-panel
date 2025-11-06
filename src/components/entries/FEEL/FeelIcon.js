@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import { FeelIcon as FeelIconSvg } from '../../icons';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 const noop = () => {};
 
 /**

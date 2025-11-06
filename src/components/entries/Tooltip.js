@@ -7,6 +7,8 @@ import { useTooltipContext } from '../../hooks/useTooltipContext';
 
 import { createPortal } from 'preact/compat';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 /**
  * @param {Object} props
  * @param {String} props.forId

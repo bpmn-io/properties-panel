@@ -10,6 +10,8 @@ import { useStaticCallback } from '../../../hooks';
 
 import { OpenPopupButton } from '../../OpenPopupButton';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 const noop = () => {};
 
 /**
