@@ -11,6 +11,8 @@ import { isFunction } from 'min-dash';
 import CollapsibleEntry from './entries/Collapsible';
 import translateFallback from './util/translateFallback';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 /**
  * @param {import('../PropertiesPanel').ListItemDefinition} props
  */
