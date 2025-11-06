@@ -10,6 +10,8 @@ import { DragIcon, CloseIcon } from '../../../components/icons';
 
 import { createDragger } from '../../../components/util/dragger';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 const noop = () => {};
 
 /**

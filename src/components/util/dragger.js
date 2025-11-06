@@ -1,5 +1,7 @@
 import { domify } from 'min-dom';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 /**
  * Add a dragger that calls back the passed function with
  * { event, delta } on drag.

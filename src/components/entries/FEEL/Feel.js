@@ -34,6 +34,8 @@ import { ToggleSwitch } from '../ToggleSwitch';
 import { NumberField } from '../NumberField';
 import Tooltip from '../Tooltip';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 const noop = () => {};
 
 /**

@@ -4,6 +4,8 @@ import TemplatingEditor from '../../../components/entries/templating/TemplatingE
 import { LaunchIcon } from '../../../components/icons';
 import { Popup } from './Popup';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 /**
  * @typedef {Object} FeelPopupProps
  * @property {string} entryId

@@ -1,5 +1,7 @@
 import { OpenPopupIcon } from './icons';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 /**
  * Button to open popups.
  *

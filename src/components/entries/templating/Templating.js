@@ -6,6 +6,8 @@ import classnames from 'classnames';
 import Description from '../Description';
 import TemplatingEditor from './TemplatingEditor';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 const noop = () => {};
 
 /**

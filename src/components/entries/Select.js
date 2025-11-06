@@ -15,6 +15,8 @@ import {
 import Description from './Description';
 import Tooltip from './Tooltip';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 /**
  * @typedef { { value: string, label: string, disabled: boolean, children: { value: string, label: string, disabled: boolean } } } Option
  */

@@ -3,6 +3,8 @@ import { FeelPopup } from './components';
 import { query as domQuery } from 'min-dom';
 import { isString } from 'min-dash';
 
+{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+
 
 export class FeelPopupRenderer {
   constructor(eventBus) {
