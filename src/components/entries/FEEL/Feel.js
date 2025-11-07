@@ -136,7 +136,7 @@ function FeelTextfield(props) {
     }
   });
 
-  const handleLocalInput = (newValue) => {
+  const handleLocalInput = (newValue, useDebounce = true) => {
     if (feelActive) {
       newValue = '=' + newValue;
     }
@@ -146,7 +146,11 @@ function FeelTextfield(props) {
     }
 
     setLocalValue(newValue);
-    handleInput(newValue);
+    if (useDebounce) {
+      handleInput(newValue);
+    } else {
+      onInput(newValue);
+    }
 
     if (!feelActive && isString(newValue) && newValue.startsWith('=')) {
 
@@ -161,8 +165,7 @@ function FeelTextfield(props) {
       onInput(e.target.checked);
     } else {
       const trimmedValue = e.target.value.trim();
-      onInput(trimmedValue);
-      setLocalValue(trimmedValue);
+      handleLocalInput(trimmedValue, false);
     }
 
     if (onBlur) {

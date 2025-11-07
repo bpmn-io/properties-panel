@@ -852,6 +852,38 @@ describe('<FeelEntry>', function() {
         expect(updateSpy).to.have.been.calledWith('new trimmed content');
       });
 
+
+      it('should preserve FEEL toggle when pasting FEEL expression and then blurring', async function() {
+
+        // given
+        const setValueSpy = sinon.spy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => '',
+          setValue: setValueSpy
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.not.exist;
+
+        // when
+        input.focus();
+        input.dispatchEvent(createFeelPasteEvent('=test'));
+
+        await waitFor(() => {
+          expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.exist;
+        });
+
+        input.blur();
+
+        // then
+        expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.exist;
+        expect(setValueSpy).to.have.been.calledWith('=test');
+      });
+
     });
 
   });
