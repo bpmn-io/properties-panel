@@ -46,13 +46,13 @@ describe('<Tooltip>', function() {
   async function openTooltip(element, focus = false) {
     focus ? element.focus() : fireEvent.mouseEnter(element);
 
-    await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.exist);
+    await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.exist, { timeout: 50 });
   }
 
   async function closeTooltip(element, blur = false) {
     blur ? element.blur() : fireEvent.mouseLeave(element);
 
-    await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist);
+    await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 50 });
   }
 
 
@@ -99,7 +99,7 @@ describe('<Tooltip>', function() {
       await closeTooltip(wrapper);
 
       // expect
-      await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 500 });
+      await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 50 });
     });
 
 
@@ -233,6 +233,7 @@ describe('<Tooltip>', function() {
       id: 'tooltipCheckbox',
       value: null,
       tooltipConfig,
+
       getTooltipForId: (id, element) => tooltipConfig[id](element)
     });
 
@@ -286,7 +287,7 @@ describe('<Tooltip>', function() {
         await closeTooltip(wrapper);
 
         // then
-        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 500 });
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 50 });
       });
 
 
@@ -305,7 +306,7 @@ describe('<Tooltip>', function() {
         await closeTooltip(wrapper);
 
         // then
-        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 500 });
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 50 });
       });
 
 
@@ -341,6 +342,21 @@ describe('<Tooltip>', function() {
         expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
       });
 
+
+      it('should hide tooltip on Escape key', async function() {
+
+        // given
+        createTooltip({ container });
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+        await openTooltip(wrapper, true); // open via focus
+
+        // when
+        fireEvent.keyDown(wrapper, { key: 'Escape', code: 'Escape' });
+
+        // then
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 50 });
+      });
+
     });
 
 
@@ -364,7 +380,7 @@ describe('<Tooltip>', function() {
         await closeTooltip(wrapper);
 
         // then
-        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 500 });
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 50 });
       });
 
 
@@ -388,6 +404,92 @@ describe('<Tooltip>', function() {
         expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
       });
 
+
+      it('should keep tooltip open during text selection in tooltip', async function() {
+
+        // given
+        const tooltipContent = <div>
+          <span id="selectable-text">This is some selectable text content</span>
+        </div>;
+
+        createTooltip({ container, value: tooltipContent });
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+        await openTooltip(wrapper);
+
+        // when - simulate text selection by creating a selection range
+        const selectableText = domQuery('#selectable-text');
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(selectableText);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // trigger mouse leave while text is selected
+        fireEvent.mouseLeave(wrapper, { relatedTarget: document.body });
+
+        // then - tooltip should remain visible due to active selection
+        expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
+
+        // cleanup
+        selection.removeAllRanges();
+      });
+
+    });
+
+
+    it('should hide tooltip when clicking outside wrapper and tooltip', async function() {
+
+      // given
+      createTooltip({ container, showDelay: 50, hideDelay: 50 });
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+      await openTooltip(wrapper);
+
+      // wait for useEffect to register the event listener
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      // create an element outside the tooltip
+      const outsideElement = document.createElement('div');
+      document.body.appendChild(outsideElement);
+
+      // when - click outside both wrapper and tooltip
+      fireEvent.mouseDown(outsideElement);
+
+      // then
+      await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 100 });
+
+      // cleanup
+      document.body.removeChild(outsideElement);
+    });
+
+
+    it('should not hide tooltip when clicking on wrapper', async function() {
+
+      // given
+      createTooltip({ container });
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+      await openTooltip(wrapper);
+
+      // when - click on wrapper
+      fireEvent.mouseDown(wrapper);
+
+      // then - tooltip should remain visible
+      expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
+    });
+
+
+    it('should not hide tooltip when clicking on tooltip content', async function() {
+
+      // given
+      createTooltip({ container });
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+      await openTooltip(wrapper);
+
+      // when - click on tooltip itself
+      const tooltip = domQuery('.bio-properties-panel-tooltip');
+      fireEvent.mouseDown(tooltip);
+
+      // then - tooltip should remain visible
+      expect(domQuery('.bio-properties-panel-tooltip')).to.exist;
     });
 
   });
@@ -436,6 +538,18 @@ describe('<Tooltip>', function() {
 
 // helpers ////////////////////
 
+/**
+ * @typedef {import('../../../src/components/entries/Tooltip.js').TooltipProps} TooltipProps
+ */
+
+/**
+ * @param {TooltipProps & {
+ *   value?: String,
+ *   id?: String,
+ *   tooltipConfig?: Object,
+ *   getTooltipForId?: Function
+ * }} props - All tooltip props plus test helpers
+ */
 function TooltipComponent(props) {
   const {
     value = 'tooltip text',
@@ -444,7 +558,9 @@ function TooltipComponent(props) {
     getTooltipForId = ()=>{},
     parent,
     direction,
-    position
+    position,
+    showDelay = 10, // Fast delays for testing
+    hideDelay = 10
   } = props;
 
   const tooltipContext = {
@@ -454,7 +570,15 @@ function TooltipComponent(props) {
 
   return (
     <TooltipContext.Provider value={ tooltipContext }>
-      <Tooltip forId={ id } value={ value } parent={ parent } direction={ direction } position={ position }>
+      <Tooltip
+        forId={ id }
+        value={ value }
+        parent={ parent }
+        direction={ direction }
+        position={ position }
+        showDelay={ showDelay }
+        hideDelay={ hideDelay }
+      >
         <div id={ id }>foo</div>
       </Tooltip>
     </TooltipContext.Provider>
@@ -469,7 +593,16 @@ function TooltipWithParent() {
   </div>;
 }
 
-
+/**
+ * @param {TooltipProps & {
+ *   container?: HTMLElement,
+ *   value?: *,
+ *   id?: String,
+ *   tooltipConfig?: Object,
+ *   getTooltipForId?: Function
+ * }} [options={}] - Configuration options for the tooltip (extends TooltipProps with test-specific properties)
+ * @param {Function} [renderFn=render] - Render function to use (defaults to @testing-library/preact render)
+ */
 function createTooltip(options = {}, renderFn = render) {
   const {
     container
