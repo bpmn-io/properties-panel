@@ -82,7 +82,6 @@ function Tooltip(props) {
       hideTimeoutRef.current = setTimeout(() => {
         setVisible(false);
       }, HIDE_DELAY);
-
     } else {
       setVisible(false);
     }
@@ -122,6 +121,18 @@ function Tooltip(props) {
       return;
     }
 
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) {
+
+      // Check if selection is within tooltip content
+      const selectionRange = selection.getRangeAt(0);
+      if (tooltipRef.current?.contains(selectionRange.commonAncestorContainer) ||
+          tooltipRef.current?.contains(selection.anchorNode) ||
+          tooltipRef.current?.contains(selection.focusNode)) {
+        return; // Keep tooltip open during text selection
+      }
+    }
+
     hide(true);
   };
 
@@ -130,21 +141,19 @@ function Tooltip(props) {
   };
 
   const handleFocusOut = (e) => {
-    const { target } = e;
+    const { relatedTarget } = e;
 
-    // Don't hide the tooltip if the wrapper or the tooltip itself is clicked.
-    const isHovered = target.matches(':hover') || tooltipRef.current?.matches(':hover');
-
-    if (target === wrapperRef.current && isHovered) {
-      e.stopPropagation();
+    // Don't hide if focus moved to the tooltip or another element within the wrapper
+    if (tooltipRef.current?.contains(relatedTarget) ||
+        wrapperRef.current?.contains(relatedTarget)) {
       return;
     }
 
-    hide();
+    hide(false);
   };
 
   const hideTooltipViaEscape = (e) => {
-    e.code === 'Escape' && hide();
+    e.code === 'Escape' && hide(false);
   };
 
   const renderTooltip = () => {
