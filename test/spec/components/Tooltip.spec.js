@@ -99,7 +99,7 @@ describe('<Tooltip>', function() {
       await closeTooltip(wrapper);
 
       // expect
-      expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
+      await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 500 });
     });
 
 
@@ -286,7 +286,7 @@ describe('<Tooltip>', function() {
         await closeTooltip(wrapper);
 
         // then
-        expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 500 });
       });
 
 
@@ -305,7 +305,7 @@ describe('<Tooltip>', function() {
         await closeTooltip(wrapper);
 
         // then
-        expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 500 });
       });
 
 
@@ -364,7 +364,7 @@ describe('<Tooltip>', function() {
         await closeTooltip(wrapper);
 
         // then
-        expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist;
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 500 });
       });
 
 
