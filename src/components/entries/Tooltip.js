@@ -11,9 +11,24 @@ import { createPortal } from 'preact/compat';
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 /**
- * @param {Object} props
- * @param {String} props.forId
- * @param {String} props.value
+ * @typedef {Object} TooltipProps
+ * @property {Object} [parent] - Parent element ref for portal rendering
+ * @property {String} [direction='right'] - Tooltip direction ( 'right', 'top')
+ * @property {String} [position] - Custom CSS position override
+ * @property {Number} [showDelay=250] - Delay in ms before showing tooltip on hover
+ * @property {Number} [hideDelay=250] - Delay in ms before hiding tooltip when mouse leaves, to avoid multiple tooltips from being opened, this should be the same as showDelay
+ * @property {*} [children] - Child elements to render inside the tooltip wrapper
+ */
+
+/**
+ * Tooltip wrapper that provides context-based tooltip content lookup.
+ * All props are forwarded to the underlying Tooltip component.
+ *
+ * @param {TooltipProps & {
+ *   forId: String,
+ *   value?: String|Object,
+ *   element?: Object
+ * }} props - Shared tooltip props plus wrapper-specific ones
  */
 export default function TooltipWrapper(props) {
   const {
@@ -32,22 +47,24 @@ export default function TooltipWrapper(props) {
   return <Tooltip { ...props } value={ value } forId={ `bio-properties-panel-${ forId }` } />;
 }
 
+/**
+ * @param {TooltipProps & {
+ *   forId: String,
+ *   value: String|Object
+ * }} props
+ */
 function Tooltip(props) {
   const {
     forId,
     value,
     parent,
     direction = 'right',
-    position
+    position,
+    showDelay = 250,
+    hideDelay = 250
   } = props;
 
   const [ visible, setVisible ] = useState(false);
-
-  // Tooltip will be shown after SHOW_DELAY ms from hovering over the source element.
-  const SHOW_DELAY = 250;
-
-  // Tooltip will be hidden after HIDE_DELAY ms leaving the source element or tooltip.
-  const HIDE_DELAY = SHOW_DELAY; // to not show double tooltips, those should be the same
 
   const showTimeoutRef = useRef(null);
   const hideTimeoutRef = useRef(null);
@@ -64,7 +81,7 @@ function Tooltip(props) {
     if (delay) {
       showTimeoutRef.current = setTimeout(() => {
         setVisible(true);
-      }, SHOW_DELAY);
+      }, showDelay);
     } else {
       setVisible(true);
     }
@@ -81,7 +98,7 @@ function Tooltip(props) {
     if (delay) {
       hideTimeoutRef.current = setTimeout(() => {
         setVisible(false);
-      }, HIDE_DELAY);
+      }, hideDelay);
     } else {
       setVisible(false);
     }
