@@ -252,7 +252,7 @@ describe('<Group>', function() {
 
   describe('title attributes', function() {
 
-    it('should have title for empty groups', function() {
+    it('should NOT have title for empty groups', function() {
 
       // given
       const result = createGroup({ container, label: 'Group' });
@@ -262,11 +262,11 @@ describe('<Group>', function() {
       const title = domQuery('.bio-properties-panel-group-header-title', header);
 
       // then
-      expect(domAttr(title, 'title')).to.eql('Group');
+      expect(domAttr(title, 'title')).to.not.exist;
     });
 
 
-    it('should not have title for groups with tooltip', function() {
+    it('should NOT have title for groups with tooltip', function() {
 
       // given
       const result = createGroup({ container, label: 'Group', tooltip: 'foo' });
@@ -280,7 +280,7 @@ describe('<Group>', function() {
     });
 
 
-    it('should have title for configured groups', function() {
+    it('should have title for data marker (configured groups)', function() {
 
       // given
       const entries = createEntries({

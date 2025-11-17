@@ -836,7 +836,7 @@ describe('<ListGroup>', function() {
 
   describe('title attributes', function() {
 
-    it('should have title for empty lists', function() {
+    it('should NOT have title for empty lists', function() {
 
       // given
       const { container } = createListGroup({ container: parentContainer });
@@ -846,11 +846,11 @@ describe('<ListGroup>', function() {
       const title = domQuery('.bio-properties-panel-group-header-title', header);
 
       // then
-      expect(domAttr(title, 'title')).to.eql('List');
+      expect(domAttr(title, 'title')).to.not.exist;
     });
 
 
-    it('should not have title for lists with tooltip', function() {
+    it('should NOT have title for lists with tooltip', function() {
 
       // given
       const { container } = createListGroup({ container: parentContainer, tooltip: 'foo' });
@@ -864,7 +864,7 @@ describe('<ListGroup>', function() {
     });
 
 
-    it('should have title for list with items', function() {
+    it('should have title for list with items (member indicator)', function() {
 
       // given
       const items = [
