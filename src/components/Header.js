@@ -41,9 +41,9 @@ export default function Header(props) {
       { ElementIcon && <ElementIcon width="32" height="32" viewBox="0 0 32 32" /> }
     </div>
     <div class="bio-properties-panel-header-labels">
-      <div title={ type } class="bio-properties-panel-header-type">{ type }</div>
+      <div class="bio-properties-panel-header-type">{ type }</div>
       { label ?
-        <div title={ label } class="bio-properties-panel-header-label">{ label }</div> :
+        <div class="bio-properties-panel-header-label">{ label }</div> :
         null
       }
     </div>

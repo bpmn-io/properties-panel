@@ -104,7 +104,6 @@ export default function List(props) {
         ) }
         onClick={ toggleOpen }>
         <div
-          title={ label }
           class={ classnames(
             'bio-properties-panel-list-entry-header-title',
             open && 'open'

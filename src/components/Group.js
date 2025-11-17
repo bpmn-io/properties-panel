@@ -106,8 +106,6 @@ export default function Group(props) {
       (sticky && open) ? 'sticky' : ''
     ) } onClick={ toggleOpen }>
       <div
-        title={ props.tooltip ? null : label }
-        data-title={ label }
         class="bio-properties-panel-group-header-title"
       >
         <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element } parent={ groupRef }>
