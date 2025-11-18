@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.34.0
+
+* `FEAT`: remove title attribute when unnecessary ([#455](https://github.com/bpmn-io/properties-panel/pull/455))
+* `FIX`: improve tooltip behavior ([#451](https://github.com/bpmn-io/properties-panel/pull/451))
+* `FIX`: correctly handle trimming and debouncing ([#450](https://github.com/bpmn-io/properties-panel/pull/450), [#309](https://github.com/bpmn-io/properties-panel/issues/309))
+
 ## 3.33.2
 
 * `FIX`: remove empty values (`""`) also after blurring input fields([#449](https://github.com/bpmn-io/properties-panel/pull/449))
