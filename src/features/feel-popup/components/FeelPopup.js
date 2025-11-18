@@ -53,7 +53,7 @@ export function FeelPopup(props) {
   const editorRef = useRef();
   const popupRef = useRef();
 
-  const isAutoCompletionOpen = useRef(false);
+  const isAutoCompletionOpenRef = useRef(false);
 
   const handleSetReturnFocus = () => {
     sourceElement && sourceElement.focus();
@@ -63,7 +63,7 @@ export function FeelPopup(props) {
 
     // we use capture here to make sure we handle the event before the editor does
     if (event.key === 'Escape') {
-      isAutoCompletionOpen.current = autoCompletionOpen(event.target);
+      isAutoCompletionOpenRef.current = autoCompletionOpen(event.target);
     }
   };
 
@@ -71,9 +71,9 @@ export function FeelPopup(props) {
     if (event.key === 'Escape') {
 
       // close popup only if auto completion is not open
-      if (!isAutoCompletionOpen.current) {
+      if (!isAutoCompletionOpenRef.current) {
         onClose();
-        isAutoCompletionOpen.current = false;
+        isAutoCompletionOpenRef.current = false;
       }
     }
   };

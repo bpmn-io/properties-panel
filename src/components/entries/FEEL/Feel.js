@@ -364,23 +364,25 @@ const OptionalFeelInput = forwardRef((props, ref) => {
 
   // To be consistent with the FEEL editor, set focus at start of input
   // this ensures clean editing experience when switching with the keyboard
-  ref.current = {
-    focus: (position) => {
-      const input = inputRef.current;
-      if (!input) {
-        return;
-      }
-
-      input.focus();
-      if (typeof position === 'number') {
-        if (position > value.length) {
-          position = value.length;
+  useEffect(() => {
+    ref.current = {
+      focus: (position) => {
+        const input = inputRef.current;
+        if (!input) {
+          return;
         }
-        input.setSelectionRange(position, position);
-      }
 
-    }
-  };
+        input.focus();
+        if (typeof position === 'number') {
+          if (position > value.length) {
+            position = value.length;
+          }
+          input.setSelectionRange(position, position);
+        }
+
+      }
+    };
+  }, [ ref, value ]);
 
   return <input
     id={ prefixId(id) }
@@ -417,23 +419,25 @@ const OptionalFeelNumberField = forwardRef((props, ref) => {
 
   // To be consistent with the FEEL editor, set focus at start of input
   // this ensures clean editing experience when switching with the keyboard
-  ref.current = {
-    focus: (position) => {
-      const input = inputRef.current;
-      if (!input) {
-        return;
-      }
-
-      input.focus();
-      if (typeof position === 'number' && position !== Infinity) {
-        if (position > value.length) {
-          position = value.length;
+  useEffect(() => {
+    ref.current = {
+      focus: (position) => {
+        const input = inputRef.current;
+        if (!input) {
+          return;
         }
-        input.setSelectionRange(position, position);
-      }
 
-    }
-  };
+        input.focus();
+        if (typeof position === 'number' && position !== Infinity) {
+          if (position > value.length) {
+            position = value.length;
+          }
+          input.setSelectionRange(position, position);
+        }
+
+      }
+    };
+  }, [ ref, value ]);
 
   return <NumberField
     id={ id }
@@ -466,17 +470,19 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
 
   // To be consistent with the FEEL editor, set focus at start of input
   // this ensures clean editing experience when switching with the keyboard
-  ref.current = {
-    focus: () => {
-      const input = inputRef.current;
-      if (!input) {
-        return;
-      }
+  useEffect(() => {
+    ref.current = {
+      focus: () => {
+        const input = inputRef.current;
+        if (!input) {
+          return;
+        }
 
-      input.focus();
-      input.setSelectionRange(0, 0);
-    }
-  };
+        input.focus();
+        input.setSelectionRange(0, 0);
+      }
+    };
+  }, [ ref ]);
 
   return <textarea
     id={ prefixId(id) }
@@ -510,16 +516,18 @@ const OptionalFeelToggleSwitch = forwardRef((props, ref) => {
 
   // To be consistent with the FEEL editor, set focus at start of input
   // this ensures clean editing experience when switching with the keyboard
-  ref.current = {
-    focus: () => {
-      const input = inputRef.current;
-      if (!input) {
-        return;
-      }
+  useEffect(() => {
+    ref.current = {
+      focus: () => {
+        const input = inputRef.current;
+        if (!input) {
+          return;
+        }
 
-      input.focus();
-    }
-  };
+        input.focus();
+      }
+    };
+  }, [ ref ]);
 
   return <ToggleSwitch
     id={ id }
@@ -549,16 +557,18 @@ const OptionalFeelCheckbox = forwardRef((props, ref) => {
 
   // To be consistent with the FEEL editor, set focus at start of input
   // this ensures clean editing experience when switching with the keyboard
-  ref.current = {
-    focus: () => {
-      const input = inputRef.current;
-      if (!input) {
-        return;
-      }
+  useEffect(() => {
+    ref.current = {
+      focus: () => {
+        const input = inputRef.current;
+        if (!input) {
+          return;
+        }
 
-      input.focus();
-    }
-  };
+        input.focus();
+      }
+    };
+  }, [ ref ]);
 
   return <input
     ref={ inputRef }

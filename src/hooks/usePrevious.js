@@ -1,6 +1,7 @@
 import {
   useEffect,
-  useRef
+  useRef,
+  useState
 } from 'preact/hooks';
 
 /**
@@ -11,9 +12,13 @@ import {
  */
 
 export function usePrevious(value) {
-  const ref = useRef();
+  const ref = useRef(value);
+  const [ prev, setPrev ] = useState(undefined);
+
   useEffect(() => {
+    setPrev(ref.current);
     ref.current = value;
-  });
-  return ref.current;
+  }, [ value ]);
+
+  return prev;
 }

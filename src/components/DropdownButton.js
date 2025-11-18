@@ -45,7 +45,7 @@ export function DropdownButton(props) {
     action();
   }
 
-  useGlobalClick([ dropdownRef.current ], () => close());
+  useGlobalClick([ dropdownRef ], () => close());
 
   return (
     <div
@@ -87,7 +87,7 @@ function MenuItem({ item, onClick }) {
 
 /**
  *
- * @param {Array<null | Element>} ignoredElements
+ * @param {Array<null | Element | Ref>} ignoredElements - Array of elements or refs
  * @param {Function} callback
  */
 function useGlobalClick(ignoredElements, callback) {
@@ -97,7 +97,8 @@ function useGlobalClick(ignoredElements, callback) {
      * @param {MouseEvent} event
      */
     function listener(event) {
-      if (ignoredElements.some(element => element && element.contains(event.target))) {
+      const elements = ignoredElements.map(el => el && (el.current || el));
+      if (elements.some(element => element && element.contains(event.target))) {
         return;
       }
 
@@ -107,5 +108,5 @@ function useGlobalClick(ignoredElements, callback) {
     document.addEventListener('click', listener, { capture: true });
 
     return () => document.removeEventListener('click', listener, { capture: true });
-  }, [ ...ignoredElements, callback ]);
+  }, [ ignoredElements, callback ]);
 }

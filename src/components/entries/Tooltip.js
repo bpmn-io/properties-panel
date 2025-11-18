@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useRef,
   useState
 } from 'preact/hooks';
@@ -44,7 +45,7 @@ function Tooltip(props) {
 
   // Tooltip will be shown after SHOW_DELAY ms from hovering over the source element.
   const SHOW_DELAY = 200;
-  let timeout = null;
+  const timeoutRef = useRef(null);
 
   const wrapperRef = useRef(null);
   const tooltipRef = useRef(null);
@@ -53,7 +54,7 @@ function Tooltip(props) {
     if (visible) return;
 
     if (delay) {
-      timeout = setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setVisible(true);
       }, SHOW_DELAY);
     } else {
@@ -62,7 +63,7 @@ function Tooltip(props) {
   };
 
   const hide = () => {
-    clearTimeout(timeout);
+    clearTimeout(timeoutRef.current);
     setVisible(false);
   };
 
@@ -94,24 +95,31 @@ function Tooltip(props) {
     e.code === 'Escape' && hide();
   };
 
-  const renderTooltip = () => {
-    return (
-      <div
-        class={ `bio-properties-panel-tooltip ${direction}` }
-        role="tooltip"
-        id="bio-properties-panel-tooltip"
-        aria-labelledby={ forId }
-        style={ position || getTooltipPosition(wrapperRef.current) }
-        ref={ tooltipRef }
-        onClick={ (e)=> e.stopPropagation() }
-        onMouseLeave={ handleMouseLeave }
-      >
-        <div class="bio-properties-panel-tooltip-content">
-          {value}
-        </div>
-        <div class="bio-properties-panel-tooltip-arrow" />
+  const [ tooltipPosition, setTooltipPosition ] = useState(null);
+
+  useEffect(() => {
+    if (visible && !position && wrapperRef.current) {
+      setTooltipPosition(getTooltipPosition(wrapperRef.current));
+    }
+  }, [ visible, position ]);
+
+  const tooltipContent = visible && (
+    <div
+      class={ `bio-properties-panel-tooltip ${direction}` }
+      role="tooltip"
+      id="bio-properties-panel-tooltip"
+      aria-labelledby={ forId }
+      style={ position || tooltipPosition }
+      ref={ tooltipRef }
+      onClick={ (e)=> e.stopPropagation() }
+      onMouseLeave={ handleMouseLeave }
+    >
+      <div class="bio-properties-panel-tooltip-content">
+        {value}
       </div>
-    );};
+      <div class="bio-properties-panel-tooltip-arrow" />
+    </div>
+  );
 
   return (
     <div class="bio-properties-panel-tooltip-wrapper" tabIndex="0"
@@ -123,12 +131,7 @@ function Tooltip(props) {
       onKeyDown={ hideTooltipViaEscape }
     >
       {props.children}
-      {visible ?
-        (parent ?
-          createPortal(renderTooltip(), parent.current)
-          : renderTooltip()
-        ) : null
-      }
+      {parent ? createPortal(tooltipContent, parent.current) : tooltipContent}
     </div>
   );
 }

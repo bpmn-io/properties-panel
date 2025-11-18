@@ -150,7 +150,7 @@ function Title(props) {
 
   // we can't use state as we need to
   // manipulate this inside dragging events
-  const context = useRef({
+  const contextRef = useRef({
     startPosition: null,
     newPosition: null,
   });
@@ -165,8 +165,8 @@ function Title(props) {
     const { x: dx, y: dy } = delta;
 
     const newPosition = {
-      x: context.current.startPosition.x + dx,
-      y: context.current.startPosition.y + dy,
+      x: contextRef.current.startPosition.x + dx,
+      y: contextRef.current.startPosition.y + dy,
     };
 
     const popupParent = getPopupParent(titleRef.current);
@@ -188,7 +188,7 @@ function Title(props) {
     const popupParent = getPopupParent(titleRef.current);
 
     const bounds = popupParent.getBoundingClientRect();
-    context.current.startPosition = {
+    contextRef.current.startPosition = {
       x: bounds.left,
       y: bounds.top,
     };
@@ -197,7 +197,7 @@ function Title(props) {
   };
 
   const onMoveEnd = () => {
-    context.current.newPosition = null;
+    contextRef.current.newPosition = null;
 
     eventBus?.fire('feelPopup.dragend');
   };

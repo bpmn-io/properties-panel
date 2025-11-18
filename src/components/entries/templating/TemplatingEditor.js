@@ -19,7 +19,7 @@ const useBufferedFocus = function(editor, ref) {
 
   const [ buffer, setBuffer ] = useState(undefined);
 
-  ref.current = useMemo(() => ({
+  const focusApi = useMemo(() => ({
     focus: (offset) => {
       if (editor) {
         editor.focus(offset);
@@ -31,6 +31,10 @@ const useBufferedFocus = function(editor, ref) {
       }
     }
   }), [ editor ]);
+
+  useEffect(() => {
+    ref.current = focusApi;
+  }, [ ref, focusApi ]);
 
   useEffect(() => {
     if (typeof buffer !== 'undefined' && editor) {

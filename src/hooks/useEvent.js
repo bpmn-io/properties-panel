@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'preact/hooks';
+import { useContext, useEffect } from 'preact/hooks';
 
 import { EventContext } from '../context';
 
@@ -12,29 +12,17 @@ import { EventContext } from '../context';
 export function useEvent(event, callback, eventBus) {
   const eventContext = useContext(EventContext);
 
-  if (!eventBus) {
-    ({ eventBus } = eventContext);
-  }
+  const bus = eventBus || eventContext.eventBus;
 
-  const didMount = useRef(false);
-
-  // (1) subscribe immediately
-  if (eventBus && !didMount.current) {
-    eventBus.on(event, callback);
-  }
-
-  // (2) update subscription after inputs changed
   useEffect(() => {
-    if (eventBus && didMount.current) {
-      eventBus.on(event, callback);
+    if (!bus) {
+      return;
     }
 
-    didMount.current = true;
+    bus.on(event, callback);
 
     return () => {
-      if (eventBus) {
-        eventBus.off(event, callback);
-      }
+      bus.off(event, callback);
     };
-  }, [ callback, event, eventBus ]);
+  }, [ callback, event, bus ]);
 }

@@ -1,3 +1,5 @@
+import { useMemo } from 'preact/hooks';
+
 import { ExternalLinkIcon } from './icons';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
@@ -34,11 +36,14 @@ export default function Header(props) {
   const type = getTypeLabel(element);
   const documentationRef = getDocumentationRef && getDocumentationRef(element);
 
-  const ElementIcon = getElementIcon(element);
+  const iconElement = useMemo(() => {
+    const ElementIcon = getElementIcon(element);
+    return ElementIcon ? <ElementIcon width="32" height="32" viewBox="0 0 32 32" /> : null;
+  }, [ getElementIcon, element ]);
 
   return (<div class="bio-properties-panel-header">
     <div class="bio-properties-panel-header-icon">
-      { ElementIcon && <ElementIcon width="32" height="32" viewBox="0 0 32 32" /> }
+      { iconElement }
     </div>
     <div class="bio-properties-panel-header-labels">
       <div title={ type } class="bio-properties-panel-header-type">{ type }</div>
