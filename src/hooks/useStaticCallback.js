@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 
 /**
  * Creates a static function reference with changing body.
@@ -16,7 +16,10 @@ import { useCallback, useRef } from 'preact/hooks';
  */
 export function useStaticCallback(callback) {
   const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [ callback ]);
 
   return useCallback(
     (...args) => callbackRef.current(...args),

@@ -59,7 +59,7 @@ function TextArea(props) {
     commitValue(newModelValue);
   }, [ commitValue ]);
 
-  const visible = useElementVisible(ref.current);
+  const visible = useElementVisible(ref);
 
   /**
    * @type { import('min-dash').DebouncedFunction }

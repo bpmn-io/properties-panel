@@ -23,20 +23,20 @@ export function useShowEntryEvent(id) {
 
   const ref = useRef();
 
-  const focus = useRef(false);
+  const focusRef = useRef(false);
 
   const onShowEntry = useCallback((event) => {
     if (event.id === id) {
       onShow();
 
-      if (!focus.current) {
-        focus.current = true;
+      if (!focusRef.current) {
+        focusRef.current = true;
       }
     }
-  }, [ id ]);
+  }, [ id, onShow ]);
 
   useEffect(() => {
-    if (focus.current && ref.current) {
+    if (focusRef.current && ref.current) {
       if (isFunction(ref.current.focus)) {
         ref.current.focus();
       }
@@ -45,7 +45,7 @@ export function useShowEntryEvent(id) {
         ref.current.select();
       }
 
-      focus.current = false;
+      focusRef.current = false;
     }
   });
 

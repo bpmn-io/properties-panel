@@ -53,8 +53,10 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       return;
     }
 
+    const element = ref.current;
+
     // TODO(@barmac): test this
-    if (!ref.current || !scrollContainer) {
+    if (!element || !scrollContainer) {
       return;
     }
 
@@ -79,12 +81,12 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       rootMargin: '0px 0px 999999% 0px', // Use bottom margin to avoid stickyness when scrolling out to bottom
       threshold: [ 1 ]
     });
-    observer.observe(ref.current);
+    observer.observe(element);
 
     // Unobserve if unmounted
     return () => {
-      observer.unobserve(ref.current);
+      observer.unobserve(element);
     };
 
-  }, [ ref.current, scrollContainer, setSticky ]);
+  }, [ ref, scrollContainer, setSticky ]);
 }

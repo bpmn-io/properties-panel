@@ -304,13 +304,13 @@ function createTooltipContext(overrides = {}) {
  * @param {Array} deps
  */
 function useUpdateLayoutEffect(effect, deps) {
-  const isMounted = useRef(false);
+  const isMountedRef = useRef(false);
 
   useLayoutEffect(() => {
-    if (isMounted.current) {
+    if (isMountedRef.current) {
       return effect();
     } else {
-      isMounted.current = true;
+      isMountedRef.current = true;
     }
   }, deps);
 }

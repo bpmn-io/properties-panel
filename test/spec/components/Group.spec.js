@@ -99,9 +99,12 @@ describe('<Group>', function() {
     it('should use global layout', async function() {
 
       // given
-      let setLayoutForKey;
+      const setLayoutForKeyRef = { current: null };
       const Entry = () => {
-        setLayoutForKey = useContext(LayoutContext).setLayoutForKey;
+        const layoutContext = useContext(LayoutContext);
+        useEffect(() => {
+          setLayoutForKeyRef.current = layoutContext.setLayoutForKey;
+        }, [ layoutContext.setLayoutForKey ]);
       };
 
       const result = createGroup({
@@ -119,7 +122,7 @@ describe('<Group>', function() {
       expect(domClasses(entries).has('open')).to.be.false;
 
       // when
-      await act(() => setLayoutForKey([ 'groups', 'groupId', 'open' ], true));
+      await act(() => setLayoutForKeyRef.current([ 'groups', 'groupId', 'open' ], true));
 
       // then
       expect(domClasses(entries).has('open')).to.be.true;
