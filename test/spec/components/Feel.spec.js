@@ -781,6 +781,37 @@ describe('<FeelEntry>', function() {
       });
 
 
+      it.only('should keep focus after paste', async function() {
+
+        // given
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => 'foo'
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+        input.focus();
+
+        const data = new DataTransfer();
+        data.setData('application/FEEL', 'foo');
+
+        const paste = new ClipboardEvent('paste', {
+          bubbles: true,
+          clipboardData: data
+        });
+
+        // when
+        input.dispatchEvent(paste);
+
+        // then
+        await waitFor(() => {
+          const editor = domQuery('[role="textbox"]', result.container);
+          expect(document.activeElement).to.equal(editor);
+        });
+      });
+
+
       it('should trim pasted content when field is empty (non-FEEL)', function() {
 
         // given
