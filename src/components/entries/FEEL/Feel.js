@@ -321,7 +321,7 @@ function FeelTextfield(props) {
             popupOpen={ isPopupOpen }
             onFeelToggle={ () => {
               handleFeelToggle();
-              setFocus(true);
+              setFocus();
             } }
             onLint={ handleLint }
             onOpenPopup={ handleOpenPopup }
