@@ -787,7 +787,8 @@ describe('<FeelEntry>', function() {
         const result = createFeelField({
           container,
           feel: 'optional',
-          getValue: () => 'foo'
+          getValue: () => 'foo',
+          debounce: fn => debounce(fn, 50)
         });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
