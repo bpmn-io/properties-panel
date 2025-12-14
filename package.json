@@ -54,7 +54,7 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@testing-library/preact": "^3.2.4",
-    "axe-core": "^4.10.3",
+    "axe-core": "^4.11.0",
     "babel-loader": "^10.0.0",
     "babel-plugin-inline-react-svg": "^2.0.2",
     "babel-plugin-istanbul": "^7.0.1",
