@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   renderHook
 } from '@testing-library/preact';
@@ -72,7 +76,7 @@ describe('hooks/useDescriptionContext', function() {
   it('should pass element argument', function() {
 
     // given
-    const getDescriptionSpy = sinon.spy();
+    const getDescriptionSpy = sinonSpy();
 
     const description = {
       input1: getDescriptionSpy

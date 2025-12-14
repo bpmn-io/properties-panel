@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 import { renderHook, waitFor } from '@testing-library/preact';
 
 import { useElementVisible } from 'src/hooks';

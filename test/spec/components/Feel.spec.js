@@ -1,6 +1,15 @@
+import { expect } from 'chai';
+
+import {
+  spy as sinonSpy,
+  stub as sinonStub,
+  useFakeTimers
+} from 'sinon';
+
 import { act } from 'preact/test-utils';
 
 import { waitFor } from '@testing-library/dom';
+
 import {
   render,
   fireEvent
@@ -76,7 +85,7 @@ describe('<FeelEntry>', function() {
     it('should update', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelField({ container, setValue: updateSpy });
 
@@ -93,7 +102,7 @@ describe('<FeelEntry>', function() {
     it('should trim whitespace on blur', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
       const result = createFeelField({
         container,
         setValue: setValueSpy
@@ -118,7 +127,7 @@ describe('<FeelEntry>', function() {
     it('should set undefined on blur when trimmed value is empty', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
       const result = createFeelField({
         container,
         getValue: () => '   ',
@@ -139,7 +148,7 @@ describe('<FeelEntry>', function() {
     it('should immediately commit value once on blur (debounce)', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelField({
         container,
@@ -165,7 +174,7 @@ describe('<FeelEntry>', function() {
     it('should immediately commit value on keyboard shortcut (cmd+z) (debounce)', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelField({
         container,
@@ -195,7 +204,7 @@ describe('<FeelEntry>', function() {
     it('should immediately commit value on keyboard shortcut (ctrl+z) (debounce)', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelField({
         container,
@@ -224,7 +233,7 @@ describe('<FeelEntry>', function() {
     it('should call onBlur if provided', async function() {
 
       // given
-      const onBlurSpy = sinon.spy();
+      const onBlurSpy = sinonSpy();
 
       const result = createFeelField({
         container,
@@ -245,7 +254,7 @@ describe('<FeelEntry>', function() {
     it('should not call setValue if the value is same', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelField({
         container,
@@ -270,7 +279,7 @@ describe('<FeelEntry>', function() {
       it('should call new setValue if passed', function() {
 
         // given
-        const updateSpies = [ sinon.spy(), sinon.spy() ];
+        const updateSpies = [ sinonSpy(), sinonSpy() ];
 
         const firstRender = createFeelField({ container, setValue: updateSpies[0] });
 
@@ -289,7 +298,7 @@ describe('<FeelEntry>', function() {
 
         // given
         const element = undefined;
-        const getValueSpies = [ sinon.spy(), sinon.spy() ];
+        const getValueSpies = [ sinonSpy(), sinonSpy() ];
 
         const firstRender = createFeelField({ container, getValue: getValueSpies[0] });
 
@@ -310,7 +319,7 @@ describe('<FeelEntry>', function() {
       it('should call new validate if passed', function() {
 
         // given
-        const validateSpies = [ sinon.spy(), sinon.spy() ];
+        const validateSpies = [ sinonSpy(), sinonSpy() ];
 
         const firstRender = createFeelField({ container, validate: validateSpies[0] });
 
@@ -405,7 +414,7 @@ describe('<FeelEntry>', function() {
         // given
         const eventBus = new EventBus();
 
-        const onShowSpy = sinon.spy();
+        const onShowSpy = sinonSpy();
 
         createFeelField({ id: 'foo', container, eventBus, onShow: onShowSpy });
 
@@ -517,7 +526,7 @@ describe('<FeelEntry>', function() {
       it('should pass error to `setValue`', function() {
 
         // given
-        const setValueSpy = sinon.spy();
+        const setValueSpy = sinonSpy();
         const validate = () => 'error';
 
         const result = createFeelField({ container, validate, setValue: setValueSpy });
@@ -702,7 +711,7 @@ describe('<FeelEntry>', function() {
       it('should toggle feel active', async function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const field = createFeelField({
           container,
@@ -729,7 +738,7 @@ describe('<FeelEntry>', function() {
 
 
       it('should toggle on input', function() {
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelField({
           container,
@@ -752,7 +761,7 @@ describe('<FeelEntry>', function() {
       it('should toggle on paste with FEEL mime type', function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelField({
           container,
@@ -784,7 +793,7 @@ describe('<FeelEntry>', function() {
       it('should trim pasted content when field is empty (non-FEEL)', function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelField({
           container,
@@ -805,7 +814,7 @@ describe('<FeelEntry>', function() {
       it('should convert to FEEL when pasting content starting with =', function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelField({
           container,
@@ -831,7 +840,7 @@ describe('<FeelEntry>', function() {
       it('should trim pasted content when all text is selected (non-FEEL)', function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelField({
           container,
@@ -856,7 +865,7 @@ describe('<FeelEntry>', function() {
       it('should preserve FEEL toggle when pasting FEEL expression and then blurring', async function() {
 
         // given
-        const setValueSpy = sinon.spy();
+        const setValueSpy = sinonSpy();
 
         const result = createFeelField({
           container,
@@ -904,7 +913,7 @@ describe('<FeelEntry>', function() {
     it('should update', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelNumber({ container, setValue: updateSpy });
 
@@ -921,7 +930,7 @@ describe('<FeelEntry>', function() {
     it('should update (floating point number)', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
 
@@ -938,7 +947,7 @@ describe('<FeelEntry>', function() {
     it('should update (0)', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
 
@@ -1028,7 +1037,7 @@ describe('<FeelEntry>', function() {
         // given
         const eventBus = new EventBus();
 
-        const onShowSpy = sinon.spy();
+        const onShowSpy = sinonSpy();
 
         createFeelNumber({ id: 'foo', container, eventBus, onShow: onShowSpy });
 
@@ -1140,7 +1149,7 @@ describe('<FeelEntry>', function() {
       it('should pass error to `setValue`', function() {
 
         // given
-        const setValueSpy = sinon.spy();
+        const setValueSpy = sinonSpy();
         const validate = () => 'error';
 
         const result = createFeelNumber({ container, validate, setValue: setValueSpy });
@@ -1304,7 +1313,7 @@ describe('<FeelEntry>', function() {
       it('should toggle feel active', async function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const field = createFeelNumber({
           container,
@@ -1333,7 +1342,7 @@ describe('<FeelEntry>', function() {
       it('should toggle on paste with FEEL mime type', function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelField({
           container,
@@ -1365,7 +1374,7 @@ describe('<FeelEntry>', function() {
       it('should trim pasted number content when field is empty', function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelNumber({
           container,
@@ -1386,7 +1395,7 @@ describe('<FeelEntry>', function() {
       it('should convert to FEEL when pasting number expression starting with =', function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelNumber({
           container,
@@ -1452,7 +1461,7 @@ describe('<FeelEntry>', function() {
     it('should update', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelTextArea({ container, setValue: updateSpy });
 
@@ -1469,7 +1478,7 @@ describe('<FeelEntry>', function() {
     it('should trim whitespace on blur', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelTextArea({
         container,
@@ -1495,7 +1504,7 @@ describe('<FeelEntry>', function() {
     it('should set undefined on blur when trimmed value is empty', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelTextArea({
         container,
@@ -1517,7 +1526,7 @@ describe('<FeelEntry>', function() {
     it('should immediately commit value once on blur (debounce)', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelTextArea({
         container,
@@ -1546,8 +1555,8 @@ describe('<FeelEntry>', function() {
     it('should call onBlur if provided', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
-      const onBlurSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
+      const onBlurSpy = sinonSpy();
 
       const result = createFeelTextArea({
         container,
@@ -1570,7 +1579,7 @@ describe('<FeelEntry>', function() {
     it('should not call setValue if the value is same', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelTextArea({
         container,
@@ -1594,7 +1603,7 @@ describe('<FeelEntry>', function() {
     it('should not call setValue if the value stays undefined or empty', async function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createFeelTextArea({
         container,
@@ -1674,7 +1683,7 @@ describe('<FeelEntry>', function() {
         // given
         const eventBus = new EventBus();
 
-        const onShowSpy = sinon.spy();
+        const onShowSpy = sinonSpy();
 
         createFeelTextArea({ id: 'foo', container, eventBus, onShow: onShowSpy });
 
@@ -1787,7 +1796,7 @@ describe('<FeelEntry>', function() {
       it('should pass error to `setValue`', function() {
 
         // given
-        const setValueSpy = sinon.spy();
+        const setValueSpy = sinonSpy();
         const validate = () => 'error';
 
         const result = createFeelTextArea({ container, validate, setValue: setValueSpy });
@@ -1952,7 +1961,7 @@ describe('<FeelEntry>', function() {
       it('should toggle feel active', async function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const field = createFeelTextArea({
           container,
@@ -1979,7 +1988,7 @@ describe('<FeelEntry>', function() {
 
 
       it('should toggle on input', function() {
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const result = createFeelTextArea({
           container,
@@ -2019,7 +2028,7 @@ describe('<FeelEntry>', function() {
     it('should update', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelToggleSwitch({ container, setValue: updateSpy, getValue: () => false });
 
@@ -2108,7 +2117,7 @@ describe('<FeelEntry>', function() {
       it('should toggle feel active', async function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const field = createFeelToggleSwitch({
           container,
@@ -2153,7 +2162,7 @@ describe('<FeelEntry>', function() {
     it('should update', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelCheckbox({ container, setValue: updateSpy, getValue: () => false });
 
@@ -2170,7 +2179,7 @@ describe('<FeelEntry>', function() {
     it('should update on blur', async function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelCheckbox({ container, setValue: updateSpy, getValue: () => false });
 
@@ -2259,7 +2268,7 @@ describe('<FeelEntry>', function() {
       it('should toggle feel active', async function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const field = createFeelCheckbox({
           container,
@@ -2315,7 +2324,7 @@ describe('<FeelEntry>', function() {
     it('should update', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelField({ container, setValue: updateSpy, feel: 'required' });
 
@@ -2347,7 +2356,7 @@ describe('<FeelEntry>', function() {
     it('should update with missing = sign', function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelField({ container, setValue: updateSpy, getValue: () => 'foo', feel: 'required' });
 
@@ -2364,7 +2373,7 @@ describe('<FeelEntry>', function() {
 
 
     it('should not submit empty feel expression', function() {
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createFeelField({
         container,
@@ -2491,7 +2500,7 @@ describe('<FeelEntry>', function() {
         // given
         const eventBus = new EventBus();
 
-        const onShowSpy = sinon.spy();
+        const onShowSpy = sinonSpy();
 
 
         createFeelField({ id: 'foo', container, eventBus, onShow: onShowSpy, feel: 'required' });
@@ -2525,7 +2534,7 @@ describe('<FeelEntry>', function() {
       it('should show syntax error', async function() {
 
         // given
-        const clock = sinon.useFakeTimers();
+        const clock = useFakeTimers();
         const result = createFeelField({ container, getValue: () => '= ...syntax error...', feel: 'required' });
 
         // when
@@ -2545,7 +2554,7 @@ describe('<FeelEntry>', function() {
       it('should not indicate field error on non-syntax errors', async function() {
 
         // given
-        const clock = sinon.useFakeTimers();
+        const clock = useFakeTimers();
         const result = createFeelField({ container, getValue: () => '= friend[0]', feel: 'required' });
 
         // when
@@ -2565,7 +2574,7 @@ describe('<FeelEntry>', function() {
       it('should show global error over local error', async function() {
 
         // given
-        const clock = sinon.useFakeTimers();
+        const clock = useFakeTimers();
         const errors = {
           foo: 'bar'
         };
@@ -2694,7 +2703,7 @@ describe('<FeelEntry>', function() {
       it('should pass error to `setValue`', async function() {
 
         // given
-        const setValueSpy = sinon.spy();
+        const setValueSpy = sinonSpy();
         const validate = () => 'error';
 
         const result = createFeelTextArea({ container, validate, setValue: setValueSpy, feel: 'required' });
@@ -2912,7 +2921,7 @@ describe('<FeelEntry>', function() {
       it('should toggle feel inactive', async function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const field = createFeelField({
           container,
@@ -2938,7 +2947,7 @@ describe('<FeelEntry>', function() {
       it('should NOT toggle if FEEL is required', async function() {
 
         // given
-        const updateSpy = sinon.spy();
+        const updateSpy = sinonSpy();
 
         const field = createFeelField({
           container,
@@ -2990,7 +2999,7 @@ describe('<FeelEntry>', function() {
 
         // given
         const eventBus = new EventBus();
-        const openPopupSpy = sinon.spy();
+        const openPopupSpy = sinonSpy();
         eventBus.on('propertiesPanel.openPopup', openPopupSpy);
 
         const result = createFeelField({
@@ -3018,7 +3027,7 @@ describe('<FeelEntry>', function() {
 
         // given
         const eventBus = new EventBus();
-        const closePopupSpy = sinon.spy();
+        const closePopupSpy = sinonSpy();
         eventBus.on('propertiesPanel.closePopup', closePopupSpy);
 
         const result = createFeelField({
@@ -3224,7 +3233,7 @@ function createFeelPasteEvent(textData, feelData = '') {
     clipboardData: new DataTransfer()
   });
 
-  sinon.stub(pasteEvent.clipboardData, 'getData').callsFake((type) => {
+  sinonStub(pasteEvent.clipboardData, 'getData').callsFake((type) => {
     if (type === 'application/FEEL') return feelData;
     return textData;
   });

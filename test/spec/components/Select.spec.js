@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import { act } from 'preact/test-utils';
 
 import {
@@ -129,7 +133,7 @@ describe('<Select>', function() {
     // given
     const getOptions = () => createOptions();
 
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createSelect({ container, setValue: updateSpy, getOptions });
 
@@ -280,7 +284,7 @@ describe('<Select>', function() {
       // given
       const eventBus = new EventBus();
 
-      const onShowSpy = sinon.spy();
+      const onShowSpy = sinonSpy();
 
       createSelect({
         container,
@@ -407,7 +411,7 @@ describe('<Select>', function() {
     it('should pass error to `setValue`', function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
       const validate = () => 'error';
       const getOptions = () => createOptions();
 

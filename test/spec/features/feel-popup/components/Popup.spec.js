@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   act,
   fireEvent,
@@ -102,7 +106,7 @@ describe('<Popup>', function() {
   it('should activate focus trap', async function() {
 
     // given
-    const focusSpy = sinon.spy();
+    const focusSpy = sinonSpy();
 
     // when
     await act(() => {
@@ -117,7 +121,7 @@ describe('<Popup>', function() {
   it('should close on ESC', async function() {
 
     // given
-    const closeSpy = sinon.spy();
+    const closeSpy = sinonSpy();
 
     await act(() => {
       render(<Popup onClose={ closeSpy }><input name="foo"></input></Popup>, { container });
@@ -137,7 +141,7 @@ describe('<Popup>', function() {
   it('should NOT close on ESC (closeOnEscape=false)', async function() {
 
     // given
-    const closeSpy = sinon.spy();
+    const closeSpy = sinonSpy();
 
     await act(() => {
       render(<Popup closeOnEscape={ false } onClose={ closeSpy }><input name="foo"></input></Popup>, { container });
@@ -157,7 +161,7 @@ describe('<Popup>', function() {
   it('should not bubble keyboard events to parent', async function() {
 
     // given
-    const keyDownSpy = sinon.spy();
+    const keyDownSpy = sinonSpy();
 
     container.addEventListener('keydown', keyDownSpy);
 
@@ -310,9 +314,9 @@ describe('<Popup>', function() {
       it('should not bubble dragging events to parent', function() {
 
         // given
-        const dragStartSpy = sinon.spy();
-        const dragOverSpy = sinon.spy();
-        const dragEnterSpy = sinon.spy();
+        const dragStartSpy = sinonSpy();
+        const dragOverSpy = sinonSpy();
+        const dragEnterSpy = sinonSpy();
 
         container.addEventListener('dragstart', dragStartSpy);
         container.addEventListener('dragover', dragOverSpy);

@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   renderHook
 } from '@testing-library/preact';
@@ -72,7 +76,7 @@ describe('hooks/useTooltipContext', function() {
   it('should pass element argument', function() {
 
     // given
-    const getTooltipSpy = sinon.spy();
+    const getTooltipSpy = sinonSpy();
 
     const tooltip = {
       input1: getTooltipSpy

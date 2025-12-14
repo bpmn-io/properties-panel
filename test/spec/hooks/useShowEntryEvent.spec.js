@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import EventBus from 'diagram-js/lib/core/EventBus';
 
 import { renderHook } from '@testing-library/preact';
@@ -24,7 +28,7 @@ describe('hooks/useShowEntryEvent', function() {
   it('should call onShow', function() {
 
     // given
-    const onShowSpy = sinon.spy();
+    const onShowSpy = sinonSpy();
 
     renderHook(() => {
       const ref = useShowEntryEvent('foo');
@@ -44,7 +48,7 @@ describe('hooks/useShowEntryEvent', function() {
   it('should not call onShow (no event bus)', function() {
 
     // given
-    const onShowSpy = sinon.spy();
+    const onShowSpy = sinonSpy();
 
     renderHook(() => {
       const ref = useShowEntryEvent('foo');
@@ -63,7 +67,7 @@ describe('hooks/useShowEntryEvent', function() {
   it('should call focus', function() {
 
     // given
-    const focusSpy = sinon.spy();
+    const focusSpy = sinonSpy();
 
     const { rerender } = renderHook(() => {
       const ref = useShowEntryEvent('foo');
@@ -84,7 +88,7 @@ describe('hooks/useShowEntryEvent', function() {
   it('should call select', function() {
 
     // given
-    const selectSpy = sinon.spy();
+    const selectSpy = sinonSpy();
 
     const { rerender } = renderHook(() => {
       const ref = useShowEntryEvent('foo');

@@ -1,3 +1,10 @@
+import { expect } from 'chai';
+
+import {
+  replace as sinonReplace,
+  restore as sinonRestore
+} from 'sinon';
+
 import { useContext, useEffect, useState } from 'preact/hooks';
 
 import {
@@ -44,11 +51,11 @@ describe('<Group>', function() {
   });
 
   beforeEach(function() {
-    sinon.replace(window, 'requestAnimationFrame', cb => cb());
+    sinonReplace(window, 'requestAnimationFrame', cb => cb());
   });
 
   afterEach(function() {
-    sinon.restore();
+    sinonRestore();
   });
 
 

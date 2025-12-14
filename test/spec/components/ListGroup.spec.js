@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import { useContext, useEffect, useState } from 'preact/hooks';
 
 import {
@@ -228,7 +232,7 @@ describe('<ListGroup>', function() {
   it('should bind add callback', async function() {
 
     // given
-    const add = sinon.spy();
+    const add = sinonSpy();
 
     const { container } = createListGroup({ container: parentContainer, add });
 

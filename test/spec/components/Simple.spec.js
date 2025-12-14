@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -43,7 +47,7 @@ describe('<Simple>', function() {
   it('should update', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createSimple({ container, setValue: updateSpy });
 
@@ -77,7 +81,7 @@ describe('<Simple>', function() {
   it('should NOT blow up on empty value', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createSimple({ container, setValue: updateSpy });
 

@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -194,7 +198,7 @@ describe('<FeelEditor>', function() {
   it('should call <onOpenPopup> with feel type', async function() {
 
     // given
-    const spy = sinon.spy();
+    const spy = sinonSpy();
     render(<Wrapper onOpenPopup={ spy } />, { container });
 
     const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', container);

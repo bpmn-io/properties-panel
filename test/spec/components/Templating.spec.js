@@ -1,3 +1,10 @@
+import { expect } from 'chai';
+
+import {
+  spy as sinonSpy,
+  useFakeTimers
+} from 'sinon';
+
 import { act } from 'preact/test-utils';
 
 import { waitFor } from '@testing-library/dom';
@@ -39,7 +46,7 @@ describe('<Templating>', function() {
 
   beforeEach(function() {
     container = TestContainer.get(this);
-    clock = sinon.useFakeTimers();
+    clock = useFakeTimers();
   });
 
   afterEach(function() {
@@ -61,7 +68,7 @@ describe('<Templating>', function() {
     it('should update', async function() {
 
       // given
-      const updateSpy = sinon.spy();
+      const updateSpy = sinonSpy();
 
       const result = createTemplatingEntry({ container, setValue: updateSpy });
 
@@ -156,7 +163,7 @@ describe('<Templating>', function() {
         // given
         const eventBus = new EventBus();
 
-        const onShowSpy = sinon.spy();
+        const onShowSpy = sinonSpy();
 
 
         createTemplatingEntry({ id: 'foo', container, eventBus, onShow: onShowSpy });
@@ -395,7 +402,7 @@ describe('<Templating>', function() {
       it('should NOT discard invalid input', async function() {
 
         // given
-        const setValueSpy = sinon.spy();
+        const setValueSpy = sinonSpy();
         const validate = () => 'error';
 
         const result = createTemplatingEntry({ container, validate, setValue: setValueSpy });

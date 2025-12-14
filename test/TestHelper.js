@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 import {
   fireEvent
 } from '@testing-library/preact';

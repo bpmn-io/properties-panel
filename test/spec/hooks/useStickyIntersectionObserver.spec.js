@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import EventBus from 'diagram-js/lib/core/EventBus';
 
 import { useStickyIntersectionObserver } from 'src/hooks';
@@ -6,6 +10,7 @@ import { renderHook, waitFor } from '@testing-library/preact';
 
 import TestContainer from 'mocha-test-container-support';
 import { EventContext } from '../../../src/context';
+
 
 describe('hooks/userStickyIntersectionObserver', function() {
 
@@ -33,7 +38,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   it('should observe', async function() {
 
     // given
-    const observeSpy = sinon.spy();
+    const observeSpy = sinonSpy();
 
     mockIntersectionObserver({ observe: observeSpy });
 
@@ -56,7 +61,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   it('should call for each entry', async function() {
 
     // given
-    const callbackSpy = sinon.spy();
+    const callbackSpy = sinonSpy();
 
     const triggerCallback = mockIntersectionObserver({});
 
@@ -86,7 +91,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   it('should not observe if DOM not ready', async function() {
 
     // given
-    const observeSpy = sinon.spy();
+    const observeSpy = sinonSpy();
 
     mockIntersectionObserver({ observe: observeSpy });
 
@@ -107,7 +112,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   it('should not call when scrollContainer is unmounted', async function() {
 
     // given
-    const callbackSpy = sinon.spy();
+    const callbackSpy = sinonSpy();
 
     const triggerCallback = mockIntersectionObserver({});
 
@@ -139,7 +144,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   it('should observe after being attached', async function() {
 
     // given
-    const observeSpy = sinon.spy();
+    const observeSpy = sinonSpy();
 
     mockIntersectionObserver({ observe: observeSpy });
 
@@ -173,7 +178,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   it('should unobserve after unmount', async function() {
 
     // given
-    const unobserveSpy = sinon.spy();
+    const unobserveSpy = sinonSpy();
 
     mockIntersectionObserver({ unobserve: unobserveSpy });
 
@@ -198,7 +203,7 @@ describe('hooks/userStickyIntersectionObserver', function() {
   it('should unobserve after being detached', async function() {
 
     // given
-    const unobserveSpy = sinon.spy();
+    const unobserveSpy = sinonSpy();
 
     mockIntersectionObserver({ unobserve: unobserveSpy });
 

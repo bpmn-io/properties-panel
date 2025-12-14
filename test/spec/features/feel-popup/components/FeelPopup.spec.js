@@ -1,9 +1,13 @@
-import sinon from 'sinon';
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import { render, fireEvent, cleanup, waitFor } from '@testing-library/preact/pure';
 import { expectNoViolations, insertCoreStyles } from 'test/TestHelper';
 import { FeelPopup, FEEL_POPUP_WIDTH, FEEL_POPUP_HEIGHT } from 'src/features/feel-popup/components/FeelPopup';
 
 insertCoreStyles();
+
 
 describe('<FeelPopup>', function() {
   let container;
@@ -30,7 +34,7 @@ describe('<FeelPopup>', function() {
   it('should render the popup with correct dimensions', function() {
 
     // given
-    const onClose = sinon.spy();
+    const onClose = sinonSpy();
 
     // when
     const { container: rendered } = render(
@@ -57,7 +61,7 @@ describe('<FeelPopup>', function() {
   it('should render links when provided', async function() {
 
     // given
-    const onClose = sinon.spy();
+    const onClose = sinonSpy();
     const links = [
       { href: 'https://foo.com', title: 'Foo' },
       { href: 'https://bar.com', title: 'Bar' }
@@ -90,8 +94,8 @@ describe('<FeelPopup>', function() {
   it('should open FEEL editor when type is "feel" and focus it', async function() {
 
     // given
-    const onClose = sinon.spy();
-    const onInput = sinon.spy();
+    const onClose = sinonSpy();
+    const onInput = sinonSpy();
 
     // when
     render(
@@ -120,8 +124,8 @@ describe('<FeelPopup>', function() {
   it('should open FEELERS editor when type is "feelers" and focus it', async function() {
 
     // given
-    const onClose = sinon.spy();
-    const onInput = sinon.spy();
+    const onClose = sinonSpy();
+    const onInput = sinonSpy();
 
     // when
     render(
@@ -150,7 +154,7 @@ describe('<FeelPopup>', function() {
   it('should call onClose when close button is clicked', async function() {
 
     // given
-    const onClose = sinon.spy();
+    const onClose = sinonSpy();
 
     // when
     render(
@@ -177,7 +181,7 @@ describe('<FeelPopup>', function() {
   it('should call onClose on ESC when no autocomplete open', async function() {
 
     // given
-    const onClose = sinon.spy();
+    const onClose = sinonSpy();
 
     // when
     render(
@@ -206,7 +210,7 @@ describe('<FeelPopup>', function() {
     const onClose = () => {
       cleanup();
     };
-    sinon.spy(sourceElement, 'focus');
+    sinonSpy(sourceElement, 'focus');
 
     // when
     render(
