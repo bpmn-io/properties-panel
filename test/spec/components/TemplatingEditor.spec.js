@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -17,6 +21,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import TemplatingEditor from 'src/components/entries/templating/TemplatingEditor';
 
 insertCoreStyles();
+
 
 describe('<TemplatingEditor>', function() {
 
@@ -111,7 +116,7 @@ describe('<TemplatingEditor>', function() {
   it('should handle open popup', async function() {
 
     // given
-    const spy = sinon.spy();
+    const spy = sinonSpy();
 
     render(<Wrapper value={ '' } onOpenPopup={ spy } />, { container });
 
@@ -144,7 +149,7 @@ describe('<TemplatingEditor>', function() {
   it('should call onOpenPopup with feelers type', async function() {
 
     // given
-    const spy = sinon.spy();
+    const spy = sinonSpy();
     render(<Wrapper onOpenPopup={ spy } />, { container });
 
     const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', container);

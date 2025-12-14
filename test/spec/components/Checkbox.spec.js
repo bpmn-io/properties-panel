@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import { act } from 'preact/test-utils';
 
 import {
@@ -66,7 +70,7 @@ describe('<Checkbox>', function() {
   it('should update', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createCheckbox({ container, setValue: updateSpy });
 
@@ -156,7 +160,7 @@ describe('<Checkbox>', function() {
       // given
       const eventBus = new EventBus();
 
-      const onShowSpy = sinon.spy();
+      const onShowSpy = sinonSpy();
 
       createCheckbox({
         container,

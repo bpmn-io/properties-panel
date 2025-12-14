@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   act,
   render,
@@ -265,7 +269,7 @@ describe('<PropertiesPanel>', function() {
         foo: 'bar'
       };
 
-      const layoutChangedSpy = sinon.spy();
+      const layoutChangedSpy = sinonSpy();
 
       // when
       createPropertiesPanel({
@@ -285,7 +289,7 @@ describe('<PropertiesPanel>', function() {
 
       // given
       const DEFAULT_LAYOUT = {};
-      const layoutChangedSpy = sinon.spy();
+      const layoutChangedSpy = sinonSpy();
 
       // when
       createPropertiesPanel({
@@ -310,7 +314,7 @@ describe('<PropertiesPanel>', function() {
         }
       ];
 
-      const layoutChangedSpy = sinon.spy();
+      const layoutChangedSpy = sinonSpy();
 
       // when
       const result = createPropertiesPanel({
@@ -346,7 +350,7 @@ describe('<PropertiesPanel>', function() {
         foo: 'bar'
       };
 
-      const layoutChangedSpy = sinon.spy();
+      const layoutChangedSpy = sinonSpy();
 
       const options = {
         container,
@@ -384,7 +388,7 @@ describe('<PropertiesPanel>', function() {
         input1: (element, translate) => undefined
       };
 
-      const descriptionLoadedSpy = sinon.spy();
+      const descriptionLoadedSpy = sinonSpy();
 
       // when
       createPropertiesPanel({
@@ -403,7 +407,7 @@ describe('<PropertiesPanel>', function() {
     it('should use default config, given no config provided', async function() {
 
       // given
-      const descriptionLoadedSpy = sinon.spy();
+      const descriptionLoadedSpy = sinonSpy();
 
       // when
       createPropertiesPanel({
@@ -430,7 +434,7 @@ describe('<PropertiesPanel>', function() {
         input1: (element, translate) => undefined
       };
 
-      const tooltipLoadedSpy = sinon.spy();
+      const tooltipLoadedSpy = sinonSpy();
 
       // when
       createPropertiesPanel({
@@ -448,7 +452,7 @@ describe('<PropertiesPanel>', function() {
     it('should use default config, given no config provided', async function() {
 
       // given
-      const tooltipLoadedSpy = sinon.spy();
+      const tooltipLoadedSpy = sinonSpy();
 
       // when
       createPropertiesPanel({

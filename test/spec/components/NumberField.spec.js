@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   render,
   fireEvent,
@@ -51,7 +55,7 @@ describe('<NumberField>', function() {
   it('should update', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createNumberField({ container, setValue: updateSpy });
 
@@ -68,7 +72,7 @@ describe('<NumberField>', function() {
   it('should update (floating point number)', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createNumberField({ container, setValue: updateSpy, step: 'any' });
 
@@ -85,7 +89,7 @@ describe('<NumberField>', function() {
   it('should update (undefined)', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createNumberField({ container, setValue: updateSpy });
 
@@ -102,7 +106,7 @@ describe('<NumberField>', function() {
   it('should NOT update on invalid', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const step = '3';
 
@@ -288,7 +292,7 @@ describe('<NumberField>', function() {
       // given
       const validate = () => 'error';
 
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createNumberField({ container, validate, setValue: setValueSpy });
       const entry = domQuery('.bio-properties-panel-entry .bio-properties-panel-input', result.container);

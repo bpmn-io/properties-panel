@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -199,7 +203,7 @@ describe('<DropdownButton>', function() {
     it('should call action item is clicked', function() {
 
       // given
-      const spy = sinon.spy();
+      const spy = sinonSpy();
       const menuItems = [
         { entry: 'Click me', action: spy }
       ];

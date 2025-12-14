@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import { useContext } from 'preact/hooks';
 
 import {
@@ -152,7 +156,7 @@ describe('<Collapsible>', function() {
   it('should bind remove callback', async function() {
 
     // given
-    const remove = sinon.spy();
+    const remove = sinonSpy();
 
     const { container } = createCollapsible({ container: parentContainer, remove });
 

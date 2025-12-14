@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 import { renderHook } from '@testing-library/preact';
 
 import { useKeyFactory } from 'src/hooks';

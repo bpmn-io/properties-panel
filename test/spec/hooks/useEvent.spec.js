@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import EventBus from 'diagram-js/lib/core/EventBus';
 
 import { renderHook } from '@testing-library/preact';
@@ -21,7 +25,7 @@ describe('hooks/useEvent', function() {
   it('should subscribe (event bus through context)', function() {
 
     // given
-    const onSpy = sinon.spy(eventBus, 'on');
+    const onSpy = sinonSpy(eventBus, 'on');
 
     // when
     renderHook(() => useEvent('foo', noop), { wrapper: WithEventContext(eventBus) });
@@ -34,7 +38,7 @@ describe('hooks/useEvent', function() {
   it('should subscribe (event but through input)', function() {
 
     // given
-    const onSpy = sinon.spy(eventBus, 'on');
+    const onSpy = sinonSpy(eventBus, 'on');
 
     // when
     renderHook(() => useEvent('foo', noop, eventBus));
@@ -47,7 +51,7 @@ describe('hooks/useEvent', function() {
   it('should not subscribe (no event bus)', function() {
 
     // given
-    const onSpy = sinon.spy(eventBus, 'on');
+    const onSpy = sinonSpy(eventBus, 'on');
 
     // when
     renderHook(() => useEvent('foo', noop));
@@ -60,9 +64,9 @@ describe('hooks/useEvent', function() {
   it('should call callback', function() {
 
     // given
-    const onSpy = sinon.spy(eventBus, 'on');
+    const onSpy = sinonSpy(eventBus, 'on');
 
-    const callbackSpy = sinon.spy();
+    const callbackSpy = sinonSpy();
 
     // when
     renderHook(() => useEvent('foo', callbackSpy), { wrapper: WithEventContext(eventBus) });
@@ -82,10 +86,10 @@ describe('hooks/useEvent', function() {
   it('should unsubscribe', function() {
 
     // given
-    const onSpy = sinon.spy(eventBus, 'on');
-    const offSpy = sinon.spy(eventBus, 'off');
+    const onSpy = sinonSpy(eventBus, 'on');
+    const offSpy = sinonSpy(eventBus, 'off');
 
-    const callbackSpy = sinon.spy();
+    const callbackSpy = sinonSpy();
 
     // when
     const { unmount } = renderHook(() => useEvent('foo', callbackSpy), { wrapper: WithEventContext(eventBus) });

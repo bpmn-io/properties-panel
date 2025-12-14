@@ -1,4 +1,12 @@
+import { expect } from 'chai';
+
+import {
+  spy as sinonSpy,
+  match as sinonMatch
+} from 'sinon';
+
 import { act } from '@testing-library/preact';
+
 import MochaTestContainer from 'mocha-test-container-support';
 
 import { query as domQuery } from 'min-dom';
@@ -45,7 +53,7 @@ describe('FeelPopup', function() {
   it('should fire <propertiesPanelPopup.open> on <propertiesPanel.openPopup>', inject(function(eventBus) {
 
     // given
-    const spy = sinon.spy();
+    const spy = sinonSpy();
 
     eventBus.on('propertiesPanelPopup.open', spy);
 
@@ -56,7 +64,7 @@ describe('FeelPopup', function() {
     expect(isPopupOpen).to.be.true;
 
     expect(spy).to.have.been.calledOnce;
-    expect(spy).to.have.been.calledWith(sinon.match({
+    expect(spy).to.have.been.calledWith(sinonMatch({
       container: container,
       config: {
         entryId: 'foo',
@@ -73,7 +81,7 @@ describe('FeelPopup', function() {
   it('should fire <propertiesPanelPopup.close> on <propertiesPanel.closePopup>', inject(function(eventBus) {
 
     // given
-    const spy = sinon.spy();
+    const spy = sinonSpy();
 
     eventBus.on('propertiesPanelPopup.close', spy);
 
@@ -90,7 +98,7 @@ describe('FeelPopup', function() {
   it('should not fire <propertiesPanelPopup.close> on <propertiesPanel.closePopup>', inject(function(eventBus) {
 
     // given
-    const spy = sinon.spy();
+    const spy = sinonSpy();
 
     eventBus.on('propertiesPanelPopup.close', spy);
 
@@ -105,7 +113,7 @@ describe('FeelPopup', function() {
   it('should fire <propertiesPanelPopup.close> on <propertiesPanel.detach>', inject(function(eventBus) {
 
     // given
-    const spy = sinon.spy();
+    const spy = sinonSpy();
 
     eventBus.on('propertiesPanelPopup.close', spy);
 
@@ -122,7 +130,7 @@ describe('FeelPopup', function() {
   it('should not fire <propertiesPanelPopup.close> on <propertiesPanel.detach>', inject(function(eventBus) {
 
     // given
-    const spy = sinon.spy();
+    const spy = sinonSpy();
 
     eventBus.on('propertiesPanelPopup.close', spy);
 
@@ -141,7 +149,7 @@ describe('FeelPopup', function() {
       it('should listen on <' + event + '>', inject(async function(eventBus) {
 
         // given
-        const spy = sinon.spy();
+        const spy = sinonSpy();
 
         eventBus.on(event, spy);
 
@@ -166,8 +174,8 @@ describe('FeelPopup', function() {
     it('should listen on <feelPopup.opened>', inject(async function(eventBus) {
 
       // given
-      const openSpy = sinon.spy();
-      const openedSpy = sinon.spy();
+      const openSpy = sinonSpy();
+      const openedSpy = sinonSpy();
 
       eventBus.on('feelPopup.open', openSpy);
       eventBus.on('feelPopup.opened', openedSpy);
@@ -181,15 +189,15 @@ describe('FeelPopup', function() {
       // then
       expect(openSpy).to.have.been.calledOnce;
       expect(openedSpy).to.have.been.calledOnce;
-      expect(openedSpy).to.have.been.calledWith(sinon.match.has('domNode'));
+      expect(openedSpy).to.have.been.calledWith(sinonMatch.has('domNode'));
     }));
 
 
     it('should listen on <feelPopup.closed>', inject(async function(eventBus) {
 
       // given
-      const closeSpy = sinon.spy();
-      const closedSpy = sinon.spy();
+      const closeSpy = sinonSpy();
+      const closedSpy = sinonSpy();
 
       eventBus.on('feelPopup.close', closeSpy);
       eventBus.on('feelPopup.closed', closedSpy);
@@ -204,7 +212,7 @@ describe('FeelPopup', function() {
 
       // then
       expect(closeSpy).to.have.been.calledOnce;
-      expect(closeSpy).to.have.been.calledWith(sinon.match.has('domNode'));
+      expect(closeSpy).to.have.been.calledWith(sinonMatch.has('domNode'));
       expect(closedSpy).to.have.been.calledOnce;
     }));
 
@@ -255,7 +263,7 @@ describe('FeelPopup', function() {
     it('#open should fire <propertiesPanelPopup.open>', inject(function(eventBus, feelPopup) {
 
       // given
-      const spy = sinon.spy();
+      const spy = sinonSpy();
       eventBus.on('propertiesPanelPopup.open', spy);
 
       const openConfig = {
@@ -268,7 +276,7 @@ describe('FeelPopup', function() {
 
       // then
       expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(sinon.match({
+      expect(spy).to.have.been.calledWith(sinonMatch({
         container: container,
         config: {
           entryId: 'testEntry',
@@ -286,7 +294,7 @@ describe('FeelPopup', function() {
     it('#close should fire <propertiesPanelPopup.close> if popup is open', inject(function(eventBus, feelPopup) {
 
       // given
-      const spy = sinon.spy();
+      const spy = sinonSpy();
       eventBus.on('propertiesPanelPopup.close', spy);
 
       // open popup first
@@ -303,7 +311,7 @@ describe('FeelPopup', function() {
     it('#close should NOT fire <propertiesPanelPopup.close> if popup is NOT open', inject(function(eventBus, feelPopup) {
 
       // given
-      const spy = sinon.spy();
+      const spy = sinonSpy();
       eventBus.on('propertiesPanelPopup.close', spy);
 
       // when

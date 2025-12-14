@@ -1,3 +1,7 @@
+import { expect } from 'chai';
+
+import { spy as sinonSpy } from 'sinon';
+
 import {
   render
 } from '@testing-library/preact/pure';
@@ -49,7 +53,7 @@ describe('<ToggleSwitch>', function() {
   it('should update to true', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createToggleSwitch({ container, setValue: updateSpy, getValue: () => false });
 
@@ -66,7 +70,7 @@ describe('<ToggleSwitch>', function() {
   it('should update to false', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createToggleSwitch({ container, setValue: updateSpy, getValue: () => true });
 

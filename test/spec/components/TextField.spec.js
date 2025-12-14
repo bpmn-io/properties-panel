@@ -1,3 +1,10 @@
+import { expect } from 'chai';
+
+import {
+  spy as sinonSpy,
+  stub as sinonStub
+} from 'sinon';
+
 import { act } from 'preact/test-utils';
 
 import {
@@ -69,7 +76,7 @@ describe('<TextField>', function() {
   it('should update', function() {
 
     // given
-    const updateSpy = sinon.spy();
+    const updateSpy = sinonSpy();
 
     const result = createTextField({ container, setValue: updateSpy });
 
@@ -103,7 +110,7 @@ describe('<TextField>', function() {
   it('should trim whitespace on blur', async function() {
 
     // given
-    const setValueSpy = sinon.spy();
+    const setValueSpy = sinonSpy();
 
     const result = createTextField({
       container,
@@ -129,7 +136,7 @@ describe('<TextField>', function() {
   it('should set undefined on blur when trimmed value is empty', async function() {
 
     // given
-    const setValueSpy = sinon.spy();
+    const setValueSpy = sinonSpy();
 
     const result = createTextField({
       container,
@@ -151,7 +158,7 @@ describe('<TextField>', function() {
   it('should immediately commit value once on blur (debounce)', async function() {
 
     // given
-    const setValueSpy = sinon.spy();
+    const setValueSpy = sinonSpy();
 
     const result = createTextField({
       container,
@@ -180,7 +187,7 @@ describe('<TextField>', function() {
   it('should immediately commit value on keyboard shortcut (cmd+z) (debounce)', async function() {
 
     // given
-    const setValueSpy = sinon.spy();
+    const setValueSpy = sinonSpy();
 
     const result = createTextField({
       container,
@@ -209,7 +216,7 @@ describe('<TextField>', function() {
   it('should immediately commit value on keyboard shortcut (ctrl+z) (debounce)', async function() {
 
     // given
-    const setValueSpy = sinon.spy();
+    const setValueSpy = sinonSpy();
 
     const result = createTextField({
       container,
@@ -238,8 +245,8 @@ describe('<TextField>', function() {
   it('should call onBlur if provided', async function() {
 
     // given
-    const setValueSpy = sinon.spy();
-    const onBlurSpy = sinon.spy();
+    const setValueSpy = sinonSpy();
+    const onBlurSpy = sinonSpy();
 
     const result = createTextField({
       container,
@@ -262,7 +269,7 @@ describe('<TextField>', function() {
   it('should not call setValue if the value is same', async function() {
 
     // given
-    const setValueSpy = sinon.spy();
+    const setValueSpy = sinonSpy();
 
     const result = createTextField({
       container,
@@ -286,7 +293,7 @@ describe('<TextField>', function() {
   it('should not call setValue if the value stays undefined or empty', async function() {
 
     // given
-    const setValueSpy = sinon.spy();
+    const setValueSpy = sinonSpy();
 
     const result = createTextField({
       container,
@@ -312,7 +319,7 @@ describe('<TextField>', function() {
     it('should call new setValue if passed', function() {
 
       // given
-      const updateSpies = [ sinon.spy(), sinon.spy() ];
+      const updateSpies = [ sinonSpy(), sinonSpy() ];
 
       const firstRender = createTextField({ container, setValue: updateSpies[0] });
 
@@ -331,7 +338,7 @@ describe('<TextField>', function() {
 
       // given
       const element = undefined;
-      const getValueSpies = [ sinon.spy(), sinon.spy() ];
+      const getValueSpies = [ sinonSpy(), sinonSpy() ];
 
       const firstRender = createTextField({ container, getValue: getValueSpies[0] });
 
@@ -352,7 +359,7 @@ describe('<TextField>', function() {
     it('should call new validate if passed', function() {
 
       // given
-      const validateSpies = [ sinon.spy(), sinon.spy() ];
+      const validateSpies = [ sinonSpy(), sinonSpy() ];
 
       const firstRender = createTextField({ container, validate: validateSpies[0] });
 
@@ -428,7 +435,7 @@ describe('<TextField>', function() {
     it('should trim pasted content when field is empty', function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createTextField({
         container,
@@ -448,7 +455,7 @@ describe('<TextField>', function() {
     it('should trim pasted content when all text is selected', function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createTextField({
         container,
@@ -472,8 +479,8 @@ describe('<TextField>', function() {
     it('should allow default paste behavior when cursor is positioned in text', function() {
 
       // given
-      const setValueSpy = sinon.spy();
-      const onPasteSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
+      const onPasteSpy = sinonSpy();
 
       const result = createTextField({
         container,
@@ -498,7 +505,7 @@ describe('<TextField>', function() {
     it('should call onPaste callback when provided', function() {
 
       // given
-      const onPasteSpy = sinon.spy();
+      const onPasteSpy = sinonSpy();
 
       const result = createTextField({
         container,
@@ -518,7 +525,7 @@ describe('<TextField>', function() {
     it('should handle empty paste data', function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
 
       const result = createTextField({
         container,
@@ -548,7 +555,7 @@ describe('<TextField>', function() {
       // given
       const eventBus = new EventBus();
 
-      const onShowSpy = sinon.spy();
+      const onShowSpy = sinonSpy();
 
       createTextField({
         container,
@@ -667,7 +674,7 @@ describe('<TextField>', function() {
     it('should NOT discard invalid input', function() {
 
       // given
-      const setValueSpy = sinon.spy();
+      const setValueSpy = sinonSpy();
       const validate = () => 'error';
 
       const result = createTextField({ container, validate, setValue: setValueSpy });
@@ -877,7 +884,7 @@ function createPasteEvent(text) {
     clipboardData: new DataTransfer()
   });
 
-  sinon.stub(pasteEvent.clipboardData, 'getData').withArgs('text').returns(text);
+  sinonStub(pasteEvent.clipboardData, 'getData').withArgs('text').returns(text);
 
   return pasteEvent;
 }

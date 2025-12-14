@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 import { query as domQuery } from 'min-dom';
 
 import TestContainer from 'mocha-test-container-support';
