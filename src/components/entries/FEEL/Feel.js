@@ -275,6 +275,11 @@ function FeelTextfield(props) {
 
         setLocalValue(trimmedValue);
         handleInput(trimmedValue);
+
+        if (!feelActive && isString(trimmedValue) && trimmedValue.startsWith('=')) {
+          setFocus(trimmedValue.length - 1);
+        }
+
         event.preventDefault();
       }
     };

@@ -879,7 +879,6 @@ describe('<FeelEntry>', function() {
         expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.not.exist;
 
         // when
-        input.focus();
         input.dispatchEvent(createFeelPasteEvent('=test'));
 
         await waitFor(() => {
