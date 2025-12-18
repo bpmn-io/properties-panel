@@ -135,6 +135,7 @@ function FeelTextfield(props) {
       setLocalValue(feelOnlyValue);
       handleInput(feelOnlyValue);
     }
+    handleInput.flush?.();
   });
 
   const handleLocalInput = (newValue, useDebounce = true) => {
@@ -279,6 +280,7 @@ function FeelTextfield(props) {
 
         setLocalValue(trimmedValue);
         handleInput(trimmedValue);
+        handleInput.flush?.();
 
         if (!feelActive && isString(trimmedValue) && trimmedValue.startsWith('=')) {
           isTogglingFromPasteRef.current = true;
