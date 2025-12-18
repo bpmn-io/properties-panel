@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.35.0
+
+* `FIX`: prevent racing blur for FEEL-optional ([#461](https://github.com/bpmn-io/properties-panel/pull/461))
+* `FIX`: keep focus in FEEL-optional field after pasting FEEL expression ([#461](https://github.com/bpmn-io/properties-panel/pull/461))
+* `DEPS`: update to `@bpmn-io/feel-editor@2`
+
 ## 3.34.0
 
 * `FEAT`: remove title attribute when unnecessary ([#455](https://github.com/bpmn-io/properties-panel/pull/455))
