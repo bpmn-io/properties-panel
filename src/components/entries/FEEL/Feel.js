@@ -87,7 +87,6 @@ function FeelTextfield(props) {
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
-  const isTogglingFromPasteRef = useRef(false);
 
   const onInput = useCallback(newValue => {
 
@@ -142,6 +141,10 @@ function FeelTextfield(props) {
       newValue = '=' + newValue;
     }
 
+    if (newValue === localValue) {
+      return;
+    }
+
     setLocalValue(newValue);
     if (useDebounce) {
       handleInput(newValue);
@@ -157,13 +160,6 @@ function FeelTextfield(props) {
   };
 
   const handleOnBlur = (e) => {
-
-    // Ignore blur when toggling from paste to avoid interference
-    if (isTogglingFromPasteRef.current) {
-      isTogglingFromPasteRef.current = false;
-      return;
-    }
-
     handleInput.cancel?.();
     if (e.target.type === 'checkbox') {
       onInput(e.target.checked);
@@ -281,7 +277,6 @@ function FeelTextfield(props) {
         handleInput(trimmedValue);
 
         if (!feelActive && isString(trimmedValue) && trimmedValue.startsWith('=')) {
-          isTogglingFromPasteRef.current = true;
           setFocus(trimmedValue.length - 1);
         }
 
