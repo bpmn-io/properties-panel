@@ -1532,3 +1532,8 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-feel-popup .cm-gutters .cm-lineNumbers .cm-gutterElement {
   text-align: center;
 }
+
+/* Checkbox Group */
+.bio-properties-panel-checkbox-group .bio-properties-panel-checkbox-group-entries > .bio-properties-panel-entry {
+  margin: 0;
+}
