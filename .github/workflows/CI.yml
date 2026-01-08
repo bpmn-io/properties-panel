@@ -23,7 +23,7 @@ jobs:
       run: npm ci
     - name: Setup project
       uses: bpmn-io/actions/setup@latest
-    - name: Build
+    - name: Build (with coverage)
       if: runner.os == 'Linux'
       env:
         COVERAGE: 1
