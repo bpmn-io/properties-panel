@@ -1536,4 +1536,5 @@ textarea.bio-properties-panel-input {
 /* Checkbox Group */
 .bio-properties-panel-checkbox-group .bio-properties-panel-checkbox-group-entries > .bio-properties-panel-entry {
   margin: 0;
+  padding: 0;
 }
