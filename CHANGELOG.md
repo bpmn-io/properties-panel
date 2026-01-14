@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.36.0
+
+* `FEAT`: add `CheckboxGroup` entry type ([#464](https://github.com/bpmn-io/properties-panel/pull/464))
+
 ## 3.35.1
 
 * `FIX`: revert [`1a8031e`](https://github.com/bpmn-io/properties-panel/commit/1a8031e7b5b20295098428b7fbb38f3dced0a41b) to prevent FEEL popup freeze
