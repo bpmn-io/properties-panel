@@ -376,6 +376,75 @@ describe('<PropertiesPanel>', function() {
       expect(layoutChangedSpy).to.have.been.calledWith(updatedLayoutConfig);
     });
 
+
+    it('should use actual layout state in setLayoutForKey handler', async function() {
+
+      // given
+      const groups = [
+        {
+          id: 'group-1',
+          label: 'Group 1',
+          entries: []
+        },
+        {
+          id: 'group-2',
+          label: 'Group 2',
+          entries: []
+        }
+      ];
+
+      const layoutChangedSpy = sinonSpy();
+
+      const initialLayoutConfig = {
+        open: false,
+        width: 430
+      };
+
+      const options = {
+        container,
+        element: noopElement,
+        groups,
+        layoutConfig: initialLayoutConfig,
+        layoutChanged: layoutChangedSpy
+      };
+
+      const { rerender } = createPropertiesPanel(options);
+
+      // when
+      const updatedLayoutConfig = {
+        open: true,
+        width: 330,
+        groups: {
+          'group-1': { open: true }
+        }
+      };
+
+      createPropertiesPanel({
+        ...options,
+        layoutConfig: updatedLayoutConfig
+      }, rerender);
+
+      const result = { container };
+
+      // when
+      const group2 = domQuery('[data-group-id="group-group-2"]', result.container);
+      const header2 = domQuery('.bio-properties-panel-group-header', group2);
+
+      await act(() => {
+        header2.click();
+      });
+
+      // then
+      expect(layoutChangedSpy).to.have.been.calledWith({
+        open: true,
+        width: 330,
+        groups: {
+          'group-1': { open: true },
+          'group-2': { open: true },
+        }
+      });
+    });
+
   });
 
 

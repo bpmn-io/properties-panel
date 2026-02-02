@@ -156,9 +156,11 @@ export default function PropertiesPanel(props) {
   };
 
   const setLayoutForKey = (key, config) => {
-    const newLayout = assign({}, layout);
-    set(newLayout, key, config);
-    setLayout(newLayout);
+    setLayout((prevLayout) => {
+      const newLayout = assign({}, prevLayout);
+      set(newLayout, key, config);
+      return newLayout;
+    });
   };
 
   const layoutContext = {
