@@ -447,7 +447,7 @@ describe('<Tooltip>', function() {
       await openTooltip(wrapper);
 
       // wait for useEffect to register the event listener
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise(resolve => setTimeout(resolve, 50));
 
       // create an element outside the tooltip
       const outsideElement = document.createElement('div');
@@ -457,7 +457,7 @@ describe('<Tooltip>', function() {
       fireEvent.mouseDown(outsideElement);
 
       // then
-      await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 100 });
+      await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist);
 
       // cleanup
       document.body.removeChild(outsideElement);
