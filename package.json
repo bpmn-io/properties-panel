@@ -63,7 +63,7 @@
     "copy-webpack-plugin": "^13.0.1",
     "cross-env": "^10.1.0",
     "del-cli": "^7.0.0",
-    "diagram-js": "^15.1.0",
+    "diagram-js": "^15.7.0",
     "eslint": "^9.39.1",
     "eslint-plugin-bpmn-io": "^2.2.0",
     "eslint-plugin-import": "^2.32.0",
