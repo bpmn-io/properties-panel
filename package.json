@@ -59,7 +59,7 @@
     "babel-plugin-inline-react-svg": "^2.0.2",
     "babel-plugin-istanbul": "^7.0.1",
     "babel-plugin-module-resolver": "^5.0.2",
-    "chai": "^6.2.1",
+    "chai": "^6.2.2",
     "copy-webpack-plugin": "^13.0.1",
     "cross-env": "^10.1.0",
     "del-cli": "^7.0.0",
@@ -79,13 +79,13 @@
     "mocha-test-container-support": "^0.2.0",
     "npm-run-all2": "^8.0.4",
     "preact": "^10.19.3",
-    "puppeteer": "^24.33.0",
     "raw-loader": "^4.0.2",
+    "puppeteer": "^24.36.1",
     "replace-in-file": "^7.2.0",
     "rollup": "^4.53.3",
     "rollup-plugin-copy": "^3.5.0",
-    "sinon": "^21.0.0",
+    "sinon": "^21.0.1",
     "sinon-chai": "^4.0.1",
-    "webpack": "^5.103.0"
+    "webpack": "^5.105.0"
   }
 }
