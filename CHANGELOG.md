@@ -6,6 +6,13 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.37.0
+
+* `DEPS`: update to `min-dash@5.0.0`
+* `DEPS`: update to `min-dom@5.2.0`
+* `DEPS`: update to `@bpmn-io/feel-editor@2.1.0`
+* `DEPS`: update to `classnames@2.5.1`
+
 ## 3.36.1
 
 * `FIX`: prevent stale layout state in `setLayoutForKey` callback ([#468](https://github.com/bpmn-io/properties-panel/pull/468))
