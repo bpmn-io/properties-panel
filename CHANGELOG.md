@@ -6,7 +6,9 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FIX`: fix: prevent stale layout state in `setLayoutForKey` callback ([#468](https://github.com/bpmn-io/properties-panel/pull/468))
+## 3.36.1
+
+* `FIX`: prevent stale layout state in `setLayoutForKey` callback ([#468](https://github.com/bpmn-io/properties-panel/pull/468))
 
 ## 3.36.0
 
