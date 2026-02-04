@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.38.0
+
+* `DEPS`: update to `feelers@1.5.1`
+
 ## 3.37.0
 
 * `DEPS`: update to `min-dash@5.0.0`
