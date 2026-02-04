@@ -42,7 +42,7 @@
     "@carbon/icons": "^11.69.0",
     "@codemirror/view": "^6.28.1",
     "classnames": "^2.5.1",
-    "feelers": "^1.4.0",
+    "feelers": "^1.5.1",
     "focus-trap": "^7.5.2",
     "min-dash": "^5.0.0",
     "min-dom": "^5.2.0"
