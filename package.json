@@ -43,7 +43,7 @@
     "@codemirror/view": "^6.28.1",
     "classnames": "^2.5.1",
     "feelers": "^1.5.1",
-    "focus-trap": "^7.5.2",
+    "focus-trap": "^8.0.0",
     "min-dash": "^5.0.0",
     "min-dom": "^5.2.0"
   },
