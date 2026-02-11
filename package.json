@@ -38,7 +38,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@bpmn-io/feel-editor": "^2.1.0",
+    "@bpmn-io/feel-editor": "^2.5.0",
     "@carbon/icons": "^11.69.0",
     "@codemirror/view": "^6.28.1",
     "classnames": "^2.5.1",
