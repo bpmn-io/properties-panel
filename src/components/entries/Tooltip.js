@@ -1,7 +1,8 @@
 import {
   useRef,
   useState,
-  useEffect
+  useEffect,
+  useLayoutEffect
 } from 'preact/hooks';
 
 import { useTooltipContext } from '../../hooks/useTooltipContext';
@@ -65,6 +66,8 @@ function Tooltip(props) {
   } = props;
 
   const [ visible, setVisible ] = useState(false);
+  const [ tooltipPosition, setTooltipPosition ] = useState(null);
+  const [ arrowOffset, setArrowOffset ] = useState(null);
 
   const showTimeoutRef = useRef(null);
   const hideTimeoutRef = useRef(null);
@@ -131,6 +134,20 @@ function Tooltip(props) {
     };
   }, [ visible, hide ]);
 
+  useLayoutEffect(() => {
+    if (!visible || position) {
+      setTooltipPosition(null);
+      setArrowOffset(null);
+      return;
+    }
+
+    if (!wrapperRef.current || !tooltipRef.current) return;
+
+    const { tooltipPosition: newPosition, arrowOffset: newArrowOffset } = getTooltipPosition(wrapperRef.current, tooltipRef.current, direction);
+    setTooltipPosition(newPosition);
+    setArrowOffset(newArrowOffset);
+  }, [ visible, position ]);
+
   const handleMouseLeave = ({ relatedTarget }) => {
 
     // Don't hide the tooltip when moving mouse between the wrapper and the tooltip.
@@ -174,13 +191,16 @@ function Tooltip(props) {
   };
 
   const renderTooltip = () => {
+    const tooltipStyle = position || (tooltipPosition ? `right: ${tooltipPosition.right}; top: ${tooltipPosition.top}px;` : undefined);
+    const arrowStyle = arrowOffset != null ? `margin-top: ${arrowOffset }px;` : undefined;
+
     return (
       <div
         class={ `bio-properties-panel-tooltip ${direction}` }
         role="tooltip"
         id="bio-properties-panel-tooltip"
         aria-labelledby={ forId }
-        style={ position || getTooltipPosition(wrapperRef.current) }
+        style={ tooltipStyle }
         ref={ tooltipRef }
         onClick={ (e)=> e.stopPropagation() }
         onMouseEnter={ handleTooltipMouseEnter }
@@ -189,9 +209,10 @@ function Tooltip(props) {
         <div class="bio-properties-panel-tooltip-content">
           {value}
         </div>
-        <div class="bio-properties-panel-tooltip-arrow" />
+        <div class="bio-properties-panel-tooltip-arrow" style={ arrowStyle } />
       </div>
-    );};
+    );
+  };
 
   return (
     <div class="bio-properties-panel-tooltip-wrapper" tabIndex="0"
@@ -216,11 +237,47 @@ function Tooltip(props) {
 
 // helper
 
-function getTooltipPosition(refElement) {
+function getTooltipPosition(refElement, tooltipElement, direction) {
+  if (!refElement) {
+    return { tooltipPosition: null, arrowOffset: null };
+  }
+
   const refPosition = refElement.getBoundingClientRect();
 
   const right = `calc(100% - ${refPosition.x}px)`;
-  const top = `${refPosition.top - 10}px`;
 
-  return `right: ${right}; top: ${top};`;
+  let top = refPosition.top - 10;
+  let arrowOffset = null;
+
+  // Ensure that the tooltip is within the viewport, adjust the top position if needed.
+  // This is only relevant for the 'right' direction for now
+  if (tooltipElement && direction === 'right') {
+    const tooltipRect = tooltipElement.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const minTop = 0;
+    const maxTop = viewportHeight - tooltipRect.height;
+
+    const originalTop = top;
+
+    if (top > maxTop) {
+      top = maxTop;
+    }
+
+    if (top < minTop) {
+      top = minTop;
+    }
+
+    // Adjust the arrow position if the tooltip had to be moved to stay within viewport
+    if (top !== originalTop) {
+      const defaultMarginTop = 16;
+
+      const topDiff = top - originalTop;
+      arrowOffset = defaultMarginTop - topDiff;
+    }
+  }
+
+  return {
+    tooltipPosition: { right, top },
+    arrowOffset
+  };
 }

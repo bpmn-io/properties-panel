@@ -1176,7 +1176,7 @@ textarea.bio-properties-panel-input {
   display: flex;
   color: var(--color-white, white);
   position: fixed;
-  z-index: 1000;
+  z-index: 1001;
   max-width: 300px;
   font-size: var(--text-size-small);
   font-family: var(--font-family);

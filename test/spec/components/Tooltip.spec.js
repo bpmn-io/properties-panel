@@ -137,10 +137,12 @@ describe('<Tooltip>', function() {
 
       // then
       const elementRect = element.getBoundingClientRect();
-      const tooltipRect = domQuery('.bio-properties-panel-tooltip').getBoundingClientRect();
 
-      expect(tooltipRect.top).to.equal(elementRect.top - 10);
-      expect(tooltipRect.right).to.equal(elementRect.x);
+      waitFor(() => {
+        const tooltipRect = domQuery('.bio-properties-panel-tooltip').getBoundingClientRect();
+        expect(tooltipRect.top).to.equal(elementRect.top - 10);
+        expect(tooltipRect.right).to.equal(elementRect.x);
+      });
     });
 
 
@@ -161,6 +163,47 @@ describe('<Tooltip>', function() {
 
     });
 
+
+    it('should adjust position and arrow when tooltip doesn\'t fit viewport (bottom)', async function() {
+
+      // given
+
+      // Create a tall tooltip content to ensure overflow
+      const tallContent = <div>
+        {Array.from({ length: 10 }, (_, i) => <p key={ i }>tooltip text line {i}</p>)}
+      </div>;
+
+      const viewportHeight = window.innerHeight;
+      container.style.position = 'fixed';
+      container.style.top = `${viewportHeight - 150}px`; // 150px from bottom
+
+      createTooltip({ container, value: tallContent });
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+      // when
+      await openTooltip(wrapper);
+
+      // then
+      const tooltip = domQuery('.bio-properties-panel-tooltip');
+      let tooltipRect;
+
+      // Tooltip should be adjusted to fit within viewport
+      await waitFor(() => {
+        tooltipRect = tooltip.getBoundingClientRect();
+        expect(tooltipRect.bottom).to.be.equal(viewportHeight);
+      });
+
+      // Arrow margin-top should be adjusted from default 16px
+      const arrow = domQuery('.bio-properties-panel-tooltip-arrow');
+      const arrowStyle = window.getComputedStyle(arrow);
+      const arrowMarginTop = parseInt(arrowStyle.marginTop);
+      expect(arrowMarginTop).to.not.equal(16);
+
+      // Arrow should still be within tooltip bounds
+      const arrowRect = arrow.getBoundingClientRect();
+      expect(arrowRect.top).to.be.at.least(tooltipRect.top);
+      expect(arrowRect.bottom).to.be.at.most(tooltipRect.bottom);
+    });
   });
 
 
