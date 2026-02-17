@@ -1,6 +1,6 @@
 {
   "name": "@bpmn-io/properties-panel",
-  "version": "3.35.1",
+  "version": "3.39.0",
   "description": "Library for creating bpmn-io properties panels.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -38,14 +38,14 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@bpmn-io/feel-editor": "^2.0.0",
+    "@bpmn-io/feel-editor": "^2.5.0",
     "@carbon/icons": "^11.69.0",
     "@codemirror/view": "^6.28.1",
-    "classnames": "^2.3.1",
-    "feelers": "^1.4.0",
-    "focus-trap": "^7.5.2",
-    "min-dash": "^4.1.1",
-    "min-dom": "^4.0.3"
+    "classnames": "^2.5.1",
+    "feelers": "^1.5.1",
+    "focus-trap": "^8.0.0",
+    "min-dash": "^5.0.0",
+    "min-dom": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -59,17 +59,17 @@
     "babel-plugin-inline-react-svg": "^2.0.2",
     "babel-plugin-istanbul": "^7.0.1",
     "babel-plugin-module-resolver": "^5.0.2",
-    "chai": "^6.2.1",
+    "chai": "^6.2.2",
     "copy-webpack-plugin": "^13.0.1",
     "cross-env": "^10.1.0",
     "del-cli": "^7.0.0",
-    "diagram-js": "^15.1.0",
+    "diagram-js": "^15.9.1",
     "eslint": "^9.39.1",
     "eslint-plugin-bpmn-io": "^2.2.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react-hooks": "^6.1.1",
     "karma": "^6.4.4",
-    "karma-chrome-launcher": "^3.2.0",
+    "karma-chrome-launcher-2": "^3.3.0",
     "karma-coverage": "^2.2.1",
     "karma-debug-launcher": "^0.0.5",
     "karma-env-preprocessor": "^0.1.1",
@@ -79,13 +79,13 @@
     "mocha-test-container-support": "^0.2.0",
     "npm-run-all2": "^8.0.4",
     "preact": "^10.19.3",
-    "puppeteer": "^24.33.0",
+    "puppeteer": "^24.36.1",
     "raw-loader": "^4.0.2",
     "replace-in-file": "^7.2.0",
     "rollup": "^4.53.3",
     "rollup-plugin-copy": "^3.5.0",
-    "sinon": "^21.0.0",
+    "sinon": "^21.0.1",
     "sinon-chai": "^4.0.1",
-    "webpack": "^5.103.0"
+    "webpack": "^5.105.0"
   }
 }

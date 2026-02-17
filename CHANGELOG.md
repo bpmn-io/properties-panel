@@ -6,6 +6,30 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.39.0
+
+* `DEPS`: update to `@bpmn-io/feel-editor@2.5.0`
+* `DEPS`: update to `focus-trap@8.0.0`
+
+## 3.38.0
+
+* `DEPS`: update to `feelers@1.5.1`
+
+## 3.37.0
+
+* `DEPS`: update to `min-dash@5.0.0`
+* `DEPS`: update to `min-dom@5.2.0`
+* `DEPS`: update to `@bpmn-io/feel-editor@2.1.0`
+* `DEPS`: update to `classnames@2.5.1`
+
+## 3.36.1
+
+* `FIX`: prevent stale layout state in `setLayoutForKey` callback ([#468](https://github.com/bpmn-io/properties-panel/pull/468))
+
+## 3.36.0
+
+* `FEAT`: add `CheckboxGroup` entry type ([#464](https://github.com/bpmn-io/properties-panel/pull/464))
+
 ## 3.35.1
 
 * `FIX`: revert [`1a8031e`](https://github.com/bpmn-io/properties-panel/commit/1a8031e7b5b20295098428b7fbb38f3dced0a41b) to prevent FEEL popup freeze
