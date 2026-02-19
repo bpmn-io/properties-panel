@@ -39,7 +39,7 @@ import Tooltip from '../Tooltip';
 const noop = () => {};
 
 /**
- * @typedef {'required'|'optional'|'static'} FeelType
+ * @typedef {'required'|'optional'|'optional-default-enabled'|'static'} FeelType
  */
 
 /**
@@ -96,8 +96,8 @@ function FeelTextfield(props) {
     commitValue(newModelValue);
   }, [ commitValue ]);
 
-  const feelActive = (isString(localValue) && localValue.startsWith('=')) || feel === 'required';
-  const feelOnlyValue = (isString(localValue) && localValue.startsWith('=')) ? localValue.substring(1) : localValue;
+  const feelActive = isFeelActive(feel, localValue);
+  const feelOnlyValue = getFeelValue(localValue);
   const feelLanguageContext = useContext(FeelLanguageContext);
 
   const [ focus, _setFocus ] = useState(undefined);
@@ -313,7 +313,7 @@ function FeelTextfield(props) {
       <div class="bio-properties-panel-feel-container" ref={ containerRef }>
         <FeelIndicator
           active={ feelActive }
-          disabled={ feel !== 'optional' || disabled }
+          disabled={ !isFeelOptional(feel) || disabled }
           onClick={ handleFeelToggle }
         />
         {feelActive ?
@@ -838,4 +838,56 @@ export function isEdited(node) {
 
 function prefixId(id) {
   return `bio-properties-panel-${id}`;
+}
+
+/**
+ * Determine if FEEL is optional for the configured {@link FeelType}.
+ *
+ * @param {FeelType} feelType
+ *
+ * @return {boolean}
+ */
+function isFeelOptional(feelType) {
+  return feelType === 'optional' || feelType === 'optional-default-enabled';
+}
+
+/**
+ * Determine if FEEL editing is currently active.
+ *
+ * @param {FeelType} feelType
+ * @param {string} localValue
+ *
+ * @return {boolean}
+ */
+function isFeelActive(feelType, localValue) {
+
+  if (feelType === 'required') {
+    return true;
+  }
+
+  if (isString(localValue)) {
+    if (localValue.startsWith('=')) {
+      return true;
+    }
+
+    if (localValue === '') {
+      return feelType === 'optional-default-enabled';
+    }
+  }
+
+  return false;
+}
+
+/**
+ * @template T
+ * @param {T} value
+ *
+ * @return {string|T}
+ */
+function getFeelValue(value) {
+  if (isString(value) && value.startsWith('=')) {
+    return value.substring(1);
+  }
+
+  return value;
 }
