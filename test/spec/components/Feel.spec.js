@@ -2065,6 +2065,21 @@ describe('<FeelEntry>', function() {
     });
 
 
+    it('should render as FEEL disabled for optional-default-enabled and value = false', async function() {
+
+      // given
+      const field = createFeelNumber({
+        container,
+        feel: 'optional-default-enabled',
+        getValue: () => false,
+        setValue: () => {}
+      });
+
+      // then
+      expect(getEditor(field.container)).not.to.exist;
+    });
+
+
     it('should update', function() {
 
       // given
