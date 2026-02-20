@@ -732,7 +732,7 @@ describe('<FeelEntry>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=foo');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(getEditor(field.container)).to.exist;
         });
       });
 
@@ -760,7 +760,7 @@ describe('<FeelEntry>', function() {
 
         // then
         return waitFor(() => {
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).not.to.exist;
+          expect(getEditor(field.container)).not.to.exist;
         });
       });
 
@@ -781,7 +781,7 @@ describe('<FeelEntry>', function() {
 
         // then
         expect(updateSpy).to.have.been.calledWith('=foo');
-        expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
+        expect(getEditor(container)).to.exist;
 
       });
 
@@ -860,7 +860,7 @@ describe('<FeelEntry>', function() {
 
         // Should also toggle to FEEL mode
         return waitFor(() => {
-          expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.exist;
+          expect(getEditor(result.container)).to.exist;
         });
       });
 
@@ -904,19 +904,19 @@ describe('<FeelEntry>', function() {
 
         const input = domQuery('.bio-properties-panel-input', result.container);
 
-        expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.not.exist;
+        expect(getEditor(result.container)).to.not.exist;
 
         // when
         input.dispatchEvent(createFeelPasteEvent('=test'));
 
         await waitFor(() => {
-          expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.exist;
+          expect(getEditor(result.container)).to.exist;
         });
 
         input.blur();
 
         // then
-        expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.exist;
+        expect(getEditor(result.container)).to.exist;
         expect(setValueSpy).to.have.been.calledWith('=test');
       });
 
@@ -1361,7 +1361,7 @@ describe('<FeelEntry>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=2');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(getEditor(field.container)).to.exist;
         });
       });
 
@@ -1440,7 +1440,7 @@ describe('<FeelEntry>', function() {
 
         // Should also toggle to FEEL mode
         return waitFor(() => {
-          expect(domQuery('.bio-properties-panel-feel-editor-container', result.container)).to.exist;
+          expect(getEditor(result.container)).to.exist;
         });
       });
 
@@ -2009,7 +2009,7 @@ describe('<FeelEntry>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=foo');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(getEditor(field.container)).to.exist;
         });
       });
 
@@ -2030,7 +2030,7 @@ describe('<FeelEntry>', function() {
 
         // then
         expect(updateSpy).to.have.been.calledWith('=foo');
-        expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
+        expect(getEditor(container)).to.exist;
 
       });
 
@@ -2165,7 +2165,7 @@ describe('<FeelEntry>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=true');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(getEditor(field.container)).to.exist;
         });
       });
 
@@ -2316,7 +2316,7 @@ describe('<FeelEntry>', function() {
         // then
         return waitFor(() => {
           expect(updateSpy).to.have.been.calledWith('=true');
-          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).to.exist;
+          expect(getEditor(field.container)).to.exist;
         });
       });
 
@@ -2343,7 +2343,7 @@ describe('<FeelEntry>', function() {
       const result = createFeelField({ container, placeholder: 'foo', feel: 'required' });
 
       // then
-      const input = domQuery('[role="textbox"]', result.container);
+      const input = getEditor(result.container);
       expect(input.textContent).to.eql('foo');
     });
 
@@ -2354,7 +2354,7 @@ describe('<FeelEntry>', function() {
       const result = createFeelField({ container, feel: 'optional-default-enabled' });
 
       // then
-      const input = domQuery('[role="textbox"]', result.container);
+      const input = getEditor(result.container);
       expect(input).to.exist;
     });
 
@@ -2366,7 +2366,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelField({ container, setValue: updateSpy, feel: 'required' });
 
-      const input = domQuery('[role="textbox"]', result.container);
+      const input = getEditor(result.container);
 
       // when
       input.textContent = 'foo';
@@ -2383,8 +2383,7 @@ describe('<FeelEntry>', function() {
       // given
       const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
 
-      const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('[role="textbox"]', entry);
+      const input = getEditor(result.container);
 
       // then
       expect(input.textContent).to.eql('foo');
@@ -2398,7 +2397,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelField({ container, setValue: updateSpy, getValue: () => 'foo', feel: 'required' });
 
-      const input = domQuery('[role="textbox"]', result.container);
+      const input = getEditor(result.container);
 
       // when
       input.textContent += 'o';
@@ -2426,7 +2425,7 @@ describe('<FeelEntry>', function() {
 
       // then
       expect(updateSpy).to.have.been.calledWith(undefined);
-      expect(domQuery('.bio-properties-panel-feel-editor-container', container)).to.exist;
+      expect(getEditor(container)).to.exist;
     });
 
 
@@ -2435,7 +2434,7 @@ describe('<FeelEntry>', function() {
       // given
       const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
 
-      const contentEditable = domQuery('[role="textbox"]', result.container);
+      const contentEditable = getEditor(result.container);
 
       const copyEvent = new ClipboardEvent('copy', {
         dataType: 'text/plain',
@@ -2457,7 +2456,7 @@ describe('<FeelEntry>', function() {
       // given
       const result = createFeelField({ container, feel: 'required', getValue: () => 'foo' });
 
-      const contentEditable = domQuery('[role="textbox"]', result.container);
+      const contentEditable = getEditor(result.container);
 
       const copyEvent = new ClipboardEvent('copy', {
         dataType: 'text/plain',
@@ -2512,7 +2511,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelField({ container, feel: 'required' });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
-        const contentEditable = domQuery('[role="textbox"]', result.container);
+        const contentEditable = getEditor(result.container);
 
         // assume
         expect(isEdited(input)).to.be.false;
@@ -3391,4 +3390,8 @@ function createFeelCheckbox(options = {}, renderFn = render) {
 
 function isValid(node) {
   return !domClasses(node).has('has-error');
+}
+
+function getEditor(container) {
+  return domQuery('[role="textbox"]', container);
 }
