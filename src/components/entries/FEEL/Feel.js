@@ -891,8 +891,7 @@ function getFeelValue(value) {
 /**
  * Initialize local FEEL value.
  *
- * `optional-default-enabled` starts in FEEL mode, but can still be toggled off
- * afterwards by removing the leading `=`.
+ * `optional-default-enabled` starts in FEEL mode if no value or empty string is provided.
  *
  * @template T
  * @param {FeelType} feelType
@@ -901,7 +900,7 @@ function getFeelValue(value) {
  * @return {string|T}
  */
 function getInitialFeelLocalValue(feelType, value) {
-  if (feelType === 'optional-default-enabled' && !value) {
+  if (feelType === 'optional-default-enabled' && (value === undefined || value === '')) {
     return '=';
   }
 
