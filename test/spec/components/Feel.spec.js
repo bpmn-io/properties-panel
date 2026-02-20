@@ -740,14 +740,12 @@ describe('<FeelEntry>', function() {
       it('should toggle feel disabled if enabled per default', async function() {
 
         // given
-        const updateSpy = sinonSpy();
-
         const field = createFeelField({
           container,
           id: 'feelField',
           feel: 'optional-default-enabled',
           getValue: () => '',
-          setValue: updateSpy
+          setValue: () => {}
         });
 
         const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
