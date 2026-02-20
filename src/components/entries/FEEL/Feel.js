@@ -83,7 +83,7 @@ function FeelTextfield(props) {
     tooltip
   } = props;
 
-  const [ localValue, setLocalValue ] = useState(value);
+  const [ localValue, setLocalValue ] = useState(getInitialFeelLocalValue(feel, value));
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
@@ -869,10 +869,6 @@ function isFeelActive(feelType, localValue) {
     if (localValue.startsWith('=')) {
       return true;
     }
-
-    if (localValue === '') {
-      return feelType === 'optional-default-enabled';
-    }
   }
 
   return false;
@@ -887,6 +883,26 @@ function isFeelActive(feelType, localValue) {
 function getFeelValue(value) {
   if (isString(value) && value.startsWith('=')) {
     return value.substring(1);
+  }
+
+  return value;
+}
+
+/**
+ * Initialize local FEEL value.
+ *
+ * `optional-default-enabled` starts in FEEL mode, but can still be toggled off
+ * afterwards by removing the leading `=`.
+ *
+ * @template T
+ * @param {FeelType} feelType
+ * @param {T} value
+ *
+ * @return {string|T}
+ */
+function getInitialFeelLocalValue(feelType, value) {
+  if (feelType === 'optional-default-enabled' && !value) {
+    return '=';
   }
 
   return value;

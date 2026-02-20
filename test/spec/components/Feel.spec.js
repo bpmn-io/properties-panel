@@ -737,6 +737,34 @@ describe('<FeelEntry>', function() {
       });
 
 
+      it('should toggle feel disabled if enabled per default', async function() {
+
+        // given
+        const updateSpy = sinonSpy();
+
+        const field = createFeelField({
+          container,
+          id: 'feelField',
+          feel: 'optional-default-enabled',
+          getValue: () => '',
+          setValue: updateSpy
+        });
+
+        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container);
+
+        // when
+        await act(() => {
+          icon.click();
+        });
+
+        // then
+        return waitFor(() => {
+          expect(domQuery('.bio-properties-panel-feel-editor-container', field.container)).not.to.exist;
+        });
+      });
+
+
       it('should toggle on input', function() {
         const updateSpy = sinonSpy();
 
@@ -2317,6 +2345,17 @@ describe('<FeelEntry>', function() {
       // then
       const input = domQuery('[role="textbox"]', result.container);
       expect(input.textContent).to.eql('foo');
+    });
+
+
+    it('should render editor for feel=optional-default-enabled', function() {
+
+      // given
+      const result = createFeelField({ container, feel: 'optional-default-enabled' });
+
+      // then
+      const input = domQuery('[role="textbox"]', result.container);
+      expect(input).to.exist;
     });
 
 
