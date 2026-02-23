@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.40.0
+
+* `FEAT`: support `optional-default-enabled` FEEL entry config ([#470](https://github.com/bpmn-io/properties-panel/pull/470))
+
 ## 3.39.0
 
 * `DEPS`: update to `@bpmn-io/feel-editor@2.5.0`
