@@ -146,6 +146,53 @@ describe('<ToggleSwitch>', function() {
   });
 
 
+  describe('rerender', function() {
+
+    it('should not retrigger on element change', function() {
+
+      // given
+      const setValue = sinonSpy();
+
+      const elementA = { id: 'elementA' };
+      const elementB = { id: 'elementB' };
+
+      const result = createToggleSwitch({
+        container,
+        element: elementA,
+        setValue,
+        getValue: () => false
+      });
+
+      const inputBefore = domQuery('.bio-properties-panel-input', result.container);
+
+      const slider = domQuery('.bio-properties-panel-toggle-switch__slider', result.container);
+
+      // when
+      clickInput(slider);
+
+      // assume
+      expect(setValue).to.have.been.calledOnceWith(true);
+
+      setValue.resetHistory();
+
+      createToggleSwitch({
+        container,
+        element: elementB,
+        setValue,
+        getValue: () => false
+      }, result.rerender);
+
+      const inputAfter = domQuery('.bio-properties-panel-input', result.container);
+
+      // then
+      expect(setValue).to.not.have.been.called;
+      expect(inputAfter).to.not.equal(inputBefore);
+      expect(inputAfter.checked).to.be.false;
+    });
+
+  });
+
+
   it('should set labels', function() {
 
     // given

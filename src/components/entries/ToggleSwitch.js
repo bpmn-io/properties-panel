@@ -107,6 +107,7 @@ export default function ToggleSwitchEntry(props) {
   return (
     <div class="bio-properties-panel-entry bio-properties-panel-toggle-switch-entry" data-entry-id={ id }>
       <ToggleSwitch
+        key={ element }
         id={ id }
         label={ label }
         value={ value }
