@@ -230,6 +230,7 @@ function Title(props) {
       {children}
       {showCloseButton && (
         <button
+          type="button"
           title={ closeButtonTooltip }
           class="bio-properties-panel-popup__close"
           onClick={ onClose }
