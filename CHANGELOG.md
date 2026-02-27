@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.40.2
+
+* `FIX`: add `type` to feel popup button ([#472](https://github.com/bpmn-io/properties-panel/pull/472))
+
 ## 3.40.1
 
 * `FIX`: prevent cutting the tooltip if it couldn't fit to the bottom of the screen ([#469](https://github.com/bpmn-io/properties-panel/pull/469))
