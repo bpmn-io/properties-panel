@@ -49,7 +49,7 @@ const FeelEditor = forwardRef((props, ref) => {
     contentAttributes,
     enableGutters,
     value,
-    onInput,
+    onInput = noop,
     onKeyDown: onKeyDownProp = noop,
     onFeelToggle = noop,
     onLint = noop,
@@ -74,8 +74,8 @@ const FeelEditor = forwardRef((props, ref) => {
 
   useBufferedFocus(editor, ref);
 
-  const handleInput = useStaticCallback(newValue => {
-    onInput(newValue);
+  const handleInput = useStaticCallback((newValue, useDebounce = true) => {
+    onInput(newValue, useDebounce);
     setLocalValue(newValue);
   });
 
@@ -129,6 +129,14 @@ const FeelEditor = forwardRef((props, ref) => {
     );
 
     return () => {
+      const stateValue = editor?._cmEditor?.state?.doc?.toString?.();
+      const domValue = editor?._cmEditor?.contentDOM?.textContent;
+
+      const currentValue = stateValue === '' && typeof domValue === 'string'
+        ? domValue
+        : (stateValue || '');
+
+      handleInput(currentValue, false);
       onLint([]);
       inputRef.current.innerHTML = '';
       setEditor(null);
