@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef } from 'preact/hooks';
+import { useCallback, useRef } from 'preact/hooks';
 
 /**
  * Creates a static function reference with changing body.
