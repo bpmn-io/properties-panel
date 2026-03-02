@@ -25,9 +25,7 @@ import { useCallback, useLayoutEffect, useRef } from 'preact/hooks';
 export function useStaticCallback(callback) {
   const callbackRef = useRef(callback);
 
-  // useLayoutEffect(() => {
-    callbackRef.current = callback;
-  // });
+  callbackRef.current = callback;
 
   return useCallback(
     (...args) => callbackRef.current(...args),
