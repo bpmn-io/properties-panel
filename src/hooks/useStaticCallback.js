@@ -11,11 +11,20 @@ import { useCallback, useRef } from 'preact/hooks';
  * The `callback` reference is static and can be safely used in external
  * libraries or as a prop that does not cause rerendering of children.
  *
+ * The ref update is deferred to after DOM mutations via useLayoutEffect.
+ * This prevents stale-closure issues when Chrome fires blur events on
+ * focused elements that are removed from the DOM during a re-render.
+ * If the ref were updated synchronously during render, a blur handler
+ * from an unmounting child could invoke the *new* callback (which
+ * closes over the new element), writing the old value into the wrong
+ * target.
+ *
  * @param {Function} callback function with changing reference
  * @returns {Function} static function reference
  */
 export function useStaticCallback(callback) {
   const callbackRef = useRef(callback);
+
   callbackRef.current = callback;
 
   return useCallback(
