@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.40.3
+
+* `FIX`: defer static callback updates to after layouting ([#471](https://github.com/bpmn-io/properties-panel/pull/471))
+* `FIX`: add selected element as key of toggleSwitch
+* `FIX`: gracefully handle missing debounce ([#475](https://github.com/bpmn-io/properties-panel/issues/475))
+
 ## 3.40.2
 
 * `FIX`: add `type` to feel popup button ([#472](https://github.com/bpmn-io/properties-panel/pull/472))
