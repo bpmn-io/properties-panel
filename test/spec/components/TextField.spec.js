@@ -242,6 +242,34 @@ describe('<TextField>', function() {
   });
 
 
+  it('should NOT throw when debounce does not provide flush', async function() {
+
+    // given
+    const result = createTextField({
+      container,
+      getValue: () => '',
+      setValue: noop,
+      debounce: fn => fn // no .flush or .cancel on returned function
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    input.focus();
+    changeInput(input, 'some value');
+
+    // then - should not throw
+    expect(() => {
+      fireEvent.keyDown(input, {
+        key: 'z',
+        metaKey: true,
+        ctrlKey: false,
+        altKey: false
+      });
+    }).not.to.throw();
+  });
+
+
   it('should call onBlur if provided', async function() {
 
     // given
