@@ -118,7 +118,7 @@ function TextArea(props) {
 
   const handleOnKeyDown = e => {
     if (isCmdWithChar(e)) {
-      handleInput.flush();
+      handleInput.flush?.();
     }
   };
 
