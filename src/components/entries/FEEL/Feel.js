@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState
 } from 'preact/hooks';
@@ -84,6 +85,7 @@ function FeelTextfield(props) {
   } = props;
 
   const [ localValue, setLocalValue ] = useState(getInitialFeelLocalValue(feel, value));
+  const localValueRef = useRef(localValue);
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
@@ -99,6 +101,15 @@ function FeelTextfield(props) {
   const feelActive = isFeelActive(feel, localValue);
   const feelOnlyValue = getFeelValue(localValue);
   const feelLanguageContext = useContext(FeelLanguageContext);
+
+  // Always-current ref so the element-change cleanup can read the latest
+  // feelActive state without needing to be in its dependency array.
+  const feelActiveRef = useRef(feelActive);
+  feelActiveRef.current = feelActive;
+
+  // Set to true when the component is unmounting so the element-change
+  // cleanup can distinguish element switches from component destruction.
+  const isUnmountingRef = useRef(false);
 
   const [ focus, _setFocus ] = useState(undefined);
 
@@ -121,6 +132,12 @@ function FeelTextfield(props) {
    * @type { import('min-dash').DebouncedFunction }
    */
   const handleInput = useDebounce(onInput, debounce);
+  const previousElementRef = useRef(element);
+
+  if (previousElementRef.current !== element) {
+    handleInput.flush?.();
+    previousElementRef.current = element;
+  }
 
   const handleFeelToggle = useStaticCallback(() => {
     if (feel === 'required') {
@@ -129,22 +146,39 @@ function FeelTextfield(props) {
 
     if (!feelActive) {
       setLocalValue('=' + localValue);
-      handleInput('=' + localValue);
+      handleInput.cancel?.();
+      onInput('=' + localValue);
     } else {
       setLocalValue(feelOnlyValue);
-      handleInput(feelOnlyValue);
+      handleInput.cancel?.();
+      onInput(feelOnlyValue);
     }
+
+    // Prevent the FeelEditor unmount cleanup from double-committing the same
+    // value that the toggle just committed.
+    editorRef.current?.clearDirty?.();
   });
 
   const handleLocalInput = (newValue, useDebounce = true) => {
+
+    const currentLocalValue = localValueRef.current;
+
+    if (!useDebounce) {
+      handleInput.cancel?.();
+    }
+
     if (feelActive) {
       newValue = '=' + newValue;
     }
 
-    if (newValue === localValue) {
+    if (newValue === currentLocalValue) {
+      if (!useDebounce) {
+        onInput(newValue);
+      }
       return;
     }
 
+    localValueRef.current = newValue;
     setLocalValue(newValue);
     if (useDebounce) {
       handleInput(newValue);
@@ -164,7 +198,12 @@ function FeelTextfield(props) {
     if (e.target.type === 'checkbox') {
       onInput(e.target.checked);
     } else {
-      const trimmedValue = e.target.value.trim();
+      let trimmedValue = normalizeFEELValue(e.target.value);
+
+      if (!trimmedValue && isString(localValueRef.current) && localValueRef.current.startsWith('=')) {
+        trimmedValue = localValueRef.current;
+      }
+
       handleLocalInput(trimmedValue, false);
     }
 
@@ -237,10 +276,34 @@ function FeelTextfield(props) {
   }, [ value ]);
 
   useEffect(() => {
+    localValueRef.current = localValue;
+  }, [ localValue ]);
+
+  // When the element changes, flush any pending FeelEditor user input to the
+  // model before the editor is reset to the new element's value.  This fires
+  // in the cleanup phase, which runs BEFORE FeelEditor's value effect clears
+  // the editor — so the DOM content is still available to read.
+  // Note: this must be registered AFTER the unmount-detection effect below so
+  // that on unmount the flag is set before this cleanup runs.
+  useEffect(() => {
+    return () => { isUnmountingRef.current = true; };
+  }, []);
+
+  useLayoutEffect(() => {
     return () => {
+      if (!isUnmountingRef.current && feelActiveRef.current) {
+        handleInput.flush?.();
+        editorRef.current?.commit?.();
+      }
+    };
+  }, [ element, handleInput ]);
+
+  useEffect(() => {
+    return () => {
+      handleInput.flush?.();
       eventBus.fire('propertiesPanel.closePopup');
     };
-  }, []);
+  }, [ eventBus, handleInput ]);
 
   // copy-paste integration
   useEffect(() => {
@@ -271,10 +334,9 @@ function FeelTextfield(props) {
 
       if (isFieldEmpty || isAllSelected) {
         const textData = event.clipboardData.getData('text');
-        const trimmedValue = textData.trim();
+        const trimmedValue = normalizeFEELValue(textData);
 
-        setLocalValue(trimmedValue);
-        handleInput(trimmedValue);
+        handleLocalInput(trimmedValue, false);
 
         if (!feelActive && isString(trimmedValue) && trimmedValue.startsWith('=')) {
           setFocus(trimmedValue.length - 1);
@@ -905,4 +967,21 @@ function getInitialFeelLocalValue(feelType, value) {
   }
 
   return value;
+}
+
+/**
+ * Normalize a raw string value for use as a FEEL expression.
+ * - Trims surrounding whitespace.
+ * - If the result starts with `=`, also trims whitespace immediately after `=`.
+ *
+ * Examples:
+ *   '  =  test  ' → '=test'
+ *   '  hello  '   → 'hello'
+ */
+function normalizeFEELValue(value) {
+  const trimmed = value.trim();
+  if (trimmed.startsWith('=')) {
+    return '=' + trimmed.slice(1).trim();
+  }
+  return trimmed;
 }
