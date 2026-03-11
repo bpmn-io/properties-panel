@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: re-enable toggling feel optional fields with backspace ([@bpmn-io/feel-editor#83](https://github.com/bpmn-io/feel-editor/pull/83))
+* `FIX`: continue suggestions for autocompletion in feel fields even after spaces ([@bpmn-io/feel-editor#84](https://github.com/bpmn-io/feel-editor/pull/84))
+* `DEPS`: update to `@bpmn-io/feel-editor@2.5.2`
+
 ## 3.40.3
 
 * `FIX`: defer static callback updates to after layouting ([#471](https://github.com/bpmn-io/properties-panel/pull/471))
