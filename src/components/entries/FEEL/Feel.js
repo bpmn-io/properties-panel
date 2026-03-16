@@ -194,7 +194,7 @@ function FeelTextfield(props) {
     if (e.target.type === 'checkbox') {
       onInput(e.target.checked);
     } else {
-      let trimmedValue = e.target.value.trim();
+      let trimmedValue = trimValue(feel, e.target.value);
 
       if (!trimmedValue && isString(localValueRef.current) && localValueRef.current.startsWith('=')) {
         trimmedValue = localValueRef.current;
@@ -325,7 +325,7 @@ function FeelTextfield(props) {
 
       if (isFieldEmpty || isAllSelected) {
         const textData = event.clipboardData.getData('text');
-        const trimmedValue = textData.trim();
+        const trimmedValue = trimValue(feel, textData);
 
         handleLocalInput(trimmedValue, false);
 
@@ -958,4 +958,17 @@ function getInitialFeelLocalValue(feelType, value) {
   }
 
   return value;
+}
+
+/*
+* trim value and also feel expression after the `=`
+ *   '  =  test  ' -> '=test'
+ *   '  hello  '   -> 'hello'
+*/
+function trimValue(feelType, value) {
+  const trimmedValue = value.trim();
+  if (isFeelActive(feelType, trimmedValue)) {
+    return '=' + getFeelValue(trimmedValue).trim();
+  }
+  return value.trim();
 }
