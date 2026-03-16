@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState
 } from 'preact/hooks';
@@ -84,6 +85,7 @@ function FeelTextfield(props) {
   } = props;
 
   const [ localValue, setLocalValue ] = useState(getInitialFeelLocalValue(feel, value));
+  const localValueRef = useRef(localValue);
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
@@ -99,6 +101,13 @@ function FeelTextfield(props) {
   const feelActive = isFeelActive(feel, localValue);
   const feelOnlyValue = getFeelValue(localValue);
   const feelLanguageContext = useContext(FeelLanguageContext);
+
+  // keep state between rerenders
+  const feelActiveRef = useRef(feelActive);
+  feelActiveRef.current = feelActive;
+  const previousElementRef = useRef(element);
+  const previousHandleInputRef = useRef(null);
+
 
   const [ focus, _setFocus ] = useState(undefined);
 
@@ -127,24 +136,44 @@ function FeelTextfield(props) {
       return;
     }
 
-    if (!feelActive) {
-      setLocalValue('=' + localValue);
-      handleInput('=' + localValue);
+    const currentValue = localValueRef.current;
+    const currentFeelActive = isFeelActive(feel, currentValue);
+    const currentFeelOnlyValue = getFeelValue(currentValue);
+
+    if (!currentFeelActive) {
+      setLocalValue('=' + currentValue);
+      handleInput.cancel?.();
+      onInput('=' + currentValue);
     } else {
-      setLocalValue(feelOnlyValue);
-      handleInput(feelOnlyValue);
+      setLocalValue(currentFeelOnlyValue);
+      handleInput.cancel?.();
+      onInput(currentFeelOnlyValue);
     }
+
+    // Prevent the FeelEditor unmount cleanup from double-committing
+    editorRef.current?.clearDirty?.();
   });
 
   const handleLocalInput = (newValue, useDebounce = true) => {
+
+    const currentLocalValue = localValueRef.current;
+
+    if (!useDebounce) {
+      handleInput.cancel?.();
+    }
+
     if (feelActive) {
       newValue = '=' + newValue;
     }
 
-    if (newValue === localValue) {
+    if (newValue === currentLocalValue) {
+      if (!useDebounce) {
+        onInput(newValue);
+      }
       return;
     }
 
+    localValueRef.current = newValue;
     setLocalValue(newValue);
     if (useDebounce) {
       handleInput(newValue);
@@ -164,7 +193,12 @@ function FeelTextfield(props) {
     if (e.target.type === 'checkbox') {
       onInput(e.target.checked);
     } else {
-      const trimmedValue = e.target.value.trim();
+      let trimmedValue = e.target.value.trim();
+
+      if (!trimmedValue && isString(localValueRef.current) && localValueRef.current.startsWith('=')) {
+        trimmedValue = localValueRef.current;
+      }
+
       handleLocalInput(trimmedValue, false);
     }
 
@@ -237,10 +271,33 @@ function FeelTextfield(props) {
   }, [ value ]);
 
   useEffect(() => {
+    localValueRef.current = localValue;
+  }, [ localValue ]);
+
+  // ensure values are committed during element switch
+  useLayoutEffect(() => {
+    const elementChanged = previousElementRef.current !== element;
+    const prevHandleInput = previousHandleInputRef.current;
+
+    previousElementRef.current = element;
+    previousHandleInputRef.current = handleInput;
+
+    if (elementChanged) {
+      handleInput.flush?.();
+      if (feelActiveRef.current) {
+        editorRef.current?.commit?.();
+      }
+    } else if (prevHandleInput && prevHandleInput !== handleInput) {
+      prevHandleInput.flush?.();
+    }
+  }, [ element, handleInput ]);
+
+  useEffect(() => {
     return () => {
+      handleInput.flush?.();
       eventBus.fire('propertiesPanel.closePopup');
     };
-  }, []);
+  }, [ eventBus, handleInput ]);
 
   // copy-paste integration
   useEffect(() => {
@@ -273,8 +330,7 @@ function FeelTextfield(props) {
         const textData = event.clipboardData.getData('text');
         const trimmedValue = textData.trim();
 
-        setLocalValue(trimmedValue);
-        handleInput(trimmedValue);
+        handleLocalInput(trimmedValue, false);
 
         if (!feelActive && isString(trimmedValue) && trimmedValue.startsWith('=')) {
           setFocus(trimmedValue.length - 1);

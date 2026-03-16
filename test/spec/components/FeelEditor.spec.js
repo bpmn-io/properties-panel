@@ -209,6 +209,145 @@ describe('<FeelEditor>', function() {
     // then
     expect(spy).to.have.been.calledWith('feel');
   });
+
+
+  it('should commit dirty value immediately on blur', async function() {
+
+    // given
+    const onInputSpy = sinonSpy();
+    render(<Wrapper onInput={ onInputSpy } />, { container });
+
+    const editor = domQuery('[role="textbox"]', container);
+    editor.textContent = 'foo';
+
+    await waitFor(() => {
+      expect(onInputSpy).to.have.been.calledWith('foo', true);
+    });
+
+    onInputSpy.resetHistory();
+
+    // when
+    fireEvent.blur(editor);
+
+    // then
+    expect(onInputSpy).to.have.been.calledOnceWith('foo', false);
+  });
+
+
+  it('should not mark editor as dirty when value prop changes externally', async function() {
+
+    // given
+    const onInputSpy = sinonSpy();
+    const component = render(<Wrapper value="initial" onInput={ onInputSpy } />, { container });
+
+    const editor = domQuery('[role="textbox"]', container);
+    onInputSpy.resetHistory();
+
+    // when
+    component.rerender(<Wrapper value="updated" onInput={ onInputSpy } />);
+
+    await waitFor(() => {
+      expect(editor.textContent).to.eql('updated');
+    });
+
+    onInputSpy.resetHistory();
+
+    // then
+    fireEvent.blur(editor);
+    expect(onInputSpy).not.to.have.been.called;
+  });
+
+
+  it('should commit current value when commit() is called without prior blur', async function() {
+
+    // given
+    const onInputSpy = sinonSpy();
+    let capturedRef;
+
+    function WrapperWithRef(props) {
+      const ref = useRef();
+      capturedRef = ref;
+      return <FeelComponent { ...props } ref={ ref } />;
+    }
+
+    render(<WrapperWithRef onInput={ onInputSpy } />, { container });
+
+    const editor = domQuery('[role="textbox"]', container);
+    editor.textContent = 'foo';
+
+    await waitFor(() => {
+      expect(onInputSpy).to.have.been.calledWith('foo', true);
+      expect(capturedRef.current.commit).to.be.a('function');
+    });
+
+    onInputSpy.resetHistory();
+
+    // when
+    capturedRef.current.commit();
+
+    // then
+    expect(onInputSpy).to.have.been.calledOnceWith('foo', false);
+  });
+
+
+  it('should commit dirty value on unmount', async function() {
+
+    // given
+    const onInputSpy = sinonSpy();
+    const { unmount } = render(<Wrapper onInput={ onInputSpy } />, { container });
+
+    const editor = domQuery('[role="textbox"]', container);
+    editor.textContent = 'foo';
+
+    await waitFor(() => {
+      expect(onInputSpy).to.have.been.calledWith('foo', true);
+    });
+
+    onInputSpy.resetHistory();
+
+    // when
+    unmount();
+
+    // then
+    expect(onInputSpy).to.have.been.calledOnceWith('foo', false);
+  });
+
+
+  it('should not re-commit on commit() call if blur already committed', async function() {
+
+    // given
+    const onInputSpy = sinonSpy();
+    let capturedRef;
+
+    function WrapperWithRef(props) {
+      const ref = useRef();
+      capturedRef = ref;
+      return <FeelComponent { ...props } ref={ ref } />;
+    }
+
+    render(<WrapperWithRef onInput={ onInputSpy } />, { container });
+
+    const editor = domQuery('[role="textbox"]', container);
+    editor.textContent = 'foo';
+
+    await waitFor(() => {
+      expect(onInputSpy).to.have.been.calledWith('foo', true);
+      expect(capturedRef.current.commit).to.be.a('function');
+    });
+
+    onInputSpy.resetHistory();
+
+    fireEvent.blur(editor);
+    expect(onInputSpy).to.have.been.calledOnceWith('foo', false);
+
+    onInputSpy.resetHistory();
+
+    // when
+    capturedRef.current.commit();
+
+    // then
+    expect(onInputSpy).not.to.have.been.called;
+  });
 });
 
 

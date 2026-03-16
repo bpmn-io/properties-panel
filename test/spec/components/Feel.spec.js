@@ -916,7 +916,7 @@ describe('<FeelEntry>', function() {
       });
 
 
-      it('should preserve FEEL toggle when pasting FEEL expression and then blurring', async function() {
+      it('should commit pasted FEEL expression immediately on paste from non-FEEL text state', function() {
 
         // given
         const setValueSpy = sinonSpy();
@@ -925,7 +925,8 @@ describe('<FeelEntry>', function() {
           container,
           feel: 'optional',
           getValue: () => '',
-          setValue: setValueSpy
+          setValue: setValueSpy,
+          debounce: fn => debounce(fn, 50)
         });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
@@ -935,15 +936,40 @@ describe('<FeelEntry>', function() {
         // when
         input.dispatchEvent(createFeelPasteEvent('=test'));
 
-        await waitFor(() => {
-          expect(getEditor(result.container)).to.exist;
+        // then
+        expect(setValueSpy).to.have.been.calledOnceWith('=test');
+      });
+
+
+      it('should not overwrite pasted FEEL expression when blurring immediately', async function() {
+
+        // given
+        const setValueSpy = sinonSpy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => '',
+          setValue: setValueSpy,
+          debounce: fn => debounce(fn, 50)
         });
 
-        input.blur();
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        expect(getEditor(result.container)).to.not.exist;
+
+        // when
+        await act(() => {
+          input.dispatchEvent(createFeelPasteEvent('=test'));
+          input.blur();
+        });
 
         // then
-        expect(getEditor(result.container)).to.exist;
-        expect(setValueSpy).to.have.been.calledWith('=test');
+        return waitFor(() => {
+          expect(getEditor(result.container)).to.exist;
+          expect(setValueSpy).to.have.been.calledWith('=test');
+          expect(setValueSpy).not.to.have.been.calledWith(undefined);
+        });
       });
 
     });
@@ -2430,6 +2456,84 @@ describe('<FeelEntry>', function() {
       // then
       return waitFor(() => {
         expect(updateSpy).to.have.been.calledWith('=foo');
+      });
+    });
+
+
+    it('should commit FEEL editor value when debounce changes without element remount', async function() {
+
+      // given
+      const setValueSpy = sinonSpy();
+      const element = {};
+
+      const result = createFeelField({
+        container,
+        element,
+        feel: 'required',
+        getValue: () => '',
+        setValue: setValueSpy,
+        debounce: fn => debounce(fn, 200)
+      });
+
+      const editor = getEditor(result.container);
+
+
+      editor.textContent = 'foo';
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(setValueSpy).not.to.have.been.called;
+
+      // when
+      await act(() => {
+        createFeelField({
+          container,
+          element,
+          feel: 'required',
+          getValue: () => '',
+          setValue: setValueSpy,
+          debounce: fn => fn
+        }, result.rerender);
+      });
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('=foo');
+    });
+
+
+    it('should persist value when leaving FEEL editor immediately after input', async function() {
+
+      // given
+      const updateSpy = sinonSpy();
+
+      const firstElement = { id: 'first' };
+      const secondElement = { id: 'second' };
+
+      const result = createFeelField({
+        container,
+        element: firstElement,
+        setValue: updateSpy,
+        feel: 'required',
+        debounce: fn => debounce(fn, 50)
+      });
+
+      const input = getEditor(result.container);
+
+      // when
+      await act(() => {
+        input.textContent = 'foo';
+
+        createFeelField({
+          container,
+          element: secondElement,
+          setValue: updateSpy,
+          feel: 'required',
+          debounce: fn => debounce(fn, 50)
+        }, result.rerender);
+      });
+
+      // then
+      await waitFor(() => {
+        expect(updateSpy).to.have.been.calledWith('=foo');
+        expect(updateSpy).to.have.been.calledOnce;
       });
     });
 
