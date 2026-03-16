@@ -22,18 +22,23 @@ const useBufferedFocus = function(editor, ref) {
 
   const [ buffer, setBuffer ] = useState(undefined);
 
-  ref.current = useMemo(() => ({
-    focus: (offset) => {
-      if (editor) {
-        editor.focus(offset);
-      } else {
-        if (typeof offset === 'undefined') {
-          offset = Infinity;
+  ref.current = useMemo(() => {
+    const current = ref.current || {};
+
+    return {
+      ...current,
+      focus: (offset) => {
+        if (editor) {
+          editor.focus(offset);
+        } else {
+          if (typeof offset === 'undefined') {
+            offset = Infinity;
+          }
+          setBuffer(offset);
         }
-        setBuffer(offset);
       }
-    }
-  }), [ editor ]);
+    };
+  }, [ editor ]);
 
   useEffect(() => {
     if (typeof buffer !== 'undefined' && editor) {
@@ -49,7 +54,7 @@ const FeelEditor = forwardRef((props, ref) => {
     contentAttributes,
     enableGutters,
     value,
-    onInput,
+    onInput = noop,
     onKeyDown: onKeyDownProp = noop,
     onFeelToggle = noop,
     onLint = noop,
@@ -64,7 +69,13 @@ const FeelEditor = forwardRef((props, ref) => {
 
   const inputRef = useRef();
   const [ editor, setEditor ] = useState();
+
   const [ localValue, setLocalValue ] = useState(value || '');
+  const isDirtyRef = useRef(false);
+
+  const ignoreProgrammaticChangeRef = useRef(false);
+  const editorRef = useRef(null);
+  const blurHasCommittedRef = useRef(false);
 
   const {
     builtins,
@@ -74,9 +85,56 @@ const FeelEditor = forwardRef((props, ref) => {
 
   useBufferedFocus(editor, ref);
 
-  const handleInput = useStaticCallback(newValue => {
-    onInput(newValue);
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    ref.current.commit = () => {
+      if (blurHasCommittedRef.current) {
+        blurHasCommittedRef.current = false;
+        return;
+      }
+
+      const stateValue = editor?._cmEditor?.state?.doc?.toString?.();
+      const domValue = editor?._cmEditor?.contentDOM?.textContent;
+      const currentValue = stateValue === '' && typeof domValue === 'string'
+        ? domValue
+        : (stateValue || '');
+      isDirtyRef.current = false;
+      handleInput(currentValue, false);
+    };
+
+    ref.current.clearDirty = () => {
+      isDirtyRef.current = false;
+    };
+  }, [ editor ]);
+
+  const handleInput = useStaticCallback((newValue, useDebounce = true) => {
+    if (!ignoreProgrammaticChangeRef.current) {
+      isDirtyRef.current = useDebounce;
+    }
+
+    onInput(newValue, useDebounce);
     setLocalValue(newValue);
+  });
+
+  // Commit immediately on blur
+  const handleBlur = useStaticCallback(() => {
+    if (!isDirtyRef.current) {
+      return;
+    }
+
+    const currentEditor = editorRef.current;
+    const stateValue = currentEditor?._cmEditor?.state?.doc?.toString?.();
+    const domValue = currentEditor?._cmEditor?.contentDOM?.textContent;
+    const currentValue = stateValue === '' && typeof domValue === 'string'
+      ? domValue
+      : (stateValue || '');
+
+    blurHasCommittedRef.current = true;
+    isDirtyRef.current = false;
+    handleInput(currentValue, false);
   });
 
   useEffect(() => {
@@ -119,16 +177,29 @@ const FeelEditor = forwardRef((props, ref) => {
       parserDialect,
       extensions: [
         ...enableGutters ? [ lineNumbers() ] : [],
-        EditorView.lineWrapping
+        EditorView.lineWrapping,
+        EditorView.domEventHandlers({ blur: handleBlur })
       ],
       contentAttributes
     });
 
+    editorRef.current = editor;
     setEditor(
       editor
     );
 
     return () => {
+      editorRef.current = null;
+      const stateValue = editor?._cmEditor?.state?.doc?.toString?.();
+      const domValue = editor?._cmEditor?.contentDOM?.textContent;
+
+      const currentValue = stateValue === '' && typeof domValue === 'string'
+        ? domValue
+        : (stateValue || '');
+
+      if (isDirtyRef.current) {
+        handleInput(currentValue, false);
+      }
       onLint([]);
       inputRef.current.innerHTML = '';
       setEditor(null);
@@ -144,7 +215,9 @@ const FeelEditor = forwardRef((props, ref) => {
       return;
     }
 
+    ignoreProgrammaticChangeRef.current = true;
     editor.setValue(value);
+    ignoreProgrammaticChangeRef.current = false;
     setLocalValue(value);
   }, [ value ]);
 

@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState
 } from 'preact/hooks';
@@ -84,6 +85,7 @@ function FeelTextfield(props) {
   } = props;
 
   const [ localValue, setLocalValue ] = useState(getInitialFeelLocalValue(feel, value));
+  const localValueRef = useRef(localValue);
 
   const editorRef = useShowEntryEvent(id);
   const containerRef = useRef();
@@ -99,6 +101,12 @@ function FeelTextfield(props) {
   const feelActive = isFeelActive(feel, localValue);
   const feelOnlyValue = getFeelValue(localValue);
   const feelLanguageContext = useContext(FeelLanguageContext);
+
+  // keep state between rerenders
+  const isUnmountingRef = useRef(false);
+  const feelActiveRef = useRef(feelActive);
+  feelActiveRef.current = feelActive;
+
 
   const [ focus, _setFocus ] = useState(undefined);
 
@@ -121,6 +129,12 @@ function FeelTextfield(props) {
    * @type { import('min-dash').DebouncedFunction }
    */
   const handleInput = useDebounce(onInput, debounce);
+  const previousElementRef = useRef(element);
+
+  if (previousElementRef.current !== element) {
+    handleInput.flush?.();
+    previousElementRef.current = element;
+  }
 
   const handleFeelToggle = useStaticCallback(() => {
     if (feel === 'required') {
@@ -129,22 +143,38 @@ function FeelTextfield(props) {
 
     if (!feelActive) {
       setLocalValue('=' + localValue);
-      handleInput('=' + localValue);
+      handleInput.cancel?.();
+      onInput('=' + localValue);
     } else {
       setLocalValue(feelOnlyValue);
-      handleInput(feelOnlyValue);
+      handleInput.cancel?.();
+      onInput(feelOnlyValue);
     }
+
+    // Prevent the FeelEditor unmount cleanup from double-committing
+    editorRef.current?.clearDirty?.();
   });
 
   const handleLocalInput = (newValue, useDebounce = true) => {
+
+    const currentLocalValue = localValueRef.current;
+
+    if (!useDebounce) {
+      handleInput.cancel?.();
+    }
+
     if (feelActive) {
       newValue = '=' + newValue;
     }
 
-    if (newValue === localValue) {
+    if (newValue === currentLocalValue) {
+      if (!useDebounce) {
+        onInput(newValue);
+      }
       return;
     }
 
+    localValueRef.current = newValue;
     setLocalValue(newValue);
     if (useDebounce) {
       handleInput(newValue);
@@ -164,7 +194,12 @@ function FeelTextfield(props) {
     if (e.target.type === 'checkbox') {
       onInput(e.target.checked);
     } else {
-      const trimmedValue = e.target.value.trim();
+      let trimmedValue = e.target.value.trim();
+
+      if (!trimmedValue && isString(localValueRef.current) && localValueRef.current.startsWith('=')) {
+        trimmedValue = localValueRef.current;
+      }
+
       handleLocalInput(trimmedValue, false);
     }
 
@@ -237,10 +272,29 @@ function FeelTextfield(props) {
   }, [ value ]);
 
   useEffect(() => {
+    localValueRef.current = localValue;
+  }, [ localValue ]);
+
+  // ensure values are committed during element switch
+  useEffect(() => {
+    return () => { isUnmountingRef.current = true; };
+  }, []);
+
+  useLayoutEffect(() => {
     return () => {
+      if (!isUnmountingRef.current && feelActiveRef.current) {
+        handleInput.flush?.();
+        editorRef.current?.commit?.();
+      }
+    };
+  }, [ element, handleInput ]);
+
+  useEffect(() => {
+    return () => {
+      handleInput.flush?.();
       eventBus.fire('propertiesPanel.closePopup');
     };
-  }, []);
+  }, [ eventBus, handleInput ]);
 
   // copy-paste integration
   useEffect(() => {
@@ -273,8 +327,7 @@ function FeelTextfield(props) {
         const textData = event.clipboardData.getData('text');
         const trimmedValue = textData.trim();
 
-        setLocalValue(trimmedValue);
-        handleInput(trimmedValue);
+        handleLocalInput(trimmedValue, false);
 
         if (!feelActive && isString(trimmedValue) && trimmedValue.startsWith('=')) {
           setFocus(trimmedValue.length - 1);
