@@ -974,6 +974,58 @@ describe('<FeelEntry>', function() {
 
     });
 
+    it('should trim whitespace after = when pasting FEEL expression', function() {
+
+      // given
+      const updateSpy = sinonSpy();
+
+      const result = createFeelField({
+        container,
+        feel: 'optional',
+        setValue: updateSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.dispatchEvent(createFeelPasteEvent('  =  test  '));
+
+      // then
+      expect(updateSpy).to.have.been.calledWith('=test');
+
+      // Should also toggle to FEEL mode
+      return waitFor(() => {
+        expect(getEditor(result.container)).to.exist;
+      });
+    });
+
+
+    it('should trim whitespace after = when blurring with FEEL expression', async function() {
+
+      // given
+      const updateSpy = sinonSpy();
+
+      const result = createFeelField({
+        container,
+        feel: 'optional',
+        setValue: updateSpy
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      await act(() => {
+        input.focus();
+        changeInput(input, '  =  test  ');
+        input.blur();
+      });
+
+      // then
+      expect(updateSpy).to.have.been.calledWith('=test');
+    });
+
+
+
   });
 
 
