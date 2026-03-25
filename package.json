@@ -15,6 +15,7 @@
     "build": "rollup -c --bundleConfigAsCjs",
     "build:watch": "npm run build -- --watch",
     "lint": "eslint .",
+    "start": "cross-env SINGLE_START=example npm run dev",
     "dev": "npm test -- --auto-watch --no-single-run",
     "test": "karma start karma.config.js",
     "prepare": "run-s build"
