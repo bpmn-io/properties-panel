@@ -51,6 +51,7 @@ const FeelEditor = forwardRef((props, ref) => {
     value,
     onInput,
     onKeyDown: onKeyDownProp = noop,
+    onBlur = noop,
     onFeelToggle = noop,
     onLint = noop,
     onOpenPopup = noop,
@@ -77,6 +78,10 @@ const FeelEditor = forwardRef((props, ref) => {
   const handleInput = useStaticCallback(newValue => {
     onInput(newValue);
     setLocalValue(newValue);
+  });
+
+  const handleBlur = useStaticCallback(() => {
+    onBlur();
   });
 
   useEffect(() => {
@@ -119,7 +124,8 @@ const FeelEditor = forwardRef((props, ref) => {
       parserDialect,
       extensions: [
         ...enableGutters ? [ lineNumbers() ] : [],
-        EditorView.lineWrapping
+        EditorView.lineWrapping,
+        EditorView.domEventHandlers({ blur: handleBlur })
       ],
       contentAttributes
     });

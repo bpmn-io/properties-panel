@@ -122,21 +122,27 @@ function FeelTextfield(props) {
    */
   const handleInput = useDebounce(onInput, debounce);
 
+  const setAndCommitValue = (newValue) => {
+
+    // cancel any pending debounced value
+    handleInput.cancel?.();
+    setLocalValue(newValue);
+    onInput(newValue);
+  };
+
   const handleFeelToggle = useStaticCallback(() => {
     if (feel === 'required') {
       return;
     }
 
     if (!feelActive) {
-      setLocalValue('=' + localValue);
-      handleInput('=' + localValue);
+      setAndCommitValue('=' + localValue);
     } else {
-      setLocalValue(feelOnlyValue);
-      handleInput(feelOnlyValue);
+      setAndCommitValue(feelOnlyValue);
     }
   });
 
-  const handleLocalInput = (newValue, useDebounce = true) => {
+  const handleInputChange = (newValue) => {
     if (feelActive) {
       newValue = '=' + newValue;
     }
@@ -146,11 +152,7 @@ function FeelTextfield(props) {
     }
 
     setLocalValue(newValue);
-    if (useDebounce) {
-      handleInput(newValue);
-    } else {
-      onInput(newValue);
-    }
+    handleInput(newValue);
 
     if (!feelActive && isString(newValue) && newValue.startsWith('=')) {
 
@@ -159,18 +161,30 @@ function FeelTextfield(props) {
     }
   };
 
-  const handleOnBlur = (e) => {
-    handleInput.cancel?.();
+  const handleOptionalInputOnBlur = (e) => {
     if (e.target.type === 'checkbox') {
-      onInput(e.target.checked);
+      setAndCommitValue(e.target.checked);
     } else {
       const trimmedValue = e.target.value.trim();
-      handleLocalInput(trimmedValue, false);
+
+      if (trimmedValue !== localValue) {
+
+        // Trim changed the value — commit trimmed
+        setAndCommitValue(trimmedValue);
+      } else {
+
+        // Value unchanged — flush any pending debounce
+        handleInput.flush?.();
+      }
     }
 
     if (onBlur) {
       onBlur(e);
     }
+  };
+
+  const handleFeelEditorOnBlur = () => {
+    handleInput.flush?.();
   };
 
   const handleOnKeyDown = e => {
@@ -196,7 +210,7 @@ function FeelTextfield(props) {
       entryId: id,
       hostLanguage,
       label,
-      onInput: handleLocalInput,
+      onInput: handleInputChange,
       singleLine,
       sourceElement: editorRef.current,
       tooltipContainer,
@@ -273,8 +287,7 @@ function FeelTextfield(props) {
         const textData = event.clipboardData.getData('text');
         const trimmedValue = textData.trim();
 
-        setLocalValue(trimmedValue);
-        handleInput(trimmedValue);
+        setAndCommitValue(trimmedValue);
 
         if (!feelActive && isString(trimmedValue) && trimmedValue.startsWith('=')) {
           setFocus(trimmedValue.length - 1);
@@ -319,7 +332,8 @@ function FeelTextfield(props) {
         {feelActive ?
           <FeelEditor
             name={ id }
-            onInput={ handleLocalInput }
+            onInput={ handleInputChange }
+            onBlur={ handleFeelEditorOnBlur }
             onKeyDown={ handleOnKeyDown }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             disabled={ disabled }
@@ -340,9 +354,9 @@ function FeelTextfield(props) {
           <OptionalComponent
             { ...props }
             popupOpen={ isPopupOpen }
-            onInput={ handleLocalInput }
+            onInput={ handleInputChange }
             onKeyDown={ handleOnKeyDown }
-            onBlur={ handleOnBlur }
+            onBlur={ handleOptionalInputOnBlur }
             contentAttributes={ { 'id': prefixId(id), 'aria-label': label } }
             value={ localValue }
             ref={ editorRef }
