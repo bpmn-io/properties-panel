@@ -6,10 +6,10 @@ import {
 export function useDebounce(callback, debounceFn) {
   const debouncedCallback = useCallback(debounceFn(callback), [ callback, debounceFn ]);
 
-  // make sure previous call is not stalled
+  // flush pending calls before unmount the debounced function
   useEffect(() => {
     return () => {
-      debouncedCallback.cancel?.();
+      debouncedCallback.flush?.();
     };
   }, [ debouncedCallback ]);
 

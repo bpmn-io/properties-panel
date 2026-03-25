@@ -154,7 +154,7 @@ describe('<FeelEntry>', function() {
         container,
         getValue: () => '',
         setValue: setValueSpy,
-        debounce: fn => debounce(fn, 0)
+        debounce: fn => debounce(fn, 50)
       });
 
       const input = domQuery('.bio-properties-panel-input', result.container);
@@ -164,10 +164,36 @@ describe('<FeelEntry>', function() {
       changeInput(input, 'hello   ');
       input.blur();
 
-      await new Promise(resolve => setTimeout(resolve, 1));
-
       // then
       expect(setValueSpy).to.have.been.calledOnceWith('hello');
+    });
+
+
+    it('should not commit again on blur if already committed (debounce)', async function() {
+
+      // given
+      let currentValue = '';
+      const setValueSpy = sinonSpy((newValue) => { currentValue = newValue; });
+
+      const result = createFeelField({
+        container,
+        getValue: () => currentValue,
+        setValue: setValueSpy,
+        debounce: fn => debounce(fn, 50)
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      input.focus();
+      changeInput(input, 'hello');
+
+      waitFor(() => expect(setValueSpy).to.have.been.calledOnce);
+
+      input.blur();
+
+      // then
+      expect(setValueSpy).to.have.been.calledOnce;
     });
 
 
@@ -765,6 +791,39 @@ describe('<FeelEntry>', function() {
       });
 
 
+      it('should commit current input value when toggling FEEL with pending debounce', async function() {
+
+        // given
+        const setValueSpy = sinonSpy();
+
+        const field = createFeelField({
+          container,
+          id: 'feelField',
+          feel: 'optional',
+          getValue: () => '',
+          setValue: setValueSpy,
+          debounce: fn => debounce(fn, 50)
+        });
+
+        const input = domQuery('.bio-properties-panel-input', field.container);
+        const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
+          field.container);
+
+        // when
+        changeInput(input, 'bar');
+        expect(setValueSpy).not.to.have.been.called;
+
+        await act(() => {
+          icon.click();
+        });
+
+        // then
+        return waitFor(() => {
+          expect(setValueSpy).to.have.been.calledWith('=bar');
+        });
+      });
+
+
       it('should toggle feel disabled if enabled per default', async function() {
 
         // given
@@ -925,7 +984,8 @@ describe('<FeelEntry>', function() {
           container,
           feel: 'optional',
           getValue: () => '',
-          setValue: setValueSpy
+          setValue: setValueSpy,
+          debounce: fn => debounce(fn, 50)
         });
 
         const input = domQuery('.bio-properties-panel-input', result.container);
@@ -946,6 +1006,120 @@ describe('<FeelEntry>', function() {
         expect(setValueSpy).to.have.been.calledWith('=test');
       });
 
+
+      it('should commit pasted value immediately (debounce)', function() {
+
+        // given
+        const setValueSpy = sinonSpy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => '',
+          setValue: setValueSpy,
+          debounce: fn => debounce(fn, 50)
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        input.dispatchEvent(createFeelPasteEvent('=test'));
+
+        // then
+        expect(setValueSpy).to.have.been.calledOnceWith('=test');
+      });
+
+
+      it('should not commit previously typed value after pasting FEEL expression', async function() {
+
+        // given
+        const setValueSpy = sinonSpy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => '',
+          setValue: setValueSpy,
+          debounce: fn => debounce(fn, 50)
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        changeInput(input, 'abc');
+        expect(setValueSpy).not.to.have.been.called;
+
+        input.focus();
+        input.setSelectionRange(0, input.value.length);
+        input.dispatchEvent(createFeelPasteEvent('=xyz'));
+
+        // then
+        expect(setValueSpy).to.have.been.calledWith('=xyz');
+
+        await new Promise(resolve => setTimeout(resolve, 50));
+        expect(setValueSpy).not.to.have.been.calledWith('abc');
+      });
+
+
+      it('should preserve pasted FEEL expression on blur', async function() {
+
+        // given
+        const setValueSpy = sinonSpy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => '',
+          setValue: setValueSpy,
+          debounce: fn => debounce(fn, 50)
+        });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        expect(getEditor(result.container)).to.not.exist;
+
+        // when
+        await act(() => {
+          input.dispatchEvent(createFeelPasteEvent('=test'));
+          input.blur();
+        });
+
+        // then
+        return waitFor(() => {
+          expect(getEditor(result.container)).to.exist;
+          expect(setValueSpy).to.have.been.calledWith('=test');
+          expect(setValueSpy).not.to.have.been.calledWith(undefined);
+        });
+      });
+
+    });
+
+
+    it('should persist plain input value on unmount', async function() {
+
+      // given
+      const setValueSpy = sinonSpy();
+
+      const result = createFeelField({
+        container,
+        setValue: setValueSpy,
+        feel: 'optional',
+        getValue: () => '',
+        debounce: fn => debounce(fn, 50)
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      changeInput(input, 'hello');
+      expect(setValueSpy).not.to.have.been.called;
+
+      // when
+      await act(() => {
+        result.unmount();
+      });
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('hello');
     });
 
   });
@@ -2431,6 +2605,99 @@ describe('<FeelEntry>', function() {
       return waitFor(() => {
         expect(updateSpy).to.have.been.calledWith('=foo');
       });
+    });
+
+    it('should commit FEEL editor value on blur (debounce)', async function() {
+
+      // given
+      const setValueSpy = sinonSpy();
+
+      const result = createFeelField({
+        container,
+        setValue: setValueSpy,
+        feel: 'required',
+        getValue: () => '',
+        debounce: fn => debounce(fn, 50)
+      });
+
+      const editor = getEditor(result.container);
+
+      editor.textContent = 'foo';
+
+      // wait for CodeMirror MutationObserver to process the change
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      expect(setValueSpy).not.to.have.been.called;
+
+      // when
+      editor.focus();
+      editor.blur();
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('=foo');
+    });
+
+
+    it('should not commit FEEL editor value again on blur if already committed', async function() {
+
+      // given
+      const setValueSpy = sinonSpy();
+
+      const result = createFeelField({
+        container,
+        setValue: setValueSpy,
+        feel: 'required',
+        debounce: fn => debounce(fn, 50)
+      });
+
+      const editor = getEditor(result.container);
+
+      editor.textContent = 'foo';
+
+      await waitFor(() => {
+        expect(setValueSpy).to.have.been.calledWith('=foo');
+      });
+
+      setValueSpy.resetHistory();
+
+      // when
+      editor.focus();
+      editor.blur();
+
+      // then
+      expect(setValueSpy).not.to.have.been.called;
+    });
+
+
+    it('should persist FEEL editor value on unmount', async function() {
+
+      // given
+      const setValueSpy = sinonSpy();
+
+      const result = createFeelField({
+        container,
+        setValue: setValueSpy,
+        feel: 'required',
+        debounce: fn => debounce(fn, 50)
+      });
+
+      const editor = getEditor(result.container);
+
+      editor.textContent = 'foo';
+
+      await waitFor(() => {
+        expect(editor.textContent).to.eql('foo');
+      });
+
+      expect(setValueSpy).not.to.have.been.called;
+
+      // when
+      await act(() => {
+        result.unmount();
+      });
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('=foo');
     });
 
 

@@ -209,6 +209,23 @@ describe('<FeelEditor>', function() {
     // then
     expect(spy).to.have.been.calledWith('feel');
   });
+
+
+  it('should fire onBlur when editor is blurred', async function() {
+
+    // given
+    const onBlurSpy = sinonSpy();
+    render(<Wrapper onBlur={ onBlurSpy } />, { container });
+
+    const editor = domQuery('[role="textbox"]', container);
+
+    // when
+    fireEvent.blur(editor);
+
+    // then
+    expect(onBlurSpy).to.have.been.calledOnce;
+  });
+
 });
 
 
