@@ -116,6 +116,7 @@ const FeelEditor = forwardRef((props, ref) => {
       onKeyDown: onKeyDown,
       onLint: onLint,
       placeholder: placeholder,
+      readOnly: disabled,
       tooltipContainer: tooltipContainer,
       value: localValue,
       variables,

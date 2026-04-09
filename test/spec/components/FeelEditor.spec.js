@@ -226,6 +226,28 @@ describe('<FeelEditor>', function() {
     expect(onBlurSpy).to.have.been.calledOnce;
   });
 
+
+  it('should be read-only when disabled', function() {
+
+    // given
+    render(<Wrapper disabled={ true } />, { container });
+
+    // then
+    const editor = domQuery('[role="textbox"]', container);
+    expect(editor.getAttribute('contenteditable')).to.equal('false');
+  });
+
+
+  it('should be editable when not disabled', function() {
+
+    // given
+    render(<Wrapper />, { container });
+
+    // then
+    const editor = domQuery('[role="textbox"]', container);
+    expect(editor.getAttribute('contenteditable')).to.equal('true');
+  });
+
 });
 
 
