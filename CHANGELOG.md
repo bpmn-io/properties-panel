@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.40.6
+
+* `FIX`: make FeelEditor read-only based on the `disabled` prop ([#484](https://github.com/bpmn-io/properties-panel/pull/484))
+
 ## 3.40.5
 
 * `FIX`: Ensure Feel/Text editors value is properly committed on blur, paste, and unmount ([#481](https://github.com/bpmn-io/properties-panel/pull/481))
