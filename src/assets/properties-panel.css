@@ -569,6 +569,42 @@ textarea.bio-properties-panel-input {
   resize: vertical;
 }
 
+/**
+ * JSON Editor (CodeMirror)
+ */
+
+.bio-properties-panel-json-editor .cm-editor {
+  border: 1px solid var(--input-border-color);
+  border-radius: 2px;
+  background-color: var(--input-background-color);
+  font-size: var(--text-size-base);
+  font-family: var(--font-family-monospace);
+}
+
+.bio-properties-panel-json-editor .cm-editor.cm-focused {
+  outline: none;
+  background-color: var(--input-focus-background-color);
+  border-color: var(--input-focus-border-color);
+}
+
+.bio-properties-panel-json-editor .cm-scroller {
+  overflow: auto;
+  max-height: 215px;
+}
+
+.bio-properties-panel-json-editor .cm-content {
+  padding-right: 18px;
+}
+
+.bio-properties-panel-entry.has-error .bio-properties-panel-json-editor .cm-editor {
+  border-color: var(--input-error-border-color);
+  background-color: var(--input-error-background-color);
+}
+
+.bio-properties-panel-entry.has-error .bio-properties-panel-json-editor .cm-editor.cm-focused {
+  border-color: var(--input-error-focus-border-color);
+}
+
 .bio-properties-panel-entry.has-error .bio-properties-panel-input,
 .bio-properties-panel-entry.has-error .bio-properties-panel-feel-editor__open-popup-placeholder {
   border-color: var(--input-error-border-color);

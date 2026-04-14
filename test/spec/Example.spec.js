@@ -14,6 +14,7 @@ import {
   TextFieldEntry,
   TextAreaEntry,
   CheckboxEntry,
+  JsonEditorEntry,
   NumberFieldEntry,
   SelectEntry,
   ToggleSwitchEntry,
@@ -35,6 +36,7 @@ describe('Example', function() {
   beforeEach(function() {
     container = document.createElement('div');
     container.style.width = '350px';
+    container.style.marginLeft = 'auto';
 
     TestContainer.get(this).appendChild(container);
   });
@@ -51,6 +53,7 @@ describe('Example', function() {
       implementation: 'java',
       className: 'com.example.MyDelegate',
       documentation: '',
+      exampleData: '{\n  "orderId": "12345",\n  "customer": {\n    "name": "Jane Doe",\n    "email": "jane@example.com"\n  },\n  "items": [\n    { "id": 1, "price": 29.99 },\n    { "id": 2, "price": 49.99 }\n  ]\n}',
       retryCount: 3,
       async: false,
       expression: '=myVariable + 10',
@@ -138,6 +141,19 @@ describe('Example', function() {
             component: NumberFieldComponent,
             label: 'Retry Count',
             description: 'Number of retries on failure.',
+            element
+          }
+        ]
+      },
+      {
+        id: 'code',
+        label: 'Example Data',
+        entries: [
+          {
+            id: 'exampleData',
+            component: JsonEditorComponent,
+            label: 'Example Data (JSON)',
+            description: 'Provide example output data as a JSON object.',
             element
           }
         ]
@@ -349,6 +365,22 @@ function createInputParameter(element) {
       value: ''
     });
   };
+}
+
+function JsonEditorComponent(props) {
+  const { id, element, label, description } = props;
+
+  return JsonEditorEntry({
+    id,
+    element,
+    label,
+    description,
+    debounce: fn => fn,
+    tooltip: 'Enter a JSON object representing example output data for this element.',
+    placeholder: '{ }',
+    getValue: () => element[id] ?? '',
+    setValue: (val) => { element[id] = val; }
+  });
 }
 
 class ExampleHeaderProvider {
