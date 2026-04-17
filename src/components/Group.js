@@ -68,7 +68,7 @@ export default function Group(props) {
     if (hasEntry && !open) {
       setOpen(true);
     }
-  }, [ pendingRequest, entries, open, setOpen ]);
+  }, [ pendingRequest, entries, open ]);
 
   const [ edited, setEdited ] = useState(false);
 

@@ -51,13 +51,6 @@ module.exports = function(karma) {
 
     browsers,
 
-    customLaunchers: {
-      ChromeHeadlessNoSandbox: {
-        base: 'ChromeHeadless',
-        flags: [ '--no-sandbox', '--disable-dev-shm-usage' ]
-      }
-    },
-
     singleRun: true,
     autoWatch: false,
 

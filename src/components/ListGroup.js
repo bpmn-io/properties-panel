@@ -98,7 +98,7 @@ export default function ListGroup(props) {
     if (hasEntry && !open) {
       setOpen(true);
     }
-  }, [ pendingRequest, items, open, setOpen ]);
+  }, [ pendingRequest, items, open ]);
 
   const openItemIds = (element === prevElement && open && addTriggered)
     ? getNewItemIds(items, localItems)
