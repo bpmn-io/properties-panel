@@ -1,6 +1,7 @@
 import {
   useCallback,
   useContext,
+  useEffect,
   useState
 } from 'preact/hooks';
 
@@ -13,7 +14,7 @@ import {
   DeleteIcon,
 } from '../icons';
 
-import { PropertiesPanelContext } from '../../context';
+import { PropertiesPanelContext, ShowEntryContext } from '../../context';
 
 import translateFallback from '../util/translateFallback';
 
@@ -36,6 +37,22 @@ export default function CollapsibleEntry(props) {
   const toggleOpen = () => setOpen(!open);
 
   const { onShow } = useContext(PropertiesPanelContext);
+
+  // open the collapsible entry when the panel-level coordinator requests
+  // showing one of its child entries
+  const { pendingRequest } = useContext(ShowEntryContext);
+
+  useEffect(() => {
+    if (!pendingRequest) {
+      return;
+    }
+
+    const hasEntry = entries.some(entry => entry && entry.id === pendingRequest.id);
+
+    if (hasEntry && !open) {
+      setOpen(true);
+    }
+  }, [ pendingRequest, entries, open ]);
 
   const propertiesPanelContext = {
     ...useContext(PropertiesPanelContext),

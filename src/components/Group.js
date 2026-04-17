@@ -23,7 +23,7 @@ import {
   useLayoutState
 } from '../hooks';
 
-import { PropertiesPanelContext } from '../context';
+import { PropertiesPanelContext, ShowEntryContext } from '../context';
 
 import { useStickyIntersectionObserver } from '../hooks';
 
@@ -53,6 +53,22 @@ export default function Group(props) {
   const onShow = useCallback(() => setOpen(true), [ setOpen ]);
 
   const toggleOpen = () => setOpen(!open);
+
+  // open the group when the panel-level coordinator requests showing an
+  // entry that lives in this group
+  const { pendingRequest } = useContext(ShowEntryContext);
+
+  useEffect(() => {
+    if (!pendingRequest) {
+      return;
+    }
+
+    const hasEntry = entries.some(entry => entry && entry.id === pendingRequest.id);
+
+    if (hasEntry && !open) {
+      setOpen(true);
+    }
+  }, [ pendingRequest, entries, open, setOpen ]);
 
   const [ edited, setEdited ] = useState(false);
 
