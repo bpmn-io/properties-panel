@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+`FEAT`: add `JsonEditor` component ([#485](https://github.com/bpmn-io/properties-panel/pull/485))
+
 ## 3.40.6
 
 * `FIX`: make FeelEditor read-only based on the `disabled` prop ([#484](https://github.com/bpmn-io/properties-panel/pull/484))
