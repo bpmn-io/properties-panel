@@ -1,6 +1,6 @@
 {
   "name": "@bpmn-io/properties-panel",
-  "version": "3.40.6",
+  "version": "3.41.0",
   "description": "Library for creating bpmn-io properties panels.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -49,7 +49,6 @@
     "@codemirror/state": "^6.6.0",
     "@codemirror/view": "^6.28.1",
     "classnames": "^2.5.1",
-
     "feelers": "^1.5.1",
     "focus-trap": "^8.0.0",
     "min-dash": "^5.0.0",
