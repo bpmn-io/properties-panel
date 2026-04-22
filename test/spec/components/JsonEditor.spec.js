@@ -243,6 +243,29 @@ describe('<JsonEditor>', function() {
       });
     });
 
+
+    it('should show no error for empty value', async function() {
+
+      // given
+      const result = createJsonEditor({
+        container,
+        getValue: () => ''
+      });
+
+      // wait linter delay to ensure no errors appear
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      // then
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+      expect(domClasses(entry).has('has-error')).to.be.false;
+
+      const error = domQuery('.bio-properties-panel-error', result.container);
+      expect(error).to.not.exist;
+
+      const editorInlineErrors = domQuery('.cm-lintPoint-error', result.container);
+      expect(editorInlineErrors).to.not.exist;
+    });
+
   });
 
 

@@ -30,6 +30,7 @@ import { linter } from '@codemirror/lint';
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 const ExternalChange = Annotation.define();
+const parseJsonLinter = jsonParseLinter();
 
 /**
  * A CodeMirror based JSON editor for the properties panel.
@@ -99,7 +100,11 @@ function JsonEditor(props) {
             }
           }),
           json(),
-          linter(jsonParseLinter(), { delay: 300 })
+          linter((view) => {
+            const content = view.state.doc.toString();
+            if (!content.trim()) return [];
+            return parseJsonLinter(view);
+          }, { delay: 300 })
         ]
       }),
       parent: containerRef.current
@@ -240,7 +245,7 @@ export function isEdited(node) {
 // helpers /////////////////
 
 function validateJson(value) {
-  if (!value) return null;
+  if (!value || !value.trim()) return null;
 
   try {
     return isObject(JSON.parse(value)) ? null : 'JSON contains errors';
