@@ -276,13 +276,14 @@ describe('<JsonEditor>', function() {
       // given
       const result = createJsonEditor({
         container,
+        placeholder: '{ }',
         getValue: () => '{"foo": 1}'
       });
 
       // then
       await waitFor(() => {
-        const entry = domQuery('.bio-properties-panel-entry', result.container);
-        expect(isEdited(entry)).to.be.true;
+        const input = domQuery('.bio-properties-panel-input', result.container);
+        expect(isEdited(input)).to.be.true;
       });
     });
 
@@ -292,13 +293,41 @@ describe('<JsonEditor>', function() {
       // given
       const result = createJsonEditor({
         container,
+        placeholder: '{ }',
         getValue: () => ''
       });
 
       // then
       await waitFor(() => {
-        const entry = domQuery('.bio-properties-panel-entry', result.container);
-        expect(isEdited(entry)).to.be.false;
+        const input = domQuery('.bio-properties-panel-input', result.container);
+        expect(isEdited(input)).to.be.false;
+      });
+    });
+
+
+    it('should be edited after update', async function() {
+
+      // given
+      let initialValue = '';
+
+      const result = createJsonEditor({
+        container,
+        placeholder: '{ }',
+        getValue: () => initialValue
+      });
+
+      // when
+      const newValue = '{"foo": 1}';
+      createJsonEditor({
+        container,
+        placeholder: '{ }',
+        getValue: () => newValue
+      }, result.render);
+
+      // then
+      await waitFor(() => {
+        const input = domQuery('.bio-properties-panel-input', result.container);
+        expect(isEdited(input)).to.be.true;
       });
     });
 

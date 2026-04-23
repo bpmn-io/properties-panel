@@ -1,4 +1,5 @@
-import { render } from '@testing-library/preact/pure';
+import { render } from 'preact';
+import { useReducer, useCallback } from 'preact/hooks';
 
 import TestContainer from 'mocha-test-container-support';
 
@@ -12,16 +13,22 @@ import ListGroup from 'src/components/ListGroup';
 
 import {
   TextFieldEntry,
+  isTextFieldEntryEdited,
   TextAreaEntry,
+  isTextAreaEntryEdited,
   CheckboxEntry,
+  isCheckboxEntryEdited,
   JsonEditorEntry,
+  isJsonEditorEntryEdited,
   NumberFieldEntry,
+  isNumberFieldEntryEdited,
   SelectEntry,
+  isSelectEntryEdited,
   ToggleSwitchEntry,
-  FeelEntry
+  isToggleSwitchEntryEdited,
+  FeelEntry,
+  isFeelEntryEdited
 } from 'src/components/entries';
-
-import { EventContext } from 'src/context';
 
 import EventBus from 'diagram-js/lib/core/EventBus';
 
@@ -45,185 +52,219 @@ describe('Example', function() {
 
     this.timeout(0);
 
-    // given
-    const element = {
-      id: 'Element_1',
-      name: 'My Service Task',
-      type: 'bpmn:ServiceTask',
-      implementation: 'java',
-      className: 'com.example.MyDelegate',
-      documentation: '',
-      exampleData: '{\n  "orderId": "12345",\n  "customer": {\n    "name": "Jane Doe",\n    "email": "jane@example.com"\n  },\n  "items": [\n    { "id": 1, "price": 29.99 },\n    { "id": 2, "price": 49.99 }\n  ]\n}',
-      retryCount: 3,
-      async: false,
-      expression: '=myVariable + 10',
-      conditionExpression: '',
-      inputParameters: [
-        { id: 'input-1', name: 'customerId', value: '=customer.id' },
-        { id: 'input-2', name: 'orderTotal', value: '=sum(order.items.price)' }
-      ],
-      outputParameters: [
-        { id: 'output-1', name: 'result', value: '=response.data' }
-      ]
-    };
-
-    const eventBus = new EventBus();
-
-    const groups = [
-      {
-        id: 'general',
-        label: 'General',
-        entries: [
-          {
-            id: 'name',
-            component: TextFieldComponent,
-            label: 'Name',
-            description: 'The display name of the element.',
-            element
-          },
-          {
-            id: 'documentation',
-            component: TextAreaComponent,
-            label: 'Documentation',
-            description: 'Documentation for this element.',
-            element
-          }
-        ]
-      },
-      {
-        id: 'feel-expressions',
-        label: 'FEEL Expressions',
-        entries: [
-          {
-            id: 'expression',
-            component: FeelEntryComponent,
-            label: 'Expression',
-            description: 'A FEEL expression to evaluate.',
-            feel: 'required',
-            element
-          },
-          {
-            id: 'conditionExpression',
-            component: FeelEntryComponent,
-            label: 'Condition',
-            description: 'Optional FEEL condition (toggle FEEL mode with = prefix).',
-            feel: 'optional',
-            element
-          }
-        ]
-      },
-      {
-        id: 'details',
-        label: 'Details',
-        entries: [
-          {
-            id: 'implementation',
-            component: SelectComponent,
-            label: 'Implementation',
-            description: 'How this task is implemented.',
-            element,
-            options: [
-              { value: '', label: '<none>' },
-              { value: 'java', label: 'Java Class' },
-              { value: 'expression', label: 'Expression' },
-              { value: 'delegate', label: 'Delegate Expression' }
-            ]
-          },
-          {
-            id: 'className',
-            component: TextFieldComponent,
-            label: 'Java Class',
-            description: 'Fully qualified class name.',
-            element
-          },
-          {
-            id: 'retryCount',
-            component: NumberFieldComponent,
-            label: 'Retry Count',
-            description: 'Number of retries on failure.',
-            element
-          }
-        ]
-      },
-      {
-        id: 'code',
-        label: 'Example Data',
-        entries: [
-          {
-            id: 'exampleData',
-            component: JsonEditorComponent,
-            label: 'Example Data (JSON)',
-            description: 'Provide example output data as a JSON object.',
-            element
-          }
-        ]
-      },
-      {
-        id: 'inputs',
-        label: 'Input Parameters',
-        component: ListGroup,
-        add: createInputParameter(element),
-        items: element.inputParameters.map(param => ({
-          id: param.id,
-          label: param.name,
-          entries: [
-            {
-              id: `${param.id}-name`,
-              component: createParameterNameEntry(element, param),
-              isEdited: () => !!param.name
-            },
-            {
-              id: `${param.id}-value`,
-              component: createParameterValueEntry(element, param),
-              isEdited: () => !!param.value
-            }
-          ]
-        }))
-      },
-      {
-        id: 'flags',
-        label: 'Flags',
-        entries: [
-          {
-            id: 'async',
-            component: CheckboxComponent,
-            label: 'Asynchronous',
-            description: 'Execute this task asynchronously.',
-            element
-          },
-          {
-            id: 'exclusive',
-            component: ToggleSwitchComponent,
-            label: 'Exclusive',
-            description: 'Exclusive job execution.',
-            element
-          }
-        ]
-      }
-    ];
-
     // when
-    render(
-      <EventContext.Provider value={ { eventBus } }>
-        <PropertiesPanel
-          element={ element }
-          headerProvider={ ExampleHeaderProvider }
-          placeholderProvider={ ExamplePlaceholderProvider }
-          groups={ groups }
-          layoutConfig={ {} }
-          layoutChanged={ () => {} }
-        />
-      </EventContext.Provider>,
-      { container }
-    );
+    render(<ExampleApp />, container);
 
     // then — keep open for interactive use with SINGLE_START
     await new Promise(() => {});
   });
 });
 
+
+// demo app ////////////////////
+
+const element = {
+  id: 'Element_1',
+  name: 'My Service Task',
+  type: 'bpmn:ServiceTask',
+  implementation: 'java',
+  className: 'com.example.MyDelegate',
+  documentation: '',
+  exampleData: '{\n  "orderId": "12345",\n  "customer": {\n    "name": "Jane Doe",\n    "email": "jane@example.com"\n  },\n  "items": [\n    { "id": 1, "price": 29.99 },\n    { "id": 2, "price": 49.99 }\n  ]\n}',
+  retryCount: 3,
+  async: false,
+  expression: '=myVariable + 10',
+  conditionExpression: '',
+  inputParameters: [
+    { id: 'input-1', name: 'customerId', value: '=customer.id' },
+    { id: 'input-2', name: 'orderTotal', value: '=sum(order.items.price)' }
+  ],
+  outputParameters: [
+    { id: 'output-1', name: 'result', value: '=response.data' }
+  ]
+};
+
+const eventBus = new EventBus();
+const layoutConfig = {};
+const noop = () => {};
+
+function ExampleApp() {
+  const [ , forceUpdate ] = useReducer(x => x + 1, 0);
+
+  const updateElement = useCallback((key, value) => {
+    element[key] = value;
+    forceUpdate();
+  }, [ element ]);
+
+  const groups = [
+    {
+      id: 'general',
+      label: 'General',
+      entries: [
+        {
+          id: 'name',
+          component: TextFieldComponent,
+          isEdited: isTextFieldEntryEdited,
+          label: 'Name',
+          description: 'The display name of the element.',
+          updateElement,
+          element
+        },
+        {
+          id: 'documentation',
+          component: TextAreaComponent,
+          isEdited: isTextAreaEntryEdited,
+          label: 'Documentation',
+          description: 'Documentation for this element.',
+          updateElement,
+          element
+        }
+      ]
+    },
+    {
+      id: 'feel-expressions',
+      label: 'FEEL Expressions',
+      entries: [
+        {
+          id: 'expression',
+          component: FeelEntryComponent,
+          isEdited: isFeelEntryEdited,
+          label: 'Expression',
+          description: 'A FEEL expression to evaluate.',
+          feel: 'required',
+          updateElement,
+          element
+        },
+        {
+          id: 'conditionExpression',
+          component: FeelEntryComponent,
+          isEdited: isFeelEntryEdited,
+          label: 'Condition',
+          description: 'Optional FEEL condition (toggle FEEL mode with = prefix).',
+          feel: 'optional',
+          updateElement,
+          element
+        }
+      ]
+    },
+    {
+      id: 'details',
+      label: 'Details',
+      entries: [
+        {
+          id: 'implementation',
+          component: SelectComponent,
+          isEdited: isSelectEntryEdited,
+          label: 'Implementation',
+          description: 'How this task is implemented.',
+          updateElement,
+          element,
+          options: [
+            { value: '', label: '<none>' },
+            { value: 'java', label: 'Java Class' },
+            { value: 'expression', label: 'Expression' },
+            { value: 'delegate', label: 'Delegate Expression' }
+          ]
+        },
+        {
+          id: 'className',
+          component: TextFieldComponent,
+          isEdited: isTextFieldEntryEdited,
+          label: 'Java Class',
+          description: 'Fully qualified class name.',
+          updateElement,
+          element
+        },
+        {
+          id: 'retryCount',
+          component: NumberFieldComponent,
+          isEdited: isNumberFieldEntryEdited,
+          label: 'Retry Count',
+          description: 'Number of retries on failure.',
+          updateElement,
+          element
+        }
+      ]
+    },
+    {
+      id: 'code',
+      label: 'Example Data',
+      entries: [
+        {
+          id: 'exampleData',
+          component: JsonEditorComponent,
+          isEdited: isJsonEditorEntryEdited,
+          label: 'Example Data (JSON)',
+          description: 'Provide example output data as a JSON object.',
+          updateElement,
+          element
+        }
+      ]
+    },
+    {
+      id: 'inputs',
+      label: 'Input Parameters',
+      component: ListGroup,
+      add: createInputParameter(element, forceUpdate),
+      items: element.inputParameters.map(param => ({
+        id: param.id,
+        label: param.name,
+        entries: [
+          {
+            id: `${param.id}-name`,
+            component: createParameterNameEntry(param),
+          },
+          {
+            id: `${param.id}-value`,
+            component: createParameterValueEntry(param),
+          }
+        ]
+      }))
+    },
+    {
+      id: 'flags',
+      label: 'Flags',
+      entries: [
+        {
+          id: 'async',
+          component: CheckboxComponent,
+          isEdited: isCheckboxEntryEdited,
+          label: 'Asynchronous',
+          description: 'Execute this task asynchronously.',
+          updateElement,
+          element
+        },
+        {
+          id: 'exclusive',
+          component: ToggleSwitchComponent,
+          isEdited: isToggleSwitchEntryEdited,
+          label: 'Exclusive',
+          description: 'Exclusive job execution.',
+          updateElement,
+          element
+        }
+      ]
+    }
+  ];
+
+  return (
+    <PropertiesPanel
+      element={ element }
+      headerProvider={ ExampleHeaderProvider }
+      placeholderProvider={ ExamplePlaceholderProvider }
+      groups={ groups }
+      eventBus={ eventBus }
+      layoutConfig={ layoutConfig }
+      layoutChanged={ noop }
+    />
+  );
+}
+
+
+// entry components ////////////////////
+
 function TextFieldComponent(props) {
-  const { id, element, label, description } = props;
+  const { id, element, label, description, updateElement } = props;
 
   return TextFieldEntry({
     id,
@@ -232,12 +273,12 @@ function TextFieldComponent(props) {
     description,
     debounce: fn => fn,
     getValue: () => element[id] || '',
-    setValue: (val) => { element[id] = val; }
+    setValue: (val) => updateElement(id, val)
   });
 }
 
 function TextAreaComponent(props) {
-  const { id, element, label, description } = props;
+  const { id, element, label, description, updateElement } = props;
 
   return TextAreaEntry({
     id,
@@ -246,12 +287,12 @@ function TextAreaComponent(props) {
     description,
     debounce: fn => fn,
     getValue: () => element[id] ?? '',
-    setValue: (val) => { element[id] = val; }
+    setValue: (val) => updateElement(id, val)
   });
 }
 
 function CheckboxComponent(props) {
-  const { id, element, label, description } = props;
+  const { id, element, label, description, updateElement } = props;
 
   return CheckboxEntry({
     id,
@@ -259,12 +300,12 @@ function CheckboxComponent(props) {
     label,
     description,
     getValue: () => element[id] ?? false,
-    setValue: (val) => { element[id] = val; }
+    setValue: (val) => updateElement(id, val)
   });
 }
 
 function NumberFieldComponent(props) {
-  const { id, element, label, description } = props;
+  const { id, element, label, description, updateElement } = props;
 
   return NumberFieldEntry({
     id,
@@ -273,12 +314,12 @@ function NumberFieldComponent(props) {
     description,
     debounce: fn => fn,
     getValue: () => element[id] ?? '',
-    setValue: (val) => { element[id] = val; }
+    setValue: (val) => updateElement(id, val)
   });
 }
 
 function SelectComponent(props) {
-  const { id, element, label, description, options } = props;
+  const { id, element, label, description, options, updateElement } = props;
 
   return SelectEntry({
     id,
@@ -286,13 +327,13 @@ function SelectComponent(props) {
     label,
     description,
     getValue: () => element[id] ?? '',
-    setValue: (val) => { element[id] = val; },
+    setValue: (val) => updateElement(id, val),
     getOptions: () => options
   });
 }
 
 function ToggleSwitchComponent(props) {
-  const { id, element, label, description } = props;
+  const { id, element, label, description, updateElement } = props;
 
   return ToggleSwitchEntry({
     id,
@@ -300,12 +341,12 @@ function ToggleSwitchComponent(props) {
     label,
     description,
     getValue: () => element[id] ?? false,
-    setValue: (val) => { element[id] = val; }
+    setValue: (val) => updateElement(id, val)
   });
 }
 
 function FeelEntryComponent(props) {
-  const { id, element, label, description, feel } = props;
+  const { id, element, label, description, feel, updateElement } = props;
 
   return FeelEntry({
     id,
@@ -315,7 +356,7 @@ function FeelEntryComponent(props) {
     feel,
     debounce: fn => fn,
     getValue: () => element[id] ?? '',
-    setValue: (val) => { element[id] = val; },
+    setValue: (val) => updateElement(id, val),
     variables: [
       { name: 'myVariable', info: 'A sample variable' },
       { name: 'customer', info: 'Customer context object' },
@@ -324,8 +365,26 @@ function FeelEntryComponent(props) {
   });
 }
 
-function createParameterNameEntry(element, param) {
+function JsonEditorComponent(props) {
+  const { id, element, label, description, updateElement } = props;
+
+  return JsonEditorEntry({
+    id,
+    element,
+    label,
+    description,
+    debounce: fn => fn,
+    tooltip: 'Enter a JSON object representing example output data for this element.',
+    placeholder: '{ }',
+    getValue: () => element[id] ?? '',
+    setValue: (val) => updateElement(id, val)
+  });
+}
+
+function createParameterNameEntry(param) {
   return function ParameterNameEntry(props) {
+    const { element } = props;
+
     return TextFieldEntry({
       id: `${param.id}-name`,
       element,
@@ -337,8 +396,10 @@ function createParameterNameEntry(element, param) {
   };
 }
 
-function createParameterValueEntry(element, param) {
+function createParameterValueEntry(param) {
   return function ParameterValueEntry(props) {
+    const { element } = props;
+
     return FeelEntry({
       id: `${param.id}-value`,
       element,
@@ -356,7 +417,7 @@ function createParameterValueEntry(element, param) {
   };
 }
 
-function createInputParameter(element) {
+function createInputParameter(element, forceUpdate) {
   return function() {
     const newId = `input-${element.inputParameters.length + 1}`;
     element.inputParameters.push({
@@ -364,24 +425,11 @@ function createInputParameter(element) {
       name: '',
       value: ''
     });
+    forceUpdate();
   };
 }
 
-function JsonEditorComponent(props) {
-  const { id, element, label, description } = props;
-
-  return JsonEditorEntry({
-    id,
-    element,
-    label,
-    description,
-    debounce: fn => fn,
-    tooltip: 'Enter a JSON object representing example output data for this element.',
-    placeholder: '{ }',
-    getValue: () => element[id] ?? '',
-    setValue: (val) => { element[id] = val; }
-  });
-}
+// providers ////////////////////
 
 class ExampleHeaderProvider {
   static getElementLabel(element) {

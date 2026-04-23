@@ -151,7 +151,7 @@ function JsonEditor(props) {
           { label }
         </Tooltip>
       </label>
-      <div ref={ containerRef } />
+      <div class={ classnames('bio-properties-panel-input', value && 'edited') } ref={ containerRef } />
     </div>
   );
 }
@@ -237,8 +237,7 @@ export default function JsonEditorEntry(props) {
  * Check if the JSON editor entry has been edited.
  */
 export function isEdited(node) {
-  const cmContent = node && node.querySelector('.cm-content');
-  return cmContent ? cmContent.textContent.trim().length > 0 : false;
+  return node && node.classList.contains('edited');
 }
 
 
