@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.41.2
+
+* `FIX`:fix JSON editor entry `isEdited` check from a properties panel group header ([#488](https://github.com/bpmn-io/properties-panel/pull/488))
+
 ## 3.41.1
 
 * `FIX`: prevent inline error in JSON editor with empty value ([#487](https://github.com/bpmn-io/properties-panel/pull/487))
