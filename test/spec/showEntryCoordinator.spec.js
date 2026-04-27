@@ -256,6 +256,45 @@ describe('showEntry coordinator', function() {
   });
 
 
+  it('should focus entry when element change and showEntry are batched', function() {
+
+    // simulates camunda/linting: select(element) then fire('showEntry')
+    // synchronously within the same handler — both updates land in the
+    // same React batch, so the new render has both the new element and
+    // the pending request
+
+    // given (no groups for element A)
+    const { rerender } = createPanel({
+      element: { id: 'a', type: 'a' },
+      groups: []
+    });
+
+    const groups = [ {
+      id: 'g1',
+      label: 'Group 1',
+      entries: [ { id: 'foo', component: FocusableEntry } ]
+    } ];
+
+    // when: element change to B and showEntry are batched together
+    act(() => {
+      rerender(
+        <PropertiesPanel
+          element={ { id: 'b', type: 'b' } }
+          headerProvider={ HeaderProvider }
+          groups={ groups }
+          eventBus={ eventBus }
+        />
+      );
+      eventBus.fire('propertiesPanel.showEntry', { id: 'foo' });
+    });
+
+    // then: group on the new element opened and entry focused
+    const groupEntries = domQuery('.bio-properties-panel-group-entries', container);
+    expect(domClasses(groupEntries).has('open')).to.be.true;
+    expect(tracker.focusedIds).to.include('foo');
+  });
+
+
   it('should cancel pending request when element changes', function() {
 
     // given (no groups — entry not mounted yet)

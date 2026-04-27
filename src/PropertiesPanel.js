@@ -251,12 +251,35 @@ export default function PropertiesPanel(props) {
 
   useEvent('propertiesPanel.showEntry', onShowEntry, eventBus);
 
-  // cancel pending show-entry request when the selected element changes
-  // (but not on the initial mount, so requests made during async initial
-  // rendering are preserved)
+  // Track the most recently committed request token. This lets us tell
+  // whether a `pendingRequest` present at the time of an element change
+  // was already alive in the previous render (→ stale, cancel) or was
+  // issued in the same render batch as the element change itself
+  // (→ keep, the consumer wants to focus an entry on the new element).
+  const lastCommittedTokenRef = useRef(0);
+
+  // cancel pending show-entry request when the selected element changes —
+  // but only if the request was issued before the element change. Requests
+  // batched together with the element change (a common pattern: select(el)
+  // followed synchronously by fire('propertiesPanel.showEntry', ...)) are
+  // preserved so the entry on the new element gets focused.
+  //
+  // useUpdateLayoutEffect avoids clobbering requests made during the
+  // initial render.
   useUpdateLayoutEffect(() => {
-    setPendingRequest(null);
+    setPendingRequest((prev) => {
+      if (prev && prev.token > lastCommittedTokenRef.current) {
+        return prev;
+      }
+      return null;
+    });
   }, [ element ]);
+
+  useEffect(() => {
+    if (pendingRequest) {
+      lastCommittedTokenRef.current = pendingRequest.token;
+    }
+  }, [ pendingRequest ]);
 
   const showEntryContext = useMemo(() => ({
     pendingRequest,
