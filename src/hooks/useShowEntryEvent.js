@@ -66,26 +66,65 @@ export function useShowEntryEvent(id) {
   }, [ pendingRequest, id, onShow ]);
 
   useEffect(() => {
-    if (focus.current && ref.current) {
-      if (isFunction(ref.current.focus)) {
-        ref.current.focus();
-      }
+    if (!focus.current || !ref.current) {
+      return;
+    }
 
-      if (isFunction(ref.current.select)) {
-        ref.current.select();
-      }
+    // wait until the entry is actually visible before focusing — otherwise
+    // .focus() on a `display: none` element is a no-op (groups are hidden
+    // via CSS when collapsed). Effects run child-first, so on the same
+    // render where pendingRequest arrives this hook would otherwise run
+    // before the parent Group/Collapsible has had a chance to open.
+    // Leaving `focus.current = true` makes this effect retry on the next
+    // render (this effect has no deps, so it runs every render).
+    if (!isVisible(ref.current)) {
+      return;
+    }
 
-      focus.current = false;
+    if (isFunction(ref.current.focus)) {
+      ref.current.focus();
+    }
 
-      // resolve the pending request on the coordinator so rapid
-      // subsequent calls (with a different token) are not clobbered
-      if (showEntryCoordinator && resolveTokenRef.current != null) {
-        const token = resolveTokenRef.current;
-        resolveTokenRef.current = null;
-        showEntryCoordinator.resolve(token);
-      }
+    if (isFunction(ref.current.select)) {
+      ref.current.select();
+    }
+
+    focus.current = false;
+
+    // resolve the pending request on the coordinator so rapid
+    // subsequent calls (with a different token) are not clobbered
+    if (showEntryCoordinator && resolveTokenRef.current != null) {
+      const token = resolveTokenRef.current;
+      resolveTokenRef.current = null;
+      showEntryCoordinator.resolve(token);
     }
   });
 
   return ref;
+}
+
+
+function isVisible(node) {
+  if (!node || typeof node.getRootNode !== 'function') {
+    return true;
+  }
+
+  // detached node — treat as not visible
+  const root = node.getRootNode();
+  if (root !== node.ownerDocument && root.host === undefined) {
+    return false;
+  }
+
+  // `display: none` (anywhere in the chain) yields a null offsetParent
+  // for non-positioned elements, which is the case for our entries
+  if (node.offsetParent === null && node.tagName !== 'BODY') {
+
+    // fall back to a getClientRects check for edge cases (fixed positioning,
+    // body-level elements). Hidden elements have no client rects.
+    if (typeof node.getClientRects === 'function' && node.getClientRects().length === 0) {
+      return false;
+    }
+  }
+
+  return true;
 }

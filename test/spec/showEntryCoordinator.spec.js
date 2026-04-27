@@ -29,18 +29,28 @@ import { useShowEntryEvent } from 'src/hooks';
 insertCoreStyles();
 
 
-// helper: collects focus calls per entry id
+// helper: collects focus calls per entry id, capturing whether the focused
+// element was visible at the time of the call. We can't use
+// `document.activeElement` to verify focus in karma because the test page
+// runs in an iframe that doesn't always own browser focus.
 function createFocusTracker() {
   return {
     calls: [],
-    record(id) {
-      this.calls.push(id);
+    record(id, visible) {
+      this.calls.push({ id, visible });
     },
     get lastFocusedId() {
-      return this.calls[this.calls.length - 1];
+      const last = this.calls[this.calls.length - 1];
+      return last && last.id;
     },
     get focusedIds() {
-      return this.calls.slice();
+      return this.calls.map(c => c.id);
+    },
+    get visibleFocusedIds() {
+      return this.calls.filter(c => c.visible).map(c => c.id);
+    },
+    get hiddenFocusedIds() {
+      return this.calls.filter(c => !c.visible).map(c => c.id);
     }
   };
 }
@@ -51,13 +61,13 @@ function makeFocusableEntry(tracker) {
 
     const ref = useShowEntryEvent(id);
 
-    // wrap .focus() so we can observe calls without relying on
-    // headless browser's document.activeElement behavior
+    // wrap .focus() so we can observe calls AND whether the element was
+    // actually visible (i.e. .focus() would have had an effect)
     const setRef = (node) => {
       if (node) {
         const originalFocus = node.focus.bind(node);
         node.focus = function() {
-          tracker.record(id);
+          tracker.record(id, node.offsetParent !== null);
           return originalFocus();
         };
       }
@@ -292,6 +302,69 @@ describe('showEntry coordinator', function() {
     const groupEntries = domQuery('.bio-properties-panel-group-entries', container);
     expect(domClasses(groupEntries).has('open')).to.be.true;
     expect(tracker.focusedIds).to.include('foo');
+  });
+
+
+  it('should not focus entry while parent group is still hidden (regression)', function() {
+
+    // closed groups use `display: none`, so `.focus()` is a no-op until
+    // the group opens. The hook must wait for visibility before focusing —
+    // otherwise the focus is silently lost and the resolved request makes
+    // it impossible to retry on the next render.
+
+    // given (group is closed)
+    const groups = [ {
+      id: 'g1',
+      label: 'Group 1',
+      entries: [ { id: 'foo', component: FocusableEntry } ]
+    } ];
+
+    createPanel({ groups });
+
+    // when
+    act(() => eventBus.fire('propertiesPanel.showEntry', { id: 'foo' }));
+
+    // then: focus only happened on a visible element
+    expect(tracker.hiddenFocusedIds, 'focus must not be called on hidden input').to.be.empty;
+    expect(tracker.visibleFocusedIds).to.include('foo');
+  });
+
+
+  it('should focus visible entry on element change + showEntry batched', function() {
+
+    // mirrors camunda/linting flow without the setTimeout hack:
+    // element changes AND showEntry fires in the same React batch.
+    // The new element's groups start collapsed — the entry must only be
+    // focused once the group has opened.
+
+    // given (element A with no matching entry)
+    const { rerender } = createPanel({
+      element: { id: 'a', type: 'a' },
+      groups: []
+    });
+
+    const groups = [ {
+      id: 'g1',
+      label: 'Group 1',
+      entries: [ { id: 'foo', component: FocusableEntry } ]
+    } ];
+
+    // when: element change to B and showEntry batched
+    act(() => {
+      rerender(
+        <PropertiesPanel
+          element={ { id: 'b', type: 'b' } }
+          headerProvider={ HeaderProvider }
+          groups={ groups }
+          eventBus={ eventBus }
+        />
+      );
+      eventBus.fire('propertiesPanel.showEntry', { id: 'foo' });
+    });
+
+    // then: focus only happened on a visible element
+    expect(tracker.hiddenFocusedIds, 'focus must not be called on hidden input').to.be.empty;
+    expect(tracker.visibleFocusedIds).to.include('foo');
   });
 
 
