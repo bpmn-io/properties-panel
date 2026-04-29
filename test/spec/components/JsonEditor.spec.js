@@ -266,6 +266,68 @@ describe('<JsonEditor>', function() {
       expect(editorInlineErrors).to.not.exist;
     });
 
+
+    it('should show error from validate prop', async function() {
+
+      // given
+      const validate = (value) => value === 'invalid' ? 'custom error' : null;
+
+      const result = createJsonEditor({
+        container,
+        getValue: () => 'invalid',
+        validate
+      });
+
+      // then
+      await waitFor(() => {
+        const error = domQuery('.bio-properties-panel-error', result.container);
+        expect(error).to.exist;
+        expect(error.textContent).to.equal('custom error');
+      });
+    });
+
+
+    it('should show no error from validate prop if valid', async function() {
+
+      // given
+      const validate = (value) => value === 'invalid' ? 'custom error' : null;
+
+      const result = createJsonEditor({
+        container,
+        getValue: () => '{"valid": true}',
+        validate
+      });
+
+      // then
+      await waitFor(() => {
+        const error = domQuery('.bio-properties-panel-error', result.container);
+        expect(error).to.not.exist;
+      });
+    });
+
+
+    it('should pass validation error to setValue', async function() {
+
+      // given
+      const validate = () => 'always invalid';
+      const setValue = sinonSpy();
+
+      const result = createJsonEditor({
+        container,
+        getValue: () => '',
+        setValue,
+        validate
+      });
+
+      // when
+      setEditorValue(result.container, 'new value');
+
+      // then
+      await waitFor(() => {
+        expect(setValue).to.have.been.calledWith('new value', 'always invalid');
+      });
+    });
+
   });
 
 
@@ -349,6 +411,7 @@ function createJsonEditor(options = {}, renderFn = render) {
     disabled,
     placeholder,
     tooltip,
+    validate,
     descriptionConfig = {},
     getDescriptionForId = noop,
     container,
@@ -389,7 +452,8 @@ function createJsonEditor(options = {}, renderFn = render) {
               setValue={ setValue }
               disabled={ disabled }
               placeholder={ placeholder }
-              tooltip={ tooltip } />
+              tooltip={ tooltip }
+              validate={ validate } />
           </DescriptionContext.Provider>
         </PropertiesPanelContext.Provider>
       </EventContext.Provider>
