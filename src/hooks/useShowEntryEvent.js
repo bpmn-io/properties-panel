@@ -70,34 +70,58 @@ export function useShowEntryEvent(id) {
       return;
     }
 
-    // wait until the entry is actually visible before focusing — otherwise
-    // .focus() on a `display: none` element is a no-op (groups are hidden
-    // via CSS when collapsed). Effects run child-first, so on the same
-    // render where pendingRequest arrives this hook would otherwise run
-    // before the parent Group/Collapsible has had a chance to open.
-    // Leaving `focus.current = true` makes this effect retry on the next
-    // render (this effect has no deps, so it runs every render).
-    if (!isVisible(ref.current)) {
-      return;
-    }
+    let rafId = null;
+    let cancelled = false;
 
-    if (isFunction(ref.current.focus)) {
-      ref.current.focus();
-    }
+    const tryFocus = () => {
+      rafId = null;
 
-    if (isFunction(ref.current.select)) {
-      ref.current.select();
-    }
+      if (cancelled || !focus.current || !ref.current) {
+        return;
+      }
 
-    focus.current = false;
+      // wait until the entry is actually visible before focusing — otherwise
+      // .focus() on a `display: none` element is a no-op (groups are hidden
+      // via CSS when collapsed). Effects run child-first, so on the same
+      // render where pendingRequest arrives this hook would otherwise run
+      // before the parent Group/Collapsible has had a chance to open. When
+      // not yet visible we retry on the next animation frame — by then the
+      // parent's setOpen has been applied and the entry's ancestor chain
+      // has display: block.
+      if (!isVisible(ref.current)) {
+        rafId = requestAnimationFrame(tryFocus);
+        return;
+      }
 
-    // resolve the pending request on the coordinator so rapid
-    // subsequent calls (with a different token) are not clobbered
-    if (showEntryCoordinator && resolveTokenRef.current != null) {
-      const token = resolveTokenRef.current;
-      resolveTokenRef.current = null;
-      showEntryCoordinator.resolve(token);
-    }
+      if (isFunction(ref.current.focus)) {
+        ref.current.focus();
+      }
+
+      if (isFunction(ref.current.select)) {
+        ref.current.select();
+      }
+
+      focus.current = false;
+
+      // resolve the pending request on the coordinator so rapid
+      // subsequent calls (with a different token) are not clobbered
+      if (showEntryCoordinator && resolveTokenRef.current != null) {
+        const token = resolveTokenRef.current;
+        resolveTokenRef.current = null;
+        showEntryCoordinator.resolve(token);
+      }
+    };
+
+    // try synchronously first — keeps the simple "already visible" case
+    // (most common) working without waiting for an animation frame
+    tryFocus();
+
+    return () => {
+      cancelled = true;
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   });
 
   return ref;

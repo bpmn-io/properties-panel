@@ -11,6 +11,8 @@ import {
 
 import { act } from 'preact/test-utils';
 
+import { useEffect as useEffectWrapper, useState as useStateWrapper } from 'preact/hooks';
+
 import TestContainer from 'mocha-test-container-support';
 
 import {
@@ -366,6 +368,71 @@ describe('showEntry coordinator', function() {
     expect(tracker.hiddenFocusedIds, 'focus must not be called on hidden input').to.be.empty;
     expect(tracker.visibleFocusedIds).to.include('foo');
   });
+
+
+  it('should focus entry via host (selection.changed → showEntry, separate fires)',
+    async function() {
+
+      // mirrors the real bpmn-js flow: a host component subscribes to
+      // `selection.changed` and re-renders <PropertiesPanel> with a new
+      // element. Linting then fires `propertiesPanel.showEntry` as a
+      // SEPARATE diagram-js event (no React batching across the two fires).
+
+      // given: a host that updates its element on selection.changed
+      function Host(props) {
+        const { initial, groupsFor } = props;
+        const [ element, setElement ] = useStateWrapper(initial);
+
+        useEffectWrapper(() => {
+          const onSel = (e) => setElement(e.newSelection[0]);
+          eventBus.on('selection.changed', onSel);
+          return () => eventBus.off('selection.changed', onSel);
+        });
+
+        return (
+          <PropertiesPanel
+            element={ element }
+            headerProvider={ HeaderProvider }
+            groups={ groupsFor(element) }
+            eventBus={ eventBus }
+          />
+        );
+      }
+
+      const elA = { id: 'a' };
+      const elB = { id: 'b' };
+
+      const groupsFor = (el) => {
+        if (el === elB) {
+          return [ {
+            id: 'g1',
+            label: 'G1',
+            entries: [ { id: 'foo', component: FocusableEntry } ]
+          } ];
+        }
+        return [];
+      };
+
+      render(
+        <Host initial={ elA } groupsFor={ groupsFor } />,
+        { container }
+      );
+
+      // when: linting flow — two separate synchronous event fires
+      eventBus.fire('selection.changed', { newSelection: [ elB ] });
+      eventBus.fire('propertiesPanel.showEntry', { id: 'foo' });
+
+      // wait for state flushes + rAF retries
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // then
+      const groupEntries = domQuery('.bio-properties-panel-group-entries', container);
+      expect(groupEntries, 'group should be rendered').to.exist;
+      expect(domClasses(groupEntries).has('open'), 'group should open').to.be.true;
+      expect(tracker.hiddenFocusedIds, 'focus must not be called on hidden input').to.be.empty;
+      expect(tracker.visibleFocusedIds, 'should focus foo on visible input').to.include('foo');
+    }
+  );
 
 
   it('should cancel pending request when element changes', function() {
