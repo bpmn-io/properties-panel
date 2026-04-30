@@ -2,6 +2,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState
 } from 'preact/hooks';
@@ -78,7 +79,7 @@ export default function ListGroup(props) {
   // a nested entry within one of the items)
   const { pendingRequest } = useContext(ShowEntryContext);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!pendingRequest) {
       return;
     }

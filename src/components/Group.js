@@ -2,6 +2,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState
 } from 'preact/hooks';
@@ -58,7 +59,7 @@ export default function Group(props) {
   // entry that lives in this group
   const { pendingRequest } = useContext(ShowEntryContext);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!pendingRequest) {
       return;
     }

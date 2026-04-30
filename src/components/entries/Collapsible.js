@@ -1,7 +1,7 @@
 import {
   useCallback,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useState
 } from 'preact/hooks';
 
@@ -42,7 +42,7 @@ export default function CollapsibleEntry(props) {
   // showing one of its child entries
   const { pendingRequest } = useContext(ShowEntryContext);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!pendingRequest) {
       return;
     }
