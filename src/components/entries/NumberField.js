@@ -139,14 +139,16 @@ export default function NumberFieldEntry(props) {
   }, [ value, validate ]);
 
   const onInput = (newValue) => {
-    let newValidationError = null;
+    if (newValue !== value) {
+      let newValidationError = null;
 
-    if (isFunction(validate)) {
-      newValidationError = validate(newValue) || null;
+      if (isFunction(validate)) {
+        newValidationError = validate(newValue) || null;
+      }
+
+      setValue(newValue, newValidationError);
+      setLocalError(newValidationError);
     }
-
-    setValue(newValue, newValidationError);
-    setLocalError(newValidationError);
   };
 
   const error = globalError || localError;

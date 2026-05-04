@@ -306,6 +306,34 @@ describe('<JsonEditor>', function() {
     });
 
 
+    it('should not call setValue or validate if value is same', async function() {
+
+      // given
+      const setValueSpy = sinonSpy();
+      const validateSpy = sinonSpy();
+
+      const result = createJsonEditor({
+        container,
+        getValue: () => '{"existing": true}',
+        setValue: setValueSpy,
+        validate: validateSpy
+      });
+
+      await waitFor(() => {
+        expect(getEditorView(result.container)).to.exist;
+      });
+
+      // when
+      validateSpy.resetHistory();
+      setEditorValue(result.container, '{"existing": true}');
+
+      // then
+      await new Promise(resolve => setTimeout(resolve, 50));
+      expect(setValueSpy).to.not.have.been.called;
+      expect(validateSpy).to.not.have.been.called;
+    });
+
+
     it('should pass validation error to setValue', async function() {
 
       // given

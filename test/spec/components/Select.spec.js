@@ -147,6 +147,34 @@ describe('<Select>', function() {
   });
 
 
+  it('should not call setValue or validate if the value is same', function() {
+
+    // given
+    const setValueSpy = sinonSpy();
+    const validateSpy = sinonSpy();
+
+    const getOptions = () => createOptions();
+
+    const result = createSelect({
+      container,
+      getValue: () => 'A',
+      setValue: setValueSpy,
+      validate: validateSpy,
+      getOptions
+    });
+
+    const select = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    validateSpy.resetHistory();
+    changeInput(select, 'A');
+
+    // then
+    expect(setValueSpy).to.not.have.been.called;
+    expect(validateSpy).to.not.have.been.called;
+  });
+
+
   it('should use unique input element on element change', function() {
 
     // given
