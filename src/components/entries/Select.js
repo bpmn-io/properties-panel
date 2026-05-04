@@ -162,14 +162,16 @@ export default function SelectEntry(props) {
 
 
   const onChange = (newValue) => {
-    let newValidationError = null;
+    if (newValue !== value) {
+      let newValidationError = null;
 
-    if (isFunction(validate)) {
-      newValidationError = validate(newValue) || null;
+      if (isFunction(validate)) {
+        newValidationError = validate(newValue) || null;
+      }
+
+      setValue(newValue, newValidationError);
+      setLocalError(newValidationError);
     }
-
-    setValue(newValue, newValidationError);
-    setLocalError(newValidationError);
   };
 
   const error = globalError || localError;

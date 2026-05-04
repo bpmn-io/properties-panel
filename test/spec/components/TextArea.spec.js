@@ -336,26 +336,30 @@ describe('<TextArea>', function() {
   });
 
 
-  it('should not call setValue if the value is same', async function() {
+  it('should not call setValue or validate if the value is same', async function() {
 
     // given
     const setValueSpy = sinonSpy();
+    const validateSpy = sinonSpy();
 
     const result = createTextArea({
       container,
       getValue: () => 'a value',
-      setValue: setValueSpy
+      setValue: setValueSpy,
+      validate: validateSpy
     });
 
     const input = domQuery('.bio-properties-panel-input', result.container);
 
     // when
+    validateSpy.resetHistory();
     input.focus();
     changeInput(input, 'a value');
     input.blur();
 
     // then
     expect(setValueSpy).to.not.have.been.called;
+    expect(validateSpy).to.not.have.been.called;
 
   });
 

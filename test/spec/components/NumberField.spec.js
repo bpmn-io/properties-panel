@@ -91,7 +91,7 @@ describe('<NumberField>', function() {
     // given
     const updateSpy = sinonSpy();
 
-    const result = createNumberField({ container, setValue: updateSpy });
+    const result = createNumberField({ container, getValue: () => 42, setValue: updateSpy });
 
     const input = domQuery('.bio-properties-panel-input', result.container);
 
@@ -119,6 +119,31 @@ describe('<NumberField>', function() {
 
     // then
     expect(updateSpy).to.not.have.been.called;
+  });
+
+
+  it('should not call setValue or validate if the value is same', function() {
+
+    // given
+    const setValueSpy = sinonSpy();
+    const validateSpy = sinonSpy();
+
+    const result = createNumberField({
+      container,
+      getValue: () => 20.5,
+      setValue: setValueSpy,
+      validate: validateSpy
+    });
+
+    const input = domQuery('.bio-properties-panel-input', result.container);
+
+    // when
+    validateSpy.resetHistory();
+    changeInput(input, 20.5);
+
+    // then
+    expect(setValueSpy).to.not.have.been.called;
+    expect(validateSpy).to.not.have.been.called;
   });
 
 
