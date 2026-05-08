@@ -80,7 +80,7 @@ describe('<TextField>', function() {
 
     const result = createTextField({ container, setValue: updateSpy });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     changeInput(input, 'foo');
@@ -95,13 +95,13 @@ describe('<TextField>', function() {
     // given
     const result = createTextField({ element: {}, container });
 
-    const input = domQuery('.bio-properties-panel-input', container);
+    const input = domQuery('.bio-properties-panel-textfield input', container);
 
     // when
     createTextField({ element: {}, container }, result.render);
 
     // then
-    const newInput = domQuery('.bio-properties-panel-input', container);
+    const newInput = domQuery('.bio-properties-panel-textfield input', container);
 
     expect(newInput).to.not.eql(input);
   });
@@ -117,7 +117,7 @@ describe('<TextField>', function() {
       setValue: setValueSpy,
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     await act(async () => {
@@ -144,7 +144,7 @@ describe('<TextField>', function() {
       setValue: setValueSpy,
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     input.focus();
@@ -167,7 +167,7 @@ describe('<TextField>', function() {
       debounce: fn => debounce(fn, 0)
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     await act(async () => {
@@ -196,7 +196,7 @@ describe('<TextField>', function() {
       debounce: fn => debounce(fn, 50) // 50ms debounce delay
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     input.focus();
@@ -225,7 +225,7 @@ describe('<TextField>', function() {
       debounce: fn => debounce(fn, 50) // 50ms debounce delay
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     input.focus();
@@ -252,7 +252,7 @@ describe('<TextField>', function() {
       debounce: fn => fn // no .flush or .cancel on returned function
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     input.focus();
@@ -282,7 +282,7 @@ describe('<TextField>', function() {
       onBlur: onBlurSpy
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     input.focus();
@@ -307,7 +307,7 @@ describe('<TextField>', function() {
       validate: validateSpy
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     validateSpy.resetHistory();
@@ -333,7 +333,7 @@ describe('<TextField>', function() {
       setValue: setValueSpy
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
     // when
     input.focus();
@@ -357,7 +357,7 @@ describe('<TextField>', function() {
 
       // when
       createTextField({ container, setValue: updateSpies[1] }, firstRender.rerender);
-      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      const input = domQuery('.bio-properties-panel-textfield input', firstRender.container);
       changeInput(input, 'foo');
 
       // then
@@ -376,7 +376,7 @@ describe('<TextField>', function() {
 
       // when
       createTextField({ container, getValue: getValueSpies[1] }, firstRender.rerender);
-      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      const input = domQuery('.bio-properties-panel-textfield input', firstRender.container);
       getValueSpies[0].resetHistory();
 
       // and when
@@ -397,7 +397,7 @@ describe('<TextField>', function() {
 
       // when
       createTextField({ container, validate: validateSpies[1] }, firstRender.rerender);
-      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      const input = domQuery('.bio-properties-panel-textfield input', firstRender.container);
       validateSpies[0].resetHistory();
 
       // and when
@@ -417,7 +417,7 @@ describe('<TextField>', function() {
       // given
       const result = createTextField({ container });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
       // when
       const edited = isEdited(input);
@@ -432,7 +432,7 @@ describe('<TextField>', function() {
       // given
       const result = createTextField({ container, getValue: () => 'foo' });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
       // when
       const edited = isEdited(input);
@@ -447,7 +447,7 @@ describe('<TextField>', function() {
       // given
       const result = createTextField({ container });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
       // assume
       expect(isEdited(input)).to.be.false;
@@ -474,7 +474,7 @@ describe('<TextField>', function() {
         setValue: setValueSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
       // when
       input.dispatchEvent(createPasteEvent('  trimmed content  '));
@@ -495,7 +495,7 @@ describe('<TextField>', function() {
         setValue: setValueSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
       input.focus();
       input.setSelectionRange(0, input.value.length);
@@ -521,7 +521,7 @@ describe('<TextField>', function() {
         onPaste: onPasteSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
       input.focus();
       input.setSelectionRange(4, 4);
@@ -544,7 +544,7 @@ describe('<TextField>', function() {
         onPaste: onPasteSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
       // when
       input.dispatchEvent(createPasteEvent('test content'));
@@ -565,7 +565,7 @@ describe('<TextField>', function() {
         setValue: setValueSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textfield input', result.container);
 
       input.focus();
       input.setSelectionRange(0, input.value.length);
@@ -636,7 +636,7 @@ describe('<TextField>', function() {
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
 
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textfield input', entry);
 
       // when
       changeInput(input, 'foo');
@@ -654,7 +654,7 @@ describe('<TextField>', function() {
       const result = createTextField({ container, validate });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textfield input', entry);
 
       // when
       changeInput(input, 'bar');
@@ -672,7 +672,7 @@ describe('<TextField>', function() {
       const result = createTextField({ container, validate });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textfield input', entry);
 
       // when
       changeInput(input, 'bar');
@@ -690,7 +690,7 @@ describe('<TextField>', function() {
       const result = createTextField({ container, validate });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textfield input', entry);
 
       // when
       changeInput(input, 'bar');
@@ -712,7 +712,7 @@ describe('<TextField>', function() {
       const result = createTextField({ container, validate, setValue: setValueSpy });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textfield input', entry);
 
       // when
       changeInput(input, 'bar');
@@ -875,7 +875,7 @@ describe('<TextField>', function() {
     it('should render tooltip', async function() {
 
       // given
-      const result = createTextField({ container, tooltip: 'tooltip-test' });
+      const result = createTextField({ container, tooltip: 'tooltip-test', label: 'my-label' });
 
       // when
       fireEvent.mouseEnter(domQuery('.bio-properties-panel-tooltip-wrapper', result.container));

@@ -69,7 +69,7 @@ describe('<TextArea>', function() {
     // given
     const result = createTextArea({ container, monospace: true });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // then
     expect(domClasses(input).has('bio-properties-panel-input-monospace')).to.be.true;
@@ -105,7 +105,7 @@ describe('<TextArea>', function() {
 
     const result = createTextArea({ container, setValue: updateSpy });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     changeInput(input, 'foo');
@@ -120,13 +120,13 @@ describe('<TextArea>', function() {
     // given
     const result = createTextArea({ element: {}, container });
 
-    const input = domQuery('.bio-properties-panel-input', container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', container);
 
     // when
     createTextArea({ element: {}, container }, result.render);
 
     // then
-    const newInput = domQuery('.bio-properties-panel-input', container);
+    const newInput = domQuery('.bio-properties-panel-textarea textarea', container);
 
     expect(newInput).to.not.eql(input);
   });
@@ -138,7 +138,7 @@ describe('<TextArea>', function() {
     // when
     createTextArea({ container });
 
-    const input = domQuery('.bio-properties-panel-input', container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', container);
 
     // then
     expect(input.dataset.gramm).to.eql('false');
@@ -155,7 +155,7 @@ describe('<TextArea>', function() {
       setValue: setValueSpy,
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     await act(() => {
@@ -182,7 +182,7 @@ describe('<TextArea>', function() {
       setValue: setValueSpy,
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     input.focus();
@@ -205,7 +205,7 @@ describe('<TextArea>', function() {
       debounce: fn => debounce(fn, 0)
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     await act(() => {
@@ -234,7 +234,7 @@ describe('<TextArea>', function() {
       debounce: fn => debounce(fn, 50) // 50ms debounce delay
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     input.focus();
@@ -265,7 +265,7 @@ describe('<TextArea>', function() {
       debounce: fn => debounce(fn, 50) // 50ms debounce delay
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     input.focus();
@@ -294,7 +294,7 @@ describe('<TextArea>', function() {
       debounce: fn => fn // no .flush or .cancel on returned function
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     input.focus();
@@ -324,7 +324,7 @@ describe('<TextArea>', function() {
       onBlur: onBlurSpy
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     input.focus();
@@ -349,7 +349,7 @@ describe('<TextArea>', function() {
       validate: validateSpy
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     validateSpy.resetHistory();
@@ -375,7 +375,7 @@ describe('<TextArea>', function() {
       setValue: setValueSpy
     });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
     // when
     input.focus();
@@ -399,7 +399,7 @@ describe('<TextArea>', function() {
 
       // when
       createTextArea({ container, setValue: updateSpies[1] }, firstRender.rerender);
-      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', firstRender.container);
       changeInput(input, 'foo');
 
       // then
@@ -418,7 +418,7 @@ describe('<TextArea>', function() {
 
       // when
       createTextArea({ container, getValue: getValueSpies[1] }, firstRender.rerender);
-      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', firstRender.container);
       getValueSpies[0].resetHistory();
 
       // and when
@@ -439,7 +439,7 @@ describe('<TextArea>', function() {
 
       // when
       createTextArea({ container, validate: validateSpies[1] }, firstRender.rerender);
-      const input = domQuery('.bio-properties-panel-input', firstRender.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', firstRender.container);
       validateSpies[0].resetHistory();
 
       // and when
@@ -464,7 +464,7 @@ describe('<TextArea>', function() {
         setValue: setValueSpy
       });
 
-      const textarea = domQuery('.bio-properties-panel-input', result.container);
+      const textarea = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       // when
       textarea.dispatchEvent(createPasteEvent('  trimmed\ncontent  '));
@@ -485,7 +485,7 @@ describe('<TextArea>', function() {
         setValue: setValueSpy
       });
 
-      const textarea = domQuery('.bio-properties-panel-input', result.container);
+      const textarea = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       textarea.focus();
       textarea.setSelectionRange(0, textarea.value.length);
@@ -511,7 +511,7 @@ describe('<TextArea>', function() {
         onPaste: onPasteSpy
       });
 
-      const textarea = domQuery('.bio-properties-panel-input', result.container);
+      const textarea = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       textarea.focus();
       textarea.setSelectionRange(4, 4);
@@ -534,7 +534,7 @@ describe('<TextArea>', function() {
         onPaste: onPasteSpy
       });
 
-      const textarea = domQuery('.bio-properties-panel-input', result.container);
+      const textarea = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       // when
       textarea.dispatchEvent(createPasteEvent('test\ncontent'));
@@ -554,7 +554,7 @@ describe('<TextArea>', function() {
         setValue: setValueSpy
       });
 
-      const textarea = domQuery('.bio-properties-panel-input', result.container);
+      const textarea = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       // when
       textarea.dispatchEvent(createPasteEvent('  line 1  \n  line 2  \n  line 3  '));
@@ -618,7 +618,7 @@ describe('<TextArea>', function() {
       // given
       const result = createTextArea({ container });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       // when
       const edited = isEdited(input);
@@ -633,7 +633,7 @@ describe('<TextArea>', function() {
       // given
       const result = createTextArea({ container, getValue: () => 'foo' });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       // when
       const edited = isEdited(input);
@@ -648,7 +648,7 @@ describe('<TextArea>', function() {
       // given
       const result = createTextArea({ container });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       // assume
       expect(isEdited(input)).to.be.false;
@@ -757,7 +757,7 @@ describe('<TextArea>', function() {
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
 
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textarea textarea', entry);
 
       // when
       changeInput(input, 'foo');
@@ -775,7 +775,7 @@ describe('<TextArea>', function() {
       const result = createTextArea({ container, validate });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textarea textarea', entry);
 
       // when
       changeInput(input, 'bar');
@@ -793,7 +793,7 @@ describe('<TextArea>', function() {
       const result = createTextArea({ container, validate });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textarea textarea', entry);
 
       // when
       changeInput(input, 'bar');
@@ -811,7 +811,7 @@ describe('<TextArea>', function() {
       const result = createTextArea({ container, validate });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textarea textarea', entry);
 
       // when
       changeInput(input, 'bar');
@@ -833,7 +833,7 @@ describe('<TextArea>', function() {
       const result = createTextArea({ container, validate, setValue: setValueSpy });
 
       const entry = domQuery('.bio-properties-panel-entry', result.container);
-      const input = domQuery('.bio-properties-panel-input', entry);
+      const input = domQuery('.bio-properties-panel-textarea textarea', entry);
 
       // when
       changeInput(input, 'bar');
@@ -883,7 +883,7 @@ describe('<TextArea>', function() {
         autoResize: true
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       // when
       const initialHeight = input.clientHeight;
@@ -904,7 +904,7 @@ describe('<TextArea>', function() {
         autoResize: true
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
       const initialHeight = input.clientHeight;
 
       // when
@@ -929,7 +929,7 @@ describe('<TextArea>', function() {
       const parent = domify('<div style="display: none;"></div>');
       container.appendChild(parent);
 
-      const style = domify('<style>.bio-properties-panel-input { box-sizing: border-box; }</style>');
+      const style = domify('<style>.bio-properties-panel-textarea textarea { box-sizing: border-box; }</style>');
       parent.appendChild(style);
 
       const result = createTextArea({
@@ -938,7 +938,7 @@ describe('<TextArea>', function() {
         autoResize: true
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
 
       // when
       parent.style.display = 'block';
@@ -960,7 +960,7 @@ describe('<TextArea>', function() {
         autoResize: true,
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-textarea textarea', result.container);
       const initialHeight = input.clientHeight;
 
       // when

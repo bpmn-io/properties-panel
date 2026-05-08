@@ -74,7 +74,7 @@ describe('<Checkbox>', function() {
 
     const result = createCheckbox({ container, setValue: updateSpy });
 
-    const input = domQuery('.bio-properties-panel-input', result.container);
+    const input = domQuery('[role="checkbox"]', result.container);
 
     // when
     clickInput(input);
@@ -89,13 +89,13 @@ describe('<Checkbox>', function() {
     // given
     const result = createCheckbox({ element: {}, container });
 
-    const input = domQuery('.bio-properties-panel-input', container);
+    const input = domQuery('[role="checkbox"]', container);
 
     // when
     createCheckbox({ element: {}, container }, result.render);
 
     // then
-    const newInput = domQuery('.bio-properties-panel-input', container);
+    const newInput = domQuery('[role="checkbox"]', container);
 
     expect(newInput).to.not.eql(input);
   });
@@ -108,7 +108,7 @@ describe('<Checkbox>', function() {
       // given
       const result = createCheckbox({ container });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('[role="checkbox"]', result.container);
 
       // when
       const edited = isEdited(input);
@@ -123,7 +123,7 @@ describe('<Checkbox>', function() {
       // given
       const result = createCheckbox({ container, getValue: () => 'foo' });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('[role="checkbox"]', result.container);
 
       // when
       const edited = isEdited(input);
@@ -138,7 +138,7 @@ describe('<Checkbox>', function() {
       // given
       const result = createCheckbox({ container });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('[role="checkbox"]', result.container);
 
       // assume
       expect(isEdited(input)).to.be.false;

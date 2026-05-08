@@ -89,7 +89,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelField({ container, setValue: updateSpy });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 'foo');
@@ -108,7 +108,7 @@ describe('<FeelEntry>', function() {
         setValue: setValueSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       await act(() => {
@@ -134,7 +134,7 @@ describe('<FeelEntry>', function() {
         setValue: setValueSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -157,7 +157,7 @@ describe('<FeelEntry>', function() {
         debounce: fn => debounce(fn, 50)
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -182,7 +182,7 @@ describe('<FeelEntry>', function() {
         debounce: fn => debounce(fn, 50)
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -209,7 +209,7 @@ describe('<FeelEntry>', function() {
         debounce: fn => debounce(fn, 50)
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -239,7 +239,7 @@ describe('<FeelEntry>', function() {
         debounce: fn => debounce(fn, 50) // 50ms debounce delay
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -266,7 +266,7 @@ describe('<FeelEntry>', function() {
         debounce: fn => fn // no .flush or .cancel on returned function
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -294,7 +294,7 @@ describe('<FeelEntry>', function() {
         onBlur: onBlurSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -316,7 +316,7 @@ describe('<FeelEntry>', function() {
         setValue: setValueSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -339,7 +339,7 @@ describe('<FeelEntry>', function() {
 
         // when
         createFeelField({ container, setValue: updateSpies[1] }, firstRender.rerender);
-        const input = domQuery('.bio-properties-panel-input', firstRender.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', firstRender.container);
         changeInput(input, 'foo');
 
         // then
@@ -358,7 +358,7 @@ describe('<FeelEntry>', function() {
 
         // when
         createFeelField({ container, getValue: getValueSpies[1] }, firstRender.rerender);
-        const input = domQuery('.bio-properties-panel-input', firstRender.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', firstRender.container);
         getValueSpies[0].resetHistory();
 
         // and when
@@ -379,7 +379,7 @@ describe('<FeelEntry>', function() {
 
         // when
         createFeelField({ container, validate: validateSpies[1] }, firstRender.rerender);
-        const input = domQuery('.bio-properties-panel-input', firstRender.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', firstRender.container);
         validateSpies[0].resetHistory();
 
         // and when
@@ -399,7 +399,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelField({ container });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -414,7 +414,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelField({ container, getValue: () => 'foo' });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -429,7 +429,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelField({ container });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // assume
         expect(isEdited(input)).to.be.false;
@@ -449,13 +449,13 @@ describe('<FeelEntry>', function() {
       // given
       const result = createFeelField({ element: {}, container });
 
-      const input = domQuery('.bio-properties-panel-input', container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', container);
 
       // when
       createFeelField({ element: {}, container }, result.render);
 
       // then
-      const newInput = domQuery('.bio-properties-panel-input', container);
+      const newInput = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', container);
 
       expect(newInput).to.not.eql(input);
     });
@@ -510,7 +510,7 @@ describe('<FeelEntry>', function() {
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
 
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'foo');
@@ -528,7 +528,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelField({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
@@ -546,7 +546,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelField({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
@@ -564,7 +564,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelField({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
@@ -586,7 +586,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelField({ container, validate, setValue: setValueSpy });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
@@ -805,7 +805,7 @@ describe('<FeelEntry>', function() {
           debounce: fn => debounce(fn, 50)
         });
 
-        const input = domQuery('.bio-properties-panel-input', field.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', field.container);
         const icon = domQuery('[data-entry-id="feelField"] .bio-properties-panel-feel-icon',
           field.container);
 
@@ -859,7 +859,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         changeInput(input, '=foo');
@@ -883,7 +883,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         const data = new DataTransfer();
         data.setData('application/FEEL', 'foo');
@@ -914,7 +914,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         input.dispatchEvent(createFeelPasteEvent('  trimmed content  '));
@@ -935,7 +935,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         input.dispatchEvent(createFeelPasteEvent('  =expression  '));
@@ -962,7 +962,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         input.focus();
         input.setSelectionRange(0, input.value.length);
@@ -988,7 +988,7 @@ describe('<FeelEntry>', function() {
           debounce: fn => debounce(fn, 50)
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         expect(getEditor(result.container)).to.not.exist;
 
@@ -1020,7 +1020,7 @@ describe('<FeelEntry>', function() {
           debounce: fn => debounce(fn, 50)
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         input.dispatchEvent(createFeelPasteEvent('=test'));
@@ -1043,7 +1043,7 @@ describe('<FeelEntry>', function() {
           debounce: fn => debounce(fn, 50)
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         changeInput(input, 'abc');
@@ -1074,7 +1074,7 @@ describe('<FeelEntry>', function() {
           debounce: fn => debounce(fn, 50)
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         expect(getEditor(result.container)).to.not.exist;
 
@@ -1108,7 +1108,7 @@ describe('<FeelEntry>', function() {
         debounce: fn => debounce(fn, 50)
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       changeInput(input, 'hello');
       expect(setValueSpy).not.to.have.been.called;
@@ -1159,7 +1159,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelNumber({ container, setValue: updateSpy });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 2);
@@ -1176,7 +1176,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 20.5);
@@ -1193,7 +1193,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelNumber({ container, setValue: updateSpy, step: 'any' });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 0);
@@ -1210,7 +1210,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelNumber({ container });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -1225,7 +1225,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelNumber({ container, getValue: () => 2 });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -1240,7 +1240,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelNumber({ container });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // assume
         expect(isEdited(input)).to.be.false;
@@ -1260,13 +1260,13 @@ describe('<FeelEntry>', function() {
       // given
       const result = createFeelNumber({ element: {}, container });
 
-      const input = domQuery('.bio-properties-panel-input', container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', container);
 
       // when
       createFeelNumber({ element: {}, container }, result.render);
 
       // then
-      const newInput = domQuery('.bio-properties-panel-input', container);
+      const newInput = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', container);
 
       expect(newInput).to.not.eql(input);
     });
@@ -1321,7 +1321,7 @@ describe('<FeelEntry>', function() {
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
 
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 2);
@@ -1339,7 +1339,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelNumber({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 3);
@@ -1357,7 +1357,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelNumber({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 3);
@@ -1375,7 +1375,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelNumber({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 3);
@@ -1397,7 +1397,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelNumber({ container, validate, setValue: setValueSpy });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 3);
@@ -1593,7 +1593,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         const data = new DataTransfer();
         data.setData('application/FEEL', 2);
@@ -1624,7 +1624,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         input.dispatchEvent(createFeelPasteEvent('  123  '));
@@ -1645,7 +1645,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         input.dispatchEvent(createFeelPasteEvent('  =42 + 8  '));
@@ -1693,7 +1693,7 @@ describe('<FeelEntry>', function() {
       // when
       createFeelTextArea({ container });
 
-      const input = domQuery('.bio-properties-panel-input', container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', container);
 
       // then
       expect(input.dataset.gramm).to.eql('false');
@@ -1707,7 +1707,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelTextArea({ container, setValue: updateSpy });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, 'foo');
@@ -1727,7 +1727,7 @@ describe('<FeelEntry>', function() {
         setValue: setValueSpy,
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       await act(() => {
@@ -1754,7 +1754,7 @@ describe('<FeelEntry>', function() {
         setValue: setValueSpy,
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -1777,7 +1777,7 @@ describe('<FeelEntry>', function() {
         debounce: fn => debounce(fn, 0)
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       await act(() => {
@@ -1806,7 +1806,7 @@ describe('<FeelEntry>', function() {
         onBlur: onBlurSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -1829,7 +1829,7 @@ describe('<FeelEntry>', function() {
         setValue: setValueSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -1853,7 +1853,7 @@ describe('<FeelEntry>', function() {
         setValue: setValueSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -1873,7 +1873,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelTextArea({ container });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -1888,7 +1888,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelTextArea({ container, getValue: () => 'foo' });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -1903,7 +1903,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelTextArea({ container });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // assume
         expect(isEdited(input)).to.be.false;
@@ -1968,7 +1968,7 @@ describe('<FeelEntry>', function() {
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
 
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'foo');
@@ -1986,7 +1986,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelTextArea({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
@@ -2004,7 +2004,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelTextArea({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
@@ -2022,7 +2022,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelTextArea({ container, validate });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
@@ -2044,7 +2044,7 @@ describe('<FeelEntry>', function() {
         const result = createFeelTextArea({ container, validate, setValue: setValueSpy });
 
         const entry = domQuery('.bio-properties-panel-entry', result.container);
-        const input = domQuery('.bio-properties-panel-input', entry);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', entry);
 
         // when
         changeInput(input, 'bar');
@@ -2238,7 +2238,7 @@ describe('<FeelEntry>', function() {
           setValue: updateSpy
         });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         changeInput(input, '=foo');
@@ -2306,7 +2306,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelToggleSwitch({ container, getValue: () => false });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -2321,7 +2321,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelToggleSwitch({ container, getValue: () => true });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -2336,7 +2336,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelToggleSwitch({ container });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // assume
         expect(isEdited(input)).to.be.false;
@@ -2423,7 +2423,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelCheckbox({ container, setValue: updateSpy, getValue: () => false });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       clickInput(input);
@@ -2440,7 +2440,7 @@ describe('<FeelEntry>', function() {
 
       const result = createFeelCheckbox({ container, setValue: updateSpy, getValue: () => false });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       input.focus();
@@ -2459,7 +2459,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelCheckbox({ container, getValue: () => false });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -2474,7 +2474,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelCheckbox({ container, getValue: () => true });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -2489,7 +2489,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelCheckbox({ container });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // assume
         expect(isEdited(input)).to.be.false;
@@ -2741,7 +2741,7 @@ describe('<FeelEntry>', function() {
         setValue: updateSpy
       });
 
-      const input = domQuery('.bio-properties-panel-input', result.container);
+      const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
       // when
       changeInput(input, '=');
@@ -2803,7 +2803,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelField({ container, feel: 'required' });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -2818,7 +2818,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelField({ container, getValue: () => 'foo', feel: 'required' });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
 
         // when
         const edited = isEdited(input);
@@ -2833,7 +2833,7 @@ describe('<FeelEntry>', function() {
         // given
         const result = createFeelField({ container, feel: 'required' });
 
-        const input = domQuery('.bio-properties-panel-input', result.container);
+        const input = domQuery('.bio-properties-panel-feel-entry input, .bio-properties-panel-feel-entry textarea, .bio-properties-panel-feel-entry div.bio-properties-panel-input', result.container);
         const contentEditable = getEditor(result.container);
 
         // assume

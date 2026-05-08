@@ -11,6 +11,14 @@ import {
 import Description from './Description';
 import Tooltip from './Tooltip';
 
+// POC: drive the checkbox visual through the shadcn (Base UI) Checkbox from
+// `@camunda/design-system`. Base UI's `<Checkbox.Root>` renders a `<button>`
+// for interaction plus a hidden `<input>` next to it, so existing tests that
+// query `input[name=...]` still resolve. The label's `htmlFor` points at the
+// button (Base UI uses `id` on the button) — a `for=` association on the
+// hidden input would not bubble clicks to Base UI's state machine.
+import { Checkbox as ShadcnCheckbox } from '@camunda/design-system/preact/components/checkbox';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 function Checkbox(props) {
@@ -25,40 +33,36 @@ function Checkbox(props) {
     tooltip
   } = props;
 
-  const [ localValue, setLocalValue ] = useState(value);
+  const [ localValue, setLocalValue ] = useState(!!value);
 
-  const handleChangeCallback = ({ target }) => {
-    onChange(target.checked);
-  };
-
-  const handleChange = e => {
-    handleChangeCallback(e);
-    setLocalValue(e.target.value);
+  const handleCheckedChange = (checked) => {
+    onChange(checked);
+    setLocalValue(checked);
   };
 
   useEffect(() => {
-    if (value === localValue) {
+    if (!!value === localValue) {
       return;
     }
 
-    setLocalValue(value);
+    setLocalValue(!!value);
   }, [ value ]);
 
   const ref = useShowEntryEvent(id);
 
   return (
-    <div class="bio-properties-panel-checkbox">
-      <input
+    <div class="bio-properties-panel-checkbox flex items-center">
+      <ShadcnCheckbox
         ref={ ref }
         id={ prefixId(id) }
         name={ id }
+        checked={ localValue }
+        disabled={ disabled }
+        onCheckedChange={ handleCheckedChange }
         onFocus={ onFocus }
         onBlur={ onBlur }
-        type="checkbox"
-        class="bio-properties-panel-input"
-        onChange={ handleChange }
-        checked={ localValue }
-        disabled={ disabled } />
+        aria-label={ typeof label === 'string' ? label : undefined }
+      />
       <label for={ prefixId(id) } class="bio-properties-panel-label">
         <Tooltip value={ tooltip } forId={ id } element={ props.element }>
           { label }
@@ -120,7 +124,15 @@ export default function CheckboxEntry(props) {
 }
 
 export function isEdited(node) {
-  return node && !!node.checked;
+  if (!node) return false;
+
+  // Base UI Checkbox renders a <span role="checkbox" aria-checked="...">
+  // — `.checked` is undefined on the DOM element. Prefer the aria attribute
+  // and fall back to `.checked` for any native <input type="checkbox"> case.
+  const aria = node.getAttribute && node.getAttribute('aria-checked');
+  if (aria != null) return aria === 'true';
+
+  return !!node.checked;
 }
 
 

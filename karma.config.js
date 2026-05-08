@@ -95,15 +95,24 @@ module.exports = function(karma) {
         })
       ],
       resolve: {
+
+        // When @camunda/design-system is npm-linked into node_modules, default
+        // symlink resolution walks up from the link target (where preact is
+        // not installed) and fails to resolve `preact/compat`. Disabling
+        // symlink-following keeps resolution anchored here, where it IS.
+        symlinks: false,
         mainFields: [
           'browser',
           'module',
           'main'
         ],
         alias: {
-          'preact': '/preact',
-          'react': '/preact/compat',
-          'react-dom': '/preact/compat'
+
+          // preact imports resolve naturally through node_modules — the
+          // `./preact/` directory is now just a published-subpath shim and
+          // mustn't intercept bare `preact` requests in tests.
+          'react': 'preact/compat',
+          'react-dom': 'preact/compat'
         },
         modules: [
           'node_modules',

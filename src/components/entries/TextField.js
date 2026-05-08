@@ -1,6 +1,3 @@
-import Description from './Description';
-import Tooltip from './Tooltip';
-
 import {
   useCallback,
   useEffect,
@@ -17,15 +14,23 @@ import {
   useShowEntryEvent,
   useStaticCallback
 } from '../../hooks';
+
 import { isCmdWithChar } from '../util/keyboardUtils';
 
-{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+import Description from './Description';
+import Tooltip from './Tooltip';
+
+import { Input } from '@camunda/design-system/preact/components/input';
+import { Label } from '@camunda/design-system/preact/components/label';
+
+const prefixId = (id) => `bio-properties-panel-${ id }`;
+
 
 function Textfield(props) {
-
   const {
     debounce,
     disabled = false,
+    element,
     id,
     label,
     onInput: commitValue,
@@ -33,28 +38,24 @@ function Textfield(props) {
     onBlur,
     onPaste,
     placeholder,
-    value = '',
-    tooltip
+    tooltip,
+    value = ''
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value || '');
 
   const ref = useShowEntryEvent(id);
 
-  const onInput = useCallback(newValue => {
+  const onInput = useCallback((newValue) => {
     const newModelValue = newValue === '' ? undefined : newValue;
     commitValue(newModelValue);
   }, [ commitValue ]);
 
-  /**
-   * @type { import('min-dash').DebouncedFunction }
-   */
   const handleInput = useDebounce(onInput, debounce);
 
-  const handleOnBlur = e => {
+  const handleOnBlur = (e) => {
     const trimmedValue = e.target.value.trim();
 
-    // trim and commit on blur
     handleInput.cancel?.();
     onInput(trimmedValue);
     setLocalValue(trimmedValue);
@@ -64,12 +65,11 @@ function Textfield(props) {
     }
   };
 
-  const handleOnPaste = e => {
+  const handleOnPaste = (e) => {
     const input = e.target;
     const isFieldEmpty = !input.value;
     const isAllSelected = input.selectionStart === 0 && input.selectionEnd === input.value.length;
 
-    // Trim and handle paste if field is empty or all content is selected (overwrite)
     if (isFieldEmpty || isAllSelected) {
       const trimmedValue = e.clipboardData.getData('text').trim();
 
@@ -84,14 +84,12 @@ function Textfield(props) {
       return;
     }
 
-    // Allow default paste behavior for normal text editing
     if (onPaste) {
       onPaste(e);
     }
   };
 
-  const handleLocalInput = e => {
-
+  const handleLocalInput = (e) => {
     if (e.target.value === localValue) {
       return;
     }
@@ -108,7 +106,7 @@ function Textfield(props) {
     setLocalValue(value);
   }, [ value ]);
 
-  const handleOnKeyDown = e => {
+  const handleOnKeyDown = (e) => {
     if (isCmdWithChar(e)) {
       handleInput.flush?.();
     }
@@ -116,12 +114,12 @@ function Textfield(props) {
 
   return (
     <div class="bio-properties-panel-textfield">
-      <label for={ prefixId(id) } class="bio-properties-panel-label">
-        <Tooltip value={ tooltip } forId={ id } element={ props.element }>
+      <Label htmlFor={ prefixId(id) } className="bio-properties-panel-label">
+        <Tooltip value={ tooltip } forId={ id } element={ element }>
           { label }
         </Tooltip>
-      </label>
-      <input
+      </Label>
+      <Input
         ref={ ref }
         id={ prefixId(id) }
         type="text"
@@ -129,14 +127,14 @@ function Textfield(props) {
         spellCheck="false"
         autoComplete="off"
         disabled={ disabled }
-        class="bio-properties-panel-input"
         onInput={ handleLocalInput }
         onFocus={ onFocus }
         onKeyDown={ handleOnKeyDown }
         onBlur={ handleOnBlur }
         onPaste={ handleOnPaste }
         placeholder={ placeholder }
-        value={ localValue } />
+        value={ localValue }
+      />
     </div>
   );
 }
@@ -145,16 +143,15 @@ function Textfield(props) {
  * @param {Object} props
  * @param {Object} props.element
  * @param {String} props.id
- * @param {String} props.description
- * @param {Boolean} props.debounce
- * @param {Boolean} props.disabled
- * @param {String} props.label
+ * @param {String} [props.description]
+ * @param {Boolean} [props.debounce]
+ * @param {Boolean} [props.disabled]
+ * @param {String} [props.label]
  * @param {Function} props.getValue
  * @param {Function} props.setValue
- * @param {Function} props.onFocus
- * @param {Function} props.onBlur
- * @param {string|import('preact').Component} props.tooltip
- * @param {Function} props.validate
+ * @param {Function} [props.onFocus]
+ * @param {Function} [props.onBlur]
+ * @param {Function} [props.validate]
  */
 export default function TextfieldEntry(props) {
   const {
@@ -177,7 +174,7 @@ export default function TextfieldEntry(props) {
   const globalError = useError(id);
   const [ localError, setLocalError ] = useState(null);
 
-  let value = getValue(element);
+  const value = getValue(element);
 
   useEffect(() => {
     if (isFunction(validate)) {
@@ -188,9 +185,9 @@ export default function TextfieldEntry(props) {
   }, [ value, validate ]);
 
   const onInput = useStaticCallback((newValue) => {
-    const value = getValue(element);
+    const currentValue = getValue(element);
 
-    if (newValue !== value) {
+    if (newValue !== currentValue) {
       let newValidationError = null;
 
       if (isFunction(validate)) {
@@ -202,15 +199,14 @@ export default function TextfieldEntry(props) {
     }
   });
 
-
   const error = globalError || localError;
 
   return (
     <div
       class={ classnames(
         'bio-properties-panel-entry',
-        error ? 'has-error' : '')
-      }
+        error ? 'has-error' : ''
+      ) }
       data-entry-id={ id }>
       <Textfield
         debounce={ debounce }
@@ -224,8 +220,9 @@ export default function TextfieldEntry(props) {
         onPaste={ onPaste }
         placeholder={ placeholder }
         value={ value }
+        element={ element }
         tooltip={ tooltip }
-        element={ element } />
+      />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
     </div>
@@ -234,11 +231,4 @@ export default function TextfieldEntry(props) {
 
 export function isEdited(node) {
   return node && !!node.value;
-}
-
-
-// helpers /////////////////
-
-function prefixId(id) {
-  return `bio-properties-panel-${ id }`;
 }

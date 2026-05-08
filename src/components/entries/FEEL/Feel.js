@@ -34,6 +34,9 @@ import { ToggleSwitch } from '../ToggleSwitch';
 import { NumberField } from '../NumberField';
 import Tooltip from '../Tooltip';
 
+import { Input } from '@camunda/design-system/preact/components/input';
+import { Textarea } from '@camunda/design-system/preact/components/textarea';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 const noop = () => {};
@@ -404,7 +407,7 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     }
   };
 
-  return <input
+  return <Input
     id={ prefixId(id) }
     type="text"
     ref={ inputRef }
@@ -412,7 +415,6 @@ const OptionalFeelInput = forwardRef((props, ref) => {
     spellCheck="false"
     autoComplete="off"
     disabled={ disabled }
-    class="bio-properties-panel-input"
     onInput={ e => onInput(e.target.value) }
     onFocus={ onFocus }
     onKeyDown={ onKeyDown }
@@ -500,15 +502,13 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
     }
   };
 
-  return <textarea
+  return <Textarea
     id={ prefixId(id) }
-    type="text"
     ref={ inputRef }
     name={ id }
     spellCheck="false"
     autoComplete="off"
     disabled={ disabled }
-    class="bio-properties-panel-input"
     onInput={ e => onInput(e.target.value) }
     onFocus={ onFocus }
     onBlur={ onBlur }

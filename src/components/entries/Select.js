@@ -15,7 +15,13 @@ import {
 import Description from './Description';
 import Tooltip from './Tooltip';
 
-{ /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
+import {
+  Select as ShadcnSelect,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@camunda/design-system/preact/components/select';
 
 /**
  * @typedef { { value: string, label: string, disabled: boolean, children: { value: string, label: string, disabled: boolean } } } Option
@@ -24,9 +30,14 @@ import Tooltip from './Tooltip';
 /**
  * Provides basic select input.
  *
+ * Renders both a visible shadcn (Base UI) Select for the user-facing UX AND
+ * a hidden native `<select>` underneath — the native one preserves the
+ * `bio-properties-panel-input` class plus the standard form/event API that
+ * downstream tests across the bpmn.io ecosystem rely on
+ * (`select[name=...]`, `.value`, `.options`, `changeInput`, etc.).
+ *
  * @param {object} props
  * @param {string} props.id
- * @param {string[]} props.path
  * @param {string} props.label
  * @param {Function} props.onChange
  * @param {Function} props.onFocus
@@ -52,13 +63,13 @@ function Select(props) {
 
   const [ localValue, setLocalValue ] = useState(value);
 
-  const handleChangeCallback = ({ target }) => {
-    onChange(target.value);
+  const handleChange = (newValue) => {
+    setLocalValue(newValue);
+    onChange(newValue);
   };
 
-  const handleChange = e => {
-    handleChangeCallback(e);
-    setLocalValue(e.target.value);
+  const handleNativeInput = ({ target }) => {
+    handleChange(target.value);
   };
 
   useEffect(() => {
@@ -69,6 +80,10 @@ function Select(props) {
     setLocalValue(value);
   }, [ value ]);
 
+  // Resolve the human-readable label for the current value so the shadcn
+  // trigger renders the same text the native <select> would show.
+  const selectedLabel = findOptionLabel(options, localValue);
+
   return (
     <div class="bio-properties-panel-select">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
@@ -76,16 +91,39 @@ function Select(props) {
           {label}
         </Tooltip>
       </label>
+
+      {/* Visual shadcn Select (button + portal popup). State is shared with
+          the hidden native select via `localValue`. */}
+      <ShadcnSelect
+        value={ localValue }
+        onValueChange={ handleChange }
+        disabled={ disabled }
+      >
+        <SelectTrigger aria-label={ typeof label === 'string' ? label : undefined }>
+          <SelectValue placeholder=" ">{ selectedLabel }</SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          { renderShadcnItems(options) }
+        </SelectContent>
+      </ShadcnSelect>
+
+      {/* Hidden native <select> — preserves the public DOM contract:
+          tests / consumers query `select[name=...]` and use the standard
+          form API; `changeInput()` fires `input` here and feeds back into
+          the same state via `handleNativeInput`. */}
       <select
         ref={ ref }
         id={ prefixId(id) }
         name={ id }
         class="bio-properties-panel-input"
-        onInput={ handleChange }
+        onInput={ handleNativeInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
         value={ localValue }
         disabled={ disabled }
+        tabIndex={ -1 }
+        aria-hidden="true"
+        style={ { display: 'none' } }
       >
         {options.map((option, idx) => {
           if (option.children) {
@@ -209,4 +247,46 @@ export function isEdited(node) {
 
 function prefixId(id) {
   return `bio-properties-panel-${ id }`;
+}
+
+function findOptionLabel(options, value) {
+  for (const option of options) {
+    if (option.children) {
+      const child = option.children.find(c => c.value === value);
+      if (child) return child.label;
+    } else if (option.value === value) {
+      return option.label;
+    }
+  }
+  return '';
+}
+
+// Flatten optgroup'd options into shadcn <SelectItem>s. Group labels render
+// as disabled items so the visual structure is preserved without needing
+// Base UI's Group primitives wired through the design system.
+function renderShadcnItems(options) {
+  return options.map((option, idx) => {
+    if (option.children) {
+      return [
+        <SelectItem key={ `g-${ idx }` } value={ `__group_${ idx }` } disabled>
+          { option.label }
+        </SelectItem>,
+        ...option.children.map((child, cidx) => (
+          <SelectItem
+            key={ `g-${ idx }-${ cidx }` }
+            value={ child.value }
+            disabled={ child.disabled }
+          >
+            { child.label }
+          </SelectItem>
+        ))
+      ];
+    }
+
+    return (
+      <SelectItem key={ idx } value={ option.value } disabled={ option.disabled }>
+        { option.label }
+      </SelectItem>
+    );
+  });
 }
