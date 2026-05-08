@@ -9,6 +9,8 @@ import {
 
 import PropertiesPanel from 'src/PropertiesPanel';
 
+import Header from 'src/components/Header';
+
 import ListGroup from 'src/components/ListGroup';
 
 import {
@@ -248,15 +250,27 @@ function ExampleApp() {
   ];
 
   return (
-    <PropertiesPanel
-      element={ element }
-      headerProvider={ ExampleHeaderProvider }
-      placeholderProvider={ ExamplePlaceholderProvider }
-      groups={ groups }
-      eventBus={ eventBus }
-      layoutConfig={ layoutConfig }
-      layoutChanged={ noop }
-    />
+    <div class="bio-properties-panel" style="display: flex; flex-direction: column; height: 100%;">
+      <div style="border: 2px dashed #888; margin: 4px;">
+        <div style="font-size: 11px; color: #555; padding: 4px 8px; background: #f5f5f5;">
+          standalone &lt;Header&gt;
+        </div>
+        <Header element={ element } headerProvider={ ExampleHeaderProvider } />
+      </div>
+      <div style="border: 2px dashed #0a7; margin: 4px; flex: 1; min-height: 0;">
+        <div style="font-size: 11px; color: #555; padding: 4px 8px; background: #f5f5f5;">
+          &lt;PropertiesPanel&gt; without built-in header
+        </div>
+        <PropertiesPanel
+          element={ element }
+          placeholderProvider={ ExamplePlaceholderProvider }
+          groups={ groups }
+          eventBus={ eventBus }
+          layoutConfig={ layoutConfig }
+          layoutChanged={ noop }
+        />
+      </div>
+    </div>
   );
 }
 
@@ -437,7 +451,11 @@ class ExampleHeaderProvider {
   }
 
   static getElementIcon() {
-    return () => <span>&#9881;</span>;
+    return ({ width, height }) => (
+      <span style={ `font-size: ${ width || 32 }px; line-height: ${ height || 32 }px;` }>
+        &#9881;
+      </span>
+    );
   }
 
   static getTypeLabel(element) {
