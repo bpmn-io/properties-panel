@@ -120,6 +120,37 @@ describe('<PropertiesPanel>', function() {
   });
 
 
+  it('should not render header - no header provider', function() {
+
+    // when
+    const result = createPropertiesPanel({
+      container,
+      element: noopElement,
+      headerProvider: null
+    });
+
+    // then
+    expect(domQuery('.bio-properties-panel-header', result.container)).to.not.exist;
+    expect(domQuery('.bio-properties-panel-scroll-container', result.container)).to.exist;
+  });
+
+
+  it('should not render header - header provider omitted', function() {
+
+    // when
+    const result = render(
+      <PropertiesPanel
+        element={ noopElement }
+        groups={ [] } />,
+      { container }
+    );
+
+    // then
+    expect(domQuery('.bio-properties-panel-header', result.container)).to.not.exist;
+    expect(domQuery('.bio-properties-panel-scroll-container', result.container)).to.exist;
+  });
+
+
   describe('groups', function() {
 
     it('should render groups', function() {

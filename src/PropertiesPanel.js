@@ -105,9 +105,12 @@ const DEFAULT_TOOLTIP = {};
  * A basic properties panel component. Describes *how* content will be rendered, accepts
  * data from implementor to describe *what* will be rendered.
  *
+ * If `headerProvider` is omitted (or `null`), the built-in `<Header>` is not rendered;
+ * consumers can render `<Header>` standalone elsewhere using the same provider shape.
+ *
  * @param {Object} props
  * @param {Object|Array} props.element
- * @param {import('./components/Header').HeaderProvider} props.headerProvider
+ * @param {import('./components/Header').HeaderProvider} [props.headerProvider]
  * @param {PlaceholderProvider} [props.placeholderProvider]
  * @param {Array<GroupDefinition|ListGroupDefinition>} props.groups
  * @param {Object} [props.layoutConfig]
@@ -243,9 +246,11 @@ export default function PropertiesPanel(props) {
             <LayoutContext.Provider value={ layoutContext }>
               <EventContext.Provider value={ eventContext }>
                 <div class="bio-properties-panel">
-                  <Header
-                    element={ element }
-                    headerProvider={ headerProvider } />
+                  { headerProvider ? (
+                    <Header
+                      element={ element }
+                      headerProvider={ headerProvider } />
+                  ) : null }
                   <div class="bio-properties-panel-scroll-container">
                     {
                       groups.map(group => {
