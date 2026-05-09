@@ -14,19 +14,26 @@ import { useEvent } from './useEvent';
 /**
  * Subscribe to `propertiesPanel.showEntry`.
  *
- * The hook listens to the `propertiesPanel.showEntry` event via the injected
- * event bus (legacy path, preserved for backward compatibility) AND reacts to
- * the panel-level `ShowEntryContext` coordinator. The coordinator path ensures
- * that entries which are mounted *after* the event fires (e.g. because their
- * parent group just opened) also receive the focus request.
+ * Pull-based: on every commit, the entry checks whether it should focus
+ * itself and whether it is currently visible. If both, it focuses + clears
+ * the request. If not (entry hidden behind a still-collapsed group, or not
+ * yet mounted), it does nothing — the next commit will check again.
+ * Whatever sequence of renders / event fires it takes for the entry to
+ * become visible (group opening, host re-renders, un-batched fires), the
+ * entry will focus itself on the first commit where it is both targeted
+ * and visible. No tokens, no rAF, no assumptions about effect ordering
+ * across the tree.
  *
- * Focus is performed in a layout effect so it runs synchronously after DOM
- * mutations but before paint. When the entry is not yet visible (parent group
- * still collapsed), the request is left pending; the parent's
- * `useLayoutEffect` then calls `setOpen(true)` synchronously, which triggers
- * a synchronous re-render. The next layout effect pass picks up the now
- * visible entry and focuses it — all in the same browser frame, no async
- * scheduling.
+ * The entry latches its "wants focus" state when it observes itself as the
+ * coordinator's pending target, so that a panel-level cancellation (e.g.
+ * when the selected element changes in the same render batch as the
+ * `showEntry` event) does not silently drop the request before the entry
+ * had a chance to react. The latch is released only when a *different*
+ * request arrives or when focus is performed.
+ *
+ * The legacy `useEvent('propertiesPanel.showEntry', …)` subscription is
+ * kept for consumers that use the hook outside of a `<PropertiesPanel>`
+ * (no coordinator available); it sets the same latch.
  *
  * @param {string} id
  *
@@ -38,51 +45,59 @@ export function useShowEntryEvent(id) {
 
   const ref = useRef();
 
-  const focus = useRef(false);
-  const resolveTokenRef = useRef(null);
+  // latch: set when this entry observes itself as the focus target
+  // (coordinator pendingRequest matches OR legacy event-bus fired with
+  // matching id); cleared on focus or when a competing request arrives
+  const focusFlag = useRef(false);
 
-  // legacy path: subscribe directly to the event bus so that consumers
-  // who embed entries outside of a <PropertiesPanel> (or in older setups
-  // without a coordinator) keep working unchanged
+  // legacy event-bus path: subscribe directly so consumers that embed
+  // entries outside of a <PropertiesPanel> (no coordinator) keep working
   const onShowEntry = useCallback((event) => {
     if (event && event.id === id) {
       if (isFunction(onShow)) {
         onShow();
       }
 
-      focus.current = true;
+      focusFlag.current = true;
     }
   }, [ id, onShow ]);
 
   useEvent('propertiesPanel.showEntry', onShowEntry);
 
-  // coordinator path: react to a pending show-entry request from the panel.
-  // This handles the "entry was not mounted when the event fired" case —
-  // when the entry finally mounts, this effect picks up the pending request
-  // and marks it for focusing.
   const pendingRequest = showEntryCoordinator && showEntryCoordinator.pendingRequest;
+  const resolve = showEntryCoordinator && showEntryCoordinator.resolve;
+
+  const isTarget = !!(pendingRequest && pendingRequest.id === id);
+
+  // notify ancestor `onShow` once per target transition (legacy
+  // PropertiesPanelContext.onShow path; still useful for consumers
+  // without the coordinator-aware Group/Collapsible)
+  const notifiedRef = useRef(false);
 
   useLayoutEffect(() => {
-    if (pendingRequest && pendingRequest.id === id) {
-      if (isFunction(onShow)) {
-        onShow();
+
+    // update latch based on the current coordinator state
+    if (isTarget) {
+      focusFlag.current = true;
+
+      if (!notifiedRef.current) {
+        notifiedRef.current = true;
+
+        if (isFunction(onShow)) {
+          onShow();
+        }
       }
+    } else {
+      notifiedRef.current = false;
 
-      focus.current = true;
-      resolveTokenRef.current = pendingRequest.token;
+      // a competing request (different id) arrived — drop our claim
+      if (pendingRequest) {
+        focusFlag.current = false;
+      }
     }
-  }, [ pendingRequest, id, onShow ]);
 
-  // Focus pass — runs as a layout effect on every render (no deps) so it
-  // re-runs synchronously after the parent group's `setOpen(true)` triggers
-  // a re-render. Preact runs layout effects child-first, so on the first
-  // commit after a request arrives this hook sees the entry as still hidden
-  // (parent's display: none); we leave `focus.current = true` and do NOT
-  // resolve. The parent's layout effect then calls `setOpen(true)`, which
-  // schedules a synchronous re-render before paint; this effect then re-runs
-  // with the entry visible and performs the focus.
-  useLayoutEffect(() => {
-    if (!focus.current || !ref.current) {
+    // attempt focus — only when we have a claim and we're visible
+    if (!focusFlag.current || !ref.current) {
       return;
     }
 
@@ -90,26 +105,27 @@ export function useShowEntryEvent(id) {
       return;
     }
 
-    if (isFunction(ref.current.focus)) {
-      ref.current.focus();
-    }
+    doFocus(ref.current);
+    focusFlag.current = false;
 
-    if (isFunction(ref.current.select)) {
-      ref.current.select();
-    }
-
-    focus.current = false;
-
-    // resolve the pending request on the coordinator so rapid
-    // subsequent calls (with a different token) are not clobbered
-    if (showEntryCoordinator && resolveTokenRef.current != null) {
-      const token = resolveTokenRef.current;
-      resolveTokenRef.current = null;
-      showEntryCoordinator.resolve(token);
+    // clear the coordinator's pending request if it's still ours
+    if (isTarget && isFunction(resolve)) {
+      resolve();
     }
   });
 
   return ref;
+}
+
+
+function doFocus(node) {
+  if (isFunction(node.focus)) {
+    node.focus();
+  }
+
+  if (isFunction(node.select)) {
+    node.select();
+  }
 }
 
 

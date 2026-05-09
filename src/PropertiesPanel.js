@@ -239,8 +239,8 @@ export default function PropertiesPanel(props) {
     setPendingRequest({ id, token: pendingTokenRef.current });
   }, []);
 
-  const resolveShow = useCallback((token) => {
-    setPendingRequest((prev) => (prev && prev.token === token ? null : prev));
+  const resolveShow = useCallback(() => {
+    setPendingRequest(null);
   }, []);
 
   const onShowEntry = useCallback((event) => {

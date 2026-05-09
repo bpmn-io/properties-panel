@@ -13,7 +13,7 @@ import { createContext } from 'preact';
  * @typedef { {
  *   pendingRequest: ShowEntryRequest | null,
  *   requestShow: (id: string) => void,
- *   resolve: (token: number) => void
+ *   resolve: () => void
  * } } ShowEntryContextValue
  */
 
