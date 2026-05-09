@@ -2,6 +2,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState
 } from 'preact/hooks';
@@ -23,7 +24,7 @@ import {
   CreateIcon
 } from './icons';
 
-import { PropertiesPanelContext } from '../context';
+import { PropertiesPanelContext, ShowEntryContext } from '../context';
 
 import { useStickyIntersectionObserver } from '../hooks';
 
@@ -72,6 +73,33 @@ export default function ListGroup(props) {
   const prevElement = usePrevious(element);
 
   const toggleOpen = useCallback(() => setOpen(!open), [ open ]);
+
+  // open the group when the panel-level coordinator requests showing an
+  // entry that lives in this list group (either a list item directly or
+  // a nested entry within one of the items)
+  const { pendingRequest } = useContext(ShowEntryContext);
+
+  useLayoutEffect(() => {
+    if (!pendingRequest) {
+      return;
+    }
+
+    const hasEntry = items.some(item => {
+      if (!item) {
+        return false;
+      }
+
+      if (item.id === pendingRequest.id) {
+        return true;
+      }
+
+      return Array.isArray(item.entries) && item.entries.some(entry => entry && entry.id === pendingRequest.id);
+    });
+
+    if (hasEntry && !open) {
+      setOpen(true);
+    }
+  }, [ pendingRequest, items, open ]);
 
   const openItemIds = (element === prevElement && open && addTriggered)
     ? getNewItemIds(items, localItems)

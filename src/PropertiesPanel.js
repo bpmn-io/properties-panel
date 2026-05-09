@@ -1,5 +1,6 @@
 import {
   useState,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -25,6 +26,7 @@ import {
   EventContext,
   LayoutContext,
   PropertiesPanelContext,
+  ShowEntryContext,
   TooltipContext
 } from './context';
 
@@ -221,6 +223,70 @@ export default function PropertiesPanel(props) {
     eventBus
   };
 
+  // set-up showEntry coordinator
+  //
+  // Tracks pending `propertiesPanel.showEntry` requests at the panel level so
+  // that groups can open themselves and entries can focus reliably, even when
+  // they are not yet mounted at the time the event fires.
+  const [ pendingRequest, setPendingRequest ] = useState(null);
+  const pendingTokenRef = useRef(0);
+
+  const requestShow = useCallback((id) => {
+    if (!id) {
+      return;
+    }
+    pendingTokenRef.current += 1;
+    setPendingRequest({ id, token: pendingTokenRef.current });
+  }, []);
+
+  const resolveShow = useCallback(() => {
+    setPendingRequest(null);
+  }, []);
+
+  const onShowEntry = useCallback((event) => {
+    if (event && event.id) {
+      requestShow(event.id);
+    }
+  }, [ requestShow ]);
+
+  useEvent('propertiesPanel.showEntry', onShowEntry, eventBus);
+
+  // Track the most recently committed request token. This lets us tell
+  // whether a `pendingRequest` present at the time of an element change
+  // was already alive in the previous render (→ stale, cancel) or was
+  // issued in the same render batch as the element change itself
+  // (→ keep, the consumer wants to focus an entry on the new element).
+  const lastCommittedTokenRef = useRef(0);
+
+  // cancel pending show-entry request when the selected element changes —
+  // but only if the request was issued before the element change. Requests
+  // batched together with the element change (a common pattern: select(el)
+  // followed synchronously by fire('propertiesPanel.showEntry', ...)) are
+  // preserved so the entry on the new element gets focused.
+  //
+  // useUpdateLayoutEffect avoids clobbering requests made during the
+  // initial render.
+  useUpdateLayoutEffect(() => {
+    setPendingRequest((prev) => {
+      if (prev && prev.token > lastCommittedTokenRef.current) {
+        return prev;
+      }
+      return null;
+    });
+  }, [ element ]);
+
+  useEffect(() => {
+    if (pendingRequest) {
+      lastCommittedTokenRef.current = pendingRequest.token;
+    }
+  }, [ pendingRequest ]);
+
+  const showEntryContext = useMemo(() => ({
+    pendingRequest,
+    requestShow,
+    resolve: resolveShow
+  }), [ pendingRequest, requestShow, resolveShow ]);
+
   const propertiesPanelContext = {
     element
   };
@@ -242,28 +308,30 @@ export default function PropertiesPanel(props) {
           <TooltipContext.Provider value={ tooltipContext }>
             <LayoutContext.Provider value={ layoutContext }>
               <EventContext.Provider value={ eventContext }>
-                <div class="bio-properties-panel">
-                  <Header
-                    element={ element }
-                    headerProvider={ headerProvider } />
-                  <div class="bio-properties-panel-scroll-container">
-                    {
-                      groups.map(group => {
-                        const {
-                          component: Component = Group,
-                          id
-                        } = group;
+                <ShowEntryContext.Provider value={ showEntryContext }>
+                  <div class="bio-properties-panel">
+                    <Header
+                      element={ element }
+                      headerProvider={ headerProvider } />
+                    <div class="bio-properties-panel-scroll-container">
+                      {
+                        groups.map(group => {
+                          const {
+                            component: Component = Group,
+                            id
+                          } = group;
 
-                        return (
-                          <Component
-                            { ...group }
-                            key={ id }
-                            element={ element } />
-                        );
-                      })
-                    }
+                          return (
+                            <Component
+                              { ...group }
+                              key={ id }
+                              element={ element } />
+                          );
+                        })
+                      }
+                    </div>
                   </div>
-                </div>
+                </ShowEntryContext.Provider>
               </EventContext.Provider>
             </LayoutContext.Provider>
           </TooltipContext.Provider>
