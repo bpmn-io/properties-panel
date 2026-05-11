@@ -223,17 +223,17 @@ export default function TextAreaEntry(props) {
 
   const onInput = useStaticCallback((newValue) => {
     const value = getValue(element);
-    let newValidationError = null;
-
-    if (isFunction(validate)) {
-      newValidationError = validate(newValue) || null;
-    }
 
     if (newValue !== value) {
-      setValue(newValue, newValidationError);
-    }
+      let newValidationError = null;
 
-    setLocalError(newValidationError);
+      if (isFunction(validate)) {
+        newValidationError = validate(newValue) || null;
+      }
+
+      setValue(newValue, newValidationError);
+      setLocalError(newValidationError);
+    }
   });
 
 

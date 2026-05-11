@@ -8,7 +8,7 @@ import {
 
 import classnames from 'classnames';
 
-import { isObject } from 'min-dash';
+import { isFunction, isObject } from 'min-dash';
 
 import {
   useDebounce,
@@ -171,6 +171,7 @@ function JsonEditor(props) {
  * @param {boolean} [props.disabled]
  * @param {string} [props.placeholder]
  * @param {string} [props.tooltip]
+ * @param {Function} [props.validate]
  */
 export default function JsonEditorEntry(props) {
   const {
@@ -183,12 +184,16 @@ export default function JsonEditorEntry(props) {
     setValue,
     disabled,
     placeholder,
-    tooltip
+    tooltip,
+    validate
   } = props;
 
   const globalError = useError(id);
 
   let value = getValue(element);
+  const [ localError, setLocalError ] = useState(
+    () => computeError(validate, value)
+  );
   const [ editorValue, setEditorValue ] = useState(value);
 
   useEffect(() => {
@@ -197,7 +202,8 @@ export default function JsonEditorEntry(props) {
     }
 
     setEditorValue(value);
-  }, [ value ]);
+    setLocalError(computeError(validate, value));
+  }, [ value, validate ]);
 
   const onInput = useStaticCallback((newValue) => {
     setEditorValue(newValue);
@@ -205,11 +211,14 @@ export default function JsonEditorEntry(props) {
     const currentValue = getValue(element);
 
     if (newValue !== currentValue) {
-      setValue(newValue);
+      const newValidationError = computeError(validate, newValue);
+
+      setValue(newValue, newValidationError);
+      setLocalError(newValidationError);
     }
   });
 
-  const error = globalError || validateJson(editorValue);
+  const error = globalError || localError;
 
   return (
     <div
@@ -243,6 +252,10 @@ export function isEdited(node) {
 
 // helpers /////////////////
 
+function computeError(validate, value) {
+  return (isFunction(validate) ? validate(value) : null) || validateJson(value);
+}
+
 function validateJson(value) {
   if (!value || !value.trim()) return null;
 
@@ -252,6 +265,3 @@ function validateJson(value) {
     return 'JSON contains errors';
   }
 }
-
-
-

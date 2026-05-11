@@ -656,18 +656,18 @@ export default function FeelEntry(props) {
 
   const onInput = useStaticCallback((newValue) => {
     const value = getValue(element);
-    let newValidationError = null;
 
-    if (isFunction(validate)) {
-      newValidationError = validate(newValue) || null;
-    }
-
-    // don't create multiple commandStack entries for the same value
+    // don't create multiple commandStack entries and do validation for the same value
     if (newValue !== value) {
-      setValue(newValue, newValidationError);
-    }
+      let newValidationError = null;
 
-    setValidationError(newValidationError);
+      if (isFunction(validate)) {
+        newValidationError = validate(newValue) || null;
+      }
+
+      setValue(newValue, newValidationError);
+      setValidationError(newValidationError);
+    }
   });
 
   const onError = useCallback(err => {

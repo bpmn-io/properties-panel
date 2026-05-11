@@ -1,6 +1,6 @@
 {
   "name": "@bpmn-io/properties-panel",
-  "version": "3.41.2",
+  "version": "3.41.3",
   "description": "Library for creating bpmn-io properties panels.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -91,7 +91,7 @@
     "replace-in-file": "^7.2.0",
     "rollup": "^4.53.3",
     "rollup-plugin-copy": "^3.5.0",
-    "sinon": "^21.0.1",
+    "sinon": "^22.0.0",
     "sinon-chai": "^4.0.1",
     "webpack": "^5.105.0"
   }
