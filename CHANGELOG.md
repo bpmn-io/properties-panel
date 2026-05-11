@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.42.0
+
+* `FEAT`: do not render `<Header>` if no `headerProvider` is provided ([#491](https://github.com/bpmn-io/properties-panel/pull/491))
+
 ## 3.41.3
 
 * `FIX`: add support of external validator for `JsonEditorEntry` ([#489](https://github.com/bpmn-io/properties-panel/pull/489))
@@ -20,7 +24,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 3.41.0
 
-`FEAT`: add `JsonEditor` component ([#485](https://github.com/bpmn-io/properties-panel/pull/485))
+* `FEAT`: add `JsonEditor` component ([#485](https://github.com/bpmn-io/properties-panel/pull/485))
 
 ## 3.40.6
 
