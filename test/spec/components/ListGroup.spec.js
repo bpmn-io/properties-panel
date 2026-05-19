@@ -895,6 +895,57 @@ describe('<ListGroup>', function() {
   });
 
 
+  describe('tooltip keyboard navigation', function() {
+
+    it('should allow tab navigation to focusable tooltip content', async function() {
+
+      // given
+      const tooltip = <div><a id="tooltip-link" href="#">link</a></div>;
+      const { container } = createListGroup({ container: parentContainer, tooltip });
+
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+      // when - open tooltip via keyboard focus
+      wrapper.focus();
+
+      await waitFor(() => {
+        expect(domQuery('.bio-properties-panel-tooltip', container)).to.exist;
+      });
+
+      // then - focusable tooltip content should be inside the wrapper
+      const link = domQuery('#tooltip-link', container);
+      expect(wrapper.contains(link)).to.be.true;
+    });
+
+
+    it('should keep tooltip open when focusing link inside tooltip', async function() {
+
+      // given
+      const tooltip = <div><a id="tooltip-link" href="#">link</a></div>;
+      const { container } = createListGroup({ container: parentContainer, tooltip });
+
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+      // when - open tooltip via keyboard focus and focus the link
+      wrapper.focus();
+
+      await waitFor(() => {
+        expect(domQuery('.bio-properties-panel-tooltip', container)).to.exist;
+      });
+
+      const link = domQuery('#tooltip-link', container);
+      link.focus();
+
+      // then - tooltip should remain visible after state updates flush
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(link);
+        expect(domQuery('.bio-properties-panel-tooltip', container)).to.exist;
+      });
+    });
+
+  });
+
+
   describe('a11y', function() {
 
     it('should have no violations', async function() {
