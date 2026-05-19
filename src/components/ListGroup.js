@@ -127,7 +127,7 @@ export default function ListGroup(props) {
       <div
         class="bio-properties-panel-group-header-title"
       >
-        <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element } parent={ groupRef }>
+        <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element }>
           { label }
         </Tooltip>
       </div>

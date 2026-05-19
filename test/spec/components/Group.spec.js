@@ -34,7 +34,7 @@ import {
   PropertiesPanelContext,
   ErrorsContext
 } from 'src/context';
-import { fireEvent } from '@testing-library/preact';
+import { fireEvent, waitFor } from '@testing-library/preact';
 import { act } from 'preact/test-utils';
 
 insertCoreStyles();
@@ -302,6 +302,57 @@ describe('<Group>', function() {
 
       // then
       expect(domAttr(dataMarker, 'title')).to.eql('Section contains edits');
+    });
+
+  });
+
+
+  describe('tooltip keyboard navigation', function() {
+
+    it('should allow tab navigation to focusable tooltip content', async function() {
+
+      // given
+      const tooltip = <div><a id="tooltip-link" href="#">link</a></div>;
+      const result = createGroup({ container, label: 'Group', tooltip });
+
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', result.container);
+
+      // when - open tooltip via keyboard focus
+      wrapper.focus();
+
+      await waitFor(() => {
+        expect(domQuery('.bio-properties-panel-tooltip', result.container)).to.exist;
+      });
+
+      // then - focusable tooltip content should be inside the wrapper
+      const link = domQuery('#tooltip-link', result.container);
+      expect(wrapper.contains(link)).to.be.true;
+    });
+
+
+    it('should keep tooltip open when focusing link inside tooltip', async function() {
+
+      // given
+      const tooltip = <div><a id="tooltip-link" href="#">link</a></div>;
+      const result = createGroup({ container, label: 'Group', tooltip });
+
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', result.container);
+
+      // when - open tooltip via keyboard focus and focus the link
+      wrapper.focus();
+
+      await waitFor(() => {
+        expect(domQuery('.bio-properties-panel-tooltip', result.container)).to.exist;
+      });
+
+      const link = domQuery('#tooltip-link', result.container);
+      link.focus();
+
+      // then - tooltip should remain visible after state updates flush
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(link);
+        expect(domQuery('.bio-properties-panel-tooltip', result.container)).to.exist;
+      });
     });
 
   });
