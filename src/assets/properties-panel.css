@@ -534,6 +534,7 @@ select.bio-properties-panel-input {
   padding: 4px 6px;
 }
 
+.bio-properties-panel code,
 .bio-properties-panel-input-monospace {
   font-family: var(--font-family-monospace);
 }
