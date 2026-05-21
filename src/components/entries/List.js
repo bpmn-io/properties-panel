@@ -35,7 +35,7 @@ import {
  * @param {*} props.element
  * @param {Function} props.onAdd
  * @param {import('preact').Component} props.component
- * @param {string} [props.label='<empty>']
+ * @param {string|import('preact').ComponentChildren} [props.label='<empty>']
  * @param {Function} [props.onRemove]
  * @param {Item[]} [props.items]
  * @param {boolean} [props.open]

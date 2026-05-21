@@ -51,7 +51,7 @@ const DEFAULT_TOOLTIP = {};
  *    autoOpen?: Boolean,
  *    entries: Array<EntryDefinition>,
  *    id: String,
- *    label: String,
+ *    label: String|import('preact').ComponentChildren,
  *    remove: (event: MouseEvent) => void
  * } } ListItemDefinition
  *
