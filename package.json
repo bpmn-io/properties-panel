@@ -62,7 +62,7 @@
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@testing-library/preact": "^3.2.4",
     "axe-core": "^4.11.0",
-    "babel-loader": "^10.0.0",
+    "babel-loader": "^10.1.1",
     "babel-plugin-inline-react-svg": "^2.0.2",
     "babel-plugin-istanbul": "^8.0.0",
     "babel-plugin-module-resolver": "^5.0.2",
@@ -93,6 +93,6 @@
     "rollup-plugin-copy": "^3.5.0",
     "sinon": "^22.0.0",
     "sinon-chai": "^4.0.1",
-    "webpack": "^5.105.0"
+    "webpack": "^5.107.1"
   }
 }
