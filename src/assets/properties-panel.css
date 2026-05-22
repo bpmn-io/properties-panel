@@ -44,6 +44,8 @@
   --description-code-border-color: var(--color-grey-225-10-85);
   --description-list-item-color: var(--color-grey-225-10-35);
 
+  --tooltip-underline-color: var(--color-grey-225-10-55);
+
   --placeholder-color: var(--color-grey-225-10-35);
   --placeholder-background-color: var(--color-grey-225-10-95);
 
@@ -1182,7 +1184,7 @@ textarea.bio-properties-panel-input {
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
-  text-decoration-color: var(--color-grey-225-10-55);
+  text-decoration-color: var(--tooltip-underline-color);
   font: inherit;
   display: flex;
   justify-content: center;
@@ -1196,7 +1198,6 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-tooltip {
-  --tooltip-underline-color: var(--color-blue-219-99-53);
   --tooltip-background-color: var(--color-grey-0-0-22);
   --tooltip-link: var(--color-blue-218-100-74);
   --tooltip-code-background-color: var(--color-grey-225-10-97);
