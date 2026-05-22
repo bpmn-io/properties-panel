@@ -1182,14 +1182,16 @@ textarea.bio-properties-panel-input {
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
-  text-decoration-color: #888;
+  text-decoration-color: var(--color-grey-225-10-55);
   font: inherit;
   display: flex;
   justify-content: center;
   width: fit-content;
 }
 
-.bio-properties-panel-tooltip-wrapper:hover {
+.bio-properties-panel-tooltip-wrapper:hover,
+.bio-properties-panel-tooltip-wrapper:focus,
+.bio-properties-panel-tooltip-wrapper:focus-visible {
   text-decoration-color: currentColor;
 }
 
