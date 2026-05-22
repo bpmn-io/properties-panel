@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.43.0
+
+* `FEAT`: style `<code>` as monospace, following theme ([#496](https://github.com/bpmn-io/properties-panel/pull/496))
+* `FIX`: allow to navigate to tooltip contents inside of groups ([#493](https://github.com/bpmn-io/properties-panel/issues/493))
+
 ## 3.42.0
 
 * `FEAT`: do not render `<Header>` if no `headerProvider` is provided ([#491](https://github.com/bpmn-io/properties-panel/pull/491))
