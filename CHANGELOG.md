@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.44.0
+
+* `FEAT`: de-emphasize tooltiped element underlines ([#499](https://github.com/bpmn-io/properties-panel/pull/499))
+
 ## 3.43.0
 
 * `FEAT`: style `<code>` as monospace, following theme ([#496](https://github.com/bpmn-io/properties-panel/pull/496))
