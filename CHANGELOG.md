@@ -10,6 +10,7 @@ ___Note:__ Yet to be released changes appear here._
 
 * `FEAT`: style `<code>` as monospace, following theme ([#496](https://github.com/bpmn-io/properties-panel/pull/496))
 * `FIX`: allow to navigate to tooltip contents inside of groups ([#493](https://github.com/bpmn-io/properties-panel/issues/493))
+* `DEPS`: update to `min-dom@5.3.0`
 
 ## 3.42.0
 

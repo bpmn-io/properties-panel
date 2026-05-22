@@ -52,7 +52,7 @@
     "feelers": "^1.5.1",
     "focus-trap": "^8.0.0",
     "min-dash": "^5.0.0",
-    "min-dom": "^5.2.0"
+    "min-dom": "^5.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
