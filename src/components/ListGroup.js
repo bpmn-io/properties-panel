@@ -114,6 +114,8 @@ export default function ListGroup(props) {
     return item.entries.some(entry => allErrors[entry.id]);
   });
 
+  const tooltipContainerRef = useRef(null);
+
 
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
     <div
@@ -127,10 +129,11 @@ export default function ListGroup(props) {
       <div
         class="bio-properties-panel-group-header-title"
       >
-        <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element }>
+        <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element } parent={ tooltipContainerRef }>
           { label }
         </Tooltip>
       </div>
+      <div ref={ tooltipContainerRef } />
       <div class="bio-properties-panel-group-header-buttons">
         {
           add

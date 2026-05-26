@@ -98,6 +98,8 @@ export default function Group(props) {
     onShow
   };
 
+  const tooltipContainerRef = useRef(null);
+
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
     <div class={ classnames(
       'bio-properties-panel-group-header',
@@ -108,10 +110,11 @@ export default function Group(props) {
       <div
         class="bio-properties-panel-group-header-title"
       >
-        <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element }>
+        <Tooltip value={ props.tooltip } forId={ 'group-' + id } element={ element } parent={ tooltipContainerRef }>
           { label }
         </Tooltip>
       </div>
+      <div ref={ tooltipContainerRef } />
       <div class="bio-properties-panel-group-header-buttons">
         {
           <DataMarker

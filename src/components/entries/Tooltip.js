@@ -68,6 +68,7 @@ function Tooltip(props) {
   const [ visible, setVisible ] = useState(false);
   const [ tooltipPosition, setTooltipPosition ] = useState(null);
   const [ arrowOffset, setArrowOffset ] = useState(null);
+  const [ openedViaKeyboard, setOpenedViaKeyboard ] = useState(false);
 
   const showTimeoutRef = useRef(null);
   const hideTimeoutRef = useRef(null);
@@ -90,7 +91,13 @@ function Tooltip(props) {
     }
   };
 
+  const handleWrapperFocus = (e) => {
+    setOpenedViaKeyboard(true);
+    show(e, false);
+  };
+
   const handleWrapperMouseEnter = (e) => {
+    setOpenedViaKeyboard(false);
     show(e, true);
   };
 
@@ -186,8 +193,23 @@ function Tooltip(props) {
     hide(false);
   };
 
+  // Auto-focus first focusable element in tooltip when opened via keyboard
+  useEffect(() => {
+    if (!visible || !openedViaKeyboard || !tooltipRef.current) return;
+
+    const focusable = tooltipRef.current.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length > 0) {
+      focusable[0].focus();
+    }
+  }, [ visible, openedViaKeyboard ]);
+
   const hideTooltipViaEscape = (e) => {
-    e.code === 'Escape' && hide(false);
+    if (e.code === 'Escape') {
+      hide(false);
+      wrapperRef.current?.focus();
+    }
   };
 
   const renderTooltip = () => {
@@ -205,6 +227,8 @@ function Tooltip(props) {
         onClick={ (e)=> e.stopPropagation() }
         onMouseEnter={ handleTooltipMouseEnter }
         onMouseLeave={ handleMouseLeave }
+        onKeyDown={ hideTooltipViaEscape }
+        onBlur={ handleFocusOut }
       >
         <div class="bio-properties-panel-tooltip-content">
           {value}
@@ -219,7 +243,7 @@ function Tooltip(props) {
       ref={ wrapperRef }
       onMouseEnter={ handleWrapperMouseEnter }
       onMouseLeave={ handleMouseLeave }
-      onFocus={ show }
+      onFocus={ handleWrapperFocus }
       onBlur={ handleFocusOut }
       onKeyDown={ hideTooltipViaEscape }
     >

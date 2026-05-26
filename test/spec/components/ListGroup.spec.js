@@ -908,13 +908,12 @@ describe('<ListGroup>', function() {
       // when - open tooltip via keyboard focus
       wrapper.focus();
 
+      // then - focus should auto-move to first focusable element in tooltip
       await waitFor(() => {
         expect(domQuery('.bio-properties-panel-tooltip', container)).to.exist;
+        const link = domQuery('#tooltip-link', container);
+        expect(document.activeElement).to.equal(link);
       });
-
-      // then - focusable tooltip content should be inside the wrapper
-      const link = domQuery('#tooltip-link', container);
-      expect(wrapper.contains(link)).to.be.true;
     });
 
 

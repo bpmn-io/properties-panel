@@ -102,6 +102,7 @@ function ExampleApp() {
     {
       id: 'general',
       label: 'General',
+      tooltip: <div>Configure general properties of this element. <a href="https://docs.camunda.io">Learn more</a> or see <a href="https://forum.camunda.io">Community Forum</a>.</div>,
       entries: [
         {
           id: 'name',
@@ -152,6 +153,7 @@ function ExampleApp() {
     {
       id: 'details',
       label: 'Details',
+      tooltip: 'Implementation details for selected task.',
       entries: [
         {
           id: 'implementation',
@@ -206,6 +208,7 @@ function ExampleApp() {
     {
       id: 'inputs',
       label: 'Input Parameters',
+      tooltip: <div>Map process variables to task input parameters. <a href="https://docs.camunda.io">Documentation</a>.</div>,
       component: ListGroup,
       add: createInputParameter(element, forceUpdate),
       items: element.inputParameters.map(param => ({
