@@ -29,6 +29,7 @@ import {
   ToggleSwitchEntry,
   isToggleSwitchEntryEdited,
   FeelEntry,
+  FeelTemplatingEntry,
   isFeelEntryEdited
 } from 'src/components/entries';
 
@@ -72,6 +73,7 @@ const element = {
   implementation: 'java',
   className: 'com.example.MyDelegate',
   documentation: '',
+  templateLabel: 'Hello {{name}}, welcome!',
   exampleData: '{\n  "orderId": "12345",\n  "customer": {\n    "name": "Jane Doe",\n    "email": "jane@example.com"\n  },\n  "items": [\n    { "id": 1, "price": 29.99 },\n    { "id": 2, "price": 49.99 }\n  ]\n}',
   retryCount: 3,
   async: false,
@@ -118,6 +120,20 @@ function ExampleApp() {
           isEdited: isTextAreaEntryEdited,
           label: 'Documentation',
           description: 'Documentation for this element.',
+          updateElement,
+          element
+        }
+      ]
+    },
+    {
+      id: 'templating',
+      label: 'Templating',
+      entries: [
+        {
+          id: 'templateLabel',
+          component: FeelTemplatingComponent,
+          isEdited: isFeelEntryEdited,
+          label: 'Template Label',
           updateElement,
           element
         }
@@ -392,6 +408,24 @@ function JsonEditorComponent(props) {
     placeholder: '{ }',
     getValue: () => element[id] ?? '',
     setValue: (val) => updateElement(id, val)
+  });
+}
+
+function FeelTemplatingComponent(props) {
+  const { id, element, label, updateElement } = props;
+
+  return FeelTemplatingEntry({
+    id,
+    element,
+    label,
+    singleLine: true,
+    debounce: fn => fn,
+    getValue: () => element[id] ?? '',
+    setValue: (val) => updateElement(id, val),
+    variables: [
+      { name: 'name', info: 'User name' },
+      { name: 'orderId', info: 'Order identifier' }
+    ]
   });
 }
 

@@ -42,6 +42,7 @@ import {
 import FeelField, {
   FeelCheckboxEntry,
   FeelNumberEntry,
+  FeelTemplatingEntry,
   FeelTextAreaEntry,
   FeelToggleSwitchEntry,
   isEdited
@@ -1120,6 +1121,47 @@ describe('<FeelEntry>', function() {
 
       // then
       expect(setValueSpy).to.have.been.calledWith('hello');
+    });
+
+  });
+
+
+  describe('FEEL disabled (FeelTemplatingEntry)', function() {
+
+    describe('paste', function() {
+
+      it('should not override content on paste for templating editor', async function() {
+
+        // given
+        const updateSpy = sinonSpy();
+
+        const result = createFeelField({
+          container,
+          feel: 'optional',
+          getValue: () => 'bar',
+          setValue: updateSpy,
+          Component: FeelTemplatingEntry
+        });
+
+        const editor = await waitFor(() => {
+          const el = domQuery('.cm-content', result.container);
+          expect(el).to.exist;
+          return el;
+        });
+
+        updateSpy.resetHistory();
+
+        // when - paste 'foo' into editor containing 'bar'
+        editor.dispatchEvent(createFeelPasteEvent('foo'));
+
+        // then - value should contain both original and pasted text
+        await waitFor(() => {
+          expect(updateSpy).to.have.been.called;
+          const calledValue = updateSpy.lastCall.args[0];
+          expect(calledValue).to.equal('foobar');
+        });
+      });
+
     });
 
   });

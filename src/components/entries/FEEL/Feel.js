@@ -279,9 +279,15 @@ function FeelTextfield(props) {
         return;
       }
 
-      const input = event.target;
-      const isFieldEmpty = !input.value;
-      const isAllSelected = input.selectionStart === 0 && input.selectionEnd === input.value.length;
+      const target = event.target;
+
+      // Skip for non-input/textArea elements (e.g. CodeMirror contenteditable)
+      if (!(target instanceof HTMLInputElement) && !(target instanceof HTMLTextAreaElement)) {
+        return;
+      }
+
+      const isFieldEmpty = !target.value;
+      const isAllSelected = target.selectionStart === 0 && target.selectionEnd === target.value.length;
 
       if (isFieldEmpty || isAllSelected) {
         const textData = event.clipboardData.getData('text');
