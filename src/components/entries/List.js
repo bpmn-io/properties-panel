@@ -16,6 +16,8 @@ import {
   useStickyIntersectionObserver
 } from '../../hooks';
 
+import translateFallback from '../util/translateFallback';
+
 import classnames from 'classnames';
 
 import {
@@ -53,6 +55,7 @@ export default function List(props) {
     onAdd,
     onRemove,
     autoFocusEntry,
+    translate = translateFallback,
     ...restProps
   } = props;
 
@@ -115,14 +118,14 @@ export default function List(props) {
         >
           <button
             type="button"
-            title="Create new list item"
+            title={ translate('Create new list item') }
             onClick={ addItem }
             class="bio-properties-panel-add-entry"
           >
             <CreateIcon />
             {
               !hasItems ? (
-                <span class="bio-properties-panel-add-entry-label">Create</span>
+                <span class="bio-properties-panel-add-entry-label">{ translate('Create') }</span>
               )
                 : null
             }
@@ -141,7 +144,7 @@ export default function List(props) {
             hasItems && (
               <button
                 type="button"
-                title="Toggle list item"
+                title={ translate('Toggle list item') }
                 class="bio-properties-panel-arrow"
               >
                 <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
@@ -162,6 +165,7 @@ export default function List(props) {
             newItems={ newItems }
             onRemove={ onRemove }
             open={ open }
+            translate={ translate }
           />
         )
       }
@@ -179,6 +183,7 @@ function ItemsList(props) {
     newItems,
     onRemove,
     open,
+    translate,
     ...restProps
   } = props;
 
@@ -231,7 +236,7 @@ function ItemsList(props) {
             onRemove && (
               <button
                 type="button"
-                title="Delete item"
+                title={ translate('Delete item') }
                 class="bio-properties-panel-remove-entry bio-properties-panel-remove-list-entry"
                 onClick={ () => onRemove && onRemove(item) }
               ><DeleteIcon /></button>
