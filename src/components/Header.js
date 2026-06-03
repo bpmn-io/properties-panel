@@ -1,5 +1,7 @@
 import { ExternalLinkIcon } from './icons';
 
+import translateFallback from './util/translateFallback';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 /**
@@ -20,7 +22,8 @@ export default function Header(props) {
 
   const {
     element,
-    headerProvider
+    headerProvider,
+    translate = translateFallback
   } = props;
 
   const {
@@ -53,7 +56,7 @@ export default function Header(props) {
           rel="noreferrer"
           class="bio-properties-panel-header-link"
           href={ documentationRef }
-          title="Open documentation"
+          title={ translate('Open documentation') }
           target="_blank">
           <ExternalLinkIcon />
         </a> :

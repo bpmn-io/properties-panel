@@ -4,6 +4,8 @@ import {
   useState
 } from 'preact/hooks';
 
+import translateFallback from '../util/translateFallback';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 /**
@@ -26,7 +28,8 @@ export default function Simple(props) {
     id,
     onBlur,
     onFocus,
-    setValue
+    setValue,
+    translate = translateFallback
   } = props;
 
   const value = getValue(element);
@@ -63,7 +66,7 @@ export default function Simple(props) {
         disabled={ disabled }
         class="bio-properties-panel-input"
         onInput={ handleInput }
-        aria-label={ localValue || '<empty>' }
+        aria-label={ localValue || translate('<empty>') }
         onFocus={ onFocus }
         onBlur={ onBlur }
         value={ localValue } />

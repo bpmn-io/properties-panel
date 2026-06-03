@@ -133,7 +133,7 @@ export default function List(props) {
           {
             hasItems && (
               <div
-                title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
+                title={ translate(`List contains {numOfItems} item${items.length != 1 ? 's' : ''}`, { numOfItems: items.length }) }
                 class="bio-properties-panel-list-badge"
               >
                 { items.length }
