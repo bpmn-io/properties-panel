@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.44.1
+
+* `FIX`: support translation of list component ([#504](https://github.com/bpmn-io/properties-panel/pull/504))
+* `FIX`: use semantic color name for tooltip underline ([#500](https://github.com/bpmn-io/properties-panel/pull/500))
+
 ## 3.44.0
 
 * `FEAT`: de-emphasize tooltiped element underlines ([#499](https://github.com/bpmn-io/properties-panel/pull/499))
