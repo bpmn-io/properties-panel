@@ -15,8 +15,9 @@ import translateFallback from './util/translateFallback';
 
 /**
  * @param {Object} props
- * @param {Object} props.element,
+ * @param {Object} props.element
  * @param {HeaderProvider} props.headerProvider
+ * @param {Function} [props.translate]
  */
 export default function Header(props) {
 

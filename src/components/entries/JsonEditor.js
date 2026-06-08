@@ -174,6 +174,7 @@ function JsonEditor(props) {
  * @param {string} [props.placeholder]
  * @param {string} [props.tooltip]
  * @param {Function} [props.validate]
+ * @param {Function} [props.translate]
  */
 export default function JsonEditorEntry(props) {
   const {

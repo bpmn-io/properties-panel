@@ -18,6 +18,7 @@ import translateFallback from '../util/translateFallback';
  * @param {Function} [props.onBlur]
  * @param {Function} [props.onFocus]
  * @param {Function} props.setValue
+ * @param {Function} [props.translate]
  */
 export default function Simple(props) {
   const {
