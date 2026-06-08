@@ -194,6 +194,7 @@ const FeelEditor = forwardRef((props, ref) => {
     ></div>
     {!disabled && <OpenPopupButton
       onClick={ () => onOpenPopup('feel') }
+      translate={ translate }
     /> }
   </div>;
 });
