@@ -62,7 +62,8 @@ const DEFAULT_TOOLTIP = {};
  *    id: String,
  *    items: Array<ListItemDefinition>,
  *    label: String,
- *    shouldOpen?: Boolean
+ *    shouldOpen?: Boolean,
+ *    translate?: Function
  * } } ListGroupDefinition
  *
  * @typedef { {
@@ -70,7 +71,8 @@ const DEFAULT_TOOLTIP = {};
  *    entries: Array<EntryDefinition>,
  *    id: String,
  *    label: String,
- *    shouldOpen?: Boolean
+ *    shouldOpen?: Boolean,
+ *    translate?: Function
  * } } GroupDefinition
  *
  *  @typedef { {

@@ -29,6 +29,8 @@ import FeelIcon from './FeelIcon';
 import { EventContext, FeelLanguageContext } from '../../../context';
 import { isCmdWithChar } from '../../util/keyboardUtils';
 
+import translateFallback from '../../util/translateFallback';
+
 import { ToggleSwitch } from '../ToggleSwitch';
 
 import { NumberField } from '../NumberField';
@@ -61,6 +63,7 @@ const noop = () => {};
  * @param {Array} props.variables
  * @param {string} [props.placeholder]
  * @param {string | import('preact').Component} props.tooltip
+ * @param {Function} props.translate
  */
 function FeelTextfield(props) {
   const {
@@ -80,7 +83,8 @@ function FeelTextfield(props) {
     singleLine,
     tooltipContainer,
     OptionalComponent = OptionalFeelInput,
-    tooltip
+    tooltip,
+    translate
   } = props;
 
   const [ localValue, setLocalValue ] = useState(getInitialFeelLocalValue(feel, value));
@@ -198,7 +202,7 @@ function FeelTextfield(props) {
     const syntaxError = lint.some(report => report.type === 'Syntax Error');
 
     if (syntaxError) {
-      onError('Unparsable FEEL expression.');
+      onError(translate('Unparsable FEEL expression.'));
     } else {
       onError(undefined);
     }
@@ -326,7 +330,9 @@ function FeelTextfield(props) {
           label={ label }
           feel={ feel }
           onClick={ handleFeelToggle }
-          active={ feelActive }></FeelIcon>
+          active={ feelActive }
+          translate={ translate }
+        />
       </label>
 
       <div class="bio-properties-panel-feel-container" ref={ containerRef }>
@@ -356,6 +362,7 @@ function FeelTextfield(props) {
             feelLanguageContext={ feelLanguageContext }
             ref={ editorRef }
             tooltipContainer={ tooltipContainer }
+            translate={ translate }
           /> :
           <OptionalComponent
             { ...props }
@@ -644,7 +651,8 @@ export default function FeelEntry(props) {
     onFocus,
     onBlur,
     placeholder,
-    tooltip
+    tooltip,
+    translate = translateFallback
   } = props;
 
   const [ validationError, setValidationError ] = useState(null);
@@ -709,6 +717,7 @@ export default function FeelEntry(props) {
         hostLanguage={ hostLanguage }
         singleLine={ singleLine }
         show={ show }
+        translate={ translate }
         value={ value }
         variables={ variables }
         tooltipContainer={ tooltipContainer }

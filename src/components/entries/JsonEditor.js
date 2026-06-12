@@ -10,6 +10,8 @@ import classnames from 'classnames';
 
 import { isFunction, isObject } from 'min-dash';
 
+import translateFallback from '../util/translateFallback';
+
 import {
   useDebounce,
   useError,
@@ -172,6 +174,7 @@ function JsonEditor(props) {
  * @param {string} [props.placeholder]
  * @param {string} [props.tooltip]
  * @param {Function} [props.validate]
+ * @param {Function} [props.translate]
  */
 export default function JsonEditorEntry(props) {
   const {
@@ -185,14 +188,15 @@ export default function JsonEditorEntry(props) {
     disabled,
     placeholder,
     tooltip,
-    validate
+    validate,
+    translate = translateFallback
   } = props;
 
   const globalError = useError(id);
 
   let value = getValue(element);
   const [ localError, setLocalError ] = useState(
-    () => computeError(validate, value)
+    () => computeError(validate, value, translate)
   );
   const [ editorValue, setEditorValue ] = useState(value);
 
@@ -202,7 +206,7 @@ export default function JsonEditorEntry(props) {
     }
 
     setEditorValue(value);
-    setLocalError(computeError(validate, value));
+    setLocalError(computeError(validate, value, translate));
   }, [ value, validate ]);
 
   const onInput = useStaticCallback((newValue) => {
@@ -211,7 +215,7 @@ export default function JsonEditorEntry(props) {
     const currentValue = getValue(element);
 
     if (newValue !== currentValue) {
-      const newValidationError = computeError(validate, newValue);
+      const newValidationError = computeError(validate, newValue, translate);
 
       setValue(newValue, newValidationError);
       setLocalError(newValidationError);
@@ -252,16 +256,16 @@ export function isEdited(node) {
 
 // helpers /////////////////
 
-function computeError(validate, value) {
-  return (isFunction(validate) ? validate(value) : null) || validateJson(value);
+function computeError(validate, value, translate) {
+  return (isFunction(validate) ? validate(value) : null) || validateJson(value, translate);
 }
 
-function validateJson(value) {
+function validateJson(value, translate = translateFallback) {
   if (!value || !value.trim()) return null;
 
   try {
-    return isObject(JSON.parse(value)) ? null : 'JSON contains errors';
+    return isObject(JSON.parse(value)) ? null : translate('JSON contains errors');
   } catch (e) {
-    return 'JSON contains errors';
+    return translate('JSON contains errors');
   }
 }

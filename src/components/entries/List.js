@@ -42,6 +42,7 @@ import {
  * @param {Item[]} [props.items]
  * @param {boolean} [props.open]
  * @param {string|boolean} [props.autoFocusEntry] either a custom selector string or true to focus the first input
+ * @param {Function} [props.translate]
  * @returns
  */
 export default function List(props) {
@@ -133,7 +134,7 @@ export default function List(props) {
           {
             hasItems && (
               <div
-                title={ `List contains ${items.length} item${items.length != 1 ? 's' : ''}` }
+                title={ translate(`List contains {numOfItems} item${items.length != 1 ? 's' : ''}`, { numOfItems: items.length }) }
                 class="bio-properties-panel-list-badge"
               >
                 { items.length }

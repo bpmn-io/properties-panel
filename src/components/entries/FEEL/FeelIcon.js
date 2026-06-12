@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import { FeelIcon as FeelIconSvg } from '../../icons';
 
+import translateFallback from '../../util/translateFallback';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 const noop = () => {};
@@ -9,6 +11,11 @@ const noop = () => {};
  * @param {Object} props
  * @param {Object} props.label
  * @param {String} props.feel
+ * @param {boolean} props.active
+ * @param {boolean} props.disabled
+ * @param {Function} props.onClick
+ * @param {Function} props.translate
+ * @returns {import('preact').Component}
  */
 export default function FeelIcon(props) {
 
@@ -16,11 +23,12 @@ export default function FeelIcon(props) {
     feel = false,
     active,
     disabled = false,
-    onClick = noop
+    onClick = noop,
+    translate = translateFallback
   } = props;
 
-  const feelRequiredLabel = 'FEEL expression is mandatory';
-  const feelOptionalLabel = `Click to ${active ? 'remove' : 'set a'} dynamic value with FEEL expression`;
+  const feelRequiredLabel = translate('FEEL expression is mandatory');
+  const feelOptionalLabel = translate(`Click to ${active ? 'remove' : 'set a'} dynamic value with FEEL expression`);
 
   const handleClick = e => {
     onClick(e);

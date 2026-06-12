@@ -10,6 +10,8 @@ import { useStaticCallback } from '../../../hooks';
 
 import { OpenPopupButton } from '../../OpenPopupButton';
 
+import translateFallback from '../../util/translateFallback';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 const noop = () => {};
@@ -60,7 +62,8 @@ const FeelEditor = forwardRef((props, ref) => {
     disabled,
     tooltipContainer,
     variables,
-    feelLanguageContext
+    feelLanguageContext,
+    translate = translateFallback
   } = props;
 
   const inputRef = useRef();
@@ -181,7 +184,7 @@ const FeelEditor = forwardRef((props, ref) => {
     popupOpen ? 'popupOpen' : null)
   }>
     {
-      popupOpen && <div class="bio-properties-panel-feel-editor__open-popup-placeholder">Opened in editor</div>
+      popupOpen && <div class="bio-properties-panel-feel-editor__open-popup-placeholder">{ translate('Opened in editor') }</div>
     }
     <div
       name={ props.name }
@@ -191,6 +194,7 @@ const FeelEditor = forwardRef((props, ref) => {
     ></div>
     {!disabled && <OpenPopupButton
       onClick={ () => onOpenPopup('feel') }
+      translate={ translate }
     /> }
   </div>;
 });
