@@ -29,6 +29,8 @@ import { useStickyIntersectionObserver } from '../hooks';
 
 import { ArrowIcon } from './icons';
 
+import translateFallback from './util/translateFallback';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 /**
@@ -41,6 +43,7 @@ export default function Group(props) {
     id,
     label,
     shouldOpen = false,
+    translate = translateFallback,
   } = props;
 
   const groupRef = useRef(null);
@@ -117,11 +120,12 @@ export default function Group(props) {
           <DataMarker
             edited={ edited }
             hasErrors={ hasErrors }
+            translate={ translate }
           />
         }
         <button
           type="button"
-          title="Toggle section"
+          title={ translate('Toggle section') }
           class="bio-properties-panel-group-header-button bio-properties-panel-arrow"
         >
           <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
@@ -156,18 +160,19 @@ export default function Group(props) {
 function DataMarker(props) {
   const {
     edited,
-    hasErrors
+    hasErrors,
+    translate = translateFallback
   } = props;
 
   if (hasErrors) {
     return (
-      <div title="Section contains an error" class="bio-properties-panel-dot bio-properties-panel-dot--error"></div>
+      <div title={ translate('Section contains an error') } class="bio-properties-panel-dot bio-properties-panel-dot--error"></div>
     );
   }
 
   if (edited) {
     return (
-      <div title="Section contains edits" class="bio-properties-panel-dot"></div>
+      <div title={ translate('Section contains edits') } class="bio-properties-panel-dot"></div>
     );
   }
   return null;
