@@ -12,8 +12,10 @@ import babelConfig from './.babelrc.json';
 
 // Resolve preact via Node module resolution so the build works regardless
 // of whether preact is installed locally or hoisted to a parent node_modules.
+// Normalize path separators to forward slashes so rollup-plugin-copy's globby
+// can process the path correctly on Windows.
 const require = createRequire(import.meta.url);
-const preactDir = path.dirname(require.resolve('preact/package.json'));
+const preactDir = path.dirname(require.resolve('preact/package.json')).split(path.sep).join('/');
 
 const nonbundledDependencies = Object.keys({ ...pkg.dependencies });
 
