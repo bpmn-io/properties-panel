@@ -42,6 +42,7 @@ import {
  * @param {Item[]} [props.items]
  * @param {boolean} [props.open]
  * @param {string|boolean} [props.autoFocusEntry] either a custom selector string or true to focus the first input
+ * @param {Function} [props.translate]
  * @returns
  */
 export default function List(props) {
