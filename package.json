@@ -85,7 +85,6 @@
     "mocha-test-container-support": "^0.2.0",
     "npm-run-all2": "^9.0.0",
     "preact": "^10.19.3",
-    "puppeteer": "^25.0.4",
     "raw-loader": "^4.0.2",
     "replace-in-file": "^8.4.0",
     "rollup": "^4.60.4",
