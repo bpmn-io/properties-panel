@@ -104,7 +104,15 @@ describe('<Collapsible>', function() {
   it('should toggle open', async function() {
 
     // given
-    const { container } = createCollapsible({ container: parentContainer });
+    const { container } = createCollapsible({
+      container: parentContainer,
+      entries: [
+        {
+          id: 'entry-1',
+          component: TestEntry
+        }
+      ]
+    });
 
     const entry = domQuery('.bio-properties-panel-collapsible-entry', container);
 
@@ -122,6 +130,42 @@ describe('<Collapsible>', function() {
 
     // then
     expect(domClasses(entries).has('open')).to.be.true;
+  });
+
+
+  it('should NOT render toggle button when entry has no children', function() {
+
+    // when
+    const { container } = createCollapsible({ container: parentContainer });
+
+    const toggleButton = domQuery('.bio-properties-panel-collapsible-entry-arrow', container);
+
+    // then
+    expect(toggleButton).to.not.exist;
+  });
+
+
+  it('should NOT toggle on header click when entry has no children', async function() {
+
+    // given
+    const { container } = createCollapsible({ container: parentContainer });
+
+    const entry = domQuery('.bio-properties-panel-collapsible-entry', container);
+
+    const header = domQuery('.bio-properties-panel-collapsible-entry-header', entry);
+
+    const entries = domQuery('.bio-properties-panel-collapsible-entry-entries', entry);
+
+    // assume
+    expect(domClasses(entries).has('open')).to.be.false;
+
+    // when
+    await act(() => {
+      header.click();
+    });
+
+    // then
+    expect(domClasses(entries).has('open')).to.be.false;
   });
 
 
@@ -234,7 +278,16 @@ describe('<Collapsible>', function() {
     it('should render translated toggle button title', function() {
 
       // given
-      const { container } = createCollapsible({ container: parentContainer, translate });
+      const { container } = createCollapsible({
+        container: parentContainer,
+        translate,
+        entries: [
+          {
+            id: 'entry-1',
+            component: TestEntry
+          }
+        ]
+      });
 
       const toggleButton = domQuery('.bio-properties-panel-collapsible-entry-arrow', container);
 
