@@ -1,5 +1,11 @@
 import path, { parse as parsePath, relative as relativePath } from 'path';
+import { createRequire } from 'module';
 import { replaceInFile } from 'replace-in-file';
+
+// Resolve preact via Node module resolution so the build works regardless
+// of whether preact is installed locally or hoisted to a parent node_modules.
+const require = createRequire(import.meta.url);
+const preactDir = path.dirname(require.resolve('preact/package.json'));
 
 import babel from '@rollup/plugin-babel';
 import copy from 'rollup-plugin-copy';
@@ -38,7 +44,7 @@ export default [
         // hook name provided to make sure next plugin has files to replace
         hook: 'buildStart',
         targets: [
-          { src: 'node_modules/preact', dest: '.' },
+          { src: preactDir, dest: '.' },
           { src: 'src/assets', dest: 'dist' }
         ]
       }),
