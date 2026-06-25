@@ -63,7 +63,6 @@
     "@testing-library/preact": "^3.2.4",
     "axe-core": "^4.11.4",
     "babel-loader": "^10.1.1",
-    "babel-plugin-inline-react-svg": "^2.0.2",
     "babel-plugin-istanbul": "^8.0.0",
     "babel-plugin-module-resolver": "^5.0.3",
     "chai": "^6.2.2",

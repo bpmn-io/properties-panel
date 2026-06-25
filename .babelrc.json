@@ -4,7 +4,6 @@
       "importSource": "preact",
       "runtime": "automatic"
     } ],
-    "inline-react-svg",
     [ "module-resolver", {
       "alias": {
         "preact": "./preact",
