@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 
-import { FeelersEditor } from 'feelers';
+import { FeelersEditor } from '@bpmn-io/feelers-editor';
 import { useStaticCallback } from '../../../hooks';
 
 import { OpenPopupButton } from '../../OpenPopupButton';
