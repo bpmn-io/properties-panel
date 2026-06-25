@@ -9,7 +9,7 @@ ___Note:__ Yet to be released changes appear here._
 ## 3.45.0
 
 * `FEAT`: add missing `translate` calls ([#505](https://github.com/bpmn-io/properties-panel/pull/505), [#504](https://github.com/bpmn-io/properties-panel/pull/504))
-* `FIX`: correct paste in template editor overriding current contents ([#https://github.com/bpmn-io/properties-panel/pull/503](https://github.com/bpmn-io/properties-panel/pull/503))
+* `FIX`: correct paste in template editor overriding current contents ([#503](https://github.com/bpmn-io/properties-panel/pull/503))
 * `CHORE`: replace `feelers` with `@bpmn-io/feelers-editor` dependency ([#516](https://github.com/bpmn-io/properties-panel/pull/516))
 
 ## 3.44.1
