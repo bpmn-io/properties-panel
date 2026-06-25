@@ -46,7 +46,7 @@ describe('<Templating>', function() {
 
   beforeEach(function() {
     container = TestContainer.get(this);
-    clock = useFakeTimers();
+    clock = useFakeTimers({ shouldClearNativeTimers: true });
   });
 
   afterEach(function() {

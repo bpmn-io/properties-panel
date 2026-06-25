@@ -2936,7 +2936,7 @@ describe('<FeelEntry>', function() {
       it('should show syntax error', async function() {
 
         // given
-        const clock = useFakeTimers();
+        const clock = useFakeTimers({ shouldClearNativeTimers: true });
         const result = createFeelField({ container, getValue: () => '= ...syntax error...', feel: 'required' });
 
         // when
@@ -2956,7 +2956,7 @@ describe('<FeelEntry>', function() {
       it('should not indicate field error on non-syntax errors', async function() {
 
         // given
-        const clock = useFakeTimers();
+        const clock = useFakeTimers({ shouldClearNativeTimers: true });
         const result = createFeelField({ container, getValue: () => '= friend[0]', feel: 'required' });
 
         // when
@@ -2976,7 +2976,7 @@ describe('<FeelEntry>', function() {
       it('should show global error over local error', async function() {
 
         // given
-        const clock = useFakeTimers();
+        const clock = useFakeTimers({ shouldClearNativeTimers: true });
         const errors = {
           foo: 'bar'
         };
