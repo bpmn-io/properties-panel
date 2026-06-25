@@ -1,0 +1,9 @@
+export default function Drag(props) {
+  return (
+    <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" { ...props }>
+      <path fill="#fff" style={ { mixBlendMode: 'multiply' } } d="M0 0h16v16H0z" />
+      <path fill="#fff" style={ { mixBlendMode: 'multiply' } } d="M0 0h16v16H0z" />
+      <path d="M7 3H5v2h2V3zM11 3H9v2h2V3zM7 7H5v2h2V7zM11 7H9v2h2V7zM7 11H5v2h2v-2zM11 11H9v2h2v-2z" fill="#161616" />
+    </svg>
+  );
+}
