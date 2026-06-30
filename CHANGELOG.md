@@ -6,6 +6,13 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.47.0
+
+* `FEAT`: enhance FEEL syntax highlighting ([bpmn-io/feel-editor#100](https://github.com/bpmn-io/feel-editor/pull/100))
+* `FIX`: correct snippet completions in path segment ([bpmn-io/feel-editor#105](https://github.com/bpmn-io/feel-editor/pull/105))
+* `FIX`: correct snippet completions from prefix ([bpmn-io/feel-editor#105](https://github.com/bpmn-io/feel-editor/pull/105))
+* `DEPS`: update to `@bpmn-io/feel-editor@2.6.0`
+
 ## 3.46.0
 
 * `DEPS`: drop `@carbon/icons` dependency ([#518](https://github.com/bpmn-io/properties-panel/pull/518))
