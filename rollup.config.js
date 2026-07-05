@@ -10,11 +10,13 @@ import resolve from '@rollup/plugin-node-resolve';
 import pkg from './package.json';
 import babelConfig from './.babelrc.json';
 
-// Resolve preact via Node module resolution so the build works regardless
-// of whether preact is installed locally or hoisted to a parent node_modules.
-// Normalize path separators to forward slashes so rollup-plugin-copy's globby
-// can process the path correctly on Windows.
 const require = createRequire(import.meta.url);
+
+// Resolve preact through Node module resolution rather than assuming it lives
+// in the local `node_modules/preact`. This ensures the build works when preact
+// is hoisted to a parent `node_modules` (mono repositories) or linked in from
+// another location. Path separators are normalized to POSIX so that
+// rollup-plugin-copy's globby can process the path on Windows.
 const preactDir = path.dirname(require.resolve('preact/package.json')).split(path.sep).join('/');
 
 const nonbundledDependencies = Object.keys({ ...pkg.dependencies });
