@@ -1120,6 +1120,16 @@ textarea.bio-properties-panel-input {
   min-height: 28px;
 }
 
+/* reserve space on the first line for the open pop-up button, only while the input is focused */
+.bio-properties-panel-feel-container:focus-within .bio-properties-panel-feel-editor-container .cm-line:first-child::before,
+.bio-properties-panel-feelers-input .bio-properties-panel-feelers-editor-container:focus-within .cm-line:first-child::before,
+.bio-properties-panel-feel-container .bio-properties-panel-feelers-editor-container:focus-within .cm-line:first-child::before {
+  content: "";
+  float: right;
+  width: 1.7em;
+  height: 1.5em;
+}
+
 .bio-properties-panel-feel-indicator {
   position: absolute;
   border: 1px solid var(--input-border-color);
@@ -1494,16 +1504,29 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup,
 .bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup {
   position: absolute;
-  top: 0;
+  top: 4px;
   right: 0;
   line-height: 1;
-  padding: 3px 4px;
-  margin: 3px;
+  padding: 2px 4px;
+  margin: 0 3px;
   display: none;
-  background: none;
+  background-color: var(--input-background-color);
   border: none;
   color: var(--feel-open-popup-color);
   cursor: pointer;
+}
+
+/* fade the text out beneath the feel popup button */
+.bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup::before,
+.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  width: 0.5em;
+  background: linear-gradient(to right, transparent, var(--input-background-color));
+  pointer-events: none;
 }
 
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup svg,
