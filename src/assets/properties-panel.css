@@ -1428,11 +1428,6 @@ textarea.bio-properties-panel-input {
   right: 8px;
 }
 
-.bio-properties-panel-feel-popup {
-  min-height: 400px;
-  width: fit-content;
-}
-
 .bio-properties-panel-feel-popup .bio-properties-panel-feel-popup__body {
   display: flex;
   margin: 0;

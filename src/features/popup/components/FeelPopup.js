@@ -25,7 +25,7 @@ import { Popup } from './Popup';
  */
 
 export const FEEL_POPUP_WIDTH = 700;
-export const FEEL_POPUP_HEIGHT = 250;
+export const FEEL_POPUP_HEIGHT = 400;
 
 /**
  * FEEL expression editor popup component
