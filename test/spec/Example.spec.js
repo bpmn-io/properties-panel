@@ -35,8 +35,8 @@ import {
 
 import EventBus from 'diagram-js/lib/core/EventBus';
 
-import { FeelPopup } from 'src/features/feel-popup/FeelPopup';
-import { FeelPopupRenderer } from 'src/features/feel-popup/FeelPopupRenderer';
+import { Popup } from 'src/features/popup/Popup';
+import { PopupRenderer } from 'src/features/popup/PopupRenderer';
 
 insertCoreStyles();
 
@@ -95,9 +95,8 @@ const eventBus = new EventBus();
 const layoutConfig = {};
 const noop = () => {};
 
-// wire the FEEL popup feature
-new FeelPopup(eventBus);
-new FeelPopupRenderer(eventBus);
+new Popup(eventBus, {});
+new PopupRenderer(eventBus);
 
 function ExampleApp() {
   const [ , forceUpdate ] = useReducer(x => x + 1, 0);
