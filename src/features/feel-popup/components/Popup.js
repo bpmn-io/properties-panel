@@ -28,6 +28,9 @@ const noop = () => {};
  * @param {Function} [props.onPostDeactivate]
  * @param {boolean} [props.returnFocus]
  * @param {boolean} [props.closeOnEscape]
+ * @param {(event: KeyboardEvent) => boolean} [props.allowFocusMove] -
+ *   Whether a Tab keypress may move focus. Return false to leave the keypress
+ *   to the focused element, e.g. an editor navigating snippet placeholders.
  * @param {string} props.title
  * @param {Ref} [ref]
  */
@@ -43,6 +46,7 @@ function PopupComponent(props, globalRef) {
     onPostDeactivate = noop,
     returnFocus = true,
     closeOnEscape = true,
+    allowFocusMove = () => true,
     title
   } = props;
 
@@ -103,6 +107,8 @@ function PopupComponent(props, globalRef) {
         clickOutsideDeactivates: true,
         delayInitialFocus,
         fallbackFocus: popupRef.current,
+        isKeyForward: (event) => isTab(event) && !event.shiftKey && allowFocusMove(event),
+        isKeyBackward: (event) => isTab(event) && event.shiftKey && allowFocusMove(event),
         onPostActivate,
         onPostDeactivate,
         returnFocusOnDeactivate: returnFocus,
@@ -269,6 +275,10 @@ function Footer(props) {
 }
 
 // helpers //////////////////////
+
+function isTab(event) {
+  return event.key === 'Tab';
+}
 
 function getPopupParent(node) {
   return node.closest('.bio-properties-panel-popup');

@@ -35,6 +35,9 @@ import {
 
 import EventBus from 'diagram-js/lib/core/EventBus';
 
+import { FeelPopup } from 'src/features/feel-popup/FeelPopup';
+import { FeelPopupRenderer } from 'src/features/feel-popup/FeelPopupRenderer';
+
 insertCoreStyles();
 
 const singleStart = window.__env__?.SINGLE_START;
@@ -91,6 +94,10 @@ const element = {
 const eventBus = new EventBus();
 const layoutConfig = {};
 const noop = () => {};
+
+// wire the FEEL popup feature
+new FeelPopup(eventBus);
+new FeelPopupRenderer(eventBus);
 
 function ExampleApp() {
   const [ , forceUpdate ] = useReducer(x => x + 1, 0);
@@ -230,11 +237,13 @@ function ExampleApp() {
         entries: [
           {
             id: `${param.id}-name`,
-            component: createParameterNameEntry(param),
+            component: ParameterNameEntry,
+            param
           },
           {
             id: `${param.id}-value`,
-            component: createParameterValueEntry(param),
+            component: ParameterValueEntry,
+            param
           }
         ]
       }))
@@ -429,40 +438,36 @@ function FeelTemplatingComponent(props) {
   });
 }
 
-function createParameterNameEntry(param) {
-  return function ParameterNameEntry(props) {
-    const { element } = props;
+function ParameterNameEntry(props) {
+  const { element, param } = props;
 
-    return TextFieldEntry({
-      id: `${param.id}-name`,
-      element,
-      label: 'Name',
-      debounce: fn => fn,
-      getValue: () => param.name,
-      setValue: (val) => { param.name = val; }
-    });
-  };
+  return TextFieldEntry({
+    id: `${param.id}-name`,
+    element,
+    label: 'Name',
+    debounce: fn => fn,
+    getValue: () => param.name,
+    setValue: (val) => { param.name = val; }
+  });
 }
 
-function createParameterValueEntry(param) {
-  return function ParameterValueEntry(props) {
-    const { element } = props;
+function ParameterValueEntry(props) {
+  const { element, param } = props;
 
-    return FeelEntry({
-      id: `${param.id}-value`,
-      element,
-      label: 'Value',
-      feel: 'optional',
-      debounce: fn => fn,
-      getValue: () => param.value,
-      setValue: (val) => { param.value = val; },
-      variables: [
-        { name: 'customer', info: 'Customer context object' },
-        { name: 'order', info: 'Current order data' },
-        { name: 'response', info: 'Response from service call' }
-      ]
-    });
-  };
+  return FeelEntry({
+    id: `${param.id}-value`,
+    element,
+    label: 'Value',
+    feel: 'optional',
+    debounce: fn => fn,
+    getValue: () => param.value,
+    setValue: (val) => { param.value = val; },
+    variables: [
+      { name: 'customer', info: 'Customer context object' },
+      { name: 'order', info: 'Current order data' },
+      { name: 'response', info: 'Response from service call' }
+    ]
+  });
 }
 
 function createInputParameter(element, forceUpdate) {
