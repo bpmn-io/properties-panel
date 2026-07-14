@@ -83,6 +83,22 @@ describe('PopupRenderer', function() {
   }));
 
 
+  it('should render text area popup on <propertiesPanelPopup.open> (no feel type)', inject(function(eventBus) {
+
+    // when
+    eventBus.fire('propertiesPanelPopup.open', {
+      container,
+      config: {
+        entryId: 'foo'
+      }
+    });
+
+    // then
+    expect(domQuery('.bio-properties-panel-text-popup', container)).to.exist;
+    expect(domQuery('.bio-properties-panel-feel-popup', container)).not.to.exist;
+  }));
+
+
   it('should remove popup on <propertiesPanelPopup.close>', inject(function(eventBus) {
 
     // given
