@@ -2,8 +2,10 @@ import Description from './Description';
 
 import {
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
+  useRef,
   useState
 } from 'preact/hooks';
 
@@ -19,7 +21,10 @@ import {
 
 import { isFunction } from 'min-dash';
 import Tooltip from './Tooltip';
+import { OpenPopupButton } from '../OpenPopupButton';
+import { EventContext } from '../../context';
 import { isCmdWithChar } from '../util/keyboardUtils';
+import translateFallback from '../util/translateFallback';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
@@ -35,6 +40,7 @@ function TextArea(props) {
 
   const {
     id,
+    element,
     label,
     debounce,
     onInput: commitValue,
@@ -47,12 +53,18 @@ function TextArea(props) {
     autoResize = true,
     placeholder,
     rows = autoResize ? 1 : 2,
-    tooltip
+    tooltip,
+    translate = translateFallback
   } = props;
 
   const [ localValue, setLocalValue ] = useState(value);
 
   const ref = useShowEntryEvent(id);
+  const containerRef = useRef();
+
+  const { eventBus } = useContext(EventContext);
+
+  const [ isPopupOpen, setIsPopupOpen ] = useState(false);
 
   const onInput = useCallback(newValue => {
     const newModelValue = newValue === '' ? undefined : newValue;
@@ -122,6 +134,41 @@ function TextArea(props) {
     }
   };
 
+  const handlePopupInput = newValue => {
+    if (newValue === localValue) {
+      return;
+    }
+
+    setLocalValue(newValue);
+    handleInput(newValue);
+  };
+
+  const handleOpenPopup = () => {
+    const isOpen = eventBus.fire('propertiesPanel.openPopup', {
+      element,
+      entryId: id,
+      label,
+      onInput: handlePopupInput,
+      sourceElement: ref.current,
+      value: localValue
+    });
+
+    if (isOpen) {
+      eventBus.once('propertiesPanelPopup.close', () => {
+        handleInput.flush?.();
+        setIsPopupOpen(false);
+      });
+    }
+
+    setIsPopupOpen(isOpen === true);
+  };
+
+  useEffect(() => {
+    return () => {
+      eventBus && eventBus.fire('propertiesPanel.closePopup');
+    };
+  }, []);
+
   useLayoutEffect(() => {
     autoResize && resizeToContents(ref.current);
   }, []);
@@ -141,31 +188,52 @@ function TextArea(props) {
   return (
     <div class="bio-properties-panel-textarea">
       <label for={ prefixId(id) } class="bio-properties-panel-label">
-        <Tooltip value={ tooltip } forId={ id } element={ props.element }>
+        <Tooltip value={ tooltip } forId={ id } element={ element }>
           { label }
         </Tooltip>
       </label>
-      <textarea
-        ref={ ref }
-        id={ prefixId(id) }
-        name={ id }
-        spellCheck="false"
+      <div
         class={ classnames(
-          'bio-properties-panel-input',
-          monospace ? 'bio-properties-panel-input-monospace' : '',
-          autoResize ? 'auto-resize' : '')
+          'bio-properties-panel-textarea-container',
+          isPopupOpen ? 'popupOpen' : null)
         }
-        onInput={ handleLocalInput }
-        onFocus={ onFocus }
-        onKeyDown={ handleOnKeyDown }
-        onBlur={ handleOnBlur }
-        onPaste={ handleOnPaste }
-        placeholder={ placeholder }
-        rows={ rows }
-        value={ localValue }
-        disabled={ disabled }
-        data-gramm="false"
-      />
+        ref={ containerRef }
+      >
+        {
+          isPopupOpen &&
+            <div class="bio-properties-panel-textarea__open-popup-placeholder">
+              { translate('Opened in editor') }
+            </div>
+        }
+        <textarea
+          ref={ ref }
+          id={ prefixId(id) }
+          name={ id }
+          spellCheck="false"
+          class={ classnames(
+            'bio-properties-panel-input',
+            monospace ? 'bio-properties-panel-input-monospace' : '',
+            autoResize ? 'auto-resize' : '')
+          }
+          onInput={ handleLocalInput }
+          onFocus={ onFocus }
+          onKeyDown={ handleOnKeyDown }
+          onBlur={ handleOnBlur }
+          onPaste={ handleOnPaste }
+          placeholder={ placeholder }
+          rows={ rows }
+          value={ localValue }
+          disabled={ disabled }
+          data-gramm="false"
+        />
+        {
+          eventBus && !disabled &&
+            <OpenPopupButton
+              onClick={ handleOpenPopup }
+              translate={ translate }
+            />
+        }
+      </div>
     </div>
   );
 }
@@ -186,6 +254,7 @@ function TextArea(props) {
  * @param {boolean} props.monospace
  * @param {Function} [props.validate]
  * @param {boolean} [props.disabled]
+ * @param {Function} [props.translate]
  */
 export default function TextAreaEntry(props) {
   const {
@@ -205,7 +274,8 @@ export default function TextAreaEntry(props) {
     onPaste,
     placeholder,
     autoResize,
-    tooltip
+    tooltip,
+    translate
   } = props;
 
   const globalError = useError(id);
@@ -262,6 +332,7 @@ export default function TextAreaEntry(props) {
         placeholder={ placeholder }
         autoResize={ autoResize }
         tooltip={ tooltip }
+        translate={ translate }
         element={ element } />
       { error && <div class="bio-properties-panel-error">{ error }</div> }
       <Description forId={ id } element={ element } value={ description } />
