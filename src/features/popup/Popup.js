@@ -1,7 +1,7 @@
 import { getPopupPosition, getPopupTitle } from './components/helpers';
 
 /**
- * FEEL popup component, built as a singleton.
+ * Popup manager, built as a singleton.
  *
  * In order to implement a custom replacement, handle the following events:
  * - `propertiesPanel.openPopup`
@@ -14,7 +14,7 @@ import { getPopupPosition, getPopupTitle } from './components/helpers';
  *  - `feelPopup.close` - fired before the popup is unmounted. Event context contains the DOM node of the popup as `domNode`
  *  - `feelPopup.closed` - fired after the popup is unmounted
  */
-export class FeelPopup {
+export class Popup {
   constructor(eventBus, config = {}) {
     this._eventBus = eventBus;
     this._config = config;
@@ -37,7 +37,7 @@ export class FeelPopup {
   }
 
   /**
-   * Check if the FEEL popup is open.
+   * Check if the popup is open.
    * @return {Boolean}
    */
   isOpen() {
@@ -45,7 +45,7 @@ export class FeelPopup {
   }
 
   /**
-   * Open the FEEL popup.
+   * Open the popup.
    *
    * @param {String} entryId
    * @param {Object} popupConfig
@@ -64,7 +64,7 @@ export class FeelPopup {
   }
 
   /**
-   * Close the FEEL popup.
+   * Close the popup.
    */
   close() {
     this._closePopup();
@@ -108,4 +108,4 @@ export class FeelPopup {
   }
 }
 
-FeelPopup.$inject = [ 'eventBus', 'config.propertiesPanel' ];
+Popup.$inject = [ 'eventBus', 'config.propertiesPanel' ];

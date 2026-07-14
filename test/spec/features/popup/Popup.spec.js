@@ -11,7 +11,7 @@ import MochaTestContainer from 'mocha-test-container-support';
 
 import { query as domQuery } from 'min-dom';
 
-import FeelPopupModule from '../../../../src/features/feel-popup';
+import FeelPopupModule from '../../../../src/features/popup';
 
 import {
   bootstrapDiagram,
@@ -20,7 +20,7 @@ import {
 } from 'test/TestHelper';
 
 
-describe('FeelPopup', function() {
+describe('Popup', function() {
 
   let container;
 

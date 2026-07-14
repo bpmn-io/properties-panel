@@ -6,7 +6,7 @@ import { isString } from 'min-dash';
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 
-export class FeelPopupRenderer {
+export class PopupRenderer {
   constructor(eventBus) {
     this._eventBus = eventBus;
 
@@ -70,7 +70,7 @@ export class FeelPopupRenderer {
   }
 }
 
-FeelPopupRenderer.$inject = [ 'eventBus' ];
+PopupRenderer.$inject = [ 'eventBus' ];
 
 // helpers /////////////////
 
