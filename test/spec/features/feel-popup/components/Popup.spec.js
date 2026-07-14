@@ -118,6 +118,58 @@ describe('<Popup>', function() {
   });
 
 
+  it('should move focus within popup on Tab', async function() {
+
+    // given
+    await act(() => {
+      render(
+        <Popup>
+          <input name="foo"></input>
+          <input name="bar"></input>
+        </Popup>,
+        { container }
+      );
+    });
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const [ firstInput, lastInput ] = popup.querySelectorAll('input');
+
+    lastInput.focus();
+
+    // when
+    fireEvent.keyDown(lastInput, { key: 'Tab' });
+
+    // then
+    expect(document.activeElement).to.eql(firstInput);
+  });
+
+
+  it('should NOT move focus on Tab (allowFocusMove=false)', async function() {
+
+    // given
+    await act(() => {
+      render(
+        <Popup allowFocusMove={ () => false }>
+          <input name="foo"></input>
+          <input name="bar"></input>
+        </Popup>,
+        { container }
+      );
+    });
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const lastInput = popup.querySelectorAll('input')[1];
+
+    lastInput.focus();
+
+    // when
+    fireEvent.keyDown(lastInput, { key: 'Tab' });
+
+    // then
+    expect(document.activeElement).to.eql(lastInput);
+  });
+
+
   it('should close on ESC', async function() {
 
     // given

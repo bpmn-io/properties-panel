@@ -3,6 +3,8 @@ import { expect } from 'chai';
 import { spy as sinonSpy } from 'sinon';
 
 import { render, fireEvent, cleanup, waitFor } from '@testing-library/preact/pure';
+import { snippet } from '@codemirror/autocomplete';
+import { EditorView } from '@codemirror/view';
 import { expectNoViolations, insertCoreStyles } from 'test/TestHelper';
 import { FeelPopup, FEEL_POPUP_WIDTH, FEEL_POPUP_HEIGHT } from 'src/features/feel-popup/components/FeelPopup';
 
@@ -234,6 +236,40 @@ describe('<FeelPopup>', function() {
       expect(sourceElement.focus).to.have.been.called;
     });
   });
+
+  it('should keep focus in editor when Tab navigates snippet placeholders', async function() {
+
+    // given
+    render(
+      <FeelPopup
+        entryId="foo"
+        title="Feel"
+        type="feel"
+        value=""
+        onInput={ () => {} }
+        onClose={ () => {} }
+        sourceElement={ sourceElement }
+      />, { container }
+    );
+
+    const cmContent = container.querySelector('.cm-content');
+
+    await waitFor(() => {
+      expect(document.activeElement === cmContent, 'expected editor to be focused').to.be.true;
+    });
+
+    const view = EditorView.findFromDOM(container.querySelector('.cm-editor'));
+
+    snippet('append(${list}, ${item})')(view, null, 0, 0);
+
+    // when
+    fireEvent.keyDown(cmContent, { key: 'Tab' });
+
+    // then
+    expect(document.activeElement === cmContent, 'expected focus to stay on editor content').to.be.true;
+    expect(view.state.sliceDoc(view.state.selection.main.from, view.state.selection.main.to)).to.equal('item');
+  });
+
 
   describe('accessibility', function() {
 

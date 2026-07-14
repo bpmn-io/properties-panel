@@ -94,6 +94,7 @@ export function FeelPopup(props) {
       returnFocus={ false }
       closeOnEscape={ false }
       delayInitialFocus={ false }
+      allowFocusMove={ (event) => !isSnippetNavigation(event) }
       onPostDeactivate={ handleSetReturnFocus }
       height={ FEEL_POPUP_HEIGHT }
       width={ FEEL_POPUP_WIDTH }
@@ -171,4 +172,10 @@ function prefixId(id) {
 function autoCompletionOpen(element) {
   const editor = element.closest('.cm-editor');
   return editor ? editor.querySelector('.cm-tooltip-autocomplete') : null;
+}
+
+// while a snippet is active, Tab navigates its placeholders inside the editor
+function isSnippetNavigation(event) {
+  const editor = event.target.closest('.cm-editor');
+  return !!(editor && editor.querySelector('.cm-snippetField'));
 }
