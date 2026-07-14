@@ -19,7 +19,7 @@ import {
   insertCoreStyles
 } from 'test/TestHelper';
 
-import { Popup } from 'src/features/feel-popup/components';
+import { Popup } from 'src/features/popup/components';
 
 insertCoreStyles();
 

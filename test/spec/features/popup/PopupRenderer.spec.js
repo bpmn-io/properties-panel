@@ -4,14 +4,14 @@ import { query as domQuery } from 'min-dom';
 
 import TestContainer from 'mocha-test-container-support';
 
-import FeelPopupModule from '../../../../src/features/feel-popup';
+import FeelPopupModule from '../../../../src/features/popup';
 
 import {
   bootstrapDiagram,
   inject
 } from 'test/TestHelper';
 
-describe('FeelPopupRenderer', function() {
+describe('PopupRenderer', function() {
 
   beforeEach(bootstrapDiagram({
     modules: [ FeelPopupModule ]

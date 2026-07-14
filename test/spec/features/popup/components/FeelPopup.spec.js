@@ -6,7 +6,7 @@ import { render, fireEvent, cleanup, waitFor } from '@testing-library/preact/pur
 import { snippet } from '@codemirror/autocomplete';
 import { EditorView } from '@codemirror/view';
 import { expectNoViolations, insertCoreStyles } from 'test/TestHelper';
-import { FeelPopup, FEEL_POPUP_WIDTH, FEEL_POPUP_HEIGHT } from 'src/features/feel-popup/components/FeelPopup';
+import { FeelPopup, FEEL_POPUP_WIDTH, FEEL_POPUP_HEIGHT } from 'src/features/popup/components/FeelPopup';
 
 insertCoreStyles();
 
