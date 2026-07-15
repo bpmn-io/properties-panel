@@ -6,6 +6,8 @@ import TestContainer from 'mocha-test-container-support';
 
 import FeelPopupModule from '../../../../src/features/popup';
 
+import { FeelPopup, TextPopup } from '../../../../src/features/popup/components';
+
 import {
   bootstrapDiagram,
   inject
@@ -41,7 +43,8 @@ describe('PopupRenderer', function() {
           { href: 'https://foo.com', title: 'Foo' },
           { href: 'https://bar.com', title: 'Bar' }
         ],
-        type: 'feel'
+        type: 'feel',
+        component: FeelPopup
       }
     });
 
@@ -69,7 +72,8 @@ describe('PopupRenderer', function() {
           { href: 'https://foo.com', title: 'Foo' },
           { href: 'https://bar.com', title: 'Bar' }
         ],
-        type: 'feel'
+        type: 'feel',
+        component: FeelPopup
       }
     });
 
@@ -89,7 +93,8 @@ describe('PopupRenderer', function() {
     eventBus.fire('propertiesPanelPopup.open', {
       container,
       config: {
-        entryId: 'foo'
+        entryId: 'foo',
+        component: TextPopup
       }
     });
 
@@ -110,7 +115,8 @@ describe('PopupRenderer', function() {
           { href: 'https://foo.com', title: 'Foo' },
           { href: 'https://bar.com', title: 'Bar' }
         ],
-        type: 'feel'
+        type: 'feel',
+        component: FeelPopup
       }
     });
 
