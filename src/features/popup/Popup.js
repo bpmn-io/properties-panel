@@ -1,7 +1,11 @@
 import { getPopupPosition, getPopupTitle } from './components/helpers';
+import { FeelPopup, TextPopup } from './components';
+
+const DEFAULT_POPUP_TYPE = 'text';
 
 /**
- * Popup manager, built as a singleton.
+ * Popup manager, built as a singleton. Renders the registered provider for a
+ * given popup type; consumers may plug in their own via #registerProvider.
  *
  * In order to implement a custom replacement, handle the following events:
  * - `propertiesPanel.openPopup`
@@ -20,6 +24,12 @@ export class Popup {
     this._config = config;
 
     this._isOpen = false;
+    this._providers = {};
+
+    // built-in providers; consumers may register their own via #registerProvider
+    this.registerProvider('feel', FeelPopup);
+    this.registerProvider('feelers', FeelPopup);
+    this.registerProvider('text', TextPopup);
 
     eventBus.on('propertiesPanel.openPopup', (_, context) => {
       this.open(context.entryId, context, context.sourceElement);
@@ -34,6 +44,26 @@ export class Popup {
     ], () => {
       this.close();
     });
+  }
+
+  /**
+   * Register a popup provider (component) for a given type.
+   *
+   * @param {string} type
+   * @param {Function|import('preact').Component} component
+   */
+  registerProvider(type, component) {
+    this._providers[type] = component;
+  }
+
+  /**
+   * Get the popup provider for a type, falling back to the default provider.
+   *
+   * @param {string} type
+   * @return {Function|import('preact').Component}
+   */
+  getProvider(type) {
+    return this._providers[type] || this._providers[DEFAULT_POPUP_TYPE];
   }
 
   /**
@@ -84,6 +114,7 @@ export class Popup {
       container: this._config.feelPopupContainer,
       config: {
         ...context,
+        component: this.getProvider(type),
         links: this._config.getFeelPopupLinks?.(type) || [],
         onClose: () => {
           this._closePopup();

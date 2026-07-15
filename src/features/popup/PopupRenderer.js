@@ -1,5 +1,4 @@
 import { render } from 'preact';
-import { FeelPopup, TextPopup } from './components';
 import { query as domQuery } from 'min-dom';
 import { isString } from 'min-dash';
 
@@ -37,9 +36,7 @@ export class PopupRenderer {
     // access to the event bus and other services
     this._emit('feelPopup.open');
 
-    const isFeel = config.type === 'feel' || config.type === 'feelers';
-
-    const Component = isFeel ? FeelPopup : TextPopup;
+    const Component = config.component;
 
     render(
       <Component { ...config } eventBus={ this._eventBus } />,
