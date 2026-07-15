@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: support snippet placeholder navigation in FEEL popup ([#524](https://github.com/bpmn-io/properties-panel/pull/524))
+
 ## 3.47.0
 
 * `FEAT`: enhance FEEL syntax highlighting ([bpmn-io/feel-editor#100](https://github.com/bpmn-io/feel-editor/pull/100))
