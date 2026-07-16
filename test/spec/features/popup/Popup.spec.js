@@ -371,7 +371,7 @@ describe('Popup', function() {
     }));
 
 
-    it('should fall back to the text popup for an unknown type', inject(function(eventBus) {
+    it('should default to the text popup when no type is given', inject(function(eventBus) {
 
       // when
       act(() => {

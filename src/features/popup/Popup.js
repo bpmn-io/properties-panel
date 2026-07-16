@@ -24,7 +24,6 @@ export class Popup {
     this._config = config;
 
     this._isOpen = false;
-    this._providers = {};
 
     // built-in providers; consumers may register their own via #registerProvider
     this.registerProvider('feel', FeelPopup);
@@ -32,10 +31,7 @@ export class Popup {
     this.registerProvider('text', TextPopup);
 
     eventBus.on('propertiesPanel.openPopup', (_, context) => {
-      this.open(context.entryId, context, context.sourceElement);
-
-      // return true to indicate that popup was opened
-      return true;
+      return this.open(context.entryId, context, context.sourceElement);
     });
 
     eventBus.on([
@@ -50,20 +46,29 @@ export class Popup {
    * Register a popup provider (component) for a given type.
    *
    * @param {string} type
-   * @param {Function|import('preact').Component} component
+   * @param {Function|import('preact').Component} provider
    */
-  registerProvider(type, component) {
-    this._providers[type] = component;
+  registerProvider(type, provider) {
+    this._eventBus.on('propertiesPanelPopup.getProviders.' + type, function(event) {
+      event.providers.push(provider);
+    });
   }
 
   /**
-   * Get the popup provider for a type, falling back to the default provider.
+   * Get the popup providers registered for a type.
    *
    * @param {string} type
-   * @return {Function|import('preact').Component}
+   * @return {Array<Function|import('preact').Component>}
    */
-  getProvider(type) {
-    return this._providers[type] || this._providers[DEFAULT_POPUP_TYPE];
+  _getProviders(type) {
+    const event = this._eventBus.createEvent({
+      type: 'propertiesPanelPopup.getProviders.' + type,
+      providers: []
+    });
+
+    this._eventBus.fire(event);
+
+    return event.providers;
   }
 
   /**
@@ -86,7 +91,7 @@ export class Popup {
     // close before opening a new one
     this.close();
 
-    this._openPopup({
+    return this._openPopup({
       ...popupConfig,
       entryId,
       sourceElement
@@ -105,8 +110,14 @@ export class Popup {
       element,
       label,
       sourceElement,
-      type
+      type = DEFAULT_POPUP_TYPE
     } = context;
+
+    const component = this._getProviders(type)[0];
+
+    if (!component) {
+      return false;
+    }
 
     this._isOpen = true;
 
@@ -114,7 +125,7 @@ export class Popup {
       container: this._config.feelPopupContainer,
       config: {
         ...context,
-        component: this.getProvider(type),
+        component,
         links: this._config.getFeelPopupLinks?.(type) || [],
         onClose: () => {
           this._closePopup();
@@ -128,6 +139,8 @@ export class Popup {
         title: getPopupTitle({ element, label })
       }
     });
+
+    return true;
   }
 
   _closePopup() {
