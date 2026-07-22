@@ -1299,15 +1299,24 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-feelers-editor-container.popupOpen .bio-properties-panel-input,
-.bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-input,
-.bio-properties-panel-textarea-container.popupOpen .bio-properties-panel-input {
+.bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-input {
   display: none;
+}
+
+.bio-properties-panel-textarea-container.popupOpen .bio-properties-panel-input {
+  visibility: hidden;
 }
 
 .bio-properties-panel-feelers-editor-container.popupOpen .bio-properties-panel-feelers-editor__open-popup-placeholder,
 .bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-feel-editor__open-popup-placeholder,
 .bio-properties-panel-textarea-container.popupOpen .bio-properties-panel-textarea__open-popup-placeholder {
   display: flex;
+}
+
+.bio-properties-panel-textarea-container.popupOpen .bio-properties-panel-textarea__open-popup-placeholder {
+  position: absolute;
+  inset: 0;
+  justify-content: flex-start;
 }
 
 .bio-properties-panel-popup {

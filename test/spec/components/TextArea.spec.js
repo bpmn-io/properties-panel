@@ -672,6 +672,47 @@ describe('<TextArea>', function() {
     });
 
 
+    it('should respect original textarea height when popup is open', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      eventBus.on('propertiesPanel.openPopup', () => true);
+
+      const result = createTextArea({
+        container,
+        eventBus,
+        id: 'textarea',
+        autoResize: true,
+        getValue: () => 'foo\nbar\nbaz\nqux'
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // wait for the textarea to auto resize to its content
+      await waitFor(() => {
+        expect(input.clientHeight).to.be.greaterThan(60);
+      });
+
+      const originalHeight = input.getBoundingClientRect().height;
+
+      const button = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+      // when
+      await act(() => {
+        fireEvent.click(button);
+      });
+
+      // then
+      const placeholder = domQuery(
+        '.bio-properties-panel-textarea__open-popup-placeholder',
+        result.container
+      );
+
+      expect(placeholder.getBoundingClientRect().height).to.be.closeTo(originalHeight, 5);
+    });
+
+
     it('should commit value edited in popup', function() {
 
       // given
