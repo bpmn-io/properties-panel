@@ -1277,8 +1277,13 @@ textarea.bio-properties-panel-input {
   transform: rotate(90deg);
 }
 
+.bio-properties-panel-textarea-container {
+  position: relative;
+}
+
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-feelers-editor__open-popup-placeholder,
-.bio-properties-panel-feel-editor-container .bio-properties-panel-feel-editor__open-popup-placeholder {
+.bio-properties-panel-feel-editor-container .bio-properties-panel-feel-editor__open-popup-placeholder,
+.bio-properties-panel-textarea-container .bio-properties-panel-textarea__open-popup-placeholder {
   display: none;
   justify-content: center;
   flex-direction: column;
@@ -1298,9 +1303,20 @@ textarea.bio-properties-panel-input {
   display: none;
 }
 
+.bio-properties-panel-textarea-container.popupOpen .bio-properties-panel-input {
+  visibility: hidden;
+}
+
 .bio-properties-panel-feelers-editor-container.popupOpen .bio-properties-panel-feelers-editor__open-popup-placeholder,
-.bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-feel-editor__open-popup-placeholder {
+.bio-properties-panel-feel-editor-container.popupOpen .bio-properties-panel-feel-editor__open-popup-placeholder,
+.bio-properties-panel-textarea-container.popupOpen .bio-properties-panel-textarea__open-popup-placeholder {
   display: flex;
+}
+
+.bio-properties-panel-textarea-container.popupOpen .bio-properties-panel-textarea__open-popup-placeholder {
+  position: absolute;
+  inset: 0;
+  justify-content: flex-start;
 }
 
 .bio-properties-panel-popup {
@@ -1379,6 +1395,7 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-popup .bio-properties-panel-popup__title {
   margin-left: 8px;
+  margin-right: auto;
 }
 
 .bio-properties-panel-popup .bio-properties-panel-popup__title::first-letter {
@@ -1426,11 +1443,6 @@ textarea.bio-properties-panel-input {
   position: absolute;
   bottom: 0;
   right: 8px;
-}
-
-.bio-properties-panel-feel-popup {
-  min-height: 400px;
-  width: fit-content;
 }
 
 .bio-properties-panel-feel-popup .bio-properties-panel-feel-popup__body {
@@ -1492,7 +1504,8 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup,
-.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup {
+.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup,
+.bio-properties-panel-textarea-container .bio-properties-panel-open-feel-popup {
   position: absolute;
   top: 0;
   right: 0;
@@ -1507,20 +1520,24 @@ textarea.bio-properties-panel-input {
 }
 
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup svg,
-.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup svg {
+.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup svg,
+.bio-properties-panel-textarea-container .bio-properties-panel-open-feel-popup svg {
   width: 16px;
   height: 16px;
 }
 
 .bio-properties-panel-feelers-editor-container:hover .bio-properties-panel-open-feel-popup,
 .bio-properties-panel-feel-container:hover .bio-properties-panel-open-feel-popup,
+.bio-properties-panel-textarea-container:hover .bio-properties-panel-open-feel-popup,
 .bio-properties-panel-feelers-editor-container:focus-within .bio-properties-panel-open-feel-popup,
-.bio-properties-panel-feel-container:focus-within .bio-properties-panel-open-feel-popup {
+.bio-properties-panel-feel-container:focus-within .bio-properties-panel-open-feel-popup,
+.bio-properties-panel-textarea-container:focus-within .bio-properties-panel-open-feel-popup {
   display: block;
 }
 
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup:hover,
-.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup:hover {
+.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup:hover,
+.bio-properties-panel-textarea-container .bio-properties-panel-open-feel-popup:hover {
   color: var(--feel-open-popup-hover-color);
 }
 
@@ -1561,6 +1578,15 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-feel-popup .cm-gutters .cm-lineNumbers .cm-gutterElement {
   text-align: center;
+}
+
+.bio-properties-panel-text-popup .bio-properties-panel-input {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  resize: none;
+  border: none;
+  padding: 8px 12px;
 }
 
 /* Checkbox Group */

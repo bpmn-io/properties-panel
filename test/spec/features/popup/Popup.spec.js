@@ -11,7 +11,7 @@ import MochaTestContainer from 'mocha-test-container-support';
 
 import { query as domQuery } from 'min-dom';
 
-import FeelPopupModule from '../../../../src/features/feel-popup';
+import FeelPopupModule from '../../../../src/features/popup';
 
 import {
   bootstrapDiagram,
@@ -20,7 +20,7 @@ import {
 } from 'test/TestHelper';
 
 
-describe('FeelPopup', function() {
+describe('Popup', function() {
 
   let container;
 
@@ -338,6 +338,51 @@ describe('FeelPopup', function() {
 
       // then
       expect(feelPopup.isOpen()).to.be.false;
+    }));
+
+  });
+
+
+  describe('providers', function() {
+
+    it('should render a registered custom provider', inject(function(eventBus, feelPopup) {
+
+      // given
+      function CustomPopup(props) {
+        return <div class="custom-popup">{ props.value }</div>;
+      }
+
+      feelPopup.registerProvider('custom', CustomPopup);
+
+      // when
+      act(() => {
+        eventBus.fire('propertiesPanel.openPopup', {
+          entryId: 'foo',
+          type: 'custom',
+          value: 'hello world'
+        });
+      });
+
+      // then
+      const popup = domQuery('.custom-popup', container);
+
+      expect(popup).to.exist;
+      expect(popup.textContent).to.equal('hello world');
+    }));
+
+
+    it('should default to the text popup when no type is given', inject(function(eventBus) {
+
+      // when
+      act(() => {
+        eventBus.fire('propertiesPanel.openPopup', {
+          entryId: 'foo',
+          value: 'plain'
+        });
+      });
+
+      // then
+      expect(domQuery('.bio-properties-panel-text-popup', container)).to.exist;
     }));
 
   });

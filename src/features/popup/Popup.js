@@ -1,7 +1,11 @@
 import { getPopupPosition, getPopupTitle } from './components/helpers';
+import { FeelPopup, TextPopup } from './components';
+
+const DEFAULT_POPUP_TYPE = 'text';
 
 /**
- * FEEL popup component, built as a singleton.
+ * Popup manager, built as a singleton. Renders the registered provider for a
+ * given popup type; consumers may plug in their own via #registerProvider.
  *
  * In order to implement a custom replacement, handle the following events:
  * - `propertiesPanel.openPopup`
@@ -14,18 +18,20 @@ import { getPopupPosition, getPopupTitle } from './components/helpers';
  *  - `feelPopup.close` - fired before the popup is unmounted. Event context contains the DOM node of the popup as `domNode`
  *  - `feelPopup.closed` - fired after the popup is unmounted
  */
-export class FeelPopup {
+export class Popup {
   constructor(eventBus, config = {}) {
     this._eventBus = eventBus;
     this._config = config;
 
     this._isOpen = false;
 
-    eventBus.on('propertiesPanel.openPopup', (_, context) => {
-      this.open(context.entryId, context, context.sourceElement);
+    // built-in providers; consumers may register their own via #registerProvider
+    this.registerProvider('feel', FeelPopup);
+    this.registerProvider('feelers', FeelPopup);
+    this.registerProvider('text', TextPopup);
 
-      // return true to indicate that popup was opened
-      return true;
+    eventBus.on('propertiesPanel.openPopup', (_, context) => {
+      return this.open(context.entryId, context, context.sourceElement);
     });
 
     eventBus.on([
@@ -37,7 +43,36 @@ export class FeelPopup {
   }
 
   /**
-   * Check if the FEEL popup is open.
+   * Register a popup provider (component) for a given type.
+   *
+   * @param {string} type
+   * @param {Function|import('preact').Component} provider
+   */
+  registerProvider(type, provider) {
+    this._eventBus.on('propertiesPanelPopup.getProviders.' + type, function(event) {
+      event.providers.push(provider);
+    });
+  }
+
+  /**
+   * Get the popup providers registered for a type.
+   *
+   * @param {string} type
+   * @return {Array<Function|import('preact').Component>}
+   */
+  _getProviders(type) {
+    const event = this._eventBus.createEvent({
+      type: 'propertiesPanelPopup.getProviders.' + type,
+      providers: []
+    });
+
+    this._eventBus.fire(event);
+
+    return event.providers;
+  }
+
+  /**
+   * Check if the popup is open.
    * @return {Boolean}
    */
   isOpen() {
@@ -45,7 +80,7 @@ export class FeelPopup {
   }
 
   /**
-   * Open the FEEL popup.
+   * Open the popup.
    *
    * @param {String} entryId
    * @param {Object} popupConfig
@@ -56,7 +91,7 @@ export class FeelPopup {
     // close before opening a new one
     this.close();
 
-    this._openPopup({
+    return this._openPopup({
       ...popupConfig,
       entryId,
       sourceElement
@@ -64,7 +99,7 @@ export class FeelPopup {
   }
 
   /**
-   * Close the FEEL popup.
+   * Close the popup.
    */
   close() {
     this._closePopup();
@@ -75,8 +110,14 @@ export class FeelPopup {
       element,
       label,
       sourceElement,
-      type
+      type = DEFAULT_POPUP_TYPE
     } = context;
+
+    const component = this._getProviders(type)[0];
+
+    if (!component) {
+      return false;
+    }
 
     this._isOpen = true;
 
@@ -84,6 +125,7 @@ export class FeelPopup {
       container: this._config.feelPopupContainer,
       config: {
         ...context,
+        component,
         links: this._config.getFeelPopupLinks?.(type) || [],
         onClose: () => {
           this._closePopup();
@@ -97,6 +139,8 @@ export class FeelPopup {
         title: getPopupTitle({ element, label })
       }
     });
+
+    return true;
   }
 
   _closePopup() {
@@ -108,4 +152,4 @@ export class FeelPopup {
   }
 }
 
-FeelPopup.$inject = [ 'eventBus', 'config.propertiesPanel' ];
+Popup.$inject = [ 'eventBus', 'config.propertiesPanel' ];

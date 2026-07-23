@@ -592,6 +592,209 @@ describe('<TextArea>', function() {
   });
 
 
+  describe('popup', function() {
+
+    it('should render open popup button', function() {
+
+      // when
+      const result = createTextArea({ container });
+
+      // then
+      expect(domQuery('.bio-properties-panel-open-feel-popup', result.container)).to.exist;
+    });
+
+
+    it('should NOT render open popup button when disabled', function() {
+
+      // when
+      const result = createTextArea({ container, disabled: true });
+
+      // then
+      expect(domQuery('.bio-properties-panel-open-feel-popup', result.container)).not.to.exist;
+    });
+
+
+    it('should fire <propertiesPanel.openPopup> on button click', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      let context;
+
+      eventBus.on('propertiesPanel.openPopup', (event, ctx) => {
+        context = ctx;
+        return true;
+      });
+
+      const result = createTextArea({
+        container,
+        eventBus,
+        id: 'foo',
+        label: 'Foo',
+        getValue: () => 'bar'
+      });
+
+      const button = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+      // when
+      fireEvent.click(button);
+
+      // then
+      expect(context).to.include({
+        entryId: 'foo',
+        label: 'Foo',
+        value: 'bar'
+      });
+    });
+
+
+    it('should show placeholder when popup is open', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      eventBus.on('propertiesPanel.openPopup', () => true);
+
+      const result = createTextArea({ container, eventBus });
+
+      const button = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+      // when
+      await act(() => {
+        fireEvent.click(button);
+      });
+
+      // then
+      const containerNode = domQuery('.bio-properties-panel-textarea-container', result.container);
+
+      expect(domClasses(containerNode).has('popupOpen')).to.be.true;
+      expect(domQuery('.bio-properties-panel-textarea__open-popup-placeholder', result.container)).to.exist;
+    });
+
+
+    it('should respect original textarea height when popup is open', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      eventBus.on('propertiesPanel.openPopup', () => true);
+
+      const result = createTextArea({
+        container,
+        eventBus,
+        id: 'textarea',
+        autoResize: true,
+        getValue: () => 'foo\nbar\nbaz\nqux'
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // wait for the textarea to auto resize to its content
+      await waitFor(() => {
+        expect(input.clientHeight).to.be.greaterThan(60);
+      });
+
+      const originalHeight = input.getBoundingClientRect().height;
+
+      const button = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+      // when
+      await act(() => {
+        fireEvent.click(button);
+      });
+
+      // then
+      const placeholder = domQuery(
+        '.bio-properties-panel-textarea__open-popup-placeholder',
+        result.container
+      );
+
+      expect(placeholder.getBoundingClientRect().height).to.be.closeTo(originalHeight, 5);
+    });
+
+
+    it('should commit value edited in popup', function() {
+
+      // given
+      const eventBus = new EventBus();
+      const setValueSpy = sinonSpy();
+
+      let popupInput;
+
+      eventBus.on('propertiesPanel.openPopup', (event, ctx) => {
+        popupInput = ctx.onInput;
+        return true;
+      });
+
+      const result = createTextArea({
+        container,
+        eventBus,
+        getValue: () => '',
+        setValue: setValueSpy
+      });
+
+      const button = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+      fireEvent.click(button);
+
+      // when
+      popupInput('edited in popup');
+
+      // then
+      expect(setValueSpy).to.have.been.calledWith('edited in popup');
+    });
+
+
+    it('should reset open state on <propertiesPanelPopup.close>', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      eventBus.on('propertiesPanel.openPopup', () => true);
+
+      const result = createTextArea({ container, eventBus });
+
+      const button = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+      await act(() => {
+        fireEvent.click(button);
+      });
+
+      const containerNode = domQuery('.bio-properties-panel-textarea-container', result.container);
+
+      // assume
+      expect(domClasses(containerNode).has('popupOpen')).to.be.true;
+
+      // when
+      await act(() => {
+        eventBus.fire('propertiesPanelPopup.close');
+      });
+
+      // then
+      expect(domClasses(containerNode).has('popupOpen')).to.be.false;
+    });
+
+
+    it('should fire <propertiesPanel.closePopup> on unmount', function() {
+
+      // given
+      const eventBus = new EventBus();
+      const closeSpy = sinonSpy();
+
+      eventBus.on('propertiesPanel.closePopup', closeSpy);
+
+      const result = createTextArea({ container, eventBus });
+
+      // when
+      result.unmount();
+
+      // then
+      expect(closeSpy).to.have.been.calledOnce;
+    });
+
+  });
+
+
   describe('errors', function() {
 
     it('should get error', function() {

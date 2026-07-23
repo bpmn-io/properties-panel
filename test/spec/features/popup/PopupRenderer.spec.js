@@ -4,14 +4,16 @@ import { query as domQuery } from 'min-dom';
 
 import TestContainer from 'mocha-test-container-support';
 
-import FeelPopupModule from '../../../../src/features/feel-popup';
+import FeelPopupModule from '../../../../src/features/popup';
+
+import { FeelPopup, TextPopup } from '../../../../src/features/popup/components';
 
 import {
   bootstrapDiagram,
   inject
 } from 'test/TestHelper';
 
-describe('FeelPopupRenderer', function() {
+describe('PopupRenderer', function() {
 
   beforeEach(bootstrapDiagram({
     modules: [ FeelPopupModule ]
@@ -41,7 +43,8 @@ describe('FeelPopupRenderer', function() {
           { href: 'https://foo.com', title: 'Foo' },
           { href: 'https://bar.com', title: 'Bar' }
         ],
-        type: 'feel'
+        type: 'feel',
+        component: FeelPopup
       }
     });
 
@@ -69,7 +72,8 @@ describe('FeelPopupRenderer', function() {
           { href: 'https://foo.com', title: 'Foo' },
           { href: 'https://bar.com', title: 'Bar' }
         ],
-        type: 'feel'
+        type: 'feel',
+        component: FeelPopup
       }
     });
 
@@ -80,6 +84,23 @@ describe('FeelPopupRenderer', function() {
     expect(popup.parentElement.classList.contains('bio-properties-panel-popup-container')).to.be.true;
 
     expect(domQuery('.other', container)).to.exist;
+  }));
+
+
+  it('should render text area popup on <propertiesPanelPopup.open> (no feel type)', inject(function(eventBus) {
+
+    // when
+    eventBus.fire('propertiesPanelPopup.open', {
+      container,
+      config: {
+        entryId: 'foo',
+        component: TextPopup
+      }
+    });
+
+    // then
+    expect(domQuery('.bio-properties-panel-text-popup', container)).to.exist;
+    expect(domQuery('.bio-properties-panel-feel-popup', container)).not.to.exist;
   }));
 
 
@@ -94,7 +115,8 @@ describe('FeelPopupRenderer', function() {
           { href: 'https://foo.com', title: 'Foo' },
           { href: 'https://bar.com', title: 'Bar' }
         ],
-        type: 'feel'
+        type: 'feel',
+        component: FeelPopup
       }
     });
 

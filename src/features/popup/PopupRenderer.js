@@ -1,12 +1,11 @@
 import { render } from 'preact';
-import { FeelPopup } from './components';
 import { query as domQuery } from 'min-dom';
 import { isString } from 'min-dash';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 
-export class FeelPopupRenderer {
+export class PopupRenderer {
   constructor(eventBus) {
     this._eventBus = eventBus;
 
@@ -37,8 +36,10 @@ export class FeelPopupRenderer {
     // access to the event bus and other services
     this._emit('feelPopup.open');
 
+    const Component = config.component;
+
     render(
-      <FeelPopup { ...config } eventBus={ this._eventBus } />,
+      <Component { ...config } eventBus={ this._eventBus } />,
       element
     );
 
@@ -70,7 +71,7 @@ export class FeelPopupRenderer {
   }
 }
 
-FeelPopupRenderer.$inject = [ 'eventBus' ];
+PopupRenderer.$inject = [ 'eventBus' ];
 
 // helpers /////////////////
 
