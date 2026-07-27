@@ -62,6 +62,11 @@ function TextArea(props) {
   const ref = useShowEntryEvent(id);
   const containerRef = useRef();
 
+  // keep a live reference to the current value so callbacks captured by the
+  // popup (frozen at open time) can compare against the latest value
+  const localValueRef = useRef(localValue);
+  localValueRef.current = localValue;
+
   const { eventBus } = useContext(EventContext);
 
   const [ isPopupOpen, setIsPopupOpen ] = useState(false);
@@ -133,7 +138,7 @@ function TextArea(props) {
   };
 
   const handlePopupInput = newValue => {
-    if (newValue === localValue) {
+    if (newValue === localValueRef.current) {
       return;
     }
 

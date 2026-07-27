@@ -745,6 +745,45 @@ describe('<TextArea>', function() {
     });
 
 
+    it('should reflect clearing contents in popup', async function() {
+
+      // given
+      const eventBus = new EventBus();
+      const setValueSpy = sinonSpy();
+
+      let popupInput;
+
+      eventBus.on('propertiesPanel.openPopup', (event, ctx) => {
+        popupInput = ctx.onInput;
+        return true;
+      });
+
+      const result = createTextArea({
+        container,
+        eventBus,
+        id: 'textarea',
+        getValue: () => '',
+        setValue: setValueSpy
+      });
+
+      const button = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+      fireEvent.click(button);
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      // when
+      // type and then clear back to the value present when the popup opened
+      await act(() => popupInput('foo'));
+      await act(() => popupInput(''));
+
+      // then
+      // clearing is reflected, old value is not restored
+      expect(input.value).to.eql('');
+      expect(setValueSpy).to.have.been.calledWith(undefined);
+    });
+
+
     it('should reset open state on <propertiesPanelPopup.close>', async function() {
 
       // given
