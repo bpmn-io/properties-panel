@@ -1184,6 +1184,46 @@ describe('<TextArea>', function() {
       });
     });
 
+
+    it('should resize on value edited in popup', async function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      let popupInput;
+
+      eventBus.on('propertiesPanel.openPopup', (event, ctx) => {
+        popupInput = ctx.onInput;
+        return true;
+      });
+
+      const result = createTextArea({
+        container,
+        eventBus,
+        id: 'textarea',
+        autoResize: true,
+        getValue: () => 'foo'
+      });
+
+      const input = domQuery('.bio-properties-panel-input', result.container);
+
+      const button = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+
+      await act(() => {
+        fireEvent.click(button);
+      });
+
+      const initialHeight = input.clientHeight;
+
+      // when
+      await act(() => {
+        popupInput('foo\nbar\nbaz\nqux');
+      });
+
+      // then
+      expect(input.clientHeight).to.be.greaterThan(initialHeight);
+    });
+
   });
 
 
