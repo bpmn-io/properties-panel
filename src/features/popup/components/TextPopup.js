@@ -93,6 +93,8 @@ export function TextPopup(props) {
   );
 }
 
+// The in-panel field stays mounted (hidden) while the popup is open, so we
+// scope the popup editor id to keep it unique in the DOM.
 function prefixId(id) {
-  return `bio-properties-panel-${id}`;
+  return `bio-properties-panel-popup-${id}`;
 }

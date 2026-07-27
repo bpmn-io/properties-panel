@@ -134,7 +134,6 @@ export function FeelPopup(props) {
           {type === 'feel' && (
             <FeelEditor
               enableGutters={ true }
-              id={ prefixId(entryId) }
               name={ entryId }
               onInput={ onInput }
               value={ value }
@@ -147,7 +146,6 @@ export function FeelPopup(props) {
 
           {type === 'feelers' && (
             <TemplatingEditor
-              id={ prefixId(entryId) }
               contentAttributes={ { 'aria-label': title } }
               enableGutters={ true }
               hostLanguage={ hostLanguage }
@@ -163,10 +161,6 @@ export function FeelPopup(props) {
       </Popup.Body>
     </Popup>
   );
-}
-
-function prefixId(id) {
-  return `bio-properties-panel-${id}`;
 }
 
 function autoCompletionOpen(element) {
