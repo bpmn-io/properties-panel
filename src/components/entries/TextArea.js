@@ -79,8 +79,6 @@ function TextArea(props) {
   const handleInput = useDebounce(onInput, debounce);
 
   const handleLocalInput = e => {
-    autoResize && resizeToContents(e.target);
-
     if (e.target.value === localValue) {
       return;
     }
@@ -169,9 +167,10 @@ function TextArea(props) {
     };
   }, []);
 
+  // auto-resize on any value change (typing, popup edits, external updates)
   useLayoutEffect(() => {
     autoResize && resizeToContents(ref.current);
-  }, []);
+  }, [ localValue ]);
 
   useLayoutEffect(() => {
     visible && autoResize && resizeToContents(ref.current);
