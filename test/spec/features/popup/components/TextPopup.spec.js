@@ -81,6 +81,28 @@ describe('<TextPopup>', function() {
   });
 
 
+  it('should scope textarea id to avoid clashing with in-panel field', function() {
+
+    // when
+    render(
+      <TextPopup
+        entryId="foo"
+        title="Test Title"
+        value="bar"
+        onInput={ () => {} }
+        onClose={ () => {} }
+        sourceElement={ sourceElement }
+      />, { container }
+    );
+
+    // then
+    const textarea = container.querySelector('textarea.bio-properties-panel-input');
+
+    expect(textarea.id).to.equal('bio-properties-panel-popup-foo');
+    expect(textarea.id).not.to.equal('bio-properties-panel-foo');
+  });
+
+
   it('should focus the textarea on open', async function() {
 
     // when
