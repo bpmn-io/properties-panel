@@ -385,6 +385,59 @@ describe('Popup', function() {
       expect(domQuery('.bio-properties-panel-text-popup', container)).to.exist;
     }));
 
+
+    it('should override a built-in provider (default priority beats built-in)', inject(function(eventBus, feelPopup) {
+
+      // given
+      function CustomTextPopup(props) {
+        return <div class="custom-text-popup">{ props.value }</div>;
+      }
+
+      feelPopup.registerProvider('text', CustomTextPopup);
+
+      // when
+      act(() => {
+        eventBus.fire('propertiesPanel.openPopup', {
+          entryId: 'foo',
+          type: 'text',
+          value: 'hello world'
+        });
+      });
+
+      // then
+      expect(domQuery('.custom-text-popup', container)).to.exist;
+      expect(domQuery('.bio-properties-panel-text-popup', container)).not.to.exist;
+    }));
+
+
+    it('should respect provider priority', inject(function(eventBus, feelPopup) {
+
+      // given
+      function LowPopup() {
+        return <div class="low-popup" />;
+      }
+
+      function HighPopup() {
+        return <div class="high-popup" />;
+      }
+
+      feelPopup.registerProvider('text', 900, LowPopup);
+      feelPopup.registerProvider('text', 1100, HighPopup);
+
+      // when
+      act(() => {
+        eventBus.fire('propertiesPanel.openPopup', {
+          entryId: 'foo',
+          type: 'text',
+          value: 'hello world'
+        });
+      });
+
+      // then
+      expect(domQuery('.high-popup', container)).to.exist;
+      expect(domQuery('.low-popup', container)).not.to.exist;
+    }));
+
   });
 });
 

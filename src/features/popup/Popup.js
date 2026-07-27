@@ -3,6 +3,11 @@ import { FeelPopup, TextPopup } from './components';
 
 const DEFAULT_POPUP_TYPE = 'text';
 
+// consumers registering via #registerProvider default to DEFAULT_PRIORITY,
+// so their providers take precedence over the LOW_PRIORITY built-ins.
+const DEFAULT_PRIORITY = 1000;
+const LOW_PRIORITY = 500;
+
 /**
  * Popup manager, built as a singleton. Renders the registered provider for a
  * given popup type; consumers may plug in their own via #registerProvider.
@@ -25,10 +30,11 @@ export class Popup {
 
     this._isOpen = false;
 
-    // built-in providers; consumers may register their own via #registerProvider
-    this.registerProvider('feel', FeelPopup);
-    this.registerProvider('feelers', FeelPopup);
-    this.registerProvider('text', TextPopup);
+    // built-in providers, registered at LOW_PRIORITY so consumers can
+    // override them via #registerProvider using the default priority
+    this.registerProvider('feel', LOW_PRIORITY, FeelPopup);
+    this.registerProvider('feelers', LOW_PRIORITY, FeelPopup);
+    this.registerProvider('text', LOW_PRIORITY, TextPopup);
 
     eventBus.on('propertiesPanel.openPopup', (_, context) => {
       return this.open(context.entryId, context, context.sourceElement);
@@ -45,11 +51,21 @@ export class Popup {
   /**
    * Register a popup provider (component) for a given type.
    *
+   * A higher `priority` wins when multiple providers are registered for the
+   * same type; the built-in providers use a low priority so consumers override
+   * them by default.
+   *
    * @param {string} type
+   * @param {number} [priority=DEFAULT_PRIORITY]
    * @param {Function|import('preact').Component} provider
    */
-  registerProvider(type, provider) {
-    this._eventBus.on('propertiesPanelPopup.getProviders.' + type, function(event) {
+  registerProvider(type, priority, provider) {
+    if (!provider) {
+      provider = priority;
+      priority = DEFAULT_PRIORITY;
+    }
+
+    this._eventBus.on('propertiesPanelPopup.getProviders.' + type, priority, function(event) {
       event.providers.push(provider);
     });
   }
