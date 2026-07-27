@@ -6,7 +6,17 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.48.0
+
+* `FEAT`: enable popup editor for text areas ([#523](https://github.com/bpmn-io/properties-panel/pull/523))
+* `FEAT`: allow registering custom popup providers ([#523](https://github.com/bpmn-io/properties-panel/pull/523))
+* `FEAT`: allow overriding popup providers via priority ([#523](https://github.com/bpmn-io/properties-panel/pull/523))
+* `FEAT`: resize `TextArea` on any interaction ([#529](https://github.com/bpmn-io/properties-panel/pull/529))
 * `FIX`: support snippet placeholder navigation in FEEL popup ([#524](https://github.com/bpmn-io/properties-panel/pull/524))
+* `FIX`: respect popup size constants ([#523](https://github.com/bpmn-io/properties-panel/pull/523))
+* `FIX`: respect field height when showing a placeholder ([#523](https://github.com/bpmn-io/properties-panel/pull/523))
+* `FIX`: scope text popup editor id to avoid duplicate DOM ids ([#523](https://github.com/bpmn-io/properties-panel/pull/523))
+* `FIX`: compare popup input against live value ([#530](https://github.com/bpmn-io/properties-panel/pull/530))
 
 ## 3.47.0
 
