@@ -157,7 +157,7 @@ describe('<Collapsible>', function() {
     const entries = domQuery('.bio-properties-panel-collapsible-entry-entries', entry);
 
     // assume
-    expect(domClasses(entries).has('open')).to.be.false;
+expect(domClasses(entries).has('open')).to.be.false;
 
     // when
     await act(() => {
