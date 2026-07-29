@@ -51,6 +51,8 @@ export default function CollapsibleEntry(props) {
 
   const placeholderLabel = translate('<empty>');
 
+  const hasEntries = entries.length > 0;
+
   return (
     <div
       data-entry-id={ id }
@@ -58,7 +60,7 @@ export default function CollapsibleEntry(props) {
         'bio-properties-panel-collapsible-entry',
         open ? 'open' : ''
       ) }>
-      <div class="bio-properties-panel-collapsible-entry-header" onClick={ toggleOpen }>
+      <div class="bio-properties-panel-collapsible-entry-header" onClick={ hasEntries ? toggleOpen : null }>
         <div
           class={ classnames(
             'bio-properties-panel-collapsible-entry-header-title',
@@ -66,13 +68,15 @@ export default function CollapsibleEntry(props) {
           ) }>
           { label || placeholderLabel }
         </div>
-        <button
-          type="button"
-          title={ translate('Toggle list item') }
-          class="bio-properties-panel-arrow  bio-properties-panel-collapsible-entry-arrow"
-        >
-          <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
-        </button>
+        { hasEntries && (
+          <button
+            type="button"
+            title={ translate('Toggle list item') }
+            class="bio-properties-panel-arrow  bio-properties-panel-collapsible-entry-arrow"
+          >
+            <ArrowIcon class={ open ? 'bio-properties-panel-arrow-down' : 'bio-properties-panel-arrow-right' } />
+          </button>
+        ) }
         {
           remove
             ?
