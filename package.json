@@ -85,7 +85,7 @@
     "npm-run-all2": "^9.0.0",
     "preact": "^10.19.3",
     "raw-loader": "^4.0.2",
-    "replace-in-file": "^8.4.0",
+    "replace-in-file": "^9.0.0",
     "rollup": "^4.60.4",
     "rollup-plugin-copy": "^3.5.0",
     "sinon": "^22.0.0",
