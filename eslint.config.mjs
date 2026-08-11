@@ -5,7 +5,8 @@ import eslintImport from 'eslint-plugin-import';
 const files = {
   build: [
     '*.js',
-    '*.mjs'
+    '*.mjs',
+    'test/distro/karma.config.js'
   ],
   test: [
     'test/**/*.js'
