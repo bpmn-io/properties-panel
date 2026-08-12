@@ -73,7 +73,8 @@ const FeelEditor = forwardRef((props, ref) => {
   const {
     builtins,
     dialect,
-    parserDialect
+    parserDialect,
+    engines
   } = feelLanguageContext || {};
 
   useBufferedFocus(editor, ref);
@@ -126,6 +127,7 @@ const FeelEditor = forwardRef((props, ref) => {
       builtins,
       dialect,
       parserDialect,
+      engines,
       extensions: [
         ...enableGutters ? [ lineNumbers() ] : [],
         EditorView.lineWrapping,
