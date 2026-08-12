@@ -6,7 +6,8 @@ import {
  * @typedef { {
  *   parserDialect?: import('@bpmn-io/feel-editor').ParserDialect,
  *   builtins?: import('@bpmn-io/feel-editor').Variable[],
- *   dialect?: import('@bpmn-io/feel-editor').Dialect
+ *   dialect?: import('@bpmn-io/feel-editor').Dialect,
+ *   engines?: Record<string, string>
  * } } FeelLanguageContextType
  */
 

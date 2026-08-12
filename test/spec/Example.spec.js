@@ -35,6 +35,8 @@ import {
 
 import EventBus from 'diagram-js/lib/core/EventBus';
 
+import { FeelLanguageContext } from 'src/context';
+
 import { Popup } from 'src/features/popup/Popup';
 import { PopupRenderer } from 'src/features/popup/PopupRenderer';
 
@@ -80,7 +82,7 @@ const element = {
   exampleData: '{\n  "orderId": "12345",\n  "customer": {\n    "name": "Jane Doe",\n    "email": "jane@example.com"\n  },\n  "items": [\n    { "id": 1, "price": 29.99 },\n    { "id": 2, "price": 49.99 }\n  ]\n}',
   retryCount: 3,
   async: false,
-  expression: '=myVariable + 10',
+  expression: '=fromAi(myVariable)',
   conditionExpression: '',
   inputParameters: [
     { id: 'input-1', name: 'customerId', value: '=customer.id' },
@@ -154,7 +156,7 @@ function ExampleApp() {
           component: FeelEntryComponent,
           isEdited: isFeelEntryEdited,
           label: 'Expression',
-          description: 'A FEEL expression to evaluate.',
+          description: 'A FEEL expression to evaluate. `fromAi` requires Camunda 8.8+.',
           feel: 'required',
           updateElement,
           element
@@ -285,14 +287,16 @@ function ExampleApp() {
         <div style="font-size: 11px; color: #555; padding: 4px 8px; background: #f5f5f5;">
           &lt;PropertiesPanel&gt; without built-in header
         </div>
-        <PropertiesPanel
-          element={ element }
-          placeholderProvider={ ExamplePlaceholderProvider }
-          groups={ groups }
-          eventBus={ eventBus }
-          layoutConfig={ layoutConfig }
-          layoutChanged={ noop }
-        />
+        <FeelLanguageContext.Provider value={ { engines: { camunda: '8.6' } } }>
+          <PropertiesPanel
+            element={ element }
+            placeholderProvider={ ExamplePlaceholderProvider }
+            groups={ groups }
+            eventBus={ eventBus }
+            layoutConfig={ layoutConfig }
+            layoutChanged={ noop }
+          />
+        </FeelLanguageContext.Provider>
       </div>
     </div>
   );

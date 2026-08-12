@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: pass engine versions to editor for FEEL compatibility linting ([#533](https://github.com/bpmn-io/properties-panel/pull/533))
+* `FIX`: restore FEEL syntax highlighting with `@bpmn-io/cm-theme@0.2.1+` ([bpmn-io/feelers#117](https://github.com/bpmn-io/feelers/pull/117))
+* `DEPS`: update to `@bpmn-io/feel-editor@2.7.0`
+* `DEPS`: update to `@bpmn-io/feelers-editor@1.1.1`
+
 ## 3.48.0
 
 * `FEAT`: enable popup editor for text areas ([#523](https://github.com/bpmn-io/properties-panel/pull/523))
