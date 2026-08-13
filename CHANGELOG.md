@@ -10,6 +10,7 @@ ___Note:__ Yet to be released changes appear here._
 * `FIX`: restore FEEL syntax highlighting with `@bpmn-io/cm-theme@0.2.1+` ([bpmn-io/feelers#117](https://github.com/bpmn-io/feelers/pull/117))
 * `DEPS`: update to `@bpmn-io/feel-editor@2.7.0`
 * `DEPS`: update to `@bpmn-io/feelers-editor@1.1.1`
+* `DEPS`: update to `min-dash@5.1.0`
 
 ## 3.48.0
 
