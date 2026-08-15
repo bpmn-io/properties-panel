@@ -131,6 +131,8 @@
   --text-line-height: 21px;
   --line-height-condensed: 17px;
 
+  --input-height: 28px;
+
   --font-family: sans-serif;
   --font-family-monospace: monospace;
 
@@ -478,11 +480,25 @@
 
 .bio-properties-panel-feelers-editor.bio-properties-panel-input {
   padding: 0;
+  min-height: var(--input-height);
+}
+
+/**
+ * Normalize the vertical rhythm of the feelers and JSON editors so single-line
+ * editors line up with plain inputs. CodeMirror's default `.cm-content` padding
+ * of `4px 0` would otherwise render them a few pixels taller than the
+ * surrounding controls. (The FEEL editor already zeroes its own content padding
+ * and sizes to the shared baseline, so it is intentionally left untouched.)
+ */
+.bio-properties-panel-feelers-editor .cm-content,
+.bio-properties-panel-json-editor .cm-content {
+  padding-top: 3px;
+  padding-bottom: 2px;
 }
 
 .bio-properties-panel-feelers-input .cm-editor
 {
-  min-height: 32px;
+  min-height: var(--input-height);
   max-height: 215px;
   background-color: transparent;
 }
@@ -507,10 +523,7 @@ textarea.bio-properties-panel-input,
 .bio-properties-panel-input[type=text] {
   display: block;
   width: 100%;
-}
-
-textarea.bio-properties-panel-input {
-  min-height: 28px;
+  min-height: var(--input-height);
 }
 
 .bio-properties-panel-input:focus,
@@ -602,6 +615,7 @@ textarea.bio-properties-panel-input {
 
 .bio-properties-panel-json-editor .bio-properties-panel-input {
   padding: 0;
+  min-height: var(--input-height);
 }
 
 .bio-properties-panel-json-editor .cm-editor {
@@ -1111,7 +1125,7 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-feel-container .bio-properties-panel-feel-editor-container>div {
   position: static;
   padding-left: 2.4em !important;
-  min-height: 28px;
+  min-height: var(--input-height);
 }
 
 .bio-properties-panel-feel-indicator {
