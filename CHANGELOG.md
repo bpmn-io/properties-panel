@@ -8,6 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 * `FEAT`: pass engine versions to editor for FEEL compatibility linting ([#533](https://github.com/bpmn-io/properties-panel/pull/533))
 * `FEAT`: unify single line input height ([#537](https://github.com/bpmn-io/properties-panel/pull/537))
+* `FIX`: center popup button vertically ([#537](https://github.com/bpmn-io/properties-panel/pull/537))
 * `FIX`: show input active state on actual focus only ([#538](https://github.com/bpmn-io/properties-panel/pull/538))
 * `FIX`: restore FEEL syntax highlighting with `@bpmn-io/cm-theme@0.2.1+` ([bpmn-io/feelers#117](https://github.com/bpmn-io/feelers/pull/117))
 * `DEPS`: update to `@bpmn-io/feel-editor@2.7.0`
