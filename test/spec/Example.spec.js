@@ -4,7 +4,8 @@ import { useReducer, useCallback, useState } from 'preact/hooks';
 import TestContainer from 'mocha-test-container-support';
 
 import {
-  insertCoreStyles
+  insertCoreStyles,
+  insertCSS
 } from 'test/TestHelper';
 
 import PropertiesPanel from 'src/PropertiesPanel';
@@ -42,6 +43,50 @@ import { PopupRenderer } from 'src/features/popup/PopupRenderer';
 
 insertCoreStyles();
 
+insertCSS('example.css', `
+  body:has(.bio-properties-panel-example) {
+    box-sizing: border-box;
+    height: calc(100vh - 16px);
+    margin: 8px;
+  }
+
+  .test-container:has(.bio-properties-panel-example) {
+    box-sizing: border-box;
+    height: 100% !important;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .test-content-container:has(.bio-properties-panel-example) {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .bio-properties-panel-example {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    height: 100%;
+    margin-left: auto;
+    border-left: solid 2px #CCC;
+  }
+
+  .bio-properties-panel-example__panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bio-properties-panel-example__panel > .bio-properties-panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+`);
+
 const singleStart = window.__env__?.SINGLE_START;
 
 describe('Example', function() {
@@ -50,8 +95,7 @@ describe('Example', function() {
 
   beforeEach(function() {
     container = document.createElement('div');
-    container.style.width = '350px';
-    container.style.marginLeft = 'auto';
+    container.classList.add('bio-properties-panel-example');
 
     TestContainer.get(this).appendChild(container);
   });
@@ -321,7 +365,7 @@ function ExampleApp() {
         </div>
         <Header element={ element } headerProvider={ ExampleHeaderProvider } />
       </div>
-      <div style="border: 2px dashed #0a7; margin: 4px; flex: 1; min-height: 0;">
+      <div class="bio-properties-panel-example__panel" style="border: 2px dashed #0a7; margin: 4px; flex: 1; min-height: 0;">
         <div style="font-size: 11px; color: #555; padding: 4px 8px; background: #f5f5f5;">
           &lt;PropertiesPanel&gt; without built-in header
         </div>
