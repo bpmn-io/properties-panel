@@ -1546,6 +1546,7 @@ textarea.bio-properties-panel-input {
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup svg,
 .bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup svg,
 .bio-properties-panel-textarea-container .bio-properties-panel-open-feel-popup svg {
+  display: block;
   width: 16px;
   height: 16px;
 }
