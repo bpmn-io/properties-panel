@@ -6,6 +6,7 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: add themable focus ring to inputs/controls ([#535](https://github.com/bpmn-io/properties-panel/pull/535))
 * `FEAT`: pass engine versions to editor for FEEL compatibility linting ([#533](https://github.com/bpmn-io/properties-panel/pull/533))
 * `FEAT`: unify single line input height ([#537](https://github.com/bpmn-io/properties-panel/pull/537))
 * `FIX`: do not show vertical resizer for auto resizing `Text` fields ([#537](https://github.com/bpmn-io/properties-panel/pull/537))
