@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { useReducer, useCallback } from 'preact/hooks';
+import { useReducer, useCallback, useState } from 'preact/hooks';
 
 import TestContainer from 'mocha-test-container-support';
 
@@ -97,11 +97,29 @@ const eventBus = new EventBus();
 const layoutConfig = {};
 const noop = () => {};
 
+/**
+ * Collect the ids of all entries across groups (including nested list items).
+ */
+function collectEntryIds(groups) {
+  const ids = [];
+
+  groups.forEach(group => {
+    (group.entries || []).forEach(entry => ids.push(entry.id));
+    (group.items || []).forEach(item => {
+      (item.entries || []).forEach(entry => ids.push(entry.id));
+    });
+  });
+
+  return ids;
+}
+
 new Popup(eventBus, {});
 new PopupRenderer(eventBus);
 
 function ExampleApp() {
   const [ , forceUpdate ] = useReducer(x => x + 1, 0);
+
+  const [ showErrors, setShowErrors ] = useState(false);
 
   const updateElement = useCallback((key, value) => {
     element[key] = value;
@@ -275,8 +293,28 @@ function ExampleApp() {
     }
   ];
 
+  const toggleErrors = event => {
+    const active = event.target.checked;
+
+    setShowErrors(active);
+
+    const errors = active ? collectEntryIds(groups).reduce((acc, id) => {
+      acc[id] = 'This field is invalid.';
+
+      return acc;
+    }, {}) : {};
+
+    eventBus.fire('propertiesPanel.setErrors', { errors });
+  };
+
   return (
     <div class="bio-properties-panel" style="display: flex; flex-direction: column; height: 100%;">
+      <div style="padding: 6px 8px; border-bottom: 1px solid #ccc;">
+        <label style="font-size: 12px; display: flex; align-items: center; gap: 6px;">
+          <input type="checkbox" checked={ showErrors } onChange={ toggleErrors } />
+          Show errors on all controls
+        </label>
+      </div>
       <div style="border: 2px dashed #888; margin: 4px;">
         <div style="font-size: 11px; color: #555; padding: 4px 8px; background: #f5f5f5;">
           standalone &lt;Header&gt;
