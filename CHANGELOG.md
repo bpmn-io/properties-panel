@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.49.1
+
+* `FIX`: resolve sticky observer scroll container relative to observed element ([#539](https://github.com/bpmn-io/properties-panel/pull/539))
+* `FIX`: correct sticky headers not working when multiple properties panels are mounted ([#539](https://github.com/bpmn-io/properties-panel/pull/539))
+
 ## 3.49.0
 
 * `FEAT`: add themable focus ring to inputs/controls ([#535](https://github.com/bpmn-io/properties-panel/pull/535))
