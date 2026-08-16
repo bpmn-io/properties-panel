@@ -35,7 +35,8 @@ function getScrollContainer(ref, scrollContainerSelector) {
  */
 export function useStickyIntersectionObserver(ref, scrollContainerSelector, setSticky) {
 
-  const [ scrollContainer, setScrollContainer ] = useState(getScrollContainer(ref, scrollContainerSelector));
+  // resolved from the observed element after mount (see effect below)
+  const [ scrollContainer, setScrollContainer ] = useState(null);
 
   const updateScrollContainer = useCallback(() => {
     const newScrollContainer = getScrollContainer(ref, scrollContainerSelector);
@@ -60,8 +61,9 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       return;
     }
 
-    // TODO(@barmac): test this
-    if (!ref.current || !scrollContainer) {
+    const element = ref.current;
+
+    if (!element || !scrollContainer) {
       return;
     }
 
@@ -86,12 +88,12 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
       rootMargin: '0px 0px 999999% 0px', // Use bottom margin to avoid stickyness when scrolling out to bottom
       threshold: [ 1 ]
     });
-    observer.observe(ref.current);
+    observer.observe(element);
 
     // Unobserve if unmounted
     return () => {
-      observer.unobserve(ref.current);
+      observer.unobserve(element);
     };
 
-  }, [ ref.current, scrollContainer, setSticky ]);
+  }, [ ref, scrollContainer, setSticky ]);
 }
