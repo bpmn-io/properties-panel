@@ -5,7 +5,7 @@ import {
 } from 'preact/hooks';
 
 import {
-  query as domQuery
+  closest as domClosest
 } from 'min-dom';
 
 import { useEvent } from './useEvent';
@@ -17,10 +17,17 @@ import { useEvent } from './useEvent';
  */
 
 /**
+ * Resolve scroll container closest to the referenced element.
+ */
+function getScrollContainer(ref, scrollContainerSelector) {
+  return ref.current ? domClosest(ref.current, scrollContainerSelector, true) : null;
+}
+
+/**
  * Use IntersectionObserver to identify when DOM element is in sticky mode.
+ *
  * If sticky is observered setSticky(true) will be called.
  * If sticky mode is left, setSticky(false) will be called.
- *
  *
  * @param {Object} ref
  * @param {string} scrollContainerSelector
@@ -28,15 +35,15 @@ import { useEvent } from './useEvent';
  */
 export function useStickyIntersectionObserver(ref, scrollContainerSelector, setSticky) {
 
-  const [ scrollContainer, setScrollContainer ] = useState(domQuery(scrollContainerSelector));
+  const [ scrollContainer, setScrollContainer ] = useState(getScrollContainer(ref, scrollContainerSelector));
 
   const updateScrollContainer = useCallback(() => {
-    const newScrollContainer = domQuery(scrollContainerSelector);
+    const newScrollContainer = getScrollContainer(ref, scrollContainerSelector);
 
     if (newScrollContainer !== scrollContainer) {
       setScrollContainer(newScrollContainer);
     }
-  }, [ scrollContainerSelector, scrollContainer ]);
+  }, [ ref, scrollContainerSelector, scrollContainer ]);
 
   useEffect(() => {
     updateScrollContainer();
