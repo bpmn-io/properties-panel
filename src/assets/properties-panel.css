@@ -520,12 +520,6 @@ textarea.bio-properties-panel-input {
   border: 1px solid var(--input-focus-border-color);
 }
 
-.bio-properties-panel-textfield:focus-within,
-.bio-properties-panel-feel-entry:focus-within {
-  --input-background-color: var(--input-focus-background-color);
-  --input-border-color: var(--input-focus-border-color);
-}
-
 .bio-properties-panel-input:disabled {
   border-color: var(--input-disabled-border-color);
   background-color: var(--input-disabled-background-color);
@@ -1131,6 +1125,22 @@ textarea.bio-properties-panel-input {
   width: 2em;
   text-align: center;
   padding: 2px 6px;
+}
+
+/**
+ * `:has()` so the indicator tracks real editor focus only — a plain
+ * `:focus-within` would also match the sibling pop-out button. Degrades to a
+ * neutral border where `:has()` is unsupported.
+ */
+.bio-properties-panel-feel-container:has(.bio-properties-panel-input:focus-within)
+  .bio-properties-panel-feel-indicator {
+  border-color: var(--input-focus-border-color);
+}
+
+.bio-properties-panel-entry.has-error
+  .bio-properties-panel-feel-container:has(.bio-properties-panel-input:focus-within)
+  .bio-properties-panel-feel-indicator {
+  border-color: var(--input-error-focus-border-color);
 }
 
 .bio-properties-panel-feel-editor-container .cm-scroller {
