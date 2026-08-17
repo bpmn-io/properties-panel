@@ -177,6 +177,63 @@ describe('<TextPopup>', function() {
   });
 
 
+  describe('sizing', function() {
+
+    // The popup is rendered through a portal outside of `.bio-properties-panel`,
+    // so it must not rely on the global `.bio-properties-panel *` box-sizing
+    // reset. Otherwise `height: 100%` + padding overflows and forces a
+    // permanent vertical scrollbar.
+    it('should apply border-box sizing to the textarea', function() {
+
+      // when
+      render(
+        <TextPopup
+          entryId="foo"
+          title="Test Title"
+          value="bar"
+          onInput={ () => {} }
+          onClose={ () => {} }
+          sourceElement={ sourceElement }
+        />, { container }
+      );
+
+      // then
+      const textarea = container.querySelector('textarea.bio-properties-panel-input');
+
+      expect(textarea).to.exist;
+      expect(window.getComputedStyle(textarea).boxSizing).to.equal('border-box');
+    });
+
+
+    it('should not exceed its container height', function() {
+
+      // when
+      render(
+        <TextPopup
+          entryId="foo"
+          title="Test Title"
+          value="bar"
+          onInput={ () => {} }
+          onClose={ () => {} }
+          sourceElement={ sourceElement }
+        />, { container }
+      );
+
+      // then
+      const textarea = container.querySelector('textarea.bio-properties-panel-input');
+
+      expect(textarea).to.exist;
+
+      const body = textarea.closest('.bio-properties-panel-popup__body');
+
+      // with content-box sizing the `height: 100%` + padding would make the
+      // textarea overflow its body by the padding amount, forcing a scrollbar
+      expect(textarea.offsetHeight).to.be.at.most(body.clientHeight);
+    });
+
+  });
+
+
   describe('a11y', function() {
 
     it('should have no violations', async function() {

@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: only show text popup scrollbar when content overflows
+
 ## 3.49.1
 
 * `FIX`: resolve sticky observer scroll container relative to observed element ([#539](https://github.com/bpmn-io/properties-panel/pull/539))
