@@ -27,7 +27,8 @@ import EventBus from 'diagram-js/lib/core/EventBus';
 import {
   changeInput,
   expectNoViolations,
-  insertCoreStyles
+  insertCoreStyles,
+  insertCSS
 } from 'test/TestHelper';
 
 import {
@@ -1168,11 +1169,16 @@ describe('<TextArea>', function() {
     it('should NOT resize on single line input when initially was display: none', function() {
 
       // given
-      const parent = domify('<div style="display: none;"></div>');
+      const parent = domify('<div class="test-textarea-boxsizing-scope" style="display: none;"></div>');
       container.appendChild(parent);
 
-      const style = domify('<style>.bio-properties-panel-input { box-sizing: border-box; }</style>');
-      parent.appendChild(style);
+      // scope the box-sizing override to this test's subtree so it does not
+      // leak `border-box` onto `.bio-properties-panel-input` elements in other
+      // specs (which share the same document)
+      insertCSS(
+        'test-textarea-boxsizing.css',
+        '.test-textarea-boxsizing-scope .bio-properties-panel-input { box-sizing: border-box; }'
+      );
 
       const result = createTextArea({
         container: parent,
