@@ -6,7 +6,7 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FIX`: only show text popup scrollbar when content overflows
+* `FIX`: only show text popup scrollbar when content overflows ([#542](https://github.com/bpmn-io/properties-panel/issues/542))
 
 ## 3.49.1
 
