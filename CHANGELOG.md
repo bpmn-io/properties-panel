@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: use CSS for textarea auto-resize ([#540](https://github.com/bpmn-io/properties-panel/pull/540))
+
 ## 3.49.2
 
 * `FIX`: only show text popup scrollbar when content overflows ([#542](https://github.com/bpmn-io/properties-panel/issues/542))

@@ -676,9 +676,10 @@ textarea.bio-properties-panel-input {
   resize: vertical;
 }
 
-/* auto-resizing textareas grow with their content, so manual resizing is pointless */
 textarea.bio-properties-panel-input.auto-resize {
+  /* auto-resizing textareas grow with their content, so manual resizing is pointless */
   resize: none;
+  field-sizing: content;
 }
 
 .bio-properties-panel-entry.has-error .bio-properties-panel-input,
