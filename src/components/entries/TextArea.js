@@ -4,7 +4,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState
 } from 'preact/hooks';
@@ -13,7 +12,6 @@ import classnames from 'classnames';
 
 import {
   useDebounce,
-  useElementVisible,
   useError,
   useShowEntryEvent,
   useStaticCallback
@@ -27,14 +25,6 @@ import { isCmdWithChar } from '../util/keyboardUtils';
 import translateFallback from '../util/translateFallback';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
-
-function resizeToContents(element) {
-  element.style.height = 'auto';
-
-  // a 2px pixel offset is required to prevent scrollbar from
-  // appearing on OS with a full length scroll bar (Windows/Linux)
-  element.style.height = `${ element.scrollHeight + 2 }px`;
-}
 
 function TextArea(props) {
 
@@ -75,8 +65,6 @@ function TextArea(props) {
     const newModelValue = newValue === '' ? undefined : newValue;
     commitValue(newModelValue);
   }, [ commitValue ]);
-
-  const visible = useElementVisible(ref.current);
 
   /**
    * @type { import('min-dash').DebouncedFunction }
@@ -171,15 +159,6 @@ function TextArea(props) {
       eventBus && eventBus.fire('propertiesPanel.closePopup');
     };
   }, []);
-
-  // auto-resize on any value change (typing, popup edits, external updates)
-  useLayoutEffect(() => {
-    autoResize && resizeToContents(ref.current);
-  }, [ localValue ]);
-
-  useLayoutEffect(() => {
-    visible && autoResize && resizeToContents(ref.current);
-  }, [ visible ]);
 
   useEffect(() => {
     if (value === localValue) {
