@@ -163,7 +163,7 @@
   --text-size-small: 13px;
   --text-size-smallest: 12px;
   --text-line-height: 21px;
-  --line-height-condensed: 17px;
+  --line-height-condensed: 18px;
 
   --input-height: 28px;
 
@@ -758,6 +758,7 @@ textarea.bio-properties-panel-input.auto-resize {
 .bio-properties-panel-error {
   margin: var(--description-offset) 0;
   font-size: var(--text-size-small);
+  line-height: var(--line-height-condensed);
 }
 
 .bio-properties-panel-warning {
