@@ -6,7 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.50.0
+
 * `FEAT`: use CSS for textarea auto-resize ([#540](https://github.com/bpmn-io/properties-panel/pull/540))
+* `FIX`: react to `engines` change of FEEL editor ([#543](https://github.com/bpmn-io/properties-panel/issues/543))
 
 ## 3.49.2
 
