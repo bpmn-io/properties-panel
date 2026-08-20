@@ -30,6 +30,12 @@
   --color-red-360-100-92: hsl(360, 100%, 92%);
   --color-red-360-100-97: hsl(360, 100%, 97%);
   --color-red-360-100-45-a35: hsla(360, 100%, 45%, 0.35);
+
+  --color-amber-39-100-33: hsl(39, 100%, 33%);
+  --color-amber-35-84-62: hsl(35, 84%, 62%);
+  --color-amber-38-100-96: hsl(38, 100%, 96%);
+  --color-amber-35-84-62-a35: hsla(35, 84%, 62%, 0.35);
+
   --color-white: white;
   --color-black: black;
   --color-transparent: transparent;
@@ -39,6 +45,7 @@
 .bio-properties-panel {
   --text-base-color: var(--color-grey-225-10-15);
   --text-error-color: var(--color-red-360-100-45);
+  --text-warning-color: var(--color-amber-39-100-33);
   --link-color: var(--color-blue-205-100-50);
 
   --description-color: var(--color-grey-225-10-35);
@@ -74,6 +81,7 @@
 
   --dot-color: var(--color-grey-225-10-35);
   --dot-color-error: var(--color-red-360-100-45);
+  --dot-color-warning: var(--color-amber-35-84-62);
 
   --list-badge-color: var(--color-white);
   --list-badge-background-color: var(--color-grey-225-10-35);
@@ -100,6 +108,7 @@
    */
   --focus-ring-color: var(--color-blue-205-100-50-a35);
   --focus-ring-error-color: var(--color-red-360-100-45-a35);
+  --focus-ring-warning-color: var(--color-amber-35-84-62-a35);
   --focus-ring-width: 2px;
   --focus-ring-offset: 0px;
   --focus-ring-offset-color: var(--group-background-color);
@@ -107,6 +116,10 @@
   --input-error-background-color: var(--color-red-360-100-97);
   --input-error-border-color: var(--color-red-360-100-45);
   --input-error-focus-border-color: var(--color-red-360-100-45);
+
+  --input-warning-background-color: var(--color-amber-38-100-96);
+  --input-warning-border-color: var(--color-amber-35-84-62);
+  --input-warning-focus-border-color: var(--color-amber-35-84-62);
 
   --input-disabled-color: var(--color-grey-225-10-55);
   --input-disabled-background-color: var(--color-grey-225-10-97);
@@ -399,6 +412,10 @@
   background-color: var(--dot-color);
 }
 
+.bio-properties-panel-dot--warning {
+  --dot-color: var(--dot-color-warning);
+}
+
 .bio-properties-panel-dot--error {
   --dot-color: var(--dot-color-error);
 }
@@ -428,6 +445,10 @@
   padding: 0 5px;
   margin: 5px;
   background-color: var(--list-badge-background-color);
+}
+
+.bio-properties-panel-list-badge--warning {
+  --list-badge-background-color: var(--dot-color-warning);
 }
 
 .bio-properties-panel-list-badge--error {
@@ -682,6 +703,30 @@ textarea.bio-properties-panel-input.auto-resize {
   field-sizing: content;
 }
 
+.bio-properties-panel-entry.has-warning .bio-properties-panel-input,
+.bio-properties-panel-entry.has-warning .bio-properties-panel-feel-editor__open-popup-placeholder {
+  border-color: var(--input-warning-border-color);
+  background-color: var(--input-warning-background-color);
+}
+
+.bio-properties-panel-entry.has-warning .bio-properties-panel-feel-indicator {
+  border-color: var(--input-warning-border-color);
+}
+
+.bio-properties-panel-entry.has-warning .bio-properties-panel-input:focus,
+.bio-properties-panel-entry.has-warning .bio-properties-panel-input:focus-within,
+.bio-properties-panel-entry.has-warning .bio-properties-panel-feel-indicator:focus {
+  border-color: var(--input-warning-focus-border-color);
+}
+
+.bio-properties-panel-entry.has-warning .bio-properties-panel-input:focus,
+.bio-properties-panel-entry.has-warning .bio-properties-panel-input:focus-within,
+.bio-properties-panel-entry.has-warning .bio-properties-panel-toggle-switch__switcher:focus-within,
+.bio-properties-panel-entry.has-warning .bio-properties-panel-focus-ring:focus,
+.bio-properties-panel-entry.has-warning .bio-properties-panel-focus-ring:focus-within {
+  --focus-ring-color: var(--focus-ring-warning-color);
+}
+
 .bio-properties-panel-entry.has-error .bio-properties-panel-input,
 .bio-properties-panel-entry.has-error .bio-properties-panel-feel-editor__open-popup-placeholder {
   border-color: var(--input-error-border-color);
@@ -704,6 +749,12 @@ textarea.bio-properties-panel-input.auto-resize {
 .bio-properties-panel-entry.has-error .bio-properties-panel-focus-ring:focus,
 .bio-properties-panel-entry.has-error .bio-properties-panel-focus-ring:focus-within {
   --focus-ring-color: var(--focus-ring-error-color);
+}
+
+.bio-properties-panel-entry .bio-properties-panel-warning {
+  color: var(--text-warning-color);
+  margin: 4px 0;
+  font-size: var(--text-size-small);
 }
 
 .bio-properties-panel-entry .bio-properties-panel-error {
@@ -1257,6 +1308,12 @@ textarea.bio-properties-panel-input.auto-resize {
 .bio-properties-panel-feel-container:has(.bio-properties-panel-input:focus-within)
   .bio-properties-panel-feel-indicator {
   border-color: var(--input-focus-border-color);
+}
+
+.bio-properties-panel-entry.has-warning
+  .bio-properties-panel-feel-container:has(.bio-properties-panel-input:focus-within)
+  .bio-properties-panel-feel-indicator {
+  border-color: var(--input-warning-focus-border-color);
 }
 
 .bio-properties-panel-entry.has-error
