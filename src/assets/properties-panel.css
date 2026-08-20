@@ -167,6 +167,8 @@
 
   --input-height: 28px;
 
+  --description-offset: 4px;
+
   --font-family: sans-serif;
   --font-family-monospace: monospace;
 
@@ -478,7 +480,7 @@
 .bio-properties-panel-description div {
   color: var(--description-color);
   display: block;
-  margin: 2px 0 4px;
+  margin: var(--description-offset) 0;
   line-height: var(--line-height-condensed);
   font-weight: 400;
   font-size: var(--text-size-small);
@@ -753,13 +755,13 @@ textarea.bio-properties-panel-input.auto-resize {
 
 .bio-properties-panel-entry .bio-properties-panel-warning {
   color: var(--text-warning-color);
-  margin: 4px 0;
+  margin: var(--description-offset) 0;
   font-size: var(--text-size-small);
 }
 
 .bio-properties-panel-entry .bio-properties-panel-error {
   color: var(--text-error-color);
-  margin: 4px 0;
+  margin: var(--description-offset) 0;
   font-size: var(--text-size-small);
 }
 
