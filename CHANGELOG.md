@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.51.0
+
 * `FEAT`: add semantic warning tokens and `.has-warning` entry modifier ([#544](https://github.com/bpmn-io/properties-panel/pull/544))
 
 ## 3.50.0
