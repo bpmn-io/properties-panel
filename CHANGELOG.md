@@ -6,6 +6,7 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: correct checkbox alignment ([#545](https://github.com/bpmn-io/properties-panel/pull/545))
 * `FIX`: unify line height across `warning`, `error` and `description` attachments ([#545](https://github.com/bpmn-io/properties-panel/pull/545))
 * `FIX`: increase description and label offset to accommodate for focus ring ([#545](https://github.com/bpmn-io/properties-panel/pull/545))
 

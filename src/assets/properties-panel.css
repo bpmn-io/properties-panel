@@ -684,7 +684,6 @@ select.bio-properties-panel-input {
   display: inline-block;
   font-size: var(--text-size-base);
   margin-left: 6px;
-  margin-top: auto;
   vertical-align: middle;
 }
 
