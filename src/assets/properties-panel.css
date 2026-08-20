@@ -167,7 +167,8 @@
 
   --input-height: 28px;
 
-  --description-offset: 4px;
+  --description-offset: 5px;
+  --label-offset: 3px;
 
   --font-family: sans-serif;
   --font-family-monospace: monospace;
@@ -461,7 +462,7 @@
  * Basic entries
  */
 .bio-properties-panel-entry {
-  margin: 2px 32px 6px 12px;
+  margin: 3px 32px 6px 12px;
 }
 
 .bio-properties-panel-entry:last-child {
@@ -471,7 +472,7 @@
 .bio-properties-panel-label {
   display: block;
   font-size: var(--text-size-small);
-  margin: 2px 0 1px;
+  margin: var(--label-offset) 0;
 }
 
 .bio-properties-panel-description,
@@ -753,16 +754,18 @@ textarea.bio-properties-panel-input.auto-resize {
   --focus-ring-color: var(--focus-ring-error-color);
 }
 
-.bio-properties-panel-entry .bio-properties-panel-warning {
-  color: var(--text-warning-color);
+.bio-properties-panel-warning,
+.bio-properties-panel-error {
   margin: var(--description-offset) 0;
   font-size: var(--text-size-small);
 }
 
-.bio-properties-panel-entry .bio-properties-panel-error {
+.bio-properties-panel-warning {
+  color: var(--text-warning-color);
+}
+
+.bio-properties-panel-error {
   color: var(--text-error-color);
-  margin: var(--description-offset) 0;
-  font-size: var(--text-size-small);
 }
 
 .bio-properties-panel-simple {
