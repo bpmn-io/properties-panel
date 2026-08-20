@@ -20,15 +20,21 @@ import { useEffect, useRef } from 'preact/hooks';
 import { fireEvent, waitFor } from '@testing-library/preact';
 
 import FeelComponent from 'src/components/entries/FEEL/FeelEditor';
+import FeelEditor from '@bpmn-io/feel-editor';
 
 insertCoreStyles();
 
 describe('<FeelEditor>', function() {
 
   let container;
+  let setEnginesSpy;
 
   beforeEach(function() {
     container = TestContainer.get(this);
+  });
+
+  afterEach(function() {
+    setEnginesSpy?.restore();
   });
 
   it('should supply variables to editor', async function() {
@@ -192,6 +198,25 @@ describe('<FeelEditor>', function() {
     const editor = domQuery('[role="textbox"]', container);
 
     expect(editor.textContent).to.eql('bar');
+  });
+
+
+  it('should update engines when changed', function() {
+
+    // given
+    const engines = {
+      camunda: '8.8'
+    };
+
+    setEnginesSpy = sinonSpy(FeelEditor.prototype, 'setEngines');
+
+    const component = render(<Wrapper />, { container });
+
+    // when
+    component.rerender(<Wrapper feelLanguageContext={ { engines } } />);
+
+    // then
+    expect(setEnginesSpy).to.have.been.calledWith(engines);
   });
 
 

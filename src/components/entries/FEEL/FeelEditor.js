@@ -176,6 +176,14 @@ const FeelEditor = forwardRef((props, ref) => {
     editor.setPlaceholder(placeholder);
   }, [ placeholder ]);
 
+  useEffect(() => {
+    if (!editor) {
+      return;
+    }
+
+    editor.setEngines(engines);
+  }, [ engines ]);
+
   const handleClick = () => {
     ref.current.focus();
   };
