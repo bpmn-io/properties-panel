@@ -8,7 +8,8 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 3.51.2
 
-* `FIX`: force linting after engines change ([#114](https://github.com/bpmn-io/feel-editor/pull/114))
+* `FIX`: force linting after engines change ([bpmn-io/feel-editor#114](https://github.com/bpmn-io/feel-editor/pull/114))
+* `DEPS`: update to `@bpmn-io/feel-editor@2.7.1`
 
 ## 3.51.1
 
