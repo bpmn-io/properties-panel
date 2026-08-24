@@ -2,6 +2,8 @@ import { expect } from 'chai';
 
 import TestContainer from 'mocha-test-container-support';
 
+import axe from 'axe-core';
+
 import { insertCoreStyles } from 'test/TestHelper';
 
 insertCoreStyles();
@@ -76,9 +78,11 @@ describe('styling (CSS)', function() {
 
 
   // enforce WCAG AA text contrast so a regression (e.g. white-on-amber) fails CI
-  it('list badges meet WCAG AA text contrast', function() {
+  it('list badges meet WCAG AA text contrast', async function() {
 
     // given
+    this.timeout(5000);
+
     container.innerHTML = `
       <span class="bio-properties-panel-list-badge" data-variant="neutral">3</span>
       <span class="bio-properties-panel-list-badge bio-properties-panel-list-badge--warning" data-variant="warning">3</span>
@@ -88,56 +92,16 @@ describe('styling (CSS)', function() {
       <span data-variant="error-hover" style="background: var(--error-badge-hover-background-color); color: var(--error-badge-color)">3</span>
     `;
 
-    // then
-    [
-      'neutral',
-      'warning',
-      'error',
-      'warning-hover',
-      'error-hover'
-    ].forEach(function(variant) {
-      const badge = container.querySelector(`[data-variant="${variant}"]`);
-      const style = getComputedStyle(badge);
-
-      const ratio = contrastRatio(style.color, style.backgroundColor);
-
-      expect(ratio, `${variant} list-badge contrast`).to.be.at.least(4.5);
+    // when
+    const results = await axe.run(container, {
+      runOnly: {
+        type: 'rule',
+        values: [ 'color-contrast' ]
+      }
     });
+
+    // then
+    expect(results.violations).to.be.empty;
   });
 
 });
-
-
-// helpers /////////////////////////////
-
-function parseRgb(value) {
-  const match = value.match(/rgba?\(([^)]+)\)/);
-
-  if (!match) {
-    throw new Error('unexpected color value: ' + value);
-  }
-
-  return match[1].split(',').slice(0, 3).map(function(part) {
-    return parseFloat(part.trim());
-  });
-}
-
-function relativeLuminance(rgb) {
-  const [ r, g, b ] = rgb.map(function(channel) {
-    const c = channel / 255;
-
-    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  });
-
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-function contrastRatio(foreground, background) {
-  const l1 = relativeLuminance(parseRgb(foreground));
-  const l2 = relativeLuminance(parseRgb(background));
-
-  const lighter = Math.max(l1, l2);
-  const darker = Math.min(l1, l2);
-
-  return (lighter + 0.05) / (darker + 0.05);
-}
