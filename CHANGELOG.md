@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: add `--warning-badge-*` and `--error-badge-*` theming tokens ([#547](https://github.com/bpmn-io/properties-panel/pull/547))
+
 ## 3.51.2
 
 * `FIX`: force linting after engines change ([bpmn-io/feel-editor#114](https://github.com/bpmn-io/feel-editor/pull/114))

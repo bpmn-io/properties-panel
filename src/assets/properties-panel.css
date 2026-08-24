@@ -33,6 +33,7 @@
 
   --color-amber-39-100-33: hsl(39, 100%, 33%);
   --color-amber-35-84-62: hsl(35, 84%, 62%);
+  --color-amber-35-84-57: hsl(35, 84%, 57%);
   --color-amber-38-100-96: hsl(38, 100%, 96%);
   --color-amber-35-84-62-a35: hsla(35, 84%, 62%, 0.35);
 
@@ -79,9 +80,16 @@
   --arrow-fill-color: var(--color-grey-225-10-35);
   --arrow-hover-background-color: var(--color-grey-225-10-95);
 
+  --warning-badge-background-color: var(--color-amber-35-84-62);
+  --warning-badge-color: var(--color-grey-225-10-15);
+  --warning-badge-hover-background-color: var(--color-amber-35-84-57);
+  --error-badge-background-color: var(--color-red-360-100-45);
+  --error-badge-color: var(--color-white);
+  --error-badge-hover-background-color: var(--color-red-360-100-40);
+
   --dot-color: var(--color-grey-225-10-35);
-  --dot-color-error: var(--color-red-360-100-45);
-  --dot-color-warning: var(--color-amber-35-84-62);
+  --dot-color-error: var(--error-badge-background-color);
+  --dot-color-warning: var(--warning-badge-background-color);
 
   --list-badge-color: var(--color-white);
   --list-badge-background-color: var(--color-grey-225-10-35);
@@ -451,11 +459,11 @@
 }
 
 .bio-properties-panel-list-badge--warning {
-  --list-badge-background-color: var(--dot-color-warning);
+  --list-badge-background-color: var(--warning-badge-background-color);
 }
 
 .bio-properties-panel-list-badge--error {
-  --list-badge-background-color: var(--dot-color-error);
+  --list-badge-background-color: var(--error-badge-background-color);
 }
 
 /**
