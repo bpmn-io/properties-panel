@@ -460,10 +460,12 @@
 
 .bio-properties-panel-list-badge--warning {
   --list-badge-background-color: var(--warning-badge-background-color);
+  --list-badge-color: var(--warning-badge-color);
 }
 
 .bio-properties-panel-list-badge--error {
   --list-badge-background-color: var(--error-badge-background-color);
+  --list-badge-color: var(--error-badge-color);
 }
 
 /**

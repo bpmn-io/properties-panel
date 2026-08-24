@@ -7,6 +7,7 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 ___Note:__ Yet to be released changes appear here._
 
 * `FEAT`: add `--warning-badge-*` and `--error-badge-*` theming tokens ([#547](https://github.com/bpmn-io/properties-panel/pull/547))
+* `FIX`: use accessible foreground color for warning list badge ([#547](https://github.com/bpmn-io/properties-panel/pull/547))
 
 ## 3.51.2
 
