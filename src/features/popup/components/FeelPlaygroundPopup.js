@@ -26,10 +26,16 @@ export function FeelPlaygroundPopup(props) {
   } = props;
 
   const [ localContext, setLocalContext ] = useState(context);
+  const [ localValue, setLocalValue ] = useState(value);
 
   const handleContextChange = (newContext) => {
     setLocalContext(newContext);
     onContextChange?.(newContext);
+  };
+
+  const handleExpressionChange = (newValue) => {
+    setLocalValue(newValue);
+    onInput?.(newValue);
   };
 
   return (
@@ -55,10 +61,10 @@ export function FeelPlaygroundPopup(props) {
           context={ localContext }
           dialect={ dialect }
           evaluationUnavailable={ evaluationUnavailable }
-          expression={ value }
+          expression={ localValue }
           onContextChange={ handleContextChange }
           onEvaluate={ onEvaluate }
-          onExpressionChange={ onInput }
+          onExpressionChange={ handleExpressionChange }
           variables={ variables }
           { ...feelLanguageContext }
         />
