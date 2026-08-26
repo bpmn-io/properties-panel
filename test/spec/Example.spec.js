@@ -161,7 +161,11 @@ function collectEntryIds(groups) {
   return ids;
 }
 
-new Popup(eventBus, {});
+new Popup(eventBus, {
+  feelPlayground: {
+    onEvaluate: evaluateExample
+  }
+});
 new PopupRenderer(eventBus);
 
 function ExampleApp() {
@@ -227,7 +231,6 @@ function ExampleApp() {
           popupType: 'feel-playground',
           context: element.playgroundContext,
           onContextChange: value => updateElement('playgroundContext', value),
-          onEvaluate: evaluateExample,
           updateElement,
           element
         },
@@ -487,7 +490,6 @@ function FeelEntryComponent(props) {
     popupType,
     context,
     onContextChange,
-    onEvaluate,
     updateElement
   } = props;
 
@@ -500,7 +502,6 @@ function FeelEntryComponent(props) {
     popupType,
     context,
     onContextChange,
-    onEvaluate,
     debounce: fn => fn,
     getValue: () => element[id] ?? '',
     setValue: (val) => updateElement(id, val),

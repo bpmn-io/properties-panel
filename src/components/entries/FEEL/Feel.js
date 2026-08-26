@@ -60,8 +60,6 @@ const noop = () => {};
  * @param {String} [props.popupType]
  * @param {String} [props.context]
  * @param {Function} [props.onContextChange]
- * @param {Function} [props.onEvaluate]
- * @param {String} [props.evaluationUnavailable]
  * @param {Function} props.tooltipContainer
  * @param {Function | import('preact').Component} props.OptionalComponent
  * @param {Boolean} props.disabled
@@ -89,8 +87,6 @@ function FeelTextfield(props) {
     popupType,
     context,
     onContextChange,
-    onEvaluate,
-    evaluationUnavailable,
     tooltipContainer,
     OptionalComponent = OptionalFeelInput,
     tooltip,
@@ -227,8 +223,6 @@ function FeelTextfield(props) {
       onInput: handleInputChange,
       context,
       onContextChange,
-      onEvaluate,
-      evaluationUnavailable,
       singleLine,
       sourceElement: editorRef.current,
       tooltipContainer,

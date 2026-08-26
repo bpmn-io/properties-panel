@@ -20,6 +20,7 @@ import {
   inject
 } from 'test/TestHelper';
 
+const HOST_ON_EVALUATE = () => {};
 
 describe('Popup', function() {
 
@@ -32,6 +33,9 @@ describe('Popup', function() {
       modules: [ FeelPopupModule ],
       propertiesPanel: {
         feelPopupContainer: container,
+        feelPlayground: {
+          onEvaluate: HOST_ON_EVALUATE
+        },
         getFeelPopupLinks: (type) => {
           if (type === 'feel') {
             return [
@@ -74,6 +78,7 @@ describe('Popup', function() {
           { href: 'https://foo.com', title: 'Foo' },
           { href: 'https://bar.com', title: 'Bar' }
         ],
+        onEvaluate: HOST_ON_EVALUATE,
         type: 'feel',
       }
     }));
