@@ -12,6 +12,7 @@ import MochaTestContainer from 'mocha-test-container-support';
 import { query as domQuery } from 'min-dom';
 
 import FeelPopupModule from '../../../../src/features/popup';
+import { FeelPlaygroundPopup } from '../../../../src/features/popup/components';
 
 import {
   bootstrapDiagram,
@@ -67,6 +68,7 @@ describe('Popup', function() {
     expect(spy).to.have.been.calledWith(sinonMatch({
       container: container,
       config: {
+        component: FeelPlaygroundPopup,
         entryId: 'foo',
         links: [
           { href: 'https://foo.com', title: 'Foo' },

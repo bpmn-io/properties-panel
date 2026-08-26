@@ -3425,6 +3425,30 @@ describe('<FeelEntry>', function() {
       });
 
 
+      it('should open configured popup type', async function() {
+
+        // given
+        const eventBus = new EventBus();
+        const openPopupSpy = sinonSpy();
+        eventBus.on('propertiesPanel.openPopup', openPopupSpy);
+
+        const result = createFeelField({
+          container,
+          eventBus,
+          feel: 'required',
+          id: 'testField',
+          popupType: 'feel-playground'
+        });
+
+        // when
+        const openPopupButton = domQuery('.bio-properties-panel-open-feel-popup', result.container);
+        await act(() => clickInput(openPopupButton));
+
+        // then
+        expect(openPopupSpy.firstCall.args[0].type).to.equal('feel-playground');
+      });
+
+
       it('should fire <propertiesPanel.closePopup> event on component unmount', async function() {
 
         // given

@@ -8,6 +8,8 @@ import {
   insertCSS
 } from 'test/TestHelper';
 
+import feelPlaygroundStyles from '@bpmn-io/feel-playground/style.css';
+
 import PropertiesPanel from 'src/PropertiesPanel';
 
 import Header from 'src/components/Header';
@@ -42,6 +44,7 @@ import { Popup } from 'src/features/popup/Popup';
 import { PopupRenderer } from 'src/features/popup/PopupRenderer';
 
 insertCoreStyles();
+insertCSS('feel-playground.css', feelPlaygroundStyles);
 
 insertCSS('example.css', `
   body:has(.bio-properties-panel-example) {
@@ -126,7 +129,8 @@ const element = {
   exampleData: '{\n  "orderId": "12345",\n  "customer": {\n    "name": "Jane Doe",\n    "email": "jane@example.com"\n  },\n  "items": [\n    { "id": 1, "price": 29.99 },\n    { "id": 2, "price": 49.99 }\n  ]\n}',
   retryCount: 3,
   async: false,
-  expression: '=fromAi(myVariable)',
+  expression: '=myVariable',
+  playgroundContext: '{\n  "myVariable": 42\n}',
   conditionExpression: '',
   inputParameters: [
     { id: 'input-1', name: 'customerId', value: '=customer.id' },
@@ -220,6 +224,10 @@ function ExampleApp() {
           label: 'Expression',
           description: 'A FEEL expression to evaluate. `fromAi` requires Camunda 8.8+.',
           feel: 'required',
+          popupType: 'feel-playground',
+          context: element.playgroundContext,
+          onContextChange: value => updateElement('playgroundContext', value),
+          onEvaluate: evaluateExample,
           updateElement,
           element
         },
@@ -470,7 +478,18 @@ function ToggleSwitchComponent(props) {
 }
 
 function FeelEntryComponent(props) {
-  const { id, element, label, description, feel, updateElement } = props;
+  const {
+    id,
+    element,
+    label,
+    description,
+    feel,
+    popupType,
+    context,
+    onContextChange,
+    onEvaluate,
+    updateElement
+  } = props;
 
   return FeelEntry({
     id,
@@ -478,6 +497,10 @@ function FeelEntryComponent(props) {
     label,
     description,
     feel,
+    popupType,
+    context,
+    onContextChange,
+    onEvaluate,
     debounce: fn => fn,
     getValue: () => element[id] ?? '',
     setValue: (val) => updateElement(id, val),
@@ -487,6 +510,12 @@ function FeelEntryComponent(props) {
       { name: 'order', info: 'Current order data' }
     ]
   });
+}
+
+async function evaluateExample({ expression, context }) {
+  return {
+    result: expression === 'myVariable' ? context.myVariable : { expression, context }
+  };
 }
 
 function JsonEditorComponent(props) {
