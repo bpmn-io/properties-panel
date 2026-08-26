@@ -42,7 +42,7 @@
   "dependencies": {
     "@bpmn-io/cm-theme": "^0.2.2",
     "@bpmn-io/feel-editor": "^2.7.1",
-    "@bpmn-io/feel-playground": "github:jarekdanielak/feel-playground",
+    "@bpmn-io/feel-playground": "github:jarekdanielak/feel-playground#b1a77b67febdfb27e0eccac3f99bada0227c843c",
     "@bpmn-io/feelers-editor": "^1.1.1",
     "@codemirror/autocomplete": "^6.18.6",
     "@codemirror/commands": "^6.10.3",
