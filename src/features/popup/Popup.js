@@ -1,5 +1,5 @@
 import { getPopupPosition, getPopupTitle } from './components/helpers';
-import { FeelPopup, TextPopup } from './components';
+import { FeelPlaygroundPopup, FeelPopup, TextPopup } from './components';
 
 const DEFAULT_POPUP_TYPE = 'text';
 
@@ -32,7 +32,8 @@ export class Popup {
 
     // built-in providers, registered at LOW_PRIORITY so consumers can
     // override them via #registerProvider using the default priority
-    this.registerProvider('feel', LOW_PRIORITY, FeelPopup);
+    this.registerProvider('feel', LOW_PRIORITY, FeelPlaygroundPopup);
+    this.registerProvider('feel-playground', LOW_PRIORITY, FeelPlaygroundPopup);
     this.registerProvider('feelers', LOW_PRIORITY, FeelPopup);
     this.registerProvider('text', LOW_PRIORITY, TextPopup);
 
@@ -140,6 +141,7 @@ export class Popup {
     this._eventBus.fire('propertiesPanelPopup.open', {
       container: this._config.feelPopupContainer,
       config: {
+        ...this._config.feelPlayground,
         ...context,
         component,
         links: this._config.getFeelPopupLinks?.(type) || [],
