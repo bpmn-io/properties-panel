@@ -11,6 +11,7 @@ import pkg from './package.json';
 import babelConfig from './.babelrc.json';
 
 const require = createRequire(import.meta.url);
+const feelPlaygroundStyles = require.resolve('@bpmn-io/feel-playground/style.css');
 
 // resolve preact through Node module resolution rather than assuming it lives
 // in the local `node_modules/preact`. This ensures the build works when preact
@@ -19,7 +20,14 @@ const require = createRequire(import.meta.url);
 // rollup-plugin-copy's globby can process the path on Windows.
 const preactDir = path.dirname(require.resolve('preact/package.json')).split(path.sep).join('/');
 
-const nonbundledDependencies = Object.keys({ ...pkg.dependencies });
+const nonbundledDependencies = Object.keys({ ...pkg.dependencies })
+  .filter(dependency => dependency !== '@bpmn-io/feel-playground');
+
+const reactCompatPaths = {
+  react: '../preact/compat',
+  'react-dom/client': '../preact/compat',
+  'react/jsx-runtime': '../preact/jsx-runtime'
+};
 
 export default [
   {
@@ -28,16 +36,19 @@ export default [
       {
         sourcemap: true,
         format: 'commonjs',
-        file: pkg.main
+        file: pkg.main,
+        paths: reactCompatPaths
       },
       {
         sourcemap: true,
         format: 'esm',
-        file: pkg.module
+        file: pkg.module,
+        paths: reactCompatPaths
       }
     ],
     external: [
       ...nonbundledDependencies,
+      ...Object.keys(reactCompatPaths),
 
       // exclude local preact copy to share it with extensions
       /\.\/preact/
@@ -49,7 +60,8 @@ export default [
         hook: 'buildStart',
         targets: [
           { src: preactDir, dest: '.' },
-          { src: 'src/assets', dest: 'dist' }
+          { src: 'src/assets', dest: 'dist' },
+          { src: feelPlaygroundStyles, dest: 'dist/assets', rename: 'feel-playground.css' }
         ]
       }),
       rewirePreactSubpackages(),
