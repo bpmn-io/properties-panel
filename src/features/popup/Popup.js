@@ -14,6 +14,7 @@ const LOW_PRIORITY = 500;
  *
  * In order to implement a custom replacement, handle the following events:
  * - `propertiesPanel.openPopup`
+ * - `propertiesPanel.updatePopup`
  * - `propertiesPanel.closePopup`
  * - `propertiesPanel.detach`
  *
@@ -39,6 +40,10 @@ export class Popup {
 
     eventBus.on('propertiesPanel.openPopup', (_, context) => {
       return this.open(context.entryId, context, context.sourceElement);
+    });
+
+    eventBus.on('propertiesPanel.updatePopup', (_, context) => {
+      this.update(context);
     });
 
     eventBus.on([

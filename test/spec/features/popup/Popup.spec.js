@@ -102,6 +102,29 @@ describe('Popup', function() {
   }));
 
 
+  it('should fire <propertiesPanelPopup.update> on <propertiesPanel.updatePopup>', inject(function(eventBus) {
+
+    // given
+    const spy = sinonSpy();
+
+    eventBus.on('propertiesPanelPopup.update', spy);
+    eventBus.fire('propertiesPanel.openPopup', DEFAULT_OPEN_POPUP_EVENT);
+
+    // when
+    eventBus.fire('propertiesPanel.updatePopup', {
+      value: 'updated'
+    });
+
+    // then
+    expect(spy).to.have.been.calledOnce;
+    expect(spy).to.have.been.calledWith(sinonMatch({
+      config: {
+        value: 'updated'
+      }
+    }));
+  }));
+
+
   it('should not fire <propertiesPanelPopup.close> on <propertiesPanel.closePopup>', inject(function(eventBus) {
 
     // given
