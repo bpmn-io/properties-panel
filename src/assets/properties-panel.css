@@ -1555,7 +1555,6 @@ textarea.bio-properties-panel-input.auto-resize {
   --feel-playground-section-background-color: var(--popup-background-color);
   --feel-playground-text-color: var(--text-base-color, var(--popup-font-color));
   --feel-playground-muted-text-color: var(--description-color, var(--color-grey-225-10-35, #525252));
-  --feel-playground-border-color: var(--input-border-color, var(--color-grey-225-10-75, #8d8d8d));
   --feel-playground-focus-color: var(--focus-outline-color, var(--color-blue-205-100-40, #0f62fe));
   --feel-playground-success-color: var(--color-green-150-86-44, #198038);
   --feel-playground-warning-color: var(--text-warning-color, var(--color-amber-39-100-33, #8e6a00));
