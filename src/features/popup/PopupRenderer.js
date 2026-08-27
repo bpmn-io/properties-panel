@@ -19,10 +19,16 @@ export class PopupRenderer {
     eventBus.on('propertiesPanelPopup.close', () => {
       this._removePopup();
     });
+
+    eventBus.on('propertiesPanelPopup.update', (context) => {
+      this._updatePopup(context);
+    });
   }
 
   _renderPopup(context) {
     let { container, config } = context;
+
+    this._config = config;
 
     container = this._container = getContainer(container) || document.body;
 
@@ -36,16 +42,33 @@ export class PopupRenderer {
     // access to the event bus and other services
     this._emit('feelPopup.open');
 
-    const Component = config.component;
-
-    render(
-      <Component { ...config } eventBus={ this._eventBus } />,
-      element
-    );
+    this._renderComponent();
 
     this._emit('feelPopup.opened', {
       domNode: element
     });
+  }
+
+  _updatePopup(context) {
+    if (!this._element) {
+      return;
+    }
+
+    this._config = {
+      ...this._config,
+      ...context.config
+    };
+
+    this._renderComponent();
+  }
+
+  _renderComponent() {
+    const Component = this._config.component;
+
+    render(
+      <Component { ...this._config } eventBus={ this._eventBus } />,
+      this._element
+    );
   }
 
   _removePopup() {
@@ -62,6 +85,8 @@ export class PopupRenderer {
     this._container.removeChild(this._element);
 
     this._container = null;
+    this._element = null;
+    this._config = null;
 
     this._emit('feelPopup.closed');
   }

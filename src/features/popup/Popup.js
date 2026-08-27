@@ -122,6 +122,21 @@ export class Popup {
     this._closePopup();
   }
 
+  /**
+   * Update the open popup configuration.
+   *
+   * @param {Object} popupConfig
+   */
+  update(popupConfig) {
+    if (!this._isOpen) {
+      return;
+    }
+
+    this._eventBus.fire('propertiesPanelPopup.update', {
+      config: popupConfig
+    });
+  }
+
   _openPopup(context) {
     const {
       element,

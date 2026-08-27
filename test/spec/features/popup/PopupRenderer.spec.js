@@ -4,6 +4,8 @@ import { query as domQuery } from 'min-dom';
 
 import TestContainer from 'mocha-test-container-support';
 
+import { useState } from 'preact/hooks';
+
 import FeelPopupModule from '../../../../src/features/popup';
 
 import { FeelPopup, TextPopup } from '../../../../src/features/popup/components';
@@ -101,6 +103,39 @@ describe('PopupRenderer', function() {
     // then
     expect(domQuery('.bio-properties-panel-text-popup', container)).to.exist;
     expect(domQuery('.bio-properties-panel-feel-popup', container)).not.to.exist;
+  }));
+
+
+  it('should update popup props without resetting component state', inject(function(eventBus) {
+
+    // given
+    function TestPopup({ value }) {
+      const [ count, setCount ] = useState(0);
+
+      return <button class="test-popup" onClick={ () => setCount(count + 1) }>{ value } { count }</button>;
+    }
+
+    eventBus.fire('propertiesPanelPopup.open', {
+      container,
+      config: {
+        component: TestPopup,
+        value: 'before'
+      }
+    });
+
+    const popup = domQuery('.test-popup', container);
+    popup.click();
+
+    // when
+    eventBus.fire('propertiesPanelPopup.update', {
+      config: {
+        value: 'after'
+      }
+    });
+
+    // then
+    expect(domQuery('.test-popup', container)).to.equal(popup);
+    expect(popup.textContent).to.equal('after 1');
   }));
 
 

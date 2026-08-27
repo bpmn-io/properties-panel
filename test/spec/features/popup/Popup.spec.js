@@ -329,6 +329,27 @@ describe('Popup', function() {
     }));
 
 
+    it('#update should fire <propertiesPanelPopup.update> if popup is open', inject(function(eventBus, feelPopup) {
+
+      // given
+      const spy = sinonSpy();
+      eventBus.on('propertiesPanelPopup.update', spy);
+
+      feelPopup.open('testEntry', { type: 'feel' }, document.createElement('input'));
+
+      // when
+      feelPopup.update({ value: 'updated' });
+
+      // then
+      expect(spy).to.have.been.calledOnce;
+      expect(spy).to.have.been.calledWith(sinonMatch({
+        config: {
+          value: 'updated'
+        }
+      }));
+    }));
+
+
     it('#isOpen should return correct state', inject(function(feelPopup) {
 
       // assume

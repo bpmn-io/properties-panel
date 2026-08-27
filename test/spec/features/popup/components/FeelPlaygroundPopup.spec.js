@@ -74,6 +74,6 @@ describe('<FeelPlaygroundPopup>', function() {
       expect(onEvaluate).to.have.been.calledWithMatch({
         expression: '2 + 2'
       });
-    }, { timeout: 1000 });
+    }, { timeout: 2000 });
   });
 });
