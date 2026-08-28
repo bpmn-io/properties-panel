@@ -87,7 +87,7 @@ insertCSS('example.css', `
   }
 `);
 
-const singleStart = window.__env__?.SINGLE_START;
+const singleStart = window.__env__?.SINGLE_START === 'example';
 
 describe('Example', function() {
 
