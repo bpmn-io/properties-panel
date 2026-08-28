@@ -51,7 +51,7 @@ insertCSS('styling.spec.css', `
   }
 `);
 
-const singleStart = window.__env__?.SINGLE_START;
+const singleStart = window.__env__?.SINGLE_START === 'styles';
 
 
 describe('styling (CSS)', function() {
@@ -68,8 +68,7 @@ describe('styling (CSS)', function() {
   });
 
 
-  // visual playground for manual review (un-skip and open the Karma debug page)
-  it.skip('severity states (visual)', function() {
+  (singleStart ? it.only : it.skip)('severity states (visual)', function() {
     container.innerHTML = `
       <div class="bio-properties-panel-styles">
         <section class="bio-properties-panel-styles-section">
