@@ -23,6 +23,7 @@
   --color-blue-218-100-74: hsl(218, 100%, 74%);
   --color-blue-205-100-85: hsl(205, 100%, 85%);
   --color-blue-205-100-95: hsl(205, 100%, 95%);
+  --color-blue-205-100-40-a35: hsla(205, 100%, 40%, 0.35);
   --color-blue-205-100-50-a35: hsla(205, 100%, 50%, 0.35);
 
   --color-red-360-100-40: hsl(360, 100%, 40%);
@@ -47,7 +48,11 @@
   --text-base-color: var(--color-grey-225-10-15);
   --text-error-color: var(--color-red-360-100-45);
   --text-warning-color: var(--color-amber-39-100-33);
-  --link-color: var(--color-blue-205-100-50);
+
+  --accent-color: var(--color-blue-205-100-40);
+  --accent-hover-color: var(--color-blue-205-100-35);
+
+  --link-color: var(--accent-color);
 
   --description-color: var(--color-grey-225-10-35);
   --description-code-background-color: var(--color-grey-225-10-97);
@@ -71,7 +76,7 @@
 
   --add-entry-fill-color: var(--color-grey-225-10-35);
   --add-entry-hover-fill-color: var(--color-white);
-  --add-entry-hover-background-color: var(--color-blue-205-100-50);
+  --add-entry-hover-background-color: var(--accent-color);
   --add-entry-label-color: var(--color-white);
 
   --remove-entry-fill-color: var(--color-red-360-100-45);
@@ -86,6 +91,11 @@
   --error-badge-background-color: var(--color-red-360-100-45);
   --error-badge-color: var(--color-white);
   --error-badge-hover-background-color: var(--color-red-360-100-40);
+
+  --accent-badge-background-color: var(--accent-color);
+  --accent-badge-color: var(--color-white);
+  --accent-badge-fill-color: var(--color-white);
+  --accent-badge-hover-background-color: var(--accent-hover-color);
 
   --dot-color: var(--color-grey-225-10-35);
   --dot-color-error: var(--error-badge-background-color);
@@ -102,11 +112,11 @@
   --checkbox-border-radius: 4px;
   --checkbox-border-color: var(--input-border-color);
   --checkbox-background-color: var(--input-background-color);
-  --checkbox-checked-background-color: var(--color-blue-205-100-50);
-  --checkbox-checked-border-color: var(--color-blue-205-100-50);
+  --checkbox-checked-background-color: var(--accent-color);
+  --checkbox-checked-border-color: var(--accent-color);
 
   --input-focus-background-color: var(--color-blue-205-100-95);
-  --input-focus-border-color: var(--color-blue-205-100-50);
+  --input-focus-border-color: var(--accent-color);
 
   --focus-outline-color: var(--color-blue-205-100-40);
 
@@ -114,7 +124,7 @@
    * Focus ring — reusable, themeable primitive shared by inputs, checkboxes,
    * toggles and any control with the `bio-properties-panel-focus-ring` class.
    */
-  --focus-ring-color: var(--color-blue-205-100-50-a35);
+  --focus-ring-color: var(--color-blue-205-100-40-a35);
   --focus-ring-error-color: var(--color-red-360-100-45-a35);
   --focus-ring-warning-color: var(--color-amber-35-84-62-a35);
   --focus-ring-width: 2px;
@@ -133,7 +143,7 @@
   --input-disabled-background-color: var(--color-grey-225-10-97);
   --input-disabled-border-color: var(--color-grey-225-10-90);
 
-  --toggle-switch-on-background-color: var(--color-blue-205-100-50);
+  --toggle-switch-on-background-color: var(--accent-color);
   --toggle-switch-off-background-color: var(--color-grey-225-10-75);
   --toggle-switch-switcher-background-color: var(--color-white);
 
@@ -142,10 +152,10 @@
 
   --list-entry-dot-background-color: var(--color-grey-225-10-35);
   --list-entry-header-button-fill-color: var(--color-grey-225-10-35);
-  --list-entry-add-entry-empty-background-color: var(--color-blue-205-100-50);
-  --list-entry-add-entry-empty-hover-background-color: var(--color-blue-205-100-45);
+  --list-entry-add-entry-empty-background-color: var(--accent-color);
+  --list-entry-add-entry-empty-hover-background-color: var(--accent-hover-color);
   --list-entry-add-entry-label-color: var(--color-white);
-  --list-entry-add-entry-background-color: var(--color-blue-205-100-50);
+  --list-entry-add-entry-background-color: var(--accent-color);
   --list-entry-add-entry-fill-color: var(--color-white);
 
   --dropdown-item-background-color: var(--color-white);
@@ -153,7 +163,7 @@
   --dropdown-separator-background-color: var(--color-grey-225-10-75);
 
   --feel-background-color: transparent;
-  --feel-active-color: var(--color-blue-205-100-45);
+  --feel-active-color: var(--accent-color);
   --feel-inactive-color: var(--color-grey-225-10-35);
   --feel-hover-color: var(--color-grey-225-10-15);
   --feel-hover-background-color: var(--color-grey-225-10-97);
@@ -466,6 +476,11 @@
 .bio-properties-panel-list-badge--error {
   --list-badge-background-color: var(--error-badge-background-color);
   --list-badge-color: var(--error-badge-color);
+}
+
+.bio-properties-panel-list-badge--accent {
+  --list-badge-background-color: var(--accent-badge-background-color);
+  --list-badge-color: var(--accent-badge-color);
 }
 
 /**

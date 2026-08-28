@@ -7,6 +7,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 ___Note:__ Yet to be released changes appear here._
 
 * `FIX`: reserve space for open pop-up button in FEEL editor ([#525](https://github.com/bpmn-io/properties-panel/pull/525))
+* `FEAT`: add `--accent-*` theming tokens and `--accent` list badge ([#549](https://github.com/bpmn-io/properties-panel/pull/549))
+* `FIX`: use WCAG AA compliant accent color ([#549](https://github.com/bpmn-io/properties-panel/pull/549))
 
 ## 3.52.0
 
