@@ -1,5 +1,11 @@
 import { getPopupPosition, getPopupTitle } from './components/helpers';
-import { FeelPlaygroundPopup, FeelPopup, TextPopup } from './components';
+import {
+  FEEL_PLAYGROUND_POPUP_HEIGHT,
+  FEEL_PLAYGROUND_POPUP_WIDTH,
+  FeelPlaygroundPopup,
+  FeelPopup,
+  TextPopup
+} from './components';
 
 const DEFAULT_POPUP_TYPE = 'text';
 
@@ -156,6 +162,10 @@ export class Popup {
       return false;
     }
 
+    const position = component === FeelPlaygroundPopup
+      ? getPopupPosition(FEEL_PLAYGROUND_POPUP_WIDTH, FEEL_PLAYGROUND_POPUP_HEIGHT)
+      : getPopupPosition();
+
     this._isOpen = true;
 
     this._eventBus.fire('propertiesPanelPopup.open', {
@@ -173,7 +183,7 @@ export class Popup {
             sourceElement && sourceElement.focus();
           }, 0);
         },
-        position: getPopupPosition(),
+        position,
         title: getPopupTitle({ element, label })
       }
     });

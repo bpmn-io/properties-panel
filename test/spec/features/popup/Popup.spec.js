@@ -12,7 +12,11 @@ import MochaTestContainer from 'mocha-test-container-support';
 import { query as domQuery } from 'min-dom';
 
 import FeelPopupModule from '../../../../src/features/popup';
-import { FeelPlaygroundPopup } from '../../../../src/features/popup/components';
+import {
+  FEEL_PLAYGROUND_POPUP_HEIGHT,
+  FEEL_PLAYGROUND_POPUP_WIDTH,
+  FeelPlaygroundPopup
+} from '../../../../src/features/popup/components';
 
 import {
   bootstrapDiagram,
@@ -69,6 +73,10 @@ describe('Popup', function() {
     expect(isPopupOpen).to.be.true;
 
     expect(spy).to.have.been.calledOnce;
+
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
     expect(spy).to.have.been.calledWith(sinonMatch({
       container: container,
       config: {
@@ -79,6 +87,10 @@ describe('Popup', function() {
           { href: 'https://bar.com', title: 'Bar' }
         ],
         onEvaluate: HOST_ON_EVALUATE,
+        position: {
+          left: Math.max(0, (viewportWidth - FEEL_PLAYGROUND_POPUP_WIDTH) / 2),
+          top: Math.max(0, (viewportHeight - FEEL_PLAYGROUND_POPUP_HEIGHT) / 2)
+        },
         type: 'feel',
       }
     }));
