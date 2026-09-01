@@ -71,14 +71,13 @@ function PopupComponent(props, globalRef) {
     }
   };
 
-  let style = {};
+  const { top, left } = position || getCenterPosition(width, height);
 
-  if (position) {
-    style = {
-      ...style,
-      top: position.top + 'px',
-      left: position.left + 'px',
-    };
+  const style = {};
+
+  if (isDefined(top) && isDefined(left)) {
+    style.top = top + 'px';
+    style.left = left + 'px';
   }
 
   if (width) {
@@ -281,6 +280,30 @@ function Footer(props) {
 }
 
 // helpers //////////////////////
+
+/**
+ * Center the popup in the viewport, based on its own dimensions.
+ *
+ * @param {number} [width]
+ * @param {number} [height]
+ */
+function getCenterPosition(width, height) {
+  if (!width || !height) {
+    return {};
+  }
+
+  const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+  return {
+    left: Math.max(0, (viewportWidth - width) / 2),
+    top: Math.max(0, (viewportHeight - height) / 2)
+  };
+}
+
+function isDefined(value) {
+  return typeof value !== 'undefined';
+}
 
 function isTab(event) {
   return event.key === 'Tab';

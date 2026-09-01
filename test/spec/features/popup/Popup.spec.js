@@ -382,7 +382,7 @@ describe('Popup', function() {
       // given
       function CustomPopup(props) {
         return (
-          <Popup title={ props.title } position={ props.position } onClose={ props.onClose }>
+          <Popup title={ props.title } onClose={ props.onClose }>
             <PopupTitle title={ props.title } eventBus={ props.eventBus } showCloseButton onClose={ props.onClose } draggable />
             <PopupBody className="custom-popup-body">{ props.value }</PopupBody>
           </Popup>
@@ -406,6 +406,33 @@ describe('Popup', function() {
       expect(domQuery('.bio-properties-panel-popup__header.draggable', container)).to.exist;
       expect(domQuery('.bio-properties-panel-popup__close', container)).to.exist;
       expect(domQuery('.custom-popup-body', container).textContent).to.equal('hello world');
+    }));
+
+
+    it('should center the popup based on its own size', inject(function(eventBus, feelPopup) {
+
+      // given
+      const width = 900, height = 640;
+
+      function CustomPopup(props) {
+        return <Popup title={ props.title } onClose={ props.onClose } width={ width } height={ height } />;
+      }
+
+      feelPopup.registerProvider('custom', CustomPopup);
+
+      // when
+      act(() => {
+        eventBus.fire('propertiesPanel.openPopup', {
+          entryId: 'foo',
+          type: 'custom'
+        });
+      });
+
+      // then
+      const popup = domQuery('.bio-properties-panel-popup', container);
+
+      expect(popup.style.left).to.equal(`${ Math.max(0, (window.innerWidth - width) / 2) }px`);
+      expect(popup.style.top).to.equal(`${ Math.max(0, (window.innerHeight - height) / 2) }px`);
     }));
 
 
