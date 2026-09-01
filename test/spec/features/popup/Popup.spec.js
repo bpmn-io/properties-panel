@@ -14,6 +14,12 @@ import { query as domQuery } from 'min-dom';
 import FeelPopupModule from '../../../../src/features/popup';
 
 import {
+  Popup,
+  PopupBody,
+  PopupTitle
+} from '../../../../src/features/popup/components';
+
+import {
   bootstrapDiagram,
   getDiagramJS,
   inject
@@ -368,6 +374,67 @@ describe('Popup', function() {
 
       expect(popup).to.exist;
       expect(popup.textContent).to.equal('hello world');
+    }));
+
+
+    it('should render a provider composed of the popup components', inject(function(eventBus, feelPopup) {
+
+      // given
+      function CustomPopup(props) {
+        return (
+          <Popup title={ props.title } position={ props.position } onClose={ props.onClose }>
+            <PopupTitle title={ props.title } eventBus={ props.eventBus } showCloseButton onClose={ props.onClose } draggable />
+            <PopupBody className="custom-popup-body">{ props.value }</PopupBody>
+          </Popup>
+        );
+      }
+
+      feelPopup.registerProvider('custom', CustomPopup);
+
+      // when
+      act(() => {
+        eventBus.fire('propertiesPanel.openPopup', {
+          entryId: 'foo',
+          type: 'custom',
+          label: 'Custom',
+          value: 'hello world'
+        });
+      });
+
+      // then
+      expect(domQuery('.bio-properties-panel-popup', container)).to.exist;
+      expect(domQuery('.bio-properties-panel-popup__header.draggable', container)).to.exist;
+      expect(domQuery('.bio-properties-panel-popup__close', container)).to.exist;
+      expect(domQuery('.custom-popup-body', container).textContent).to.equal('hello world');
+    }));
+
+
+    it('should close a provider composed of the popup components', inject(function(eventBus, feelPopup) {
+
+      // given
+      function CustomPopup(props) {
+        return (
+          <Popup title={ props.title } onClose={ props.onClose }>
+            <PopupTitle title={ props.title } eventBus={ props.eventBus } showCloseButton onClose={ props.onClose } />
+          </Popup>
+        );
+      }
+
+      feelPopup.registerProvider('custom', CustomPopup);
+
+      act(() => {
+        eventBus.fire('propertiesPanel.openPopup', {
+          entryId: 'foo',
+          type: 'custom'
+        });
+      });
+
+      // when
+      act(() => domQuery('.bio-properties-panel-popup__close', container).click());
+
+      // then
+      expect(feelPopup.isOpen()).to.be.false;
+      expect(domQuery('.bio-properties-panel-popup', container)).not.to.exist;
     }));
 
 

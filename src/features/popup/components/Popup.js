@@ -141,6 +141,12 @@ Popup.Title = Title;
 Popup.Body = Body;
 Popup.Footer = Footer;
 
+export {
+  Title as PopupTitle,
+  Body as PopupBody,
+  Footer as PopupFooter
+};
+
 function Title(props) {
   const {
     children,

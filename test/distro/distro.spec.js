@@ -22,4 +22,17 @@ describe('distro', function() {
     expect(preactHooks.useCallback).to.be.a('function');
   });
 
+
+  it('should expose the popup components', async function() {
+
+    // when
+    const bundle = await import('../../dist/index.esm.js');
+
+    // then
+    expect(bundle.Popup).to.exist;
+    expect(bundle.PopupTitle).to.be.a('function');
+    expect(bundle.PopupBody).to.be.a('function');
+    expect(bundle.PopupFooter).to.be.a('function');
+  });
+
 });
