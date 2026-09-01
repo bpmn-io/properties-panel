@@ -16,7 +16,6 @@ import { Popup } from './Popup';
  * @property {string} value
  * @property {Array} [links]
  * @property {Array|Object} [variables]
- * @property {Object} [position]
  * @property {string} [hostLanguage]
  * @property {boolean} [singleLine]
  * @property {HTMLElement} [sourceElement]
@@ -41,7 +40,6 @@ export function FeelPopup(props) {
     value,
     links,
     variables,
-    position,
     hostLanguage,
     singleLine,
     sourceElement,
@@ -89,7 +87,6 @@ export function FeelPopup(props) {
   return (
     <Popup
       className="bio-properties-panel-feel-popup"
-      position={ position }
       title={ title }
       returnFocus={ false }
       closeOnEscape={ false }

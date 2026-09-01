@@ -1,4 +1,4 @@
-import { getPopupPosition, getPopupTitle } from './components/helpers';
+import { getPopupTitle } from './components/helpers';
 import { FeelPopup, TextPopup } from './components';
 
 const DEFAULT_POPUP_TYPE = 'text';
@@ -151,7 +151,6 @@ export class Popup {
             sourceElement && sourceElement.focus();
           }, 0);
         },
-        position: getPopupPosition(),
         title: getPopupTitle({ element, label })
       }
     });

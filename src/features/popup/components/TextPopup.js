@@ -10,7 +10,6 @@ import { Popup } from './Popup';
  * @property {Function} onClose
  * @property {string} title
  * @property {string} value
- * @property {Object} [position]
  * @property {HTMLElement} [sourceElement]
  * @property {Object} [eventBus]
  */
@@ -33,7 +32,6 @@ export function TextPopup(props) {
     onClose,
     title,
     value,
-    position,
     sourceElement,
     eventBus
   } = props;
@@ -56,7 +54,6 @@ export function TextPopup(props) {
   return (
     <Popup
       className="bio-properties-panel-text-popup"
-      position={ position }
       title={ title }
       returnFocus={ false }
       closeOnEscape={ true }
