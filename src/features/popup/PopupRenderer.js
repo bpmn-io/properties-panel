@@ -62,6 +62,7 @@ export class PopupRenderer {
     this._container.removeChild(this._element);
 
     this._container = null;
+    this._element = null;
 
     this._emit('feelPopup.closed');
   }
