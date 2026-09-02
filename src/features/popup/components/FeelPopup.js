@@ -20,7 +20,6 @@ import { Popup } from './Popup';
  * @property {boolean} [singleLine]
  * @property {HTMLElement} [sourceElement]
  * @property {HTMLElement|string} [tooltipContainer]
- * @property {Object} [eventBus]
  */
 
 export const FEEL_POPUP_WIDTH = 700;
@@ -44,7 +43,6 @@ export function FeelPopup(props) {
     singleLine,
     sourceElement,
     tooltipContainer,
-    eventBus,
     feelLanguageContext,
   } = props;
 
@@ -99,7 +97,6 @@ export function FeelPopup(props) {
     >
       <Popup.Title
         title={ title }
-        eventBus={ eventBus }
         showCloseButton={ true }
         closeButtonTooltip="Save and close"
         onClose={ onClose }
