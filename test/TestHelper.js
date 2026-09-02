@@ -49,6 +49,11 @@ export function clickInput(input) {
 
 export function insertCoreStyles() {
   insertCSS(
+    'theme.css',
+    require('@bpmn-io/theme/assets/theme.css').default
+  );
+
+  insertCSS(
     'properties-panel.css',
     require('../src/assets/properties-panel.css').default
   );

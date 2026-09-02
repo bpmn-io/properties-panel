@@ -247,7 +247,7 @@ export default function PropertiesPanel(props) {
           <TooltipContext.Provider value={ tooltipContext }>
             <LayoutContext.Provider value={ layoutContext }>
               <EventContext.Provider value={ eventContext }>
-                <div class="bio-properties-panel">
+                <div class="bio-properties-panel bio-theme">
                   { headerProvider ? (
                     <Header
                       element={ element }

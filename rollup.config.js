@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path, { parse as parsePath, relative as relativePath } from 'path';
 import { createRequire } from 'module';
 import { replaceInFile } from 'replace-in-file';
@@ -18,6 +19,9 @@ const require = createRequire(import.meta.url);
 // another location. Path separators are normalized to POSIX so that
 // rollup-plugin-copy's globby can process the path on Windows.
 const preactDir = path.dirname(require.resolve('preact/package.json')).split(path.sep).join('/');
+
+// inlined so the published stylesheet stays a single self-contained file
+const themeCss = fs.readFileSync(require.resolve('@bpmn-io/theme/assets/theme.css'), 'utf8');
 
 const nonbundledDependencies = Object.keys({ ...pkg.dependencies });
 
@@ -49,7 +53,11 @@ export default [
         hook: 'buildStart',
         targets: [
           { src: preactDir, dest: '.' },
-          { src: 'src/assets', dest: 'dist' }
+          {
+            src: 'src/assets/properties-panel.css',
+            dest: 'dist/assets',
+            transform: contents => `${themeCss}\n${contents.toString()}`
+          }
         ]
       }),
       rewirePreactSubpackages(),

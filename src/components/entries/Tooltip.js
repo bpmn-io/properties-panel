@@ -196,7 +196,7 @@ function Tooltip(props) {
 
     return (
       <div
-        class={ `bio-properties-panel-tooltip ${direction}` }
+        class={ `bio-properties-panel-tooltip bio-theme ${direction}` }
         role="tooltip"
         id="bio-properties-panel-tooltip"
         aria-labelledby={ forId }

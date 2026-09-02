@@ -127,7 +127,7 @@ function PopupComponent(props, globalRef) {
       ref={ popupRef }
       onKeyDown={ handleKeydown }
       role="dialog"
-      class={ classNames('bio-properties-panel-popup', className) }
+      class={ classNames('bio-properties-panel-popup', 'bio-theme', className) }
       style={ style }
     >
       {props.children}
