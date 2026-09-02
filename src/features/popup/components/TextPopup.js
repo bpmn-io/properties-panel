@@ -11,7 +11,6 @@ import { Popup } from './Popup';
  * @property {string} title
  * @property {string} value
  * @property {HTMLElement} [sourceElement]
- * @property {Object} [eventBus]
  */
 
 export const TEXT_POPUP_WIDTH = 700;
@@ -32,8 +31,7 @@ export function TextPopup(props) {
     onClose,
     title,
     value,
-    sourceElement,
-    eventBus
+    sourceElement
   } = props;
 
   const editorRef = useRef();
@@ -66,7 +64,6 @@ export function TextPopup(props) {
     >
       <Popup.Title
         title={ title }
-        eventBus={ eventBus }
         showCloseButton={ true }
         closeButtonTooltip="Save and close"
         onClose={ onClose }

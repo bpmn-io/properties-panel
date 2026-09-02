@@ -1,6 +1,6 @@
 import { forwardRef } from 'preact/compat';
 
-import { useEffect, useRef } from 'preact/hooks';
+import { useContext, useEffect, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
@@ -9,6 +9,8 @@ import * as focusTrap from 'focus-trap';
 import { isDefined } from 'min-dash';
 
 import { DragIcon, CloseIcon } from '../../../components/icons';
+
+import { EventContext } from '../../../context';
 
 import { createDragger } from '../../../components/util/dragger';
 
@@ -149,11 +151,12 @@ export {
 };
 
 function Title(props) {
+  const { eventBus } = useContext(EventContext);
+
   const {
     children,
     className,
     draggable,
-    eventBus,
     title,
     showCloseButton = false,
     closeButtonTooltip = 'Close popup',
