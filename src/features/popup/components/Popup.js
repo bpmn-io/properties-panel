@@ -6,6 +6,8 @@ import classNames from 'classnames';
 
 import * as focusTrap from 'focus-trap';
 
+import { isDefined } from 'min-dash';
+
 import { DragIcon, CloseIcon } from '../../../components/icons';
 
 import { createDragger } from '../../../components/util/dragger';
@@ -299,10 +301,6 @@ function getCenterPosition(width, height) {
     left: Math.max(0, (viewportWidth - width) / 2),
     top: Math.max(0, (viewportHeight - height) / 2)
   };
-}
-
-function isDefined(value) {
-  return typeof value !== 'undefined';
 }
 
 function isTab(event) {
