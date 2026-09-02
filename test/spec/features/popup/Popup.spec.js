@@ -383,7 +383,7 @@ describe('Popup', function() {
       function CustomPopup(props) {
         return (
           <Popup title={ props.title } onClose={ props.onClose }>
-            <PopupTitle title={ props.title } eventBus={ props.eventBus } showCloseButton onClose={ props.onClose } draggable />
+            <PopupTitle title={ props.title } showCloseButton onClose={ props.onClose } draggable />
             <PopupBody className="custom-popup-body">{ props.value }</PopupBody>
           </Popup>
         );
@@ -442,7 +442,7 @@ describe('Popup', function() {
       function CustomPopup(props) {
         return (
           <Popup title={ props.title } onClose={ props.onClose }>
-            <PopupTitle title={ props.title } eventBus={ props.eventBus } showCloseButton onClose={ props.onClose } />
+            <PopupTitle title={ props.title } showCloseButton onClose={ props.onClose } />
           </Popup>
         );
       }

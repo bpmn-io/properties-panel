@@ -2,6 +2,8 @@ import { render } from 'preact';
 import { query as domQuery } from 'min-dom';
 import { isString } from 'min-dash';
 
+import { EventContext } from '../../context';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 
@@ -30,16 +32,14 @@ export class PopupRenderer {
 
     container.appendChild(element);
 
-    // TODO(philippfromme): there is no useService in this context, so we need
-    // to pass the event bus as a prop or create a context provider, however,
-    // a custom renderer would have to use that context provider as well to have
-    // access to the event bus and other services
     this._emit('feelPopup.open');
 
     const Component = config.component;
 
     render(
-      <Component { ...config } eventBus={ this._eventBus } />,
+      <EventContext.Provider value={ { eventBus: this._eventBus } }>
+        <Component { ...config } eventBus={ this._eventBus } />
+      </EventContext.Provider>,
       element
     );
 
