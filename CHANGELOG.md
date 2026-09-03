@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.54.0
+
+* `FEAT`: expose popup components ([#550](https://github.com/bpmn-io/properties-panel/pull/550))
+* `FIX`: center popup based on its own size ([#550](https://github.com/bpmn-io/properties-panel/pull/550))
+* `FIX`: release popup element reference on close ([#550](https://github.com/bpmn-io/properties-panel/pull/550))
+
 ## 3.53.0
 
 * `FEAT`: add `--accent-*` theming tokens and `--accent` list badge ([#549](https://github.com/bpmn-io/properties-panel/pull/549))
