@@ -3,9 +3,11 @@ import classNames from 'classnames';
 import { isFunction } from 'min-dash';
 
 import {
-  useError,
+  useDiagnostics,
   useShowEntryEvent
 } from '../../hooks';
+
+import { ENTRY_SEVERITY_CLASS, getMostSevere, toDiagnostic } from '../util/diagnostics';
 
 import {
   useEffect,
@@ -13,6 +15,7 @@ import {
 } from 'preact/hooks';
 
 import Description from './Description';
+import DiagnosticMessage from './Diagnostic';
 import Tooltip from './Tooltip';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
@@ -127,7 +130,7 @@ function Select(props) {
  * @param {Function} props.onBlur
  * @param {Function} props.getOptions
  * @param {boolean} [props.disabled]
- * @param {Function} [props.validate]
+ * @param {Function} [props.validate] - returns a message or a diagnostic, if the value is invalid
  * @param {string|import('preact').Component} props.tooltip
  */
 export default function SelectEntry(props) {
@@ -147,8 +150,8 @@ export default function SelectEntry(props) {
   } = props;
 
   const options = getOptions(element);
-  const globalError = useError(id);
-  const [ localError, setLocalError ] = useState(null);
+  const diagnostics = useDiagnostics(id);
+  const [ localDiagnostic, setLocalDiagnostic ] = useState(null);
 
   let value = getValue(element);
 
@@ -156,7 +159,7 @@ export default function SelectEntry(props) {
     if (isFunction(validate)) {
       const newValidationError = validate(value) || null;
 
-      setLocalError(newValidationError);
+      setLocalDiagnostic(toDiagnostic(newValidationError));
     }
   }, [ value, validate ]);
 
@@ -170,17 +173,18 @@ export default function SelectEntry(props) {
       }
 
       setValue(newValue, newValidationError);
-      setLocalError(newValidationError);
+      setLocalDiagnostic(toDiagnostic(newValidationError));
     }
   };
 
-  const error = globalError || localError;
+  // externally provided diagnostics take precedence over local ones
+  const diagnostic = getMostSevere([ ...diagnostics, localDiagnostic ]);
 
   return (
     <div
       class={ classNames(
         'bio-properties-panel-entry',
-        error ? 'has-error' : '')
+        ENTRY_SEVERITY_CLASS[ diagnostic?.severity ])
       }
       data-entry-id={ id }>
       <Select
@@ -195,7 +199,7 @@ export default function SelectEntry(props) {
         disabled={ disabled }
         tooltip={ tooltip }
         element={ element } />
-      { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <DiagnosticMessage diagnostic={ diagnostic } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

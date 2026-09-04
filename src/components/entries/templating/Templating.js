@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState, useMemo, useRef } from 'preact/hooks';
 import { useStaticCallback, useShowEntryEvent } from '../../../hooks';
 import { isFunction } from 'min-dash';
-import { useError } from '../../../hooks';
+import { useDiagnostics } from '../../../hooks';
 import classnames from 'classnames';
 import Description from '../Description';
+import DiagnosticMessage from '../Diagnostic';
 import TemplatingEditor from './TemplatingEditor';
+import { ENTRY_SEVERITY_CLASS, getMostSevere, toDiagnostic } from '../../util/diagnostics';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
@@ -21,7 +23,7 @@ const noop = () => {};
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.tooltipContainer
- * @param {Function} props.validate
+ * @param {Function} props.validate - returns a message or a diagnostic, if the value is invalid
  * @param {Function} props.show
  */
 export default function TemplatingEntry(props) {
@@ -39,8 +41,8 @@ export default function TemplatingEntry(props) {
     show = noop,
   } = props;
 
-  const [ validationError, setValidationError ] = useState(null);
-  const [ localError, setLocalError ] = useState(null);
+  const [ validationDiagnostic, setValidationDiagnostic ] = useState(null);
+  const [ lintDiagnostic, setLintDiagnostic ] = useState(null);
 
   let value = getValue(element);
 
@@ -48,7 +50,7 @@ export default function TemplatingEntry(props) {
     if (isFunction(validate)) {
       const newValidationError = validate(value) || null;
 
-      setValidationError(newValidationError);
+      setValidationDiagnostic(toDiagnostic(newValidationError));
     }
   }, [ value, validate ]);
 
@@ -64,22 +66,23 @@ export default function TemplatingEntry(props) {
       setValue(newValue, newValidationError);
     }
 
-    setValidationError(newValidationError);
+    setValidationDiagnostic(toDiagnostic(newValidationError));
   });
 
   const onError = useCallback(err => {
-    setLocalError(err);
+    setLintDiagnostic(toDiagnostic(err));
   }, []);
 
-  const temporaryError = useError(id);
+  const diagnostics = useDiagnostics(id);
 
-  const error = localError || temporaryError || validationError;
+  // externally provided diagnostics take precedence over local ones
+  const diagnostic = getMostSevere([ ...diagnostics, lintDiagnostic, validationDiagnostic ]);
 
   return (
     <div
       class={ classnames(
         'bio-properties-panel-entry',
-        error ? 'has-error' : '')
+        ENTRY_SEVERITY_CLASS[ diagnostic?.severity ])
       }
       data-entry-id={ id }>
       <Templating
@@ -93,7 +96,7 @@ export default function TemplatingEntry(props) {
         show={ show }
         value={ value }
         tooltipContainer={ tooltipContainer } />
-      {error && <div class="bio-properties-panel-error">{error}</div>}
+      <DiagnosticMessage diagnostic={ diagnostic } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
@@ -145,7 +148,7 @@ function Templating(props) {
       return;
     }
 
-    const error = lint[0];
+    const error = errors[0];
     const message = `${error.source}: ${error.message}`;
 
     onError(message);

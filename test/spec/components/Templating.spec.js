@@ -246,7 +246,7 @@ describe('<Templating>', function() {
       });
 
 
-      it('should show local error over global error', async function() {
+      it('should show global error over local error', async function() {
 
         // given
         const errors = {
@@ -274,7 +274,7 @@ describe('<Templating>', function() {
         await waitFor(() => {
           errorField = domQuery('.bio-properties-panel-error', result.container);
           expect(errorField).to.exist;
-          expect(errorField.textContent).not.to.eql('bar');
+          expect(errorField.textContent).to.eql('bar');
         });
       });
 

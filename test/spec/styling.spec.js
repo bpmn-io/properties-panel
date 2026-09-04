@@ -105,11 +105,32 @@ describe('styling (CSS)', function() {
             <input class="bio-properties-panel-input bio-properties-panel-focus-ring" type="text" value="Focus me" />
             <div class="bio-properties-panel-error">Error message</div>
           </div>
+          <div class="bio-properties-panel-entry">
+            <label class="bio-properties-panel-label">Info</label>
+            <input class="bio-properties-panel-input bio-properties-panel-focus-ring" type="text" value="Focus me" />
+            <div class="bio-properties-panel-info">Info message</div>
+          </div>
           <div class="bio-properties-panel-entry has-warning has-error">
-            <label class="bio-properties-panel-label">Warning + error</label>
+            <label class="bio-properties-panel-label">Warning + error (CSS only)</label>
             <input class="bio-properties-panel-input bio-properties-panel-focus-ring" type="text" value="Focus me" />
             <div class="bio-properties-panel-warning">Warning message</div>
             <div class="bio-properties-panel-error">Error message</div>
+          </div>
+          <div class="bio-properties-panel-entry has-error">
+            <label class="bio-properties-panel-label">Error with action</label>
+            <input class="bio-properties-panel-input bio-properties-panel-focus-ring" type="text" value="PT30" />
+            <div class="bio-properties-panel-error">
+              <span class="bio-properties-panel-diagnostic-message">Value must be a valid ISO 8601 duration.</span>
+              <button type="button" class="bio-properties-panel-diagnostic-action">Fix</button>
+            </div>
+          </div>
+          <div class="bio-properties-panel-entry has-warning">
+            <label class="bio-properties-panel-label">Warning with action</label>
+            <input class="bio-properties-panel-input bio-properties-panel-focus-ring" type="text" value="25" />
+            <div class="bio-properties-panel-warning">
+              <span class="bio-properties-panel-diagnostic-message">Retry count exceeds recommended maximum of 10.</span>
+              <button type="button" class="bio-properties-panel-diagnostic-action">Fix</button>
+            </div>
           </div>
         </section>
 

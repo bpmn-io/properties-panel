@@ -1,4 +1,5 @@
 import Description from './Description';
+import DiagnosticMessage from './Diagnostic';
 import Tooltip from './Tooltip';
 
 import {
@@ -12,8 +13,10 @@ import classnames from 'classnames';
 import { isFunction } from 'min-dash';
 
 import {
-  useError
+  useDiagnostics
 } from '../../hooks';
+
+import { ENTRY_SEVERITY_CLASS, getMostSevere, toDiagnostic } from '../util/diagnostics';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
@@ -104,7 +107,7 @@ export function NumberField(props) {
  * @param {Function} props.onFocus
  * @param {Function} props.onBlur
  * @param {String} props.step
- * @param {Function} props.validate
+ * @param {Function} props.validate - returns a message or a diagnostic, if the value is invalid
  */
 export default function NumberFieldEntry(props) {
   const {
@@ -125,8 +128,8 @@ export default function NumberFieldEntry(props) {
     tooltip
   } = props;
 
-  const globalError = useError(id);
-  const [ localError, setLocalError ] = useState(null);
+  const diagnostics = useDiagnostics(id);
+  const [ localDiagnostic, setLocalDiagnostic ] = useState(null);
 
   let value = getValue(element);
 
@@ -134,7 +137,7 @@ export default function NumberFieldEntry(props) {
     if (isFunction(validate)) {
       const newValidationError = validate(value) || null;
 
-      setLocalError(newValidationError);
+      setLocalDiagnostic(toDiagnostic(newValidationError));
     }
   }, [ value, validate ]);
 
@@ -147,16 +150,17 @@ export default function NumberFieldEntry(props) {
       }
 
       setValue(newValue, newValidationError);
-      setLocalError(newValidationError);
+      setLocalDiagnostic(toDiagnostic(newValidationError));
     }
   };
 
-  const error = globalError || localError;
+  // externally provided diagnostics take precedence over local ones
+  const diagnostic = getMostSevere([ ...diagnostics, localDiagnostic ]);
 
   return (
     <div class={ classnames(
       'bio-properties-panel-entry',
-      error ? 'has-error' : '') } data-entry-id={ id }>
+      ENTRY_SEVERITY_CLASS[ diagnostic?.severity ]) } data-entry-id={ id }>
       <NumberField
         debounce={ debounce }
         disabled={ disabled }
@@ -172,7 +176,7 @@ export default function NumberFieldEntry(props) {
         value={ value }
         tooltip={ tooltip }
       />
-      { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <DiagnosticMessage diagnostic={ diagnostic } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

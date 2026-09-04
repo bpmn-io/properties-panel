@@ -19,9 +19,11 @@ import {
 } from 'min-dash';
 
 import {
-  useErrors,
+  useAllDiagnostics,
   useLayoutState
 } from '../hooks';
+
+import { getMostSevereForIds } from './util/diagnostics';
 
 import { PropertiesPanelContext } from '../context';
 
@@ -89,9 +91,9 @@ export default function Group(props) {
     return () => cancelAnimationFrame(scheduled);
   }, [ entries, setEdited ]);
 
-  // set error state depending on all entries
-  const allErrors = useErrors();
-  const hasErrors = entries.some(entry => allErrors[entry.id]);
+  // set severity state depending on all entries
+  const allDiagnostics = useAllDiagnostics();
+  const diagnostic = getMostSevereForIds(allDiagnostics, entries.map(entry => entry.id));
 
   // set css class when group is sticky to top
   useStickyIntersectionObserver(groupRef, 'div.bio-properties-panel-scroll-container', setSticky);
@@ -119,7 +121,7 @@ export default function Group(props) {
         {
           <DataMarker
             edited={ edited }
-            hasErrors={ hasErrors }
+            severity={ diagnostic?.severity }
             translate={ translate }
           />
         }
@@ -160,13 +162,19 @@ export default function Group(props) {
 function DataMarker(props) {
   const {
     edited,
-    hasErrors,
+    severity,
     translate = translateFallback
   } = props;
 
-  if (hasErrors) {
+  if (severity === 'error') {
     return (
       <div title={ translate('Section contains an error') } class="bio-properties-panel-dot bio-properties-panel-dot--error"></div>
+    );
+  }
+
+  if (severity === 'warning') {
+    return (
+      <div title={ translate('Section contains a warning') } class="bio-properties-panel-dot bio-properties-panel-dot--warning"></div>
     );
   }
 
