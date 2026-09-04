@@ -1,4 +1,5 @@
 import Description from '../Description';
+import ErrorMessage from '../Error';
 import TemplatingEditor from '../templating/TemplatingEditor';
 
 import {
@@ -723,7 +724,7 @@ export default function FeelEntry(props) {
         tooltipContainer={ tooltipContainer }
         OptionalComponent={ props.OptionalComponent }
         tooltip={ tooltip } />
-      {error && <div class="bio-properties-panel-error">{error}</div>}
+      <ErrorMessage error={ error } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

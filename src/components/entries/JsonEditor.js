@@ -1,4 +1,5 @@
 import Description from './Description';
+import ErrorMessage from './Error';
 
 import {
   useEffect,
@@ -240,7 +241,7 @@ export default function JsonEditorEntry(props) {
         tooltip={ tooltip }
         element={ element }
       />
-      { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <ErrorMessage error={ error } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

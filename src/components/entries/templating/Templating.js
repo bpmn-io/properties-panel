@@ -4,6 +4,7 @@ import { isFunction } from 'min-dash';
 import { useError } from '../../../hooks';
 import classnames from 'classnames';
 import Description from '../Description';
+import ErrorMessage from '../Error';
 import TemplatingEditor from './TemplatingEditor';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
@@ -93,7 +94,7 @@ export default function TemplatingEntry(props) {
         show={ show }
         value={ value }
         tooltipContainer={ tooltipContainer } />
-      {error && <div class="bio-properties-panel-error">{error}</div>}
+      <ErrorMessage error={ error } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

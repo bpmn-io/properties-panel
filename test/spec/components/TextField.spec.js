@@ -13,6 +13,8 @@ import {
   findByText
 } from '@testing-library/preact/pure';
 
+import { waitFor } from '@testing-library/preact';
+
 import TestContainer from 'mocha-test-container-support';
 
 import {
@@ -622,6 +624,90 @@ describe('<TextField>', function() {
       expect(domQuery('.bio-properties-panel-error', result.container)).to.exist;
     });
 
+
+    it('should render error action', function() {
+
+      // given
+      const errors = {
+        foo: {
+          message: 'bar',
+          action: {
+            label: 'Fix',
+            onClick: noop
+          }
+        }
+      };
+
+      const result = createTextField({ container, errors, id: 'foo' });
+
+      // when
+      const message = domQuery('.bio-properties-panel-error-message', result.container);
+      const action = domQuery('.bio-properties-panel-error-action', result.container);
+
+      // then
+      expect(message.innerText).to.eql('bar');
+      expect(action).to.exist;
+      expect(action.innerText).to.eql('Fix');
+    });
+
+
+    it('should show error action tooltip on hover', async function() {
+
+      // given
+      const errors = {
+        foo: {
+          message: 'bar',
+          action: {
+            label: 'Fix',
+            tooltip: 'Fix the value',
+            onClick: noop
+          }
+        }
+      };
+
+      const result = createTextField({ container, errors, id: 'foo' });
+
+      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', result.container);
+
+      // when
+      fireEvent.mouseEnter(wrapper);
+
+      // then
+      await waitFor(() => {
+        const tooltip = domQuery('.bio-properties-panel-tooltip-content', result.container);
+
+        expect(tooltip).to.exist;
+        expect(tooltip.textContent).to.eql('Fix the value');
+      });
+    });
+
+
+    it('should trigger error action on click', function() {
+
+      // given
+      const onClickSpy = sinonSpy();
+
+      const errors = {
+        foo: {
+          message: 'bar',
+          action: {
+            label: 'Fix',
+            onClick: onClickSpy
+          }
+        }
+      };
+
+      const result = createTextField({ container, errors, id: 'foo' });
+
+      const action = domQuery('.bio-properties-panel-error-action', result.container);
+
+      // when
+      fireEvent.click(action);
+
+      // then
+      expect(onClickSpy).to.have.been.called;
+    });
+
   });
 
 
@@ -895,6 +981,34 @@ describe('<TextField>', function() {
 
       const { container: node } = createTextField({
         container,
+        label: 'foo'
+      });
+
+      // then
+      await expectNoViolations(node);
+    });
+
+
+    it('should have no violations with error action', async function() {
+
+      // given
+      this.timeout(5000);
+
+      const errors = {
+        foo: {
+          message: 'bar',
+          action: {
+            label: 'Fix',
+            tooltip: 'Fix the value',
+            onClick: noop
+          }
+        }
+      };
+
+      const { container: node } = createTextField({
+        container,
+        errors,
+        id: 'foo',
         label: 'foo'
       });
 

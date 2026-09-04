@@ -1,4 +1,5 @@
 import Description from './Description';
+import ErrorMessage from './Error';
 
 import {
   useCallback,
@@ -317,7 +318,7 @@ export default function TextAreaEntry(props) {
         tooltip={ tooltip }
         translate={ translate }
         element={ element } />
-      { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <ErrorMessage error={ error } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

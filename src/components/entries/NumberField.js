@@ -1,4 +1,5 @@
 import Description from './Description';
+import ErrorMessage from './Error';
 import Tooltip from './Tooltip';
 
 import {
@@ -172,7 +173,7 @@ export default function NumberFieldEntry(props) {
         value={ value }
         tooltip={ tooltip }
       />
-      { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <ErrorMessage error={ error } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );

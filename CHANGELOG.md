@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: allow entry errors to carry an action with a custom label and tooltip
+
 ## 3.54.0
 
 * `FEAT`: expose popup components ([#550](https://github.com/bpmn-io/properties-panel/pull/550))

@@ -111,6 +111,14 @@ describe('styling (CSS)', function() {
             <div class="bio-properties-panel-warning">Warning message</div>
             <div class="bio-properties-panel-error">Error message</div>
           </div>
+          <div class="bio-properties-panel-entry has-error">
+            <label class="bio-properties-panel-label">Error with action</label>
+            <input class="bio-properties-panel-input bio-properties-panel-focus-ring" type="text" value="PT30" />
+            <div class="bio-properties-panel-error">
+              <span class="bio-properties-panel-error-message">Value must be a valid ISO 8601 duration.</span>
+              <button type="button" class="bio-properties-panel-error-action">Fix</button>
+            </div>
+          </div>
         </section>
 
         <section class="bio-properties-panel-styles-section">

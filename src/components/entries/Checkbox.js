@@ -9,6 +9,7 @@ import {
 } from 'preact/hooks';
 
 import Description from './Description';
+import ErrorMessage from './Error';
 import Tooltip from './Tooltip';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
@@ -113,7 +114,7 @@ export default function CheckboxEntry(props) {
         value={ value }
         tooltip={ tooltip }
         element={ element } />
-      { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <ErrorMessage error={ error } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
