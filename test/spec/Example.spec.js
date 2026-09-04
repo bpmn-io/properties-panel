@@ -164,6 +164,7 @@ function ExampleApp() {
   const [ , forceUpdate ] = useReducer(x => x + 1, 0);
 
   const [ showErrors, setShowErrors ] = useState(false);
+  const [ showDiagnostics, setShowDiagnostics ] = useState(false);
 
   const updateElement = useCallback((key, value) => {
     element[key] = value;
@@ -351,12 +352,42 @@ function ExampleApp() {
     eventBus.fire('propertiesPanel.setErrors', { errors });
   };
 
+  const toggleDiagnostics = event => {
+    const active = event.target.checked;
+
+    setShowDiagnostics(active);
+
+    const severities = [ 'info', 'warning', 'error' ];
+
+    const diagnostics = active ? collectEntryIds(groups).reduce((acc, id, idx) => {
+      const severity = severities[ idx % severities.length ];
+
+      acc[id] = [ {
+        severity,
+        message: `This is an example ${ severity }.`,
+        action: {
+          label: 'Fix',
+          tooltip: `Fix this example ${ severity }`,
+          onClick: () => console.log('fix', id)
+        }
+      } ];
+
+      return acc;
+    }, {}) : {};
+
+    eventBus.fire('propertiesPanel.setDiagnostics', { diagnostics });
+  };
+
   return (
     <div class="bio-properties-panel" style="display: flex; flex-direction: column; height: 100%;">
       <div style="padding: 6px 8px; border-bottom: 1px solid #ccc;">
         <label style="font-size: 12px; display: flex; align-items: center; gap: 6px;">
           <input type="checkbox" checked={ showErrors } onChange={ toggleErrors } />
           Show errors on all controls
+        </label>
+        <label style="font-size: 12px; display: flex; align-items: center; gap: 6px;">
+          <input type="checkbox" checked={ showDiagnostics } onChange={ toggleDiagnostics } />
+          Show diagnostics on all controls
         </label>
       </div>
       <div style="border: 2px dashed #888; margin: 4px;">

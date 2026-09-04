@@ -33,6 +33,7 @@ import {
 
 import {
   DescriptionContext,
+  DiagnosticsContext,
   ErrorsContext,
   EventContext,
   PropertiesPanelContext
@@ -625,7 +626,7 @@ describe('<TextField>', function() {
     });
 
 
-    it('should render error action', function() {
+    it('should NOT get error action', function() {
 
       // given
       const errors = {
@@ -638,74 +639,239 @@ describe('<TextField>', function() {
         }
       };
 
+      // when
       const result = createTextField({ container, errors, id: 'foo' });
 
-      // when
-      const message = domQuery('.bio-properties-panel-error-message', result.container);
-      const action = domQuery('.bio-properties-panel-error-action', result.container);
+      // then
+      expect(domQuery('.bio-properties-panel-diagnostic-action', result.container)).to.not.exist;
+    });
+
+  });
+
+
+  describe('diagnostics', function() {
+
+    it('should get error', function() {
+
+      // given
+      const diagnostics = {
+        foo: [ { severity: 'error', message: 'bar' } ]
+      };
+
+      const result = createTextField({ container, diagnostics, id: 'foo' });
 
       // then
-      expect(message.innerText).to.eql('bar');
-      expect(action).to.exist;
-      expect(action.innerText).to.eql('Fix');
+      expect(domClasses(domQuery('.bio-properties-panel-entry', result.container)).has('has-error')).to.be.true;
+      expect(domQuery('.bio-properties-panel-error', result.container).innerText).to.eql('bar');
     });
 
 
-    it('should show error action tooltip on hover', async function() {
+    it('should get warning', function() {
 
       // given
-      const errors = {
-        foo: {
-          message: 'bar',
-          action: {
-            label: 'Fix',
-            tooltip: 'Fix the value',
-            onClick: noop
-          }
-        }
+      const diagnostics = {
+        foo: [ { severity: 'warning', message: 'bar' } ]
       };
 
-      const result = createTextField({ container, errors, id: 'foo' });
-
-      const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', result.container);
-
-      // when
-      fireEvent.mouseEnter(wrapper);
+      const result = createTextField({ container, diagnostics, id: 'foo' });
 
       // then
-      await waitFor(() => {
-        const tooltip = domQuery('.bio-properties-panel-tooltip-content', result.container);
+      expect(domClasses(domQuery('.bio-properties-panel-entry', result.container)).has('has-warning')).to.be.true;
+      expect(domQuery('.bio-properties-panel-warning', result.container).innerText).to.eql('bar');
+    });
 
-        expect(tooltip).to.exist;
-        expect(tooltip.textContent).to.eql('Fix the value');
+
+    it('should get info', function() {
+
+      // given
+      const diagnostics = {
+        foo: [ { severity: 'info', message: 'bar' } ]
+      };
+
+      const result = createTextField({ container, diagnostics, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-info', result.container).innerText).to.eql('bar');
+    });
+
+
+    it('should NOT mark entry for info', function() {
+
+      // given
+      const diagnostics = {
+        foo: [ { severity: 'info', message: 'bar' } ]
+      };
+
+      // when
+      const result = createTextField({ container, diagnostics, id: 'foo' });
+
+      // then
+      const entry = domQuery('.bio-properties-panel-entry', result.container);
+
+      expect(domClasses(entry).has('has-error')).to.be.false;
+      expect(domClasses(entry).has('has-warning')).to.be.false;
+    });
+
+
+    it('should show most severe diagnostic', function() {
+
+      // given
+      const diagnostics = {
+        foo: [
+          { severity: 'info', message: 'info' },
+          { severity: 'error', message: 'error' },
+          { severity: 'warning', message: 'warning' }
+        ]
+      };
+
+      const result = createTextField({ container, diagnostics, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-error', result.container).innerText).to.eql('error');
+      expect(domQuery('.bio-properties-panel-warning', result.container)).to.not.exist;
+    });
+
+
+    it('should show diagnostic over local error of same severity', function() {
+
+      // given
+      const diagnostics = {
+        foo: [ { severity: 'error', message: 'bar' } ]
+      };
+
+      const validate = () => 'local';
+
+      const result = createTextField({ container, diagnostics, validate, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-error', result.container).innerText).to.eql('bar');
+    });
+
+
+    it('should show more severe local error over diagnostic', function() {
+
+      // given
+      const diagnostics = {
+        foo: [ { severity: 'warning', message: 'bar' } ]
+      };
+
+      const validate = () => 'local';
+
+      const result = createTextField({ container, diagnostics, validate, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-error', result.container).innerText).to.eql('local');
+    });
+
+
+    it('should get local warning through validate', function() {
+
+      // given
+      const validate = () => ({ severity: 'warning', message: 'bar' });
+
+      const result = createTextField({ container, validate, id: 'foo' });
+
+      // then
+      expect(domQuery('.bio-properties-panel-warning', result.container).innerText).to.eql('bar');
+    });
+
+
+    describe('action', function() {
+
+      it('should render', function() {
+
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'error',
+            message: 'bar',
+            action: { label: 'Fix', onClick: noop }
+          } ]
+        };
+
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        // when
+        const action = domQuery('.bio-properties-panel-diagnostic-action', result.container);
+
+        // then
+        expect(action.innerText).to.eql('Fix');
       });
-    });
 
 
-    it('should trigger error action on click', function() {
+      it('should render for warning', function() {
 
-      // given
-      const onClickSpy = sinonSpy();
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'warning',
+            message: 'bar',
+            action: { label: 'Fix', onClick: noop }
+          } ]
+        };
 
-      const errors = {
-        foo: {
-          message: 'bar',
-          action: {
-            label: 'Fix',
-            onClick: onClickSpy
-          }
-        }
-      };
+        const result = createTextField({ container, diagnostics, id: 'foo' });
 
-      const result = createTextField({ container, errors, id: 'foo' });
+        // when
+        const warning = domQuery('.bio-properties-panel-warning', result.container);
 
-      const action = domQuery('.bio-properties-panel-error-action', result.container);
+        // then
+        expect(domQuery('.bio-properties-panel-diagnostic-action', warning)).to.exist;
+      });
 
-      // when
-      fireEvent.click(action);
 
-      // then
-      expect(onClickSpy).to.have.been.called;
+      it('should show tooltip on hover', async function() {
+
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'error',
+            message: 'bar',
+            action: { label: 'Fix', tooltip: 'Fix the value', onClick: noop }
+          } ]
+        };
+
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', result.container);
+
+        // when
+        fireEvent.mouseEnter(wrapper);
+
+        // then
+        await waitFor(() => {
+          const tooltip = domQuery('.bio-properties-panel-tooltip-content', result.container);
+
+          expect(tooltip).to.exist;
+          expect(tooltip.textContent).to.eql('Fix the value');
+        });
+      });
+
+
+      it('should trigger on click', function() {
+
+        // given
+        const onClickSpy = sinonSpy();
+
+        const diagnostics = {
+          foo: [ {
+            severity: 'error',
+            message: 'bar',
+            action: { label: 'Fix', onClick: onClickSpy }
+          } ]
+        };
+
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        const action = domQuery('.bio-properties-panel-diagnostic-action', result.container);
+
+        // when
+        fireEvent.click(action);
+
+        // then
+        expect(onClickSpy).to.have.been.called;
+      });
+
     });
 
   });
@@ -989,25 +1155,26 @@ describe('<TextField>', function() {
     });
 
 
-    it('should have no violations with error action', async function() {
+    it('should have no violations with diagnostic action', async function() {
 
       // given
       this.timeout(5000);
 
-      const errors = {
-        foo: {
+      const diagnostics = {
+        foo: [ {
+          severity: 'warning',
           message: 'bar',
           action: {
             label: 'Fix',
             tooltip: 'Fix the value',
             onClick: noop
           }
-        }
+        } ]
       };
 
       const { container: node } = createTextField({
         container,
-        errors,
+        diagnostics,
         id: 'foo',
         label: 'foo'
       });
@@ -1053,12 +1220,17 @@ function createTextField(options = {}, renderFn = render) {
     eventBus = new EventBus(),
     onShow = noop,
     errors = {},
+    diagnostics = {},
     tooltip,
     ...restProps
   } = options;
 
   const errorsContext = {
     errors
+  };
+
+  const diagnosticsContext = {
+    diagnostics
   };
 
   const eventContext = {
@@ -1075,28 +1247,30 @@ function createTextField(options = {}, renderFn = render) {
   };
 
   return renderFn(
-    <ErrorsContext.Provider value={ errorsContext }>
-      <EventContext.Provider value={ eventContext }>
-        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-          <DescriptionContext.Provider value={ descriptionContext }>
-            <TextField
-              { ...restProps }
-              element={ element }
-              id={ id }
-              label={ label }
-              description={ description }
-              disabled={ disabled }
-              getValue={ getValue }
-              setValue={ setValue }
-              onBlur={ onBlur }
-              debounce={ debounce }
-              validate={ validate }
-              tooltip={ tooltip }
-            />
-          </DescriptionContext.Provider>
-        </PropertiesPanelContext.Provider>
-      </EventContext.Provider>
-    </ErrorsContext.Provider>,
+    <DiagnosticsContext.Provider value={ diagnosticsContext }>
+      <ErrorsContext.Provider value={ errorsContext }>
+        <EventContext.Provider value={ eventContext }>
+          <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+            <DescriptionContext.Provider value={ descriptionContext }>
+              <TextField
+                { ...restProps }
+                element={ element }
+                id={ id }
+                label={ label }
+                description={ description }
+                disabled={ disabled }
+                getValue={ getValue }
+                setValue={ setValue }
+                onBlur={ onBlur }
+                debounce={ debounce }
+                validate={ validate }
+                tooltip={ tooltip }
+              />
+            </DescriptionContext.Provider>
+          </PropertiesPanelContext.Provider>
+        </EventContext.Provider>
+      </ErrorsContext.Provider>
+    </DiagnosticsContext.Provider>,
     {
       container
     }

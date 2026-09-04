@@ -778,11 +778,20 @@ textarea.bio-properties-panel-input.auto-resize {
   --focus-ring-color: var(--focus-ring-error-color);
 }
 
+.bio-properties-panel-info,
 .bio-properties-panel-warning,
 .bio-properties-panel-error {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
   margin: var(--description-offset) 0;
   font-size: var(--text-size-small);
   line-height: var(--line-height-condensed);
+}
+
+.bio-properties-panel-info {
+  color: var(--description-color);
 }
 
 .bio-properties-panel-warning {
@@ -790,18 +799,14 @@ textarea.bio-properties-panel-input.auto-resize {
 }
 
 .bio-properties-panel-error {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
   color: var(--text-error-color);
 }
 
-.bio-properties-panel-error-message {
+.bio-properties-panel-diagnostic-message {
   flex: 1;
 }
 
-.bio-properties-panel-error-action {
+.bio-properties-panel-diagnostic-action {
   flex-shrink: 0;
   color: var(--accent-color);
   background-color: transparent;
@@ -814,12 +819,12 @@ textarea.bio-properties-panel-input.auto-resize {
   cursor: pointer;
 }
 
-.bio-properties-panel-error-action:hover {
+.bio-properties-panel-diagnostic-action:hover {
   color: #fff;
   background-color: var(--accent-color);
 }
 
-.bio-properties-panel-error-action:focus {
+.bio-properties-panel-diagnostic-action:focus {
   outline-offset: 2px;
   outline-color: var(--focus-outline-color);
 }

@@ -1,5 +1,5 @@
 import Description from '../Description';
-import ErrorMessage from '../Error';
+import DiagnosticMessage from '../Diagnostic';
 import TemplatingEditor from '../templating/TemplatingEditor';
 
 import {
@@ -18,7 +18,7 @@ import { isFunction, isString } from 'min-dash';
 
 import {
   useDebounce,
-  useError,
+  useDiagnostics,
   useShowEntryEvent,
   useStaticCallback
 } from '../../../hooks';
@@ -36,6 +36,8 @@ import { ToggleSwitch } from '../ToggleSwitch';
 
 import { NumberField } from '../NumberField';
 import Tooltip from '../Tooltip';
+
+import { ENTRY_SEVERITY_CLASS, getMostSevere, toDiagnostic } from '../../util/diagnostics';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
@@ -622,7 +624,7 @@ const OptionalFeelCheckbox = forwardRef((props, ref) => {
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.tooltipContainer
- * @param {Function} props.validate
+ * @param {Function} props.validate - returns a message or a diagnostic, if the value is invalid
  * @param {Function} props.show
  * @param {Function} props.example
  * @param {Array} props.variables
@@ -656,8 +658,8 @@ export default function FeelEntry(props) {
     translate = translateFallback
   } = props;
 
-  const [ validationError, setValidationError ] = useState(null);
-  const [ localError, setLocalError ] = useState(null);
+  const [ validationDiagnostic, setValidationDiagnostic ] = useState(null);
+  const [ lintDiagnostic, setLintDiagnostic ] = useState(null);
 
   let value = getValue(element);
 
@@ -665,7 +667,7 @@ export default function FeelEntry(props) {
     if (isFunction(validate)) {
       const newValidationError = validate(value) || null;
 
-      setValidationError(newValidationError);
+      setValidationDiagnostic(toDiagnostic(newValidationError));
     }
   }, [ value, validate ]);
 
@@ -681,24 +683,25 @@ export default function FeelEntry(props) {
       }
 
       setValue(newValue, newValidationError);
-      setValidationError(newValidationError);
+      setValidationDiagnostic(toDiagnostic(newValidationError));
     }
   });
 
   const onError = useCallback(err => {
-    setLocalError(err);
+    setLintDiagnostic(toDiagnostic(err));
   }, []);
 
-  const temporaryError = useError(id);
+  const diagnostics = useDiagnostics(id);
 
-  const error = temporaryError || localError || validationError;
+  // externally provided diagnostics take precedence over local ones
+  const diagnostic = getMostSevere([ ...diagnostics, lintDiagnostic, validationDiagnostic ]);
 
   return (
     <div
       class={ classnames(
         props.class,
         'bio-properties-panel-entry',
-        error ? 'has-error' : '')
+        ENTRY_SEVERITY_CLASS[ diagnostic?.severity ])
       }
       data-entry-id={ id }>
       <FeelTextfield
@@ -724,7 +727,7 @@ export default function FeelEntry(props) {
         tooltipContainer={ tooltipContainer }
         OptionalComponent={ props.OptionalComponent }
         tooltip={ tooltip } />
-      <ErrorMessage error={ error } forId={ id } element={ element } />
+      <DiagnosticMessage diagnostic={ diagnostic } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
@@ -745,7 +748,7 @@ export default function FeelEntry(props) {
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.tooltipContainer
- * @param {Function} props.validate
+ * @param {Function} props.validate - returns a message or a diagnostic, if the value is invalid
  * @param {Function} props.show
  * @param {Function} props.example
  * @param {Array} props.variables
@@ -768,7 +771,7 @@ export function FeelNumberEntry(props) {
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.tooltipContainer
- * @param {Function} props.validate
+ * @param {Function} props.validate - returns a message or a diagnostic, if the value is invalid
  * @param {Function} props.show
  * @param {Function} props.example
  * @param {Array} props.variables
@@ -792,7 +795,7 @@ export function FeelTextAreaEntry(props) {
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.tooltipContainer
- * @param {Function} props.validate
+ * @param {Function} props.validate - returns a message or a diagnostic, if the value is invalid
  * @param {Function} props.show
  * @param {Function} props.example
  * @param {Array} props.variables
@@ -815,7 +818,7 @@ export function FeelToggleSwitchEntry(props) {
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.tooltipContainer
- * @param {Function} props.validate
+ * @param {Function} props.validate - returns a message or a diagnostic, if the value is invalid
  * @param {Function} props.show
  * @param {Function} props.example
  * @param {Array} props.variables
@@ -840,7 +843,7 @@ export function FeelCheckboxEntry(props) {
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.tooltipContainer
- * @param {Function} props.validate
+ * @param {Function} props.validate - returns a message or a diagnostic, if the value is invalid
  * @param {Function} props.show
  * @param {Function} props.example
  * @param {Array} props.variables

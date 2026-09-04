@@ -21,6 +21,7 @@ import Placeholder from './components/Placeholder';
 
 import {
   DescriptionContext,
+  DiagnosticsContext,
   ErrorsContext,
   EventContext,
   LayoutContext,
@@ -29,6 +30,8 @@ import {
 } from './context';
 
 import { useEvent } from './hooks';
+
+import { toDiagnostic, toErrorDiagnostic } from './components/util/diagnostics';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
@@ -212,15 +215,31 @@ export default function PropertiesPanel(props) {
     getTooltipForId
   };
 
+  const [ diagnostics, setDiagnostics ] = useState({});
+
+  const onSetDiagnostics = ({ diagnostics }) => setDiagnostics(diagnostics);
+
+  useEvent('propertiesPanel.setDiagnostics', onSetDiagnostics, eventBus);
+
   const [ errors, setErrors ] = useState({});
 
   const onSetErrors = ({ errors }) => setErrors(errors);
 
   useEvent('propertiesPanel.setErrors', onSetErrors, eventBus);
 
-  const errorsContext = {
-    errors
-  };
+  // externally provided diagnostics take precedence over the deprecated errors
+  const allDiagnostics = useMemo(
+    () => createDiagnostics(diagnostics, errors),
+    [ diagnostics, errors ]
+  );
+
+  const diagnosticsContext = useMemo(() => ({
+    diagnostics: allDiagnostics
+  }), [ allDiagnostics ]);
+
+  const errorsContext = useMemo(() => ({
+    errors: createErrors(allDiagnostics)
+  }), [ allDiagnostics ]);
 
   const eventContext = {
     eventBus
@@ -242,46 +261,101 @@ export default function PropertiesPanel(props) {
 
   return (
     <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-      <ErrorsContext.Provider value={ errorsContext }>
-        <DescriptionContext.Provider value={ descriptionContext }>
-          <TooltipContext.Provider value={ tooltipContext }>
-            <LayoutContext.Provider value={ layoutContext }>
-              <EventContext.Provider value={ eventContext }>
-                <div class="bio-properties-panel">
-                  { headerProvider ? (
-                    <Header
-                      element={ element }
-                      headerProvider={ headerProvider } />
-                  ) : null }
-                  <div class="bio-properties-panel-scroll-container">
-                    {
-                      groups.map(group => {
-                        const {
-                          component: Component = Group,
-                          id
-                        } = group;
+      <DiagnosticsContext.Provider value={ diagnosticsContext }>
+        <ErrorsContext.Provider value={ errorsContext }>
+          <DescriptionContext.Provider value={ descriptionContext }>
+            <TooltipContext.Provider value={ tooltipContext }>
+              <LayoutContext.Provider value={ layoutContext }>
+                <EventContext.Provider value={ eventContext }>
+                  <div class="bio-properties-panel">
+                    { headerProvider ? (
+                      <Header
+                        element={ element }
+                        headerProvider={ headerProvider } />
+                    ) : null }
+                    <div class="bio-properties-panel-scroll-container">
+                      {
+                        groups.map(group => {
+                          const {
+                            component: Component = Group,
+                            id
+                          } = group;
 
-                        return (
-                          <Component
-                            { ...group }
-                            key={ id }
-                            element={ element } />
-                        );
-                      })
-                    }
+                          return (
+                            <Component
+                              { ...group }
+                              key={ id }
+                              element={ element } />
+                          );
+                        })
+                      }
+                    </div>
                   </div>
-                </div>
-              </EventContext.Provider>
-            </LayoutContext.Provider>
-          </TooltipContext.Provider>
-        </DescriptionContext.Provider>
-      </ErrorsContext.Provider>
+                </EventContext.Provider>
+              </LayoutContext.Provider>
+            </TooltipContext.Provider>
+          </DescriptionContext.Provider>
+        </ErrorsContext.Provider>
+      </DiagnosticsContext.Provider>
     </PropertiesPanelContext.Provider>
   );
 }
 
 
 // helpers //////////////////
+
+/**
+ * Merge the diagnostics with the ones provided through the deprecated errors,
+ * keyed by entry ID.
+ *
+ * @param {Object<String, Array<import('./components/util/diagnostics').Diagnostic>>} diagnostics
+ * @param {Object<String, String>} errors
+ *
+ * @returns {Object<String, Array<import('./components/util/diagnostics').Diagnostic>>}
+ */
+function createDiagnostics(diagnostics, errors) {
+  const merged = {};
+
+  for (const id in diagnostics) {
+    merged[ id ] = asArray(diagnostics[ id ]).map(diagnostic => toDiagnostic(diagnostic)).filter(Boolean);
+  }
+
+  for (const id in errors) {
+    const error = toErrorDiagnostic(errors[ id ]);
+
+    if (error) {
+      merged[ id ] = [ ...(merged[ id ] || []), error ];
+    }
+  }
+
+  return merged;
+}
+
+/**
+ * Project the diagnostics of severity <error> to the deprecated errors,
+ * keyed by entry ID.
+ *
+ * @param {Object<String, Array<import('./components/util/diagnostics').Diagnostic>>} diagnostics
+ *
+ * @returns {Object<String, String>}
+ */
+function createErrors(diagnostics) {
+  const errors = {};
+
+  for (const id in diagnostics) {
+    const error = diagnostics[ id ].find(({ severity }) => severity === 'error');
+
+    if (error) {
+      errors[ id ] = error.message;
+    }
+  }
+
+  return errors;
+}
+
+function asArray(value) {
+  return isArray(value) ? value : [ value ];
+}
 
 function createLayout(overrides = {}, defaults = DEFAULT_LAYOUT) {
   return {

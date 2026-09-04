@@ -3,19 +3,16 @@ import { useContext } from 'preact/hooks';
 import { ErrorsContext } from '../context';
 
 /**
- * @typedef {Object} ErrorAction
- * @property {String} label - label of the action button
- * @property {String} [tooltip] - tooltip shown on hover/focus of the action button
- * @property {Function} onClick - callback invoked when the action is triggered
- */
-
-/**
- * @typedef {String|{ message: String, action?: ErrorAction }} EntryError
- */
-
-/**
+ * Accesses the error of a single entry.
+ *
+ * Only reports diagnostics of severity <error>; warnings and infos are not
+ * exposed here.
+ *
+ * @deprecated use `useDiagnostics` instead
+ *
  * @param {String} id
- * @returns {EntryError}
+ *
+ * @returns {String|undefined}
  */
 export function useError(id) {
   const { errors } = useContext(ErrorsContext);
@@ -23,6 +20,16 @@ export function useError(id) {
   return errors[ id ];
 }
 
+/**
+ * Accesses the errors of all entries, keyed by entry ID.
+ *
+ * Only reports diagnostics of severity <error>; warnings and infos are not
+ * exposed here.
+ *
+ * @deprecated use `useAllDiagnostics` instead
+ *
+ * @returns {Object<String, String>}
+ */
 export function useErrors() {
   const { errors } = useContext(ErrorsContext);
 
