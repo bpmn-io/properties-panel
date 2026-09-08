@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: remove background from FEEL popup icon ([#555](https://github.com/bpmn-io/properties-panel/pull/555))
+
 ## 3.54.0
 
 * `FEAT`: expose popup components ([#550](https://github.com/bpmn-io/properties-panel/pull/550))
