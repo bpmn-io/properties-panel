@@ -1751,23 +1751,10 @@ textarea.bio-properties-panel-input.auto-resize {
   padding: 2px 4px;
   margin: 0 3px;
   display: none;
-  background-color: var(--input-background-color);
+  background: none;
   border: none;
   color: var(--feel-open-popup-color);
   cursor: pointer;
-}
-
-/* fade the text out beneath the feel popup button */
-.bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup::before,
-.bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 100%;
-  width: 0.5em;
-  background: linear-gradient(to right, transparent, var(--input-background-color));
-  pointer-events: none;
 }
 
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup svg,
