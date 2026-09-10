@@ -1,5 +1,5 @@
 import {
-  useError,
+  useDisplayedDiagnostic,
   useShowEntryEvent
 } from '../../hooks';
 
@@ -8,8 +8,13 @@ import {
   useState
 } from 'preact/hooks';
 
+import classnames from 'classnames';
+
 import Description from './Description';
+import DiagnosticMessage from './Diagnostic';
 import Tooltip from './Tooltip';
+
+import { getDiagnosticClass } from '../util/diagnostics';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
@@ -98,10 +103,16 @@ export default function CheckboxEntry(props) {
 
   const value = getValue(element);
 
-  const error = useError(id);
+  const diagnostic = useDisplayedDiagnostic(id);
 
   return (
-    <div class="bio-properties-panel-entry bio-properties-panel-checkbox-entry" data-entry-id={ id }>
+    <div
+      class={ classnames(
+        'bio-properties-panel-entry',
+        'bio-properties-panel-checkbox-entry',
+        getDiagnosticClass(diagnostic))
+      }
+      data-entry-id={ id }>
       <Checkbox
         disabled={ disabled }
         id={ id }
@@ -113,7 +124,7 @@ export default function CheckboxEntry(props) {
         value={ value }
         tooltip={ tooltip }
         element={ element } />
-      { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <DiagnosticMessage diagnostic={ diagnostic } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
