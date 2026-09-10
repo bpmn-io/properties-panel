@@ -32,6 +32,7 @@ import Group from 'src/components/Group';
 
 import {
   PropertiesPanelContext,
+  DiagnosticsContext,
   ErrorsContext
 } from 'src/context';
 import { fireEvent, waitFor } from '@testing-library/preact';
@@ -254,6 +255,59 @@ describe('<Group>', function() {
       expect(errorMarker).to.exist;
     });
 
+
+    it('should show warning marker', function() {
+
+      // given
+      const entries = createEntries();
+      const diagnostics = { 'entry-1': [ { severity: 'warning', message: 'message' } ] };
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries, diagnostics });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      // then
+      expect(domQuery('.bio-properties-panel-dot--warning', header)).to.exist;
+    });
+
+
+    it('should show error marker over warning marker', function() {
+
+      // given
+      const entries = createEntries();
+      const diagnostics = {
+        'entry-1': [ { severity: 'warning', message: 'message' } ],
+        'entry-2': [ { severity: 'error', message: 'message' } ]
+      };
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries, diagnostics });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      // then
+      expect(domQuery('.bio-properties-panel-dot--error', header)).to.exist;
+      expect(domQuery('.bio-properties-panel-dot--warning', header)).to.not.exist;
+    });
+
+
+    it('should NOT show marker for info', function() {
+
+      // given
+      const entries = createEntries();
+      const diagnostics = { 'entry-1': [ { severity: 'info', message: 'message' } ] };
+
+      // when
+      const result = createGroup({ container, label: 'Group', entries, diagnostics });
+
+      const header = domQuery('.bio-properties-panel-group-header', result.container);
+
+      // then
+      expect(domQuery('.bio-properties-panel-dot--error', header)).to.not.exist;
+      expect(domQuery('.bio-properties-panel-dot--warning', header)).to.not.exist;
+    });
+
   });
 
 
@@ -407,16 +461,19 @@ function createEntries(options = {}) {
 function createGroup(options = {}) {
   const {
     container,
-    errors = {}
+    errors = {},
+    diagnostics = {}
   } = options;
 
 
   return render(
-    <ErrorsContext.Provider value={ { errors } }>
-      <MockLayout>
-        <Group id="Example" { ...options } />
-      </MockLayout>
-    </ErrorsContext.Provider>,
+    <DiagnosticsContext.Provider value={ { diagnostics } }>
+      <ErrorsContext.Provider value={ { errors } }>
+        <MockLayout>
+          <Group id="Example" { ...options } />
+        </MockLayout>
+      </ErrorsContext.Provider>
+    </DiagnosticsContext.Provider>,
     {
       container
     }

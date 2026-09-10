@@ -19,9 +19,13 @@ import {
   insertCoreStyles
 } from 'test/TestHelper';
 
+import EventBus from 'diagram-js/lib/core/EventBus';
+
 import PropertiesPanel from 'src/PropertiesPanel';
 
 import ListGroup from 'src/components/ListGroup';
+
+import { useDiagnostics, useError } from 'src/hooks';
 
 import {
   HeaderProvider,
@@ -525,6 +529,94 @@ describe('<PropertiesPanel>', function() {
   });
 
 
+  describe('diagnostics', function() {
+
+    const groups = [
+      {
+        id: 'group-1',
+        label: 'Group 1',
+        entries: [
+          { id: 'entry-1', component: DiagnosticsEntry }
+        ]
+      }
+    ];
+
+    it('should set diagnostics through event', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const result = createPropertiesPanel({ container, element: noopElement, groups, eventBus });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.setDiagnostics', {
+        diagnostics: {
+          'entry-1': [ { severity: 'warning', message: 'bar' } ]
+        }
+      }));
+
+      // then
+      expect(domQuery('.diagnostics', result.container).textContent).to.eql('warning:bar');
+    });
+
+
+    it('should expose deprecated errors as diagnostics', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const result = createPropertiesPanel({ container, element: noopElement, groups, eventBus });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.setErrors', {
+        errors: { 'entry-1': 'bar' }
+      }));
+
+      // then
+      expect(domQuery('.diagnostics', result.container).textContent).to.eql('error:bar');
+    });
+
+
+    it('should expose errors to deprecated consumers', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const result = createPropertiesPanel({ container, element: noopElement, groups, eventBus });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.setDiagnostics', {
+        diagnostics: {
+          'entry-1': [ { severity: 'error', message: 'bar' } ]
+        }
+      }));
+
+      // then
+      expect(domQuery('.error', result.container).textContent).to.eql('bar');
+    });
+
+
+    it('should NOT expose warnings to deprecated consumers', function() {
+
+      // given
+      const eventBus = new EventBus();
+
+      const result = createPropertiesPanel({ container, element: noopElement, groups, eventBus });
+
+      // when
+      act(() => eventBus.fire('propertiesPanel.setDiagnostics', {
+        diagnostics: {
+          'entry-1': [ { severity: 'warning', message: 'bar' } ]
+        }
+      }));
+
+      // then
+      expect(domQuery('.error', result.container).textContent).to.be.empty;
+    });
+
+  });
+
+
   describe('tooltip context', function() {
 
     it('should notify on tooltip loaded', function() {
@@ -587,7 +679,8 @@ function createPropertiesPanel(options = {}, renderFn = render) {
     descriptionConfig,
     descriptionLoaded = noop,
     tooltipConfig,
-    tooltipLoaded = noop
+    tooltipLoaded = noop,
+    eventBus
   } = options;
 
   return renderFn(
@@ -602,11 +695,26 @@ function createPropertiesPanel(options = {}, renderFn = render) {
       descriptionLoaded={ descriptionLoaded }
       tooltipConfig={ tooltipConfig }
       tooltipLoaded={ tooltipLoaded }
+      eventBus={ eventBus }
     />,
     {
       container
     }
   );
+}
+
+function DiagnosticsEntry(props) {
+  const { id = 'entry-1' } = props;
+
+  const diagnostics = useDiagnostics(id);
+  const error = useError(id);
+
+  return <div class="bio-properties-panel-entry" data-entry-id={ id }>
+    <span class="diagnostics">
+      { diagnostics.map(({ severity, message }) => `${ severity }:${ message }`).join(',') }
+    </span>
+    <span class="error">{ error || '' }</span>
+  </div>;
 }
 
 function TestEntry(props) {
