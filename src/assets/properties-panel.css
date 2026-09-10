@@ -1758,7 +1758,7 @@ textarea.bio-properties-panel-input.auto-resize {
   display: none;
   background: none;
   border: none;
-  color: var(--feel-open-popup-color);
+  fill: var(--feel-open-popup-color);
   cursor: pointer;
 }
 
@@ -1782,7 +1782,7 @@ textarea.bio-properties-panel-input.auto-resize {
 .bio-properties-panel-feelers-editor-container .bio-properties-panel-open-feel-popup:hover,
 .bio-properties-panel-feel-container .bio-properties-panel-open-feel-popup:hover,
 .bio-properties-panel-textarea-container .bio-properties-panel-open-feel-popup:hover {
-  color: var(--feel-open-popup-hover-color);
+  fill: var(--feel-open-popup-hover-color);
 }
 
 .bio-properties-panel-feel-popup .bio-properties-panel-popup__footer .bio-properties-panel-feel-popup__close-btn {
