@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+# 3.55.0
+
+* `FEAT`: source color variables from `@bpmn-io/theme` ([#551](https://github.com/bpmn-io/properties-panel/pull/551))
+
 ## 3.54.1
 
 * `FIX`: remove background from FEEL popup icon ([#555](https://github.com/bpmn-io/properties-panel/pull/555))
