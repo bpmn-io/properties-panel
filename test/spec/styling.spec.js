@@ -61,6 +61,7 @@ describe('styling (CSS)', function() {
   beforeEach(function() {
     container = document.createElement('div');
     container.classList.add('bio-properties-panel');
+    container.classList.add('bio-theme-parent');
     container.style.width = '100%';
     container.style.padding = '10px';
 
