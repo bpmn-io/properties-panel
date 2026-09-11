@@ -782,11 +782,20 @@ textarea.bio-properties-panel-input.auto-resize {
   --focus-ring-color: var(--focus-ring-error-color);
 }
 
+.bio-properties-panel-info,
 .bio-properties-panel-warning,
 .bio-properties-panel-error {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
   margin: var(--description-offset) 0;
   font-size: var(--text-size-small);
   line-height: var(--line-height-condensed);
+}
+
+.bio-properties-panel-info {
+  color: var(--description-color);
 }
 
 .bio-properties-panel-warning {
@@ -795,6 +804,33 @@ textarea.bio-properties-panel-input.auto-resize {
 
 .bio-properties-panel-error {
   color: var(--text-error-color);
+}
+
+.bio-properties-panel-diagnostic-message {
+  flex: 1;
+}
+
+.bio-properties-panel-diagnostic-action {
+  flex-shrink: 0;
+  color: var(--accent-color);
+  background-color: transparent;
+  border: 1px solid var(--accent-color);
+  border-radius: 2px;
+  padding: 1px 8px;
+  font-family: inherit;
+  font-size: var(--text-size-small);
+  line-height: var(--line-height-condensed);
+  cursor: pointer;
+}
+
+.bio-properties-panel-diagnostic-action:hover {
+  color: var(--bio-text-on-primary);
+  background-color: var(--accent-color);
+}
+
+.bio-properties-panel-diagnostic-action:focus {
+  outline-offset: 2px;
+  outline-color: var(--focus-outline-color);
 }
 
 .bio-properties-panel-simple {
@@ -1428,6 +1464,11 @@ textarea.bio-properties-panel-input.auto-resize {
 .bio-properties-panel-tooltip-wrapper:focus,
 .bio-properties-panel-tooltip-wrapper:focus-visible {
   text-decoration-color: currentColor;
+}
+
+/* the diagnostic action is a button, not text that hints at more info */
+.bio-properties-panel-tooltip-wrapper:has(.bio-properties-panel-diagnostic-action) {
+  text-decoration: none;
 }
 
 .bio-properties-panel-tooltip {
