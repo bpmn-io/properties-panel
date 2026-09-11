@@ -10,11 +10,12 @@
     "preact"
   ],
   "scripts": {
-    "all": "run-s lint clean build test test:distro",
+    "all": "run-s lint lint:theme clean build test test:distro",
     "clean": "del-cli preact dist",
     "build": "rollup -c --bundleConfigAsCjs",
     "build:watch": "npm run build -- --watch",
     "lint": "eslint .",
+    "lint:theme": "bpmn-io-theme-validate src/assets/properties-panel.css",
     "start": "cross-env SINGLE_START=example npm run dev",
     "start:styles": "cross-env SINGLE_START=styles npm run dev",
     "dev": "npm test -- --auto-watch --no-single-run",
@@ -58,6 +59,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@babel/plugin-transform-react-jsx": "^7.29.7",
+    "@bpmn-io/theme": "^0.1.0",
     "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",

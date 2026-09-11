@@ -61,6 +61,7 @@ describe('styling (CSS)', function() {
   beforeEach(function() {
     container = document.createElement('div');
     container.classList.add('bio-properties-panel');
+    container.classList.add('bio-theme-parent');
     container.style.width = '100%';
     container.style.padding = '10px';
 
@@ -90,6 +91,48 @@ describe('styling (CSS)', function() {
               <input class="bio-properties-panel-input" type="checkbox" checked />
               <span class="bio-properties-panel-label">Checkbox</span>
             </label>
+          </div>
+          <div class="bio-properties-panel-entry">
+            <div class="bio-properties-panel-feel-entry">
+              <label class="bio-properties-panel-label">
+                FEEL (optional)
+                <button type="button" class="bio-properties-panel-feel-icon optional" title="Click to set a dynamic value with FEEL expression">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.6168 11.9894C3.47957 12.6745 3.22473 13.1809 2.85227 13.5085C2.48961 13.8362 1.97012 14 1.29381 14H0L0.308751 12.4213H1.57316L3.08751 4.78085H2.17596L2.48471 3.20213H3.39626L3.6315 2.01064C3.76872 1.32553 4.01866 0.819149 4.38132 0.491489C4.75378 0.16383 5.27817 0 5.95448 0H7.2483L6.93954 1.57872H5.67514L5.35168 3.20213H6.61609L6.30734 4.78085H5.04293L3.6168 11.9894Z" fill="currentcolor" />
+                    <path d="M5.60492 11.0213L8.63361 6.86596L7.28099 3.20213H9.35403L10.0598 5.74894H10.2362L11.927 3.20213H14L10.986 7.25319L12.3239 11.0213H10.2509L9.54517 8.41489H9.36874L7.67796 11.0213H5.60492Z" fill="currentcolor" />
+                  </svg>
+                </button>
+              </label>
+              <div class="bio-properties-panel-feel-container">
+                <div class="bio-properties-panel-feel-input">
+                  <input class="bio-properties-panel-input" type="text" value="Optional text value" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bio-properties-panel-entry">
+            <div class="bio-properties-panel-feel-entry feel-active">
+              <label class="bio-properties-panel-label">
+                FEEL (required)
+                <button type="button" class="bio-properties-panel-feel-icon required active" disabled title="FEEL expression is mandatory">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.6168 11.9894C3.47957 12.6745 3.22473 13.1809 2.85227 13.5085C2.48961 13.8362 1.97012 14 1.29381 14H0L0.308751 12.4213H1.57316L3.08751 4.78085H2.17596L2.48471 3.20213H3.39626L3.6315 2.01064C3.76872 1.32553 4.01866 0.819149 4.38132 0.491489C4.75378 0.16383 5.27817 0 5.95448 0H7.2483L6.93954 1.57872H5.67514L5.35168 3.20213H6.61609L6.30734 4.78085H5.04293L3.6168 11.9894Z" fill="currentcolor" />
+                    <path d="M5.60492 11.0213L8.63361 6.86596L7.28099 3.20213H9.35403L10.0598 5.74894H10.2362L11.927 3.20213H14L10.986 7.25319L12.3239 11.0213H10.2509L9.54517 8.41489H9.36874L7.67796 11.0213H5.60492Z" fill="currentcolor" />
+                  </svg>
+                </button>
+              </label>
+              <div class="bio-properties-panel-feel-container">
+                <span class="bio-properties-panel-feel-indicator">=</span>
+                <div class="bio-properties-panel-feel-editor-container">
+                  <div class="bio-properties-panel-input edited">= now()</div>
+                  <button type="button" class="bio-properties-panel-open-feel-popup" title="Open pop-up editor">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                      <path d="M6 15L6 14 2.7 14 7 9.7 6.3 9 2 13.3 2 10 1 10 1 15zM10 1L10 2 13.3 2 9 6.3 9.7 7 14 2.7 14 6 15 6 15 1z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
