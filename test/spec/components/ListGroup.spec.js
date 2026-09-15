@@ -27,7 +27,7 @@ import {
 import ListGroup from 'src/components/ListGroup';
 
 import { PropertiesPanelContext, LayoutContext } from 'src/context';
-import { ErrorsContext } from '../../../src/context';
+import { DiagnosticsContext, ErrorsContext } from '../../../src/context';
 
 insertCoreStyles();
 
@@ -142,6 +142,79 @@ describe('<ListGroup>', function() {
       // then
       expect(errorBadge).to.exist;
       expect(errorBadge.innerText).to.eql('2');
+    });
+
+
+    it('should indicate warning', function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        }
+      ];
+
+      const diagnostics = {
+        'item-1': [ { severity: 'warning', message: 'foo' } ]
+      };
+
+      // when
+      const { container } = createListGroup({ container: parentContainer, items, diagnostics });
+
+      // then
+      expect(domQuery('.bio-properties-panel-list-badge--warning', container)).to.exist;
+    });
+
+
+    it('should indicate error over warning', function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        },
+        {
+          id: 'item-2',
+          label: 'Item 2'
+        }
+      ];
+
+      const diagnostics = {
+        'item-1': [ { severity: 'warning', message: 'foo' } ],
+        'item-2': [ { severity: 'error', message: 'foo' } ]
+      };
+
+      // when
+      const { container } = createListGroup({ container: parentContainer, items, diagnostics });
+
+      // then
+      expect(domQuery('.bio-properties-panel-list-badge--error', container)).to.exist;
+      expect(domQuery('.bio-properties-panel-list-badge--warning', container)).to.not.exist;
+    });
+
+
+    it('should NOT indicate info', function() {
+
+      // given
+      const items = [
+        {
+          id: 'item-1',
+          label: 'Item 1'
+        }
+      ];
+
+      const diagnostics = {
+        'item-1': [ { severity: 'info', message: 'foo' } ]
+      };
+
+      // when
+      const { container } = createListGroup({ container: parentContainer, items, diagnostics });
+
+      // then
+      expect(domQuery('.bio-properties-panel-list-badge--error', container)).to.not.exist;
+      expect(domQuery('.bio-properties-panel-list-badge--warning', container)).to.not.exist;
     });
 
   });
@@ -1071,6 +1144,7 @@ function TestGroup(props) {
   const {
     element = noopElement,
     errors = {},
+    diagnostics = {},
     id = 'sampleId',
     label = 'List',
     items = [],
@@ -1081,20 +1155,22 @@ function TestGroup(props) {
   } = props;
 
   return (
-    <ErrorsContext.Provider value={ { errors } }>
-      <MockLayout>
-        <ListGroup
-          element={ element }
-          id={ id }
-          label={ label }
-          items={ items }
-          add={ add }
-          shouldOpen={ shouldOpen }
-          tooltip={ tooltip }
-          translate={ translate }
-        />
-      </MockLayout>
-    </ErrorsContext.Provider>
+    <DiagnosticsContext.Provider value={ { diagnostics } }>
+      <ErrorsContext.Provider value={ { errors } }>
+        <MockLayout>
+          <ListGroup
+            element={ element }
+            id={ id }
+            label={ label }
+            items={ items }
+            add={ add }
+            shouldOpen={ shouldOpen }
+            tooltip={ tooltip }
+            translate={ translate }
+          />
+        </MockLayout>
+      </ErrorsContext.Provider>
+    </DiagnosticsContext.Provider>
   );
 }
 
@@ -1102,6 +1178,7 @@ function createListGroup(options = {}, renderFn = render) {
   const {
     element = noopElement,
     errors,
+    diagnostics,
     id = 'sampleId',
     label = 'List',
     items = [],
@@ -1116,6 +1193,7 @@ function createListGroup(options = {}, renderFn = render) {
     <TestGroup
       element={ element }
       errors={ errors }
+      diagnostics={ diagnostics }
       id={ id }
       label={ label }
       items={ items }

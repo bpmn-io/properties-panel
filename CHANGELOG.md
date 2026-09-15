@@ -6,7 +6,18 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
-# 3.55.0
+* `FEAT`: support entry diagnostics with `info`, `warning` and `error` severity, displaying the most severe one ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `FEAT`: set diagnostics through `propertiesPanel.setDiagnostics` ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `FEAT`: allow diagnostics to carry an action with a custom label and tooltip ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `FEAT`: allow `validate` to return a diagnostic ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `FEAT`: indicate the most severe diagnostic in group and list markers ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `FIX`: mark checkbox entries with errors ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `FIX`: report the most severe templating lint error, not the first report ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `FIX`: show externally provided errors over local ones in templating entries, consistent with all other entries ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `DEPRECATE`: `propertiesPanel.setErrors`, `ErrorsContext`, `useError` and `useErrors` in favor of their diagnostics counterparts ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `DEPRECATE`: `bio-properties-panel-error-message` and `bio-properties-panel-error-action` classes in favor of `bio-properties-panel-diagnostic-message` and `bio-properties-panel-diagnostic-action`, kept alongside them for backwards compatibility ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+
+## 3.55.0
 
 * `FEAT`: source color variables from `@bpmn-io/theme` ([#551](https://github.com/bpmn-io/properties-panel/pull/551))
 

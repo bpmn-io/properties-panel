@@ -287,6 +287,29 @@ describe('<JsonEditor>', function() {
     });
 
 
+    it('should show built-in JSON error over a less severe custom diagnostic', async function() {
+
+      // given
+      const validate = () => ({ severity: 'warning', message: 'custom warning' });
+
+      const result = createJsonEditor({
+        container,
+        getValue: () => '{invalid: json}',
+        validate
+      });
+
+      // then
+      await waitFor(() => {
+        const entry = domQuery('.bio-properties-panel-entry', result.container);
+        expect(domClasses(entry).has('has-error')).to.be.true;
+
+        const error = domQuery('.bio-properties-panel-error', result.container);
+        expect(error).to.exist;
+        expect(error.textContent).to.equal('JSON contains errors');
+      });
+    });
+
+
     it('should show no error from validate prop if valid', async function() {
 
       // given
