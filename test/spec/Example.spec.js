@@ -142,19 +142,28 @@ const layoutConfig = {};
 const noop = () => {};
 
 /**
- * Collect the ids of all entries across groups (including nested list items).
+ * Collect the ids of all entries across groups (including nested list items),
+ * optionally filtered by a predicate.
  */
-function collectEntryIds(groups) {
+function collectEntryIds(groups, filterEntry = () => true) {
   const ids = [];
 
   groups.forEach(group => {
-    (group.entries || []).forEach(entry => ids.push(entry.id));
+    (group.entries || []).forEach(entry => filterEntry(entry) && ids.push(entry.id));
     (group.items || []).forEach(item => {
-      (item.entries || []).forEach(entry => ids.push(entry.id));
+      (item.entries || []).forEach(entry => filterEntry(entry) && ids.push(entry.id));
     });
   });
 
   return ids;
+}
+
+/**
+ * Entries whose component does not consume diagnostics/errors, and should
+ * therefore be excluded from the "show errors/diagnostics" demo toggles.
+ */
+function supportsDiagnostics(entry) {
+  return entry.component !== ToggleSwitchComponent;
 }
 
 new Popup(eventBus, {});
@@ -164,6 +173,7 @@ function ExampleApp() {
   const [ , forceUpdate ] = useReducer(x => x + 1, 0);
 
   const [ showErrors, setShowErrors ] = useState(false);
+  const [ showDiagnostics, setShowDiagnostics ] = useState(false);
 
   const updateElement = useCallback((key, value) => {
     element[key] = value;
@@ -337,10 +347,16 @@ function ExampleApp() {
     }
   ];
 
+  // errors and diagnostics feed the same store, so setting one always
+  // replaces whatever the other previously showed: reflect that in the UI
   const toggleErrors = event => {
     const active = event.target.checked;
 
     setShowErrors(active);
+
+    if (active) {
+      setShowDiagnostics(false);
+    }
 
     const errors = active ? collectEntryIds(groups).reduce((acc, id) => {
       acc[id] = 'This field is invalid.';
@@ -351,12 +367,49 @@ function ExampleApp() {
     eventBus.fire('propertiesPanel.setErrors', { errors });
   };
 
+  const toggleDiagnostics = event => {
+    const active = event.target.checked;
+
+    setShowDiagnostics(active);
+
+    if (active) {
+      setShowErrors(false);
+    }
+
+    const severities = [ 'info', 'warning', 'error' ];
+
+    const actionLabels = [ 'Fix', 'Ask an agent', 'Input from an agent' ];
+
+    const diagnostics = active ? collectEntryIds(groups, supportsDiagnostics).reduce((acc, id, idx) => {
+      const severity = severities[ idx % severities.length ];
+      const label = actionLabels[ idx % actionLabels.length ];
+
+      acc[id] = [ {
+        severity,
+        message: `This is an example ${ severity }.`,
+        action: {
+          label,
+          tooltip: `${ label } for this example ${ severity }`,
+          onClick: () => console.log('fix', id)
+        }
+      } ];
+
+      return acc;
+    }, {}) : {};
+
+    eventBus.fire('propertiesPanel.setDiagnostics', { diagnostics });
+  };
+
   return (
     <div class="bio-properties-panel" style="display: flex; flex-direction: column; height: 100%;">
       <div style="padding: 6px 8px; border-bottom: 1px solid #ccc;">
         <label style="font-size: 12px; display: flex; align-items: center; gap: 6px;">
           <input type="checkbox" checked={ showErrors } onChange={ toggleErrors } />
           Show errors on all controls
+        </label>
+        <label style="font-size: 12px; display: flex; align-items: center; gap: 6px;">
+          <input type="checkbox" checked={ showDiagnostics } onChange={ toggleDiagnostics } />
+          Show diagnostics on all supported controls
         </label>
       </div>
       <div style="border: 2px dashed #888; margin: 4px;">

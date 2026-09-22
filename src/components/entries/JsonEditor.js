@@ -1,4 +1,5 @@
 import Description from './Description';
+import DiagnosticMessage from './Diagnostic';
 
 import {
   useEffect,
@@ -14,12 +15,14 @@ import translateFallback from '../util/translateFallback';
 
 import {
   useDebounce,
-  useError,
+  useDiagnostics,
   useShowEntryEvent,
   useStaticCallback
 } from '../../hooks';
 
 import Tooltip from './Tooltip';
+
+import { getDiagnosticClass, getMostSevere, toDiagnostic } from '../util/diagnostics';
 
 import { EditorView, drawSelection, highlightSpecialChars, keymap, placeholder as cmPlaceholder } from '@codemirror/view';
 import { Annotation, EditorState } from '@codemirror/state';
@@ -173,7 +176,7 @@ function JsonEditor(props) {
  * @param {boolean} [props.disabled]
  * @param {string} [props.placeholder]
  * @param {string} [props.tooltip]
- * @param {Function} [props.validate]
+ * @param {import('../util/diagnostics').ValidateFunction} [props.validate]
  * @param {Function} [props.translate]
  */
 export default function JsonEditorEntry(props) {
@@ -192,11 +195,11 @@ export default function JsonEditorEntry(props) {
     translate = translateFallback
   } = props;
 
-  const globalError = useError(id);
+  const diagnostics = useDiagnostics(id);
 
   let value = getValue(element);
-  const [ localError, setLocalError ] = useState(
-    () => computeError(validate, value, translate)
+  const [ localDiagnostic, setLocalDiagnostic ] = useState(
+    () => computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate)
   );
   const [ editorValue, setEditorValue ] = useState(value);
 
@@ -206,7 +209,7 @@ export default function JsonEditorEntry(props) {
     }
 
     setEditorValue(value);
-    setLocalError(computeError(validate, value, translate));
+    setLocalDiagnostic(computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate));
   }, [ value, validate ]);
 
   const onInput = useStaticCallback((newValue) => {
@@ -215,18 +218,19 @@ export default function JsonEditorEntry(props) {
     const currentValue = getValue(element);
 
     if (newValue !== currentValue) {
-      const newValidationError = computeError(validate, newValue, translate);
+      const newValidationError = isFunction(validate) ? validate(newValue) : null;
 
       setValue(newValue, newValidationError);
-      setLocalError(newValidationError);
+      setLocalDiagnostic(computeDiagnostic(newValidationError, newValue, translate));
     }
   });
 
-  const error = globalError || localError;
+  // externally provided diagnostics take precedence over local ones
+  const diagnostic = getMostSevere([ ...diagnostics, localDiagnostic ]);
 
   return (
     <div
-      class={ classnames('bio-properties-panel-entry', error && 'has-error') }
+      class={ classnames('bio-properties-panel-entry', getDiagnosticClass(diagnostic)) }
       data-entry-id={ id }>
       <JsonEditor
         id={ id }
@@ -240,7 +244,7 @@ export default function JsonEditorEntry(props) {
         tooltip={ tooltip }
         element={ element }
       />
-      { error && <div class="bio-properties-panel-error">{ error }</div> }
+      <DiagnosticMessage diagnostic={ diagnostic } forId={ id } element={ element } />
       <Description forId={ id } element={ element } value={ description } />
     </div>
   );
@@ -256,8 +260,11 @@ export function isEdited(node) {
 
 // helpers /////////////////
 
-function computeError(validate, value, translate) {
-  return (isFunction(validate) ? validate(value) : null) || validateJson(value, translate);
+function computeDiagnostic(custom, value, translate) {
+  const builtIn = validateJson(value, translate);
+
+  // rank both local checks, so a custom warning cannot mask a built-in JSON syntax error
+  return getMostSevere([ toDiagnostic(custom), toDiagnostic(builtIn) ]);
 }
 
 function validateJson(value, translate = translateFallback) {
