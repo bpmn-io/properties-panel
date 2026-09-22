@@ -8,6 +8,7 @@ html, body {
 
 .test-container {
   height: 800px !important;
+  overflow: visible !important;
 }
 
 .test-content-container {
