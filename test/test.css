@@ -7,8 +7,8 @@ html, body {
 }
 
 .test-container {
-  height: auto !important;
-  min-height: 800px;
+  height: 800px !important;
+  overflow: visible !important;
 }
 
 .test-content-container {
