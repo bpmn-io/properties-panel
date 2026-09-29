@@ -12,12 +12,19 @@ import { createPortal } from 'preact/compat';
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 /**
+ * DOM id of the rendered tooltip popup, so a caller whose trigger is itself
+ * interactive (e.g. a button) can point `aria-describedby` at it.
+ */
+export const TOOLTIP_ID = 'bio-properties-panel-tooltip';
+
+/**
  * @typedef {Object} TooltipProps
  * @property {Object} [parent] - Parent element ref for portal rendering
  * @property {String} [direction='right'] - Tooltip direction ( 'right', 'top')
  * @property {String} [position] - Custom CSS position override
  * @property {Number} [showDelay=250] - Delay in ms before showing tooltip on hover
  * @property {Number} [hideDelay=250] - Delay in ms before hiding tooltip when mouse leaves, to avoid multiple tooltips from being opened, this should be the same as showDelay
+ * @property {Boolean} [focusable=true] - whether the wrapper itself should be a keyboard tab stop; set to `false` when `children` is already focusable (e.g. a button), to avoid an extra tab stop
  * @property {*} [children] - Child elements to render inside the tooltip wrapper
  */
 
@@ -62,7 +69,8 @@ function Tooltip(props) {
     direction = 'right',
     position,
     showDelay = 250,
-    hideDelay = 250
+    hideDelay = 250,
+    focusable = true
   } = props;
 
   const [ visible, setVisible ] = useState(false);
@@ -198,7 +206,7 @@ function Tooltip(props) {
       <div
         class={ `bio-properties-panel-tooltip bio-theme-parent ${direction}` }
         role="tooltip"
-        id="bio-properties-panel-tooltip"
+        id={ TOOLTIP_ID }
         aria-labelledby={ forId }
         style={ tooltipStyle }
         ref={ tooltipRef }
@@ -215,12 +223,12 @@ function Tooltip(props) {
   };
 
   return (
-    <div class="bio-properties-panel-tooltip-wrapper" tabIndex="0"
+    <div class="bio-properties-panel-tooltip-wrapper" tabIndex={ focusable ? '0' : undefined }
       ref={ wrapperRef }
       onMouseEnter={ handleWrapperMouseEnter }
       onMouseLeave={ handleMouseLeave }
-      onFocus={ show }
-      onBlur={ handleFocusOut }
+      onFocusIn={ show }
+      onFocusOut={ handleFocusOut }
       onKeyDown={ hideTooltipViaEscape }
     >
       {props.children}
