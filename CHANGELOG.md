@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.56.0
+
 * `FEAT`: support entry diagnostics with `info`, `warning` and `error` severity, displaying the most severe one ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
 * `FEAT`: set diagnostics through `propertiesPanel.setDiagnostics` ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
 * `FEAT`: allow diagnostics to carry an action with a custom label and tooltip ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
