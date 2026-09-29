@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 
 import Tooltip, { TOOLTIP_ID } from './Tooltip';
+import { InfoIcon } from '../icons';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
@@ -27,7 +28,12 @@ export default function DiagnosticMessage(props) {
 
   return (
     <div class={ SEVERITY_CLASS[ severity ] }>
-      <span class={ classnames('bio-properties-panel-error-message', 'bio-properties-panel-diagnostic-message') }>{ message }</span>
+      <span class={ classnames('bio-properties-panel-error-message', 'bio-properties-panel-diagnostic-message') }>
+        { severity === 'info' && (
+          <InfoIcon class="bio-properties-panel-diagnostic-icon" aria-hidden="true" />
+        ) }
+        { message }
+      </span>
       { action && (
         <Tooltip
           value={ action.tooltip }

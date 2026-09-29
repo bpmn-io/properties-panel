@@ -5,5 +5,6 @@ export { default as DeleteIcon } from './Delete.js';
 export { default as DragIcon } from './Drag.js';
 export { default as ExternalLinkIcon } from './ExternalLink.js';
 export { default as FeelIcon } from './Feel.js';
+export { default as InfoIcon } from './Info.js';
 export { default as LaunchIcon } from './Launch.js';
 export { default as OpenPopupIcon } from './OpenPopup.js';

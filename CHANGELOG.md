@@ -14,6 +14,7 @@ ___Note:__ Yet to be released changes appear here._
 * `FEAT`: allow `Tooltip` to skip its own tab stop via a `focusable` prop, for triggers that are already focusable ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
 * `FIX`: mark checkbox entries with errors ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
 * `FIX`: report the most severe templating lint error, not the first report ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+* `FEAT`: display an icon on `info` diagnostics
 * `FIX`: show externally provided errors over local ones in templating entries, consistent with all other entries ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
 
 ### Deprecation
