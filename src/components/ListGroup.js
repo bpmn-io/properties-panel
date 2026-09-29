@@ -11,10 +11,11 @@ import Tooltip from './entries/Tooltip';
 import classnames from 'classnames';
 
 import {
-  useErrors,
   useLayoutState,
   usePrevious
 } from '../hooks';
+
+import { useListDiagnostic } from '../hooks/useDiagnostics';
 
 import ListItem from './ListItem';
 
@@ -32,6 +33,11 @@ import translateFallback from './util/translateFallback';
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 const noop = () => {};
+
+const LIST_BADGE_SEVERITY_CLASS = {
+  error: 'bio-properties-panel-list-badge--error',
+  warning: 'bio-properties-panel-list-badge--warning'
+};
 
 /**
  * @param {import('../PropertiesPanel').ListGroupDefinition} props
@@ -100,19 +106,7 @@ export default function ListGroup(props) {
     add(e);
   };
 
-  const allErrors = useErrors();
-  const hasError = items.some(item => {
-    if (allErrors[item.id]) {
-      return true;
-    }
-
-    if (!item.entries) {
-      return;
-    }
-
-    // also check if the error is nested, e.g. for name-value entries
-    return item.entries.some(entry => allErrors[entry.id]);
-  });
+  const diagnostic = useListDiagnostic(items);
 
 
   return <div class="bio-properties-panel-group" data-group-id={ 'group-' + id } ref={ groupRef }>
@@ -160,7 +154,7 @@ export default function ListGroup(props) {
                 class={
                   classnames(
                     'bio-properties-panel-list-badge',
-                    hasError ? 'bio-properties-panel-list-badge--error' : ''
+                    LIST_BADGE_SEVERITY_CLASS[ diagnostic?.severity ]
                   )
                 }
               >

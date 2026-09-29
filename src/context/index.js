@@ -1,4 +1,9 @@
 export { default as DescriptionContext } from './DescriptionContext';
+export { default as DiagnosticsContext } from './DiagnosticsContext';
+
+/**
+ * @deprecated use `DiagnosticsContext` instead
+ */
 export { default as ErrorsContext } from './ErrorsContext';
 export { default as EventContext } from './EventContext';
 export { default as FeelLanguageContext } from './FeelLanguageContext';
