@@ -36,6 +36,7 @@
   --bio-warning-text: hsl(39, 100%, 33%);
   --bio-warning-surface: hsl(38, 100%, 96%);
   --bio-info: hsl(205, 100%, 40%);
+  --bio-info-marker: var(--bio-info);
   --bio-info-on-inverted: hsl(218, 100%, 74%);
   --bio-focus: hsl(205, 100%, 40%);
   --bio-focus-ring: hsla(205, 100%, 40%, 0.35);
@@ -53,6 +54,7 @@
   --text-warning-color: var(--bio-warning-text);
 
   --diagnostic-action-border-radius: 11px;
+  --diagnostic-icon-color: var(--bio-info-marker);
 
   --accent-color: var(--bio-primary);
   --accent-hover-color: var(--bio-primary-hover);
@@ -787,10 +789,7 @@ textarea.bio-properties-panel-input.auto-resize {
 .bio-properties-panel-info,
 .bio-properties-panel-warning,
 .bio-properties-panel-error {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
+  display: flow-root;
   margin: var(--description-offset) 0;
   /* reserve the diagnostic action's border + padding, so height stays constant whether it is present or not */
   min-height: calc(var(--line-height-condensed) + 4px);
@@ -810,12 +809,22 @@ textarea.bio-properties-panel-input.auto-resize {
   color: var(--text-error-color);
 }
 
-.bio-properties-panel-diagnostic-message {
-  flex: 1;
+.bio-properties-panel-diagnostic-icon {
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  margin-right: 4px;
+  color: var(--diagnostic-icon-color);
+}
+
+.bio-properties-panel-tooltip-wrapper:has(.bio-properties-panel-diagnostic-action) {
+  display: inline-flex;
+  vertical-align: top;
+  margin-left: 4px;
 }
 
 .bio-properties-panel-diagnostic-action {
-  flex-shrink: 0;
   color: var(--accent-color);
   background-color: transparent;
   border: 1px solid var(--accent-color);

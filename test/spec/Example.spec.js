@@ -370,9 +370,13 @@ function ExampleApp() {
       const severity = severities[ idx % severities.length ];
       const label = actionLabels[ idx % actionLabels.length ];
 
+      const message = severity === 'info'
+        ? 'This is an example info notice that is intentionally long, so that it wraps across several lines to check how the icon behaves alongside wrapped text.'
+        : `This is an example ${ severity }.`;
+
       acc[id] = [ {
         severity,
-        message: `This is an example ${ severity }.`,
+        message,
         action: {
           label,
           tooltip: `${ label } for this example ${ severity }`,

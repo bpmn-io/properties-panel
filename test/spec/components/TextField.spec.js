@@ -663,6 +663,7 @@ describe('<TextField>', function() {
       // then
       expect(domClasses(domQuery('.bio-properties-panel-entry', result.container)).has('has-error')).to.be.true;
       expect(domQuery('.bio-properties-panel-error', result.container).innerText).to.eql('bar');
+      expect(domQuery('.bio-properties-panel-diagnostic-icon', result.container)).to.not.exist;
     });
 
 
@@ -678,6 +679,7 @@ describe('<TextField>', function() {
       // then
       expect(domClasses(domQuery('.bio-properties-panel-entry', result.container)).has('has-warning')).to.be.true;
       expect(domQuery('.bio-properties-panel-warning', result.container).innerText).to.eql('bar');
+      expect(domQuery('.bio-properties-panel-diagnostic-icon', result.container)).to.not.exist;
     });
 
 
@@ -692,6 +694,7 @@ describe('<TextField>', function() {
 
       // then
       expect(domQuery('.bio-properties-panel-info', result.container).innerText).to.eql('bar');
+      expect(domQuery('.bio-properties-panel-diagnostic-icon', result.container)).to.exist;
     });
 
 
