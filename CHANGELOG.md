@@ -6,7 +6,9 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
-# 3.55.0
+* `FEAT`: allow `Tooltip` to skip its own tab stop via a `focusable` prop, for triggers that are already focusable ([#554](https://github.com/bpmn-io/properties-panel/pull/554))
+
+## 3.55.0
 
 * `FEAT`: source color variables from `@bpmn-io/theme` ([#551](https://github.com/bpmn-io/properties-panel/pull/551))
 

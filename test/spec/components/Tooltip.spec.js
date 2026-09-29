@@ -405,6 +405,77 @@ describe('<Tooltip>', function() {
     });
 
 
+    describe('focusable', function() {
+
+      it('should make the wrapper a tab stop by default', function() {
+
+        // given
+        createTooltip({ container });
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+        // then
+        expect(wrapper.getAttribute('tabIndex')).to.equal('0');
+      });
+
+
+      it('should not make the wrapper a tab stop when focusable=false', function() {
+
+        // given
+        createTooltip({
+          container,
+          focusable: false,
+          children: <button id="trigger">Fix</button>
+        });
+
+        const wrapper = domQuery('.bio-properties-panel-tooltip-wrapper', container);
+
+        // then
+        expect(wrapper.getAttribute('tabIndex')).to.be.null;
+      });
+
+
+      it('should show tooltip when a focusable child is focused', async function() {
+
+        // given
+        createTooltip({
+          container,
+          focusable: false,
+          children: <button id="trigger">Fix</button>
+        });
+
+        const trigger = domQuery('#trigger', container);
+
+        // when
+        trigger.focus();
+
+        // then
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.exist, { timeout: 50 });
+      });
+
+
+      it('should hide tooltip when the focusable child is blurred', async function() {
+
+        // given
+        createTooltip({
+          container,
+          focusable: false,
+          children: <button id="trigger">Fix</button>
+        });
+
+        const trigger = domQuery('#trigger', container);
+        trigger.focus();
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.exist, { timeout: 50 });
+
+        // when
+        trigger.blur();
+
+        // then
+        await waitFor(() => expect(domQuery('.bio-properties-panel-tooltip')).to.not.exist, { timeout: 50 });
+      });
+
+    });
+
+
     describe('tooltip content', function() {
 
       it('should not persist tooltip - mouse focus', async function() {
@@ -605,7 +676,9 @@ function TooltipComponent(props) {
     direction,
     position,
     showDelay = 10, // Fast delays for testing
-    hideDelay = 10
+    hideDelay = 10,
+    focusable,
+    children = <div id={ id }>foo</div>
   } = props;
 
   const tooltipContext = {
@@ -623,8 +696,9 @@ function TooltipComponent(props) {
         position={ position }
         showDelay={ showDelay }
         hideDelay={ hideDelay }
+        focusable={ focusable }
       >
-        <div id={ id }>foo</div>
+        { children }
       </Tooltip>
     </TooltipContext.Provider>
   );
