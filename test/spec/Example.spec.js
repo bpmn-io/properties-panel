@@ -142,19 +142,28 @@ const layoutConfig = {};
 const noop = () => {};
 
 /**
- * Collect the ids of all entries across groups (including nested list items).
+ * Collect the ids of all entries across groups (including nested list items),
+ * optionally filtered by a predicate.
  */
-function collectEntryIds(groups) {
+function collectEntryIds(groups, filterEntry = () => true) {
   const ids = [];
 
   groups.forEach(group => {
-    (group.entries || []).forEach(entry => ids.push(entry.id));
+    (group.entries || []).forEach(entry => filterEntry(entry) && ids.push(entry.id));
     (group.items || []).forEach(item => {
-      (item.entries || []).forEach(entry => ids.push(entry.id));
+      (item.entries || []).forEach(entry => filterEntry(entry) && ids.push(entry.id));
     });
   });
 
   return ids;
+}
+
+/**
+ * Entries whose component does not consume diagnostics/errors, and should
+ * therefore be excluded from the "show errors/diagnostics" demo toggles.
+ */
+function supportsDiagnostics(entry) {
+  return entry.component !== ToggleSwitchComponent;
 }
 
 new Popup(eventBus, {});
@@ -163,7 +172,7 @@ new PopupRenderer(eventBus);
 function ExampleApp() {
   const [ , forceUpdate ] = useReducer(x => x + 1, 0);
 
-  const [ showErrors, setShowErrors ] = useState(false);
+  const [ mode, setMode ] = useState('none');
 
   const updateElement = useCallback((key, value) => {
     element[key] = value;
@@ -337,26 +346,60 @@ function ExampleApp() {
     }
   ];
 
-  const toggleErrors = event => {
-    const active = event.target.checked;
+  // errors and diagnostics feed the same store, so only one can be shown
+  // at a time: model it as a radio group rather than two checkboxes
+  const selectMode = newMode => {
+    setMode(newMode);
 
-    setShowErrors(active);
+    if (newMode === 'errors') {
+      const errors = collectEntryIds(groups).reduce((acc, id) => {
+        acc[id] = 'This field is invalid.';
 
-    const errors = active ? collectEntryIds(groups).reduce((acc, id) => {
-      acc[id] = 'This field is invalid.';
+        return acc;
+      }, {});
+
+      eventBus.fire('propertiesPanel.setErrors', { errors });
+      return;
+    }
+
+    const severities = [ 'info', 'warning', 'error' ];
+
+    const actionLabels = [ 'Fix', 'Ask an agent', 'Input from an agent' ];
+
+    const diagnostics = newMode === 'diagnostics' ? collectEntryIds(groups, supportsDiagnostics).reduce((acc, id, idx) => {
+      const severity = severities[ idx % severities.length ];
+      const label = actionLabels[ idx % actionLabels.length ];
+
+      acc[id] = [ {
+        severity,
+        message: `This is an example ${ severity }.`,
+        action: {
+          label,
+          tooltip: `${ label } for this example ${ severity }`,
+          onClick: () => console.log('fix', id)
+        }
+      } ];
 
       return acc;
     }, {}) : {};
 
-    eventBus.fire('propertiesPanel.setErrors', { errors });
+    eventBus.fire('propertiesPanel.setDiagnostics', { diagnostics });
   };
 
   return (
     <div class="bio-properties-panel" style="display: flex; flex-direction: column; height: 100%;">
       <div style="padding: 6px 8px; border-bottom: 1px solid #ccc;">
         <label style="font-size: 12px; display: flex; align-items: center; gap: 6px;">
-          <input type="checkbox" checked={ showErrors } onChange={ toggleErrors } />
+          <input type="radio" name="mode" checked={ mode === 'none' } onChange={ () => selectMode('none') } />
+          Show nothing
+        </label>
+        <label style="font-size: 12px; display: flex; align-items: center; gap: 6px;">
+          <input type="radio" name="mode" checked={ mode === 'errors' } onChange={ () => selectMode('errors') } />
           Show errors on all controls
+        </label>
+        <label style="font-size: 12px; display: flex; align-items: center; gap: 6px;">
+          <input type="radio" name="mode" checked={ mode === 'diagnostics' } onChange={ () => selectMode('diagnostics') } />
+          Show diagnostics on all supported controls
         </label>
       </div>
       <div style="border: 2px dashed #888; margin: 4px;">
