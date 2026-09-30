@@ -30,6 +30,7 @@ import {
   ToggleSwitchEntry,
   isToggleSwitchEntryEdited,
   FeelEntry,
+  FeelNumberEntry,
   FeelTemplatingEntry,
   isFeelEntryEdited
 } from 'src/components/entries';
@@ -238,6 +239,16 @@ function ExampleApp() {
           isEdited: isFeelEntryEdited,
           label: 'Condition',
           description: 'Optional FEEL condition (toggle FEEL mode with = prefix).',
+          feel: 'optional',
+          updateElement,
+          element
+        },
+        {
+          id: 'retries',
+          component: FeelNumberEntryComponent,
+          isEdited: isFeelEntryEdited,
+          label: 'Retries',
+          description: 'Optional FEEL number (toggle FEEL mode with = prefix).',
           feel: 'optional',
           updateElement,
           element
@@ -533,6 +544,21 @@ function FeelEntryComponent(props) {
       { name: 'customer', info: 'Customer context object' },
       { name: 'order', info: 'Current order data' }
     ]
+  });
+}
+
+function FeelNumberEntryComponent(props) {
+  const { id, element, label, description, feel, updateElement } = props;
+
+  return FeelNumberEntry({
+    id,
+    element,
+    label,
+    description,
+    feel,
+    debounce: fn => fn,
+    getValue: () => element[id] ?? '',
+    setValue: (val) => updateElement(id, val)
   });
 }
 

@@ -195,6 +195,20 @@ function FeelTextfield(props) {
   };
 
   const handleOnKeyDown = e => {
+
+    // number inputs do not accept `=`, convert to FEEL explicitly
+    // if the field is empty; caret position is not exposed for number inputs
+    const isCommand = (e.ctrlKey || e.metaKey) && !e.getModifierState?.('AltGraph');
+
+    if (e.key === '=' && !isCommand && !feelActive && isFeelOptional(feel) && !disabled && e.target.type === 'number' && !e.target.value) {
+      e.preventDefault();
+      handleFeelToggle();
+
+      // number inputs expose no caret position
+      _setFocus(Infinity);
+      return;
+    }
+
     if (isCmdWithChar(e)) {
       handleInput.flush?.();
     }
@@ -448,28 +462,22 @@ const OptionalFeelNumberField = forwardRef((props, ref) => {
     max,
     step,
     onFocus,
-    onBlur
+    onBlur,
+    onKeyDown
   } = props;
 
   const inputRef = useRef();
 
-  // To be consistent with the FEEL editor, set focus at start of input
-  // this ensures clean editing experience when switching with the keyboard
+  // Number inputs do not support selection ranges,
+  // so the focus position is ignored and the input is only focused
   ref.current = {
-    focus: (position) => {
+    focus: () => {
       const input = inputRef.current;
       if (!input) {
         return;
       }
 
       input.focus();
-      if (typeof position === 'number' && position !== Infinity) {
-        if (position > value.length) {
-          position = value.length;
-        }
-        input.setSelectionRange(position, position);
-      }
-
     }
   };
 
@@ -486,6 +494,7 @@ const OptionalFeelNumberField = forwardRef((props, ref) => {
     value={ value }
     onFocus={ onFocus }
     onBlur={ onBlur }
+    onKeyDown={ onKeyDown }
   />;
 });
 
