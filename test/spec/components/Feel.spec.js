@@ -1194,6 +1194,59 @@ describe('<FeelEntry>', function() {
     });
 
 
+    describe('convert to FEEL on =', function() {
+
+      it('should convert empty field', async function() {
+
+        // given
+        const updateSpy = sinonSpy();
+
+        const result = createFeelNumber({ container, setValue: updateSpy });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        fireEvent.keyDown(input, { key: '=' });
+
+        // then
+        await waitFor(() => expect(getEditor(result.container)).to.exist);
+
+        expect(domQuery('input[type="number"]', result.container)).not.to.exist;
+      });
+
+
+      it('should NOT convert on Ctrl+=', function() {
+
+        // given
+        const result = createFeelNumber({ container });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        fireEvent.keyDown(input, { key: '=', ctrlKey: true });
+
+        // then
+        expect(getEditor(result.container)).not.to.exist;
+      });
+
+
+      it('should NOT convert non-empty field', function() {
+
+        // given
+        const result = createFeelNumber({ container, getValue: () => 5 });
+
+        const input = domQuery('.bio-properties-panel-input', result.container);
+
+        // when
+        fireEvent.keyDown(input, { key: '=' });
+
+        // then
+        expect(getEditor(result.container)).not.to.exist;
+        expect(domQuery('input[type="number"]', result.container)).to.exist;
+      });
+    });
+
+
     it('should update', function() {
 
       // given

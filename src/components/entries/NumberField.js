@@ -36,6 +36,7 @@ export function NumberField(props) {
     value = '',
     onFocus,
     onBlur,
+    onKeyDown,
     tooltip
   } = props;
 
@@ -86,6 +87,7 @@ export function NumberField(props) {
         onInput={ handleInput }
         onFocus={ onFocus }
         onBlur={ onBlur }
+        onKeyDown={ onKeyDown }
         step={ step }
         value={ localValue } />
     </div>
