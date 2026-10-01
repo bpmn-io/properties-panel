@@ -1,5 +1,7 @@
 import classnames from 'classnames';
 
+import { useEffect, useRef } from 'preact/hooks';
+
 import Tooltip, { TOOLTIP_ID } from './Tooltip';
 import { InfoIcon } from '../icons';
 
@@ -34,26 +36,49 @@ export default function DiagnosticMessage(props) {
         ) }
         { message }
       </span>
-      { action && (
-        <Tooltip
-          value={ action.tooltip }
-          forId={ `${ forId }-diagnostic-action` }
-          element={ element }
-          focusable={ false }
-        >
-          <button
-            type="button"
-            id={ prefixId(`${ forId }-diagnostic-action`) }
-            aria-label={ action.ariaLabel }
-            class={ classnames('bio-properties-panel-error-action', 'bio-properties-panel-diagnostic-action') }
-            onClick={ action.onClick }
-            aria-describedby={ action.tooltip ? TOOLTIP_ID : undefined }
-          >
-            { action.label }
-          </button>
-        </Tooltip>
-      ) }
+      { action && <DiagnosticAction action={ action } forId={ forId } element={ element } /> }
     </div>
+  );
+}
+
+
+function DiagnosticAction(props) {
+  const { action, forId, element } = props;
+
+  const buttonRef = useRef();
+
+  // restore focus to the field once the focused action goes away
+  useEffect(() => {
+    return () => {
+      const button = buttonRef.current;
+
+      if (button && button === document.activeElement) {
+        const field = document.getElementById(prefixId(forId));
+
+        field && field.focus();
+      }
+    };
+  }, [ forId ]);
+
+  return (
+    <Tooltip
+      value={ action.tooltip }
+      forId={ `${ forId }-diagnostic-action` }
+      element={ element }
+      focusable={ false }
+    >
+      <button
+        type="button"
+        ref={ buttonRef }
+        id={ prefixId(`${ forId }-diagnostic-action`) }
+        class={ classnames('bio-properties-panel-error-action', 'bio-properties-panel-diagnostic-action') }
+        onClick={ action.onClick }
+        aria-label={ action.ariaLabel }
+        aria-describedby={ action.tooltip ? TOOLTIP_ID : undefined }
+      >
+        { action.label }
+      </button>
+    </Tooltip>
   );
 }
 

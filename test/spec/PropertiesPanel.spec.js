@@ -25,6 +25,8 @@ import PropertiesPanel from 'src/PropertiesPanel';
 
 import ListGroup from 'src/components/ListGroup';
 
+import { TextFieldEntry } from 'src/components/entries';
+
 import { useDiagnostics, useError } from 'src/hooks';
 
 import {
@@ -661,6 +663,70 @@ describe('<PropertiesPanel>', function() {
       expect(domQuery('.error', result.container).textContent).to.be.empty;
     });
 
+
+
+    describe('action', function() {
+
+      const textGroups = [
+        {
+          id: 'group-1',
+          label: 'Group 1',
+          entries: [
+            { id: 'entry-1', component: TextFieldComponent },
+            { id: 'entry-2', component: TextFieldComponent }
+          ]
+        }
+      ];
+
+      const diagnostics = {
+        'entry-1': [ {
+          severity: 'error',
+          message: 'bar',
+          action: { label: 'Fix', onClick: () => {} }
+        } ]
+      };
+
+      const layoutConfig = { groups: { 'group-1': { open: true } } };
+
+      let eventBus, result;
+
+      beforeEach(function() {
+        eventBus = new EventBus();
+
+        result = createPropertiesPanel({ container, element: noopElement, groups: textGroups, eventBus, layoutConfig });
+
+        act(() => eventBus.fire('propertiesPanel.setDiagnostics', { diagnostics }));
+      });
+
+
+      it('should restore focus to field if diagnostic is removed through event', function() {
+
+        // given
+        domQuery('.bio-properties-panel-diagnostic-action', result.container).focus();
+
+        // when
+        act(() => eventBus.fire('propertiesPanel.setDiagnostics', { diagnostics: {} }));
+
+        // then
+        expect(document.activeElement).to.equal(domQuery('#bio-properties-panel-entry-1', result.container));
+      });
+
+
+      it('should keep focus elsewhere if diagnostic is removed through event', function() {
+
+        // given
+        const other = domQuery('#bio-properties-panel-entry-2', result.container);
+
+        other.focus();
+
+        // when
+        act(() => eventBus.fire('propertiesPanel.setDiagnostics', { diagnostics: {} }));
+
+        // then
+        expect(document.activeElement).to.equal(other);
+      });
+
+    });
   });
 
 
@@ -748,6 +814,19 @@ function createPropertiesPanel(options = {}, renderFn = render) {
       container
     }
   );
+}
+
+function TextFieldComponent(props) {
+  const { id, element } = props;
+
+  return TextFieldEntry({
+    id,
+    element,
+    label: id,
+    debounce: fn => fn,
+    getValue: () => '',
+    setValue: noop
+  });
 }
 
 function DiagnosticsEntry(props) {
