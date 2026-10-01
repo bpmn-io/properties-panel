@@ -44,6 +44,7 @@ export default function DiagnosticMessage(props) {
           <button
             type="button"
             id={ prefixId(`${ forId }-diagnostic-action`) }
+            aria-label={ action.ariaLabel }
             class={ classnames('bio-properties-panel-error-action', 'bio-properties-panel-diagnostic-action') }
             onClick={ action.onClick }
             aria-describedby={ action.tooltip ? TOOLTIP_ID : undefined }
