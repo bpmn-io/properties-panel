@@ -846,6 +846,26 @@ describe('<TextField>', function() {
       });
 
 
+      it('should set accessible name of the action button', function() {
+
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'error',
+            message: 'bar',
+            action: { label: 'Fix', ariaLabel: 'Fix foo', onClick: noop }
+          } ]
+        };
+
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        // then
+        const action = domQuery('.bio-properties-panel-diagnostic-action', result.container);
+
+        expect(action.getAttribute('aria-label')).to.eql('Fix foo');
+      });
+
+
       it('should label the tooltip by the action button it belongs to', async function() {
 
         // given
