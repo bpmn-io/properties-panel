@@ -377,7 +377,9 @@ function ExampleApp() {
 
     const actionLabels = [ 'Fix', 'Ask an agent', 'Input from an agent' ];
 
-    const diagnostics = newMode === 'diagnostics' ? collectEntryIds(groups, supportsDiagnostics).reduce((acc, id, idx) => {
+    const diagnostics = {};
+
+    newMode === 'diagnostics' && collectEntryIds(groups, supportsDiagnostics).reduce((acc, id, idx) => {
       const severity = severities[ idx % severities.length ];
       const label = actionLabels[ idx % actionLabels.length ];
 
@@ -391,12 +393,18 @@ function ExampleApp() {
         action: {
           label,
           tooltip: `${ label } for this example ${ severity }`,
-          onClick: () => console.log('fix', id)
+          onClick: () => {
+
+            // resolving the diagnostic makes the action disappear
+            delete diagnostics[ id ];
+
+            eventBus.fire('propertiesPanel.setDiagnostics', { diagnostics: { ...diagnostics } });
+          }
         }
       } ];
 
       return acc;
-    }, {}) : {};
+    }, diagnostics);
 
     eventBus.fire('propertiesPanel.setDiagnostics', { diagnostics });
   };
