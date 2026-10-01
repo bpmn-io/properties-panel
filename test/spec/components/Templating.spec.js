@@ -28,6 +28,7 @@ import {
 
 import {
   DescriptionContext,
+  DiagnosticsContext,
   ErrorsContext,
   EventContext,
   PropertiesPanelContext
@@ -485,6 +486,33 @@ describe('<Templating>', function() {
     });
 
 
+    describe('diagnostics', function() {
+
+      it('should restore focus to editor if focused action goes away', function() {
+
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'error',
+            message: 'bar',
+            action: { label: 'Fix', onClick: noop }
+          } ]
+        };
+
+        const result = createTemplatingEntry({ container, diagnostics, id: 'foo', label: 'foo' });
+
+        domQuery('.bio-properties-panel-diagnostic-action', result.container).focus();
+
+        // when
+        createTemplatingEntry({ container, diagnostics: {}, id: 'foo', label: 'foo' }, result.rerender);
+
+        // then
+        expect(document.activeElement).to.equal(domQuery('.cm-content', result.container));
+      });
+
+    });
+
+
     describe('description', function() {
 
       it('should render without description per default', function() {
@@ -617,10 +645,15 @@ function createTemplatingEntry(options = {}, renderFn = render) {
     eventBus = new EventBus(),
     onShow = noop,
     errors = {},
+    diagnostics = {}
   } = options;
 
   const errorsContext = {
     errors
+  };
+
+  const diagnosticsContext = {
+    diagnostics
   };
 
   const eventContext = {
@@ -637,26 +670,28 @@ function createTemplatingEntry(options = {}, renderFn = render) {
   };
 
   return renderFn(
-    <ErrorsContext.Provider value={ errorsContext }>
-      <EventContext.Provider value={ eventContext }>
-        <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
-          <DescriptionContext.Provider value={ descriptionContext }>
-            <TemplatingEntry
-              element={ element }
-              id={ id }
-              description={ description }
-              debounce={ debounce }
-              disabled={ disabled }
-              label={ label }
-              getValue={ getValue }
-              setValue={ setValue }
-              tooltipContainer={ container }
-              validate={ validate }
-            />
-          </DescriptionContext.Provider>
-        </PropertiesPanelContext.Provider>
-      </EventContext.Provider>
-    </ErrorsContext.Provider>,
+    <DiagnosticsContext.Provider value={ diagnosticsContext }>
+      <ErrorsContext.Provider value={ errorsContext }>
+        <EventContext.Provider value={ eventContext }>
+          <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+            <DescriptionContext.Provider value={ descriptionContext }>
+              <TemplatingEntry
+                element={ element }
+                id={ id }
+                description={ description }
+                debounce={ debounce }
+                disabled={ disabled }
+                label={ label }
+                getValue={ getValue }
+                setValue={ setValue }
+                tooltipContainer={ container }
+                validate={ validate }
+              />
+            </DescriptionContext.Provider>
+          </PropertiesPanelContext.Provider>
+        </EventContext.Provider>
+      </ErrorsContext.Provider>
+    </DiagnosticsContext.Provider>,
     {
       container
     }

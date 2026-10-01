@@ -177,7 +177,7 @@ function Templating(props) {
         <TemplatingEditor
           name={ id }
           onInput={ handleInput }
-          contentAttributes={ { 'aria-labelledby': prefixIdLabel(id) } }
+          contentAttributes={ { 'id': prefixId(id), 'aria-labelledby': prefixIdLabel(id) } }
           disabled={ disabled }
           onLint={ handleLint }
           value={ localValue }
@@ -194,6 +194,10 @@ export function isEdited(node) {
 }
 
 // helpers /////////////////
+
+function prefixId(id) {
+  return `bio-properties-panel-${ id }`;
+}
 
 function prefixIdLabel(id) {
   return `bio-properties-panel-feelers-${id}-label`;
