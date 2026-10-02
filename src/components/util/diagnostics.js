@@ -5,6 +5,7 @@ import { isString } from 'min-dash';
  *
  * @typedef {Object} DiagnosticAction
  * @property {String} label - label of the action button
+ * @property {String} [ariaLabel] - accessible name of the action button, to tell apart multiple actions with the same label
  * @property {String|import('preact').ComponentChildren} [tooltip] - tooltip shown on hover/focus of the action button
  * @property {Function} onClick - callback invoked when the action is triggered
  *

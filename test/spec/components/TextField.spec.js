@@ -846,6 +846,49 @@ describe('<TextField>', function() {
       });
 
 
+      it('should set accessible name of the action button', function() {
+
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'error',
+            message: 'bar',
+            action: { label: 'Fix', ariaLabel: 'Fix foo', onClick: noop }
+          } ]
+        };
+
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        // then
+        const action = domQuery('.bio-properties-panel-diagnostic-action', result.container);
+
+        expect(action.getAttribute('aria-label')).to.eql('Fix foo');
+      });
+
+
+      it('should restore focus to the field when focused action goes away', function() {
+
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'error',
+            message: 'bar',
+            action: { label: 'Fix', onClick: noop }
+          } ]
+        };
+
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        domQuery('.bio-properties-panel-diagnostic-action', result.container).focus();
+
+        // when
+        createTextField({ container, diagnostics: {}, id: 'foo' }, result.rerender);
+
+        // then
+        expect(document.activeElement).to.equal(domQuery('input', result.container));
+      });
+
+
       it('should label the tooltip by the action button it belongs to', async function() {
 
         // given
