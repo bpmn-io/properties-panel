@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.56.1
+
 * `FIX`: convert empty optional FEEL number fields to FEEL on `=` key press ([#559](https://github.com/bpmn-io/properties-panel/pull/559))
 
 ## 3.56.0
