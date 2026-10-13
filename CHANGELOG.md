@@ -6,6 +6,11 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.57.0
+
+* `FEAT`: support `ariaLabel` on diagnostic actions ([#560](https://github.com/bpmn-io/properties-panel/pull/560))
+* `FEAT`: restore focus to the field when a focused diagnostic action unmounts ([#560](https://github.com/bpmn-io/properties-panel/pull/560))
+
 ## 3.56.1
 
 * `FIX`: convert empty optional FEEL number fields to FEEL on `=` key press ([#559](https://github.com/bpmn-io/properties-panel/pull/559))
