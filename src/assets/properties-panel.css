@@ -824,6 +824,11 @@ textarea.bio-properties-panel-input.auto-resize {
   margin-left: 4px;
 }
 
+/* no message to offset the action from */
+.bio-properties-panel-tooltip-wrapper:has(.bio-properties-panel-diagnostic-action):first-child {
+  margin-left: 0;
+}
+
 .bio-properties-panel-diagnostic-action {
   color: var(--accent-color);
   background-color: transparent;

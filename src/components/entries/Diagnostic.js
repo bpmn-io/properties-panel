@@ -30,12 +30,14 @@ export default function DiagnosticMessage(props) {
 
   return (
     <div class={ SEVERITY_CLASS[ severity ] }>
-      <span class={ classnames('bio-properties-panel-error-message', 'bio-properties-panel-diagnostic-message') }>
-        { severity === 'info' && (
-          <InfoIcon class="bio-properties-panel-diagnostic-icon" aria-hidden="true" />
-        ) }
-        { message }
-      </span>
+      { message && (
+        <span class={ classnames('bio-properties-panel-error-message', 'bio-properties-panel-diagnostic-message') }>
+          { severity === 'info' && (
+            <InfoIcon class="bio-properties-panel-diagnostic-icon" aria-hidden="true" />
+          ) }
+          { message }
+        </span>
+      ) }
       { action && <DiagnosticAction action={ action } forId={ forId } element={ element } /> }
     </div>
   );

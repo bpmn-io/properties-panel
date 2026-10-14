@@ -383,7 +383,10 @@ function ExampleApp() {
       const severity = severities[ idx % severities.length ];
       const label = actionLabels[ idx % actionLabels.length ];
 
-      const message = severity === 'info'
+      // every second info is a bare action, explained by its tooltip only
+      const bare = severity === 'info' && idx % 2 === 0;
+
+      const message = bare ? '' : severity === 'info'
         ? 'This is an example info notice that is intentionally long, so that it wraps across several lines to check how the icon behaves alongside wrapped text.'
         : `This is an example ${ severity }.`;
 

@@ -11,7 +11,7 @@ import { isString } from 'min-dash';
  *
  * @typedef {Object} Diagnostic
  * @property {Severity} severity
- * @property {String} message
+ * @property {String} [message]
  * @property {DiagnosticAction} [action]
  *
  * @callback ValidateFunction
