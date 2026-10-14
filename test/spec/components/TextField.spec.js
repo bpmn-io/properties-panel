@@ -698,6 +698,91 @@ describe('<TextField>', function() {
     });
 
 
+    describe('empty message', function() {
+
+      it('should render action without icon for info', function() {
+
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'info',
+            message: '',
+            action: { label: 'Fix', tooltip: 'Fix the value', onClick: noop }
+          } ]
+        };
+
+        // when
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        // then
+        expect(domQuery('.bio-properties-panel-info', result.container)).to.exist;
+        expect(domQuery('.bio-properties-panel-diagnostic-action', result.container).innerText).to.eql('Fix');
+        expect(domQuery('.bio-properties-panel-diagnostic-icon', result.container)).to.not.exist;
+        expect(domQuery('.bio-properties-panel-diagnostic-message', result.container)).to.not.exist;
+      });
+
+
+      [ 'warning', 'error' ].forEach(function(severity) {
+
+        it(`should render action without message for ${ severity }`, function() {
+
+          // given
+          const diagnostics = {
+            foo: [ {
+              severity,
+              message: '',
+              action: { label: 'Fix', onClick: noop }
+            } ]
+          };
+
+          // when
+          const result = createTextField({ container, diagnostics, id: 'foo' });
+
+          // then
+          expect(domQuery('.bio-properties-panel-diagnostic-action', result.container)).to.exist;
+          expect(domQuery('.bio-properties-panel-diagnostic-message', result.container)).to.not.exist;
+        });
+
+      });
+
+
+      it('should still mark entry', function() {
+
+        // given
+        const diagnostics = {
+          foo: [ { severity: 'warning', message: '', action: { label: 'Fix', onClick: noop } } ]
+        };
+
+        // when
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        // then
+        expect(domClasses(domQuery('.bio-properties-panel-entry', result.container)).has('has-warning')).to.be.true;
+      });
+
+
+      it('should keep icon and message for info with message', function() {
+
+        // given
+        const diagnostics = {
+          foo: [ {
+            severity: 'info',
+            message: 'bar',
+            action: { label: 'Fix', onClick: noop }
+          } ]
+        };
+
+        // when
+        const result = createTextField({ container, diagnostics, id: 'foo' });
+
+        // then
+        expect(domQuery('.bio-properties-panel-diagnostic-icon', result.container)).to.exist;
+        expect(domQuery('.bio-properties-panel-diagnostic-message', result.container).innerText).to.eql('bar');
+      });
+
+    });
+
+
     it('should NOT mark entry for info', function() {
 
       // given

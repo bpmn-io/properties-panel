@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: do not render an icon or message for diagnostics with an empty message, e.g. action-only diagnostics ([#562](https://github.com/bpmn-io/properties-panel/pull/562))
+
 ## 3.57.0
 
 * `FEAT`: support `ariaLabel` on diagnostic actions ([#560](https://github.com/bpmn-io/properties-panel/pull/560))
