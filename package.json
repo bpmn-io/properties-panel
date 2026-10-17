@@ -70,7 +70,7 @@
     "babel-plugin-module-resolver": "^5.0.3",
     "chai": "^6.2.2",
     "cross-env": "^10.1.0",
-    "del-cli": "^7.0.0",
+    "del-cli": "^8.0.0",
     "diagram-js": "^15.25.0",
     "eslint": "^9.39.5",
     "eslint-plugin-bpmn-io": "^2.3.1",
