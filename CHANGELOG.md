@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.58.0
+
 * `FEAT`: export `DiagnosticMessage` to render diagnostics in custom entries
 
 ## 3.57.1
