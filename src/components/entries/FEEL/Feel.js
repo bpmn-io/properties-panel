@@ -225,13 +225,26 @@ function FeelTextfield(props) {
     }
   });
 
+  // changes made in the popup are applied once, when it closes
+  const applyPopupDraft = useStaticCallback((draft) => {
+    const newValue = feelActive ? '=' + draft : draft;
+
+    if (newValue !== localValue) {
+      setAndCommitValue(newValue);
+    }
+  });
+
   const handleOpenPopup = (type = 'feel') => {
+    let draft;
+
     const isOpen = eventBus.fire('propertiesPanel.openPopup', {
       element,
       entryId: id,
       hostLanguage,
       label,
-      onInput: handleInputChange,
+      onInput: (newValue) => {
+        draft = newValue;
+      },
       singleLine,
       sourceElement: editorRef.current,
       tooltipContainer,
@@ -243,6 +256,10 @@ function FeelTextfield(props) {
 
     if (isOpen) {
       eventBus.once('propertiesPanelPopup.close', () => {
+        if (draft !== undefined) {
+          applyPopupDraft(draft);
+        }
+
         setIsPopupOpen(false);
       });
     }
