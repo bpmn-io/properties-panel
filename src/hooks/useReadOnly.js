@@ -35,3 +35,17 @@ export function useDisabled(disabled) {
 
   return !!disabled || readOnly;
 }
+
+/**
+ * Get the validation function of an entry. Nothing is validated
+ * while the properties panel is read-only.
+ *
+ * @param {Function} [validate]
+ *
+ * @returns {Function|undefined}
+ */
+export function useValidate(validate) {
+  const readOnly = useReadOnly();
+
+  return readOnly ? undefined : validate;
+}

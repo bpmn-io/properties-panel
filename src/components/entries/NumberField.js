@@ -16,7 +16,7 @@ import {
   useDiagnostics
 } from '../../hooks';
 
-import { useDisabled } from '../../hooks/useReadOnly';
+import { useDisabled, useValidate } from '../../hooks/useReadOnly';
 
 import noDebounce from '../util/noDebounce';
 
@@ -131,9 +131,11 @@ export default function NumberFieldEntry(props) {
     step,
     onFocus,
     onBlur,
-    validate,
+    validate: validateProp,
     tooltip
   } = props;
+
+  const validate = useValidate(validateProp);
 
   const diagnostics = useDiagnostics(id);
   const [ localDiagnostic, setLocalDiagnostic ] = useState(null);

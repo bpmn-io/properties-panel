@@ -22,7 +22,7 @@ import {
   useShowEntryEvent,
   useStaticCallback
 } from '../../../hooks';
-import { useDisabled } from '../../../hooks/useReadOnly';
+import { useDisabled, useReadOnly, useValidate } from '../../../hooks/useReadOnly';
 
 import FeelEditor from './FeelEditor';
 import { FeelIndicator } from './FeelIndicator';
@@ -693,7 +693,7 @@ export default function FeelEntry(props) {
     tooltipContainer,
     hostLanguage,
     singleLine,
-    validate,
+    validate: validateProp,
     show = noop,
     example,
     variables,
@@ -703,6 +703,8 @@ export default function FeelEntry(props) {
     tooltip,
     translate = translateFallback
   } = props;
+
+  const validate = useValidate(validateProp);
 
   const [ validationDiagnostic, setValidationDiagnostic ] = useState(null);
   const [ lintDiagnostic, setLintDiagnostic ] = useState(null);
@@ -733,9 +735,13 @@ export default function FeelEntry(props) {
     }
   });
 
+  const readOnly = useReadOnly();
+
   const onError = useCallback(err => {
-    setLintDiagnostic(err);
-  }, []);
+
+    // do not surface lint results in read-only mode
+    setLintDiagnostic(readOnly ? null : err);
+  }, [ readOnly ]);
 
   const diagnostics = useDiagnostics(id);
 

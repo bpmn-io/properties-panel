@@ -20,7 +20,7 @@ import {
   useStaticCallback
 } from '../../hooks';
 
-import { useDisabled } from '../../hooks/useReadOnly';
+import { useDisabled, useReadOnly, useValidate } from '../../hooks/useReadOnly';
 
 import Tooltip from './Tooltip';
 
@@ -195,15 +195,18 @@ export default function JsonEditorEntry(props) {
     disabled,
     placeholder,
     tooltip,
-    validate,
+    validate: validateProp,
     translate = translateFallback
   } = props;
 
+  const validate = useValidate(validateProp);
+
   const diagnostics = useDiagnostics(id);
+  const readOnly = useReadOnly();
 
   let value = getValue(element);
   const [ localDiagnostic, setLocalDiagnostic ] = useState(
-    () => computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate)
+    () => computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate, readOnly)
   );
   const [ editorValue, setEditorValue ] = useState(value);
 
@@ -213,7 +216,7 @@ export default function JsonEditorEntry(props) {
     }
 
     setEditorValue(value);
-    setLocalDiagnostic(computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate));
+    setLocalDiagnostic(computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate, readOnly));
   }, [ value, validate ]);
 
   const onInput = useStaticCallback((newValue) => {
@@ -225,7 +228,7 @@ export default function JsonEditorEntry(props) {
       const newValidationError = isFunction(validate) ? validate(newValue) : null;
 
       setValue(newValue, newValidationError);
-      setLocalDiagnostic(computeDiagnostic(newValidationError, newValue, translate));
+      setLocalDiagnostic(computeDiagnostic(newValidationError, newValue, translate, readOnly));
     }
   });
 
@@ -264,7 +267,13 @@ export function isEdited(node) {
 
 // helpers /////////////////
 
-function computeDiagnostic(custom, value, translate) {
+function computeDiagnostic(custom, value, translate, readOnly) {
+
+  // nothing is validated in read-only mode
+  if (readOnly) {
+    return null;
+  }
+
   const builtIn = validateJson(value, translate);
 
   // rank both local checks, so a custom warning cannot mask a built-in JSON syntax error

@@ -8,6 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 * `FEAT`: add `readOnly` prop to `PropertiesPanel` to make the whole panel non-editable; disables all entries, hides list add and remove actions and popup buttons
 * `FEAT`: export `ReadOnlyContext` and `useReadOnly` to support read-only mode in custom entries
+* `FEAT`: do not validate and do not show diagnostics in read-only mode
 * `FEAT`: `debounce` is optional for all entries
 * `FIX`: honor `disabled` in `ToggleSwitchEntry`, `FeelIcon` and `TemplatingEditor`
 * `FIX`: make `JsonEditor` non-editable if `disabled`

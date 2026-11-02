@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useMemo, useRef } from 'preact/hooks';
 import { useStaticCallback, useShowEntryEvent } from '../../../hooks';
-import { useDisabled } from '../../../hooks/useReadOnly';
+import { useDisabled, useReadOnly, useValidate } from '../../../hooks/useReadOnly';
 import { isFunction } from 'min-dash';
 import { useDiagnostics } from '../../../hooks';
 import classnames from 'classnames';
@@ -39,9 +39,11 @@ export default function TemplatingEntry(props) {
     getValue,
     setValue,
     tooltipContainer,
-    validate,
+    validate: validateProp,
     show = noop,
   } = props;
+
+  const validate = useValidate(validateProp);
 
   const [ validationDiagnostic, setValidationDiagnostic ] = useState(null);
   const [ lintDiagnostic, setLintDiagnostic ] = useState(null);
@@ -71,9 +73,13 @@ export default function TemplatingEntry(props) {
     setValidationDiagnostic(newValidationError);
   });
 
+  const readOnly = useReadOnly();
+
   const onError = useCallback(err => {
-    setLintDiagnostic(err);
-  }, []);
+
+    // do not surface lint results in read-only mode
+    setLintDiagnostic(readOnly ? null : err);
+  }, [ readOnly ]);
 
   const diagnostics = useDiagnostics(id);
 
