@@ -22,7 +22,7 @@ import { isFunction } from 'min-dash';
 import Tooltip from './Tooltip';
 import { OpenPopupButton } from '../OpenPopupButton';
 import { EventContext } from '../../context';
-import { useDisabled } from '../../hooks/useReadOnly';
+import { useDisabled, useValidate } from '../../hooks/useReadOnly';
 import { isCmdWithChar } from '../util/keyboardUtils';
 import translateFallback from '../util/translateFallback';
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
@@ -255,7 +255,7 @@ export default function TextAreaEntry(props) {
     rows,
     monospace,
     disabled,
-    validate,
+    validate: validateProp,
     onFocus,
     onBlur,
     onPaste,
@@ -264,6 +264,8 @@ export default function TextAreaEntry(props) {
     tooltip,
     translate
   } = props;
+
+  const validate = useValidate(validateProp);
 
   const diagnostics = useDiagnostics(id);
   const [ localDiagnostic, setLocalDiagnostic ] = useState(null);

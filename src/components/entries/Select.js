@@ -7,7 +7,7 @@ import {
   useShowEntryEvent
 } from '../../hooks';
 
-import { useDisabled } from '../../hooks/useReadOnly';
+import { useDisabled, useValidate } from '../../hooks/useReadOnly';
 
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
 
@@ -148,9 +148,11 @@ export default function SelectEntry(props) {
     disabled,
     onFocus,
     onBlur,
-    validate,
+    validate: validateProp,
     tooltip
   } = props;
+
+  const validate = useValidate(validateProp);
 
   const options = getOptions(element);
   const diagnostics = useDiagnostics(id);

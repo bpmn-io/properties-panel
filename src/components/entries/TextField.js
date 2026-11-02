@@ -18,7 +18,7 @@ import {
   useShowEntryEvent,
   useStaticCallback
 } from '../../hooks';
-import { useDisabled } from '../../hooks/useReadOnly';
+import { useDisabled, useValidate } from '../../hooks/useReadOnly';
 import { isCmdWithChar } from '../util/keyboardUtils';
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
 
@@ -170,13 +170,15 @@ export default function TextfieldEntry(props) {
     label,
     getValue,
     setValue,
-    validate,
+    validate: validateProp,
     onFocus,
     onBlur,
     onPaste,
     placeholder,
     tooltip
   } = props;
+
+  const validate = useValidate(validateProp);
 
   const diagnostics = useDiagnostics(id);
   const [ localDiagnostic, setLocalDiagnostic ] = useState(null);

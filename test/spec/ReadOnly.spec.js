@@ -449,6 +449,104 @@ describe('read-only mode', function() {
   });
 
 
+  describe('validation', function() {
+
+    const VALIDATED = [
+      'TextField',
+      'TextArea',
+      'NumberField',
+      'Select',
+      'JsonEditor',
+      'Templating',
+      'Feel (static text)',
+      'Feel (expression)',
+      'FeelNumber',
+      'FeelTextArea',
+      'FeelTemplating'
+    ];
+
+    VALIDATED.forEach(function(name) {
+
+      describe(name, function() {
+
+        let validate;
+
+        beforeEach(function() {
+          validate = sinonSpy(() => 'invalid');
+        });
+
+        function create(readOnly, eventBus) {
+          return createPanel({
+            container,
+            readOnly,
+            eventBus,
+            groups: [ createGroup({ ...ENTRIES[ name ], validate }) ]
+          });
+        }
+
+
+        it('should validate and show errors by default', function() {
+
+          // when
+          create(false);
+
+          // then
+          expect(validate).to.have.been.called;
+          expect(domQuery('.bio-properties-panel-entry.has-error', container)).to.exist;
+        });
+
+
+        it('should not validate in read-only mode', function() {
+
+          // when
+          create(true);
+
+          // then
+          expect(validate).not.to.have.been.called;
+          expect(domQuery('.bio-properties-panel-entry.has-error', container)).not.to.exist;
+        });
+
+
+        it('should not show external diagnostics in read-only mode', async function() {
+
+          // given
+          const eventBus = new EventBus();
+
+          create(true, eventBus);
+
+          // when
+          await act(() => {
+            eventBus.fire('propertiesPanel.setDiagnostics', {
+              diagnostics: { entry: [ { message: 'external', severity: 'error' } ] }
+            });
+          });
+
+          // then
+          expect(domQuery('.bio-properties-panel-entry.has-error', container)).not.to.exist;
+          expect(domQuery('.bio-properties-panel-group-header.has-error', container)).not.to.exist;
+        });
+
+      });
+
+    });
+
+
+    it('should not show built-in JSON errors in read-only mode', function() {
+
+      // when
+      createPanel({
+        container,
+        readOnly: true,
+        groups: [ createGroup({ component: JsonEditorEntry, getValue: () => '{ foo' }) ]
+      });
+
+      // then
+      expect(domQuery('.bio-properties-panel-entry.has-error', container)).not.to.exist;
+    });
+
+  });
+
+
   describe('hooks and context', function() {
 
     function ReadOnlyProbe() {
