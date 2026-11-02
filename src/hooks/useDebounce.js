@@ -3,7 +3,9 @@ import {
   useEffect
 } from 'preact/hooks';
 
-export function useDebounce(callback, debounceFn) {
+import noDebounce from '../components/util/noDebounce';
+
+export function useDebounce(callback, debounceFn = noDebounce) {
   const debouncedCallback = useCallback(debounceFn(callback), [ callback, debounceFn ]);
 
   // flush pending calls before unmount the debounced function

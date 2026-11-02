@@ -22,6 +22,7 @@ import {
   useShowEntryEvent,
   useStaticCallback
 } from '../../../hooks';
+import { useDisabled } from '../../../hooks/useReadOnly';
 
 import FeelEditor from './FeelEditor';
 import { FeelIndicator } from './FeelIndicator';
@@ -81,7 +82,6 @@ function FeelTextfield(props) {
     placeholder,
     feel,
     value = '',
-    disabled = false,
     variables,
     singleLine,
     tooltipContainer,
@@ -89,6 +89,8 @@ function FeelTextfield(props) {
     tooltip,
     translate
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const [ localValue, setLocalValue ] = useState(getInitialFeelLocalValue(feel, value));
 
@@ -130,6 +132,11 @@ function FeelTextfield(props) {
   const handleInput = useDebounce(onInput, debounce);
 
   const setAndCommitValue = (newValue) => {
+
+    // never commit in disabled or read-only mode, e.g. through paste
+    if (disabled) {
+      return;
+    }
 
     // cancel any pending debounced value
     handleInput.cancel?.();
@@ -365,6 +372,7 @@ function FeelTextfield(props) {
           feel={ feel }
           onClick={ handleFeelToggle }
           active={ feelActive }
+          disabled={ disabled }
           translate={ translate }
         />
       </label>
@@ -400,6 +408,7 @@ function FeelTextfield(props) {
           /> :
           <OptionalComponent
             { ...props }
+            disabled={ disabled }
             popupOpen={ isPopupOpen }
             onInput={ handleInputChange }
             onKeyDown={ handleOnKeyDown }
@@ -563,6 +572,7 @@ const OptionalFeelTextArea = forwardRef((props, ref) => {
 const OptionalFeelToggleSwitch = forwardRef((props, ref) => {
   const {
     id,
+    disabled,
     onInput,
     value,
     onFocus,
@@ -589,6 +599,7 @@ const OptionalFeelToggleSwitch = forwardRef((props, ref) => {
     id={ id }
     value={ value }
     inputRef={ inputRef }
+    disabled={ disabled }
     onInput={ onInput }
     onFocus={ onFocus }
     onBlur={ onBlur }

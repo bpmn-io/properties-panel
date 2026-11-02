@@ -26,6 +26,7 @@ import {
   EventContext,
   LayoutContext,
   PropertiesPanelContext,
+  ReadOnlyContext,
   TooltipContext
 } from './context';
 
@@ -127,6 +128,8 @@ const DEFAULT_TOOLTIP = {};
  * @param {HTMLElement} [props.feelPopupContainer]
  * @param {Function} [props.getFeelPopupLinks]
  * @param {Object} [props.eventBus]
+ * @param {boolean} [props.readOnly=false] make the whole panel read-only,
+ *   i.e. disable all entries and hide all actions that modify the diagram
  */
 export default function PropertiesPanel(props) {
   const {
@@ -140,7 +143,8 @@ export default function PropertiesPanel(props) {
     descriptionLoaded,
     tooltipConfig,
     tooltipLoaded,
-    eventBus
+    eventBus,
+    readOnly = false
   } = props;
 
   // set-up layout context
@@ -261,30 +265,32 @@ export default function PropertiesPanel(props) {
             <TooltipContext.Provider value={ tooltipContext }>
               <LayoutContext.Provider value={ layoutContext }>
                 <EventContext.Provider value={ eventContext }>
-                  <div class="bio-properties-panel bio-theme-parent">
-                    { headerProvider ? (
-                      <Header
-                        element={ element }
-                        headerProvider={ headerProvider } />
-                    ) : null }
-                    <div class="bio-properties-panel-scroll-container">
-                      {
-                        groups.map(group => {
-                          const {
-                            component: Component = Group,
-                            id
-                          } = group;
+                  <ReadOnlyContext.Provider value={ readOnly }>
+                    <div class="bio-properties-panel bio-theme-parent">
+                      { headerProvider ? (
+                        <Header
+                          element={ element }
+                          headerProvider={ headerProvider } />
+                      ) : null }
+                      <div class="bio-properties-panel-scroll-container">
+                        {
+                          groups.map(group => {
+                            const {
+                              component: Component = Group,
+                              id
+                            } = group;
 
-                          return (
-                            <Component
-                              { ...group }
-                              key={ id }
-                              element={ element } />
-                          );
-                        })
-                      }
+                            return (
+                              <Component
+                                { ...group }
+                                key={ id }
+                                element={ element } />
+                            );
+                          })
+                        }
+                      </div>
                     </div>
-                  </div>
+                  </ReadOnlyContext.Provider>
                 </EventContext.Provider>
               </LayoutContext.Provider>
             </TooltipContext.Provider>

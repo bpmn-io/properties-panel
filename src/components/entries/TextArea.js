@@ -22,6 +22,7 @@ import { isFunction } from 'min-dash';
 import Tooltip from './Tooltip';
 import { OpenPopupButton } from '../OpenPopupButton';
 import { EventContext } from '../../context';
+import { useDisabled } from '../../hooks/useReadOnly';
 import { isCmdWithChar } from '../util/keyboardUtils';
 import translateFallback from '../util/translateFallback';
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
@@ -37,7 +38,6 @@ function TextArea(props) {
     debounce,
     onInput: commitValue,
     value = '',
-    disabled,
     monospace,
     onFocus,
     onBlur,
@@ -48,6 +48,8 @@ function TextArea(props) {
     tooltip,
     translate = translateFallback
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const [ localValue, setLocalValue ] = useState(value);
 
@@ -228,7 +230,7 @@ function TextArea(props) {
  * @param {object} props.element
  * @param {string} props.id
  * @param {string} props.description
- * @param {boolean} props.debounce
+ * @param {boolean} [props.debounce]
  * @param {string} props.label
  * @param {Function} props.getValue
  * @param {Function} props.setValue

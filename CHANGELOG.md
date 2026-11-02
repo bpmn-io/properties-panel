@@ -6,6 +6,12 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: add `readOnly` prop to `PropertiesPanel` to make the whole panel non-editable; disables all entries, hides list add and remove actions and popup buttons
+* `FEAT`: export `ReadOnlyContext` and `useReadOnly` to support read-only mode in custom entries
+* `FEAT`: `debounce` is optional for all entries
+* `FIX`: honor `disabled` in `ToggleSwitchEntry`, `FeelIcon` and `TemplatingEditor`
+* `FIX`: make `JsonEditor` non-editable if `disabled`
+
 ## 3.58.1
 
 * `FIX`: apply popup changes once on close ([#566](https://github.com/bpmn-io/properties-panel/pull/566))

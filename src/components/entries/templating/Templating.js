@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState, useMemo, useRef } from 'preact/hooks';
 import { useStaticCallback, useShowEntryEvent } from '../../../hooks';
+import { useDisabled } from '../../../hooks/useReadOnly';
 import { isFunction } from 'min-dash';
 import { useDiagnostics } from '../../../hooks';
 import classnames from 'classnames';
 import Description from '../Description';
 import DiagnosticMessage from '../Diagnostic';
 import TemplatingEditor from './TemplatingEditor';
+import noDebounce from '../../util/noDebounce';
 import { getDiagnosticClass, getMostSevere } from '../../util/diagnostics';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
@@ -17,7 +19,7 @@ const noop = () => {};
  * @param {Object} props.element
  * @param {String} props.id
  * @param {String} props.description
- * @param {Boolean} props.debounce
+ * @param {Boolean} [props.debounce]
  * @param {Boolean} props.disabled
  * @param {String} props.label
  * @param {Function} props.getValue
@@ -104,15 +106,16 @@ export default function TemplatingEntry(props) {
 
 function Templating(props) {
   const {
-    debounce,
+    debounce = noDebounce,
     id,
     label,
     onInput,
     onError,
     value = '',
-    disabled = false,
     tooltipContainer
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const [ localValue, setLocalValue ] = useState(value);
 
