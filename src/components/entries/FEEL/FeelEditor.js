@@ -7,6 +7,7 @@ import Editor from '@bpmn-io/feel-editor';
 import { EditorView, lineNumbers } from '@codemirror/view';
 
 import { useStaticCallback } from '../../../hooks';
+import { useDisabled } from '../../../hooks/useReadOnly';
 
 import { OpenPopupButton } from '../../OpenPopupButton';
 
@@ -59,12 +60,13 @@ const FeelEditor = forwardRef((props, ref) => {
     onOpenPopup = noop,
     placeholder,
     popupOpen,
-    disabled,
     tooltipContainer,
     variables,
     feelLanguageContext,
     translate = translateFallback
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const inputRef = useRef();
   const [ editor, setEditor ] = useState();
@@ -145,7 +147,7 @@ const FeelEditor = forwardRef((props, ref) => {
       inputRef.current.innerHTML = '';
       setEditor(null);
     };
-  }, []);
+  }, [ disabled ]);
 
   useEffect(() => {
     if (!editor) {

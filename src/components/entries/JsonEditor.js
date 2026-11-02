@@ -20,6 +20,8 @@ import {
   useStaticCallback
 } from '../../hooks';
 
+import { useDisabled } from '../../hooks/useReadOnly';
+
 import Tooltip from './Tooltip';
 
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
@@ -58,11 +60,12 @@ function JsonEditor(props) {
     debounce,
     value = '',
     onInput: commitValue,
-    disabled,
     placeholder,
     tooltip,
     element
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const containerRef = useRef(null);
   const viewRef = useRef(null);
@@ -94,7 +97,8 @@ function JsonEditor(props) {
           ]),
           EditorState.tabSize.of(2),
           EditorView.lineWrapping,
-          EditorState.readOnly.of(!!disabled),
+          EditorState.readOnly.of(disabled),
+          EditorView.editable.of(!disabled),
           ...(placeholder ? [ cmPlaceholder(placeholder) ] : []),
           EditorView.updateListener.of(update => {
             const isExternal = update.transactions.some(
@@ -127,7 +131,7 @@ function JsonEditor(props) {
     return () => {
       view.destroy();
     };
-  }, []);
+  }, [ disabled ]);
 
   // Sync external value changes into the editor
   useEffect(() => {
@@ -170,7 +174,7 @@ function JsonEditor(props) {
  * @param {string} props.id
  * @param {string} [props.description]
  * @param {string} props.label
- * @param {Function} props.debounce
+ * @param {Function} [props.debounce]
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {boolean} [props.disabled]

@@ -8,6 +8,8 @@ import {
 import classNames from 'classnames';
 import Tooltip from './Tooltip';
 
+import { useDisabled } from '../../hooks/useReadOnly';
+
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 export function ToggleSwitch(props) {
@@ -23,6 +25,8 @@ export function ToggleSwitch(props) {
     inputRef,
     tooltip
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const [ localValue, setLocalValue ] = useState(value);
 
@@ -65,7 +69,8 @@ export function ToggleSwitch(props) {
             onBlur={ onBlur }
             name={ id }
             onInput={ handleInput }
-            checked={ !!localValue } />
+            checked={ !!localValue }
+            disabled={ disabled } />
           <span class="bio-properties-panel-toggle-switch__slider" />
         </label>
         { switcherLabel && <p class="bio-properties-panel-toggle-switch__label">{ switcherLabel }</p> }
@@ -82,6 +87,7 @@ export function ToggleSwitch(props) {
  * @param {String} props.label
  * @param {String} props.switcherLabel
  * @param {Boolean} props.inline
+ * @param {Boolean} [props.disabled]
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {Function} props.onFocus
@@ -96,6 +102,7 @@ export default function ToggleSwitchEntry(props) {
     label,
     switcherLabel,
     inline,
+    disabled,
     getValue,
     setValue,
     onFocus,
@@ -116,6 +123,7 @@ export default function ToggleSwitchEntry(props) {
         onBlur={ onBlur }
         switcherLabel={ switcherLabel }
         inline={ inline }
+        disabled={ disabled }
         tooltip={ tooltip }
         element={ element } />
       <Description forId={ id } element={ element } value={ description } />

@@ -16,6 +16,10 @@ import {
   useDiagnostics
 } from '../../hooks';
 
+import { useDisabled } from '../../hooks/useReadOnly';
+
+import noDebounce from '../util/noDebounce';
+
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
@@ -23,8 +27,7 @@ import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
 export function NumberField(props) {
 
   const {
-    debounce,
-    disabled,
+    debounce = noDebounce,
     displayLabel = true,
     id,
     inputRef,
@@ -39,6 +42,8 @@ export function NumberField(props) {
     onKeyDown,
     tooltip
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const [ localValue, setLocalValue ] = useState(value);
 
@@ -96,7 +101,7 @@ export function NumberField(props) {
 
 /**
  * @param {Object} props
- * @param {Boolean} props.debounce
+ * @param {Boolean} [props.debounce]
  * @param {String} props.description
  * @param {Boolean} props.disabled
  * @param {Object} props.element

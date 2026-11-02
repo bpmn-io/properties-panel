@@ -7,6 +7,8 @@ import {
   useShowEntryEvent
 } from '../../hooks';
 
+import { useDisabled } from '../../hooks/useReadOnly';
+
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
 
 import {
@@ -45,11 +47,12 @@ function Select(props) {
     onChange,
     options = [],
     value = '',
-    disabled,
     onFocus,
     onBlur,
     tooltip
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const ref = useShowEntryEvent(id);
 

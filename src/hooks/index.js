@@ -10,6 +10,7 @@ export { useEvent } from './useEvent';
 export { useKeyFactory } from './useKeyFactory';
 export { useLayoutState } from './useLayoutState';
 export { usePrevious } from './usePrevious';
+export { useReadOnly } from './useReadOnly';
 export { useShowEntryEvent } from './useShowEntryEvent';
 export { useStickyIntersectionObserver } from './useStickyIntersectionObserver';
 export { useStaticCallback } from './useStaticCallback';
