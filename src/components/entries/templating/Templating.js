@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState, useMemo, useRef } from 'preact/hooks';
 import { useStaticCallback, useShowEntryEvent } from '../../../hooks';
+import { useDisabled, useReadOnly, useValidate } from '../../../hooks/useReadOnly';
 import { isFunction } from 'min-dash';
 import { useDiagnostics } from '../../../hooks';
 import classnames from 'classnames';
 import Description from '../Description';
 import DiagnosticMessage from '../Diagnostic';
 import TemplatingEditor from './TemplatingEditor';
+import noDebounce from '../../util/noDebounce';
 import { getDiagnosticClass, getMostSevere } from '../../util/diagnostics';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
@@ -17,7 +19,7 @@ const noop = () => {};
  * @param {Object} props.element
  * @param {String} props.id
  * @param {String} props.description
- * @param {Boolean} props.debounce
+ * @param {Boolean} [props.debounce]
  * @param {Boolean} props.disabled
  * @param {String} props.label
  * @param {Function} props.getValue
@@ -37,9 +39,11 @@ export default function TemplatingEntry(props) {
     getValue,
     setValue,
     tooltipContainer,
-    validate,
+    validate: validateProp,
     show = noop,
   } = props;
+
+  const validate = useValidate(validateProp);
 
   const [ validationDiagnostic, setValidationDiagnostic ] = useState(null);
   const [ lintDiagnostic, setLintDiagnostic ] = useState(null);
@@ -69,9 +73,13 @@ export default function TemplatingEntry(props) {
     setValidationDiagnostic(newValidationError);
   });
 
+  const readOnly = useReadOnly();
+
   const onError = useCallback(err => {
-    setLintDiagnostic(err);
-  }, []);
+
+    // do not surface lint results in read-only mode
+    setLintDiagnostic(readOnly ? null : err);
+  }, [ readOnly ]);
 
   const diagnostics = useDiagnostics(id);
 
@@ -104,15 +112,16 @@ export default function TemplatingEntry(props) {
 
 function Templating(props) {
   const {
-    debounce,
+    debounce = noDebounce,
     id,
     label,
     onInput,
     onError,
     value = '',
-    disabled = false,
     tooltipContainer
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const [ localValue, setLocalValue ] = useState(value);
 

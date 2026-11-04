@@ -1,4 +1,5 @@
 import { useShowEntryEvent } from '../../hooks';
+import { useDisabled } from '../../hooks/useReadOnly';
 
 import { useDisplayedDiagnostic } from '../../hooks/useDiagnostics';
 
@@ -22,12 +23,13 @@ function Checkbox(props) {
     id,
     label,
     onChange,
-    disabled,
     value = false,
     onFocus,
     onBlur,
     tooltip
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const [ localValue, setLocalValue ] = useState(value);
 

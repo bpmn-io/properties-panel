@@ -15,6 +15,8 @@ import {
 
 import { PropertiesPanelContext } from '../../context';
 
+import { useReadOnly } from '../../hooks/useReadOnly';
+
 import translateFallback from '../util/translateFallback';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
@@ -30,6 +32,8 @@ export default function CollapsibleEntry(props) {
     remove,
     translate = translateFallback
   } = props;
+
+  const readOnly = useReadOnly();
 
   const [ open, setOpen ] = useState(shouldOpen);
 
@@ -78,7 +82,7 @@ export default function CollapsibleEntry(props) {
           </button>
         ) }
         {
-          remove
+          remove && !readOnly
             ?
             (
               <button type="button" title={ translate('Delete item') } class="bio-properties-panel-remove-entry" onClick={ remove }>

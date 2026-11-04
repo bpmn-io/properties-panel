@@ -4,6 +4,7 @@ import { forwardRef } from 'preact/compat';
 
 import { FeelersEditor } from '@bpmn-io/feelers-editor';
 import { useStaticCallback } from '../../../hooks';
+import { useDisabled } from '../../../hooks/useReadOnly';
 
 import { OpenPopupButton } from '../../OpenPopupButton';
 
@@ -44,7 +45,6 @@ const TemplatingEditor = forwardRef((props, ref) => {
 
   const {
     onInput,
-    disabled,
     tooltipContainer,
     enableGutters,
     value,
@@ -55,6 +55,8 @@ const TemplatingEditor = forwardRef((props, ref) => {
     hostLanguage = null,
     singleLine = false
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const inputRef = useRef();
   const [ editor, setEditor ] = useState();
@@ -82,6 +84,7 @@ const TemplatingEditor = forwardRef((props, ref) => {
       hostLanguage,
       singleLine,
       lineWrap: true,
+      readOnly: disabled
     });
 
     setEditor(
@@ -93,7 +96,7 @@ const TemplatingEditor = forwardRef((props, ref) => {
       inputRef.current.innerHTML = '';
       setEditor(null);
     };
-  }, []);
+  }, [ disabled ]);
 
   useEffect(() => {
     if (!editor) {
