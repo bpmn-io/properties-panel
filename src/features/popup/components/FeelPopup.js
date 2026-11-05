@@ -93,6 +93,7 @@ export function FeelPopup(props) {
       onPostDeactivate={ handleSetReturnFocus }
       height={ FEEL_POPUP_HEIGHT }
       width={ FEEL_POPUP_WIDTH }
+      resizable
       ref={ popupRef }
     >
       <Popup.Title
