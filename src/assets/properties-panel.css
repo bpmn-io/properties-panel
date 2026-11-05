@@ -122,6 +122,7 @@
   --checkbox-background-color: var(--input-background-color);
   --checkbox-checked-background-color: var(--bio-primary);
   --checkbox-checked-border-color: var(--bio-primary);
+  --checkbox-checked-disabled-background-color: var(--input-disabled-color);
 
   --input-focus-background-color: var(--bio-primary-surface);
   --input-focus-border-color: var(--bio-primary);
@@ -711,6 +712,12 @@ select.bio-properties-panel-input {
   cursor: not-allowed;
   border-color: var(--input-disabled-border-color);
   background-color: var(--input-disabled-background-color);
+}
+
+/* keep the white checkmark visible: the disabled background is near-white */
+.bio-properties-panel-input[type="checkbox"]:checked:disabled {
+  border-color: var(--checkbox-checked-disabled-background-color);
+  background-color: var(--checkbox-checked-disabled-background-color);
 }
 
 .bio-properties-panel-checkbox > .bio-properties-panel-label {

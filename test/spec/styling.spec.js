@@ -282,4 +282,41 @@ describe('styling (CSS)', function() {
     expect(results.violations).to.be.empty;
   });
 
+
+  it('checked disabled checkbox keeps its checkmark visible', function() {
+
+    // given
+    container.innerHTML = `
+      <input class="bio-properties-panel-input" type="checkbox" checked disabled />
+    `;
+
+    const checkbox = container.querySelector('input');
+
+    // when
+    const { backgroundColor } = getComputedStyle(checkbox);
+
+    // then
+    // the checkmark is drawn in white; require WCAG non-text contrast (3:1)
+    expect(contrastRatio(backgroundColor, 'rgb(255, 255, 255)')).to.be.at.least(3);
+  });
+
 });
+
+
+// helpers //////////
+
+function relativeLuminance(color) {
+  const [ r, g, b ] = color.match(/\d+(\.\d+)?/g).slice(0, 3).map(channel => {
+    const value = Number(channel) / 255;
+
+    return value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+  });
+
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrastRatio(a, b) {
+  const [ lighter, darker ] = [ relativeLuminance(a), relativeLuminance(b) ].sort((x, y) => y - x);
+
+  return (lighter + 0.05) / (darker + 0.05);
+}
