@@ -18,6 +18,9 @@ import { createDragger } from '../../../components/util/dragger';
 
 const noop = () => {};
 
+export const POPUP_MIN_WIDTH = 300;
+export const POPUP_MIN_HEIGHT = 200;
+
 /**
  * A generic popup component.
  *
@@ -27,6 +30,9 @@ const noop = () => {};
  * @param {{top: number, left: number}} [props.position]
  * @param {number} [props.width]
  * @param {number} [props.height]
+ * @param {boolean} [props.resizable=false]
+ * @param {number} [props.minWidth=300]
+ * @param {number} [props.minHeight=200]
  * @param {Function} props.onClose
  * @param {Function} [props.onPostActivate]
  * @param {Function} [props.onPostDeactivate]
@@ -45,6 +51,9 @@ function PopupComponent(props, globalRef) {
     position,
     width,
     height,
+    resizable = false,
+    minWidth = POPUP_MIN_WIDTH,
+    minHeight = POPUP_MIN_HEIGHT,
     onClose,
     onPostActivate = noop,
     onPostDeactivate = noop,
@@ -78,6 +87,11 @@ function PopupComponent(props, globalRef) {
   const { top, left } = position || getCenterPosition(width, height);
 
   const style = {};
+
+  if (resizable) {
+    style.minWidth = `min(${minWidth}px, 90vw)`;
+    style.minHeight = `min(${minHeight}px, 90vh)`;
+  }
 
   if (isDefined(top) && isDefined(left)) {
     style.top = top + 'px';
@@ -130,7 +144,7 @@ function PopupComponent(props, globalRef) {
       ref={ popupRef }
       onKeyDown={ handleKeydown }
       role="dialog"
-      class={ classNames('bio-properties-panel-popup', 'bio-theme-parent', className) }
+      class={ classNames('bio-properties-panel-popup', 'bio-theme-parent', resizable && 'resizable', className) }
       style={ style }
     >
       {props.children}

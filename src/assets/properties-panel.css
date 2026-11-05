@@ -1637,6 +1637,12 @@ textarea.bio-properties-panel-input.auto-resize {
   font-size: 14px;
 }
 
+.bio-properties-panel-popup.resizable {
+  max-width: 90vw;
+  max-height: 90vh;
+  resize: both;
+}
+
 /**
  * Popups render through a portal outside `.bio-properties-panel`, so re-apply
  * the global box-sizing reset here.

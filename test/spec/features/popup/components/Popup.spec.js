@@ -45,6 +45,41 @@ describe('<Popup>', function() {
   });
 
 
+  it('should not resize or constrain dimensions by default', function() {
+
+    // when
+    render(
+      <Popup width={ 100 } height={ 100 } minWidth={ 500 } minHeight={ 250 } />,
+      { container }
+    );
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const style = window.getComputedStyle(popup);
+    const bounds = popup.getBoundingClientRect();
+
+    // then
+    expect(style.resize).to.eql('none');
+    expect(style.maxWidth).to.eql('none');
+    expect(style.maxHeight).to.eql('none');
+    expect(bounds.width).to.eql(100);
+    expect(bounds.height).to.eql(100);
+  });
+
+
+  it('should allow resizing in both directions', function() {
+
+    // when
+    render(<Popup resizable />, { container });
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const style = window.getComputedStyle(popup);
+
+    // then
+    expect(style.resize).to.eql('both');
+    expect(style.overflow).to.eql('hidden');
+  });
+
+
   it('should render width', function() {
 
     // given
@@ -76,6 +111,94 @@ describe('<Popup>', function() {
 
     // then
     expect(bounds.height).to.eql(height);
+  });
+
+
+  it('should enforce minimum dimensions', function() {
+
+    // when
+    render(<Popup width={ 100 } height={ 100 } resizable />, { container });
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const bounds = popup.getBoundingClientRect();
+
+    // then
+    expect(bounds.width).to.eql(300);
+    expect(bounds.height).to.eql(200);
+  });
+
+
+  it('should support custom minimum dimensions in pixels', function() {
+
+    // when
+    render(
+      <Popup width={ 100 } height={ 100 } minWidth={ 500 } minHeight={ 250 } resizable />,
+      { container }
+    );
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const bounds = popup.getBoundingClientRect();
+
+    // then
+    expect(bounds.width).to.eql(500);
+    expect(bounds.height).to.eql(250);
+  });
+
+
+  it('should support zero minimum dimensions', function() {
+
+    // when
+    render(
+      <Popup width={ 100 } height={ 100 } minWidth={ 0 } minHeight={ 0 } resizable />,
+      { container }
+    );
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const bounds = popup.getBoundingClientRect();
+
+    // then
+    expect(bounds.width).to.eql(100);
+    expect(bounds.height).to.eql(100);
+  });
+
+
+  it('should limit dimensions to 90 percent of the viewport', function() {
+
+    // when
+    render(
+      <Popup width={ window.innerWidth + 100 } height={ window.innerHeight + 100 } resizable />,
+      { container }
+    );
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const bounds = popup.getBoundingClientRect();
+
+    // then
+    expect(bounds.width).to.be.closeTo(window.innerWidth * 0.9, 0.02);
+    expect(bounds.height).to.be.closeTo(window.innerHeight * 0.9, 0.02);
+  });
+
+
+  it('should cap minimum dimensions at 90 percent of the viewport', function() {
+
+    // when
+    render(
+      <Popup
+        width={ 100 }
+        height={ 100 }
+        minWidth={ window.innerWidth + 100 }
+        minHeight={ window.innerHeight + 100 }
+        resizable
+      />,
+      { container }
+    );
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const bounds = popup.getBoundingClientRect();
+
+    // then
+    expect(bounds.width).to.be.closeTo(window.innerWidth * 0.9, 0.02);
+    expect(bounds.height).to.be.closeTo(window.innerHeight * 0.9, 0.02);
   });
 
 

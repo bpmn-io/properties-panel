@@ -60,6 +60,7 @@ export function TextPopup(props) {
       onPostDeactivate={ handleSetReturnFocus }
       height={ TEXT_POPUP_HEIGHT }
       width={ TEXT_POPUP_WIDTH }
+      resizable
       ref={ popupRef }
     >
       <Popup.Title

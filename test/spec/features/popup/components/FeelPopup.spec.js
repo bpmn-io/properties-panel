@@ -57,6 +57,7 @@ describe('<FeelPopup>', function() {
     expect(popup).to.exist;
     expect(popup.style.width).to.equal(`${FEEL_POPUP_WIDTH}px`);
     expect(popup.style.height).to.equal(`${FEEL_POPUP_HEIGHT}px`);
+    expect(window.getComputedStyle(popup).resize).to.equal('both');
   });
 
 
