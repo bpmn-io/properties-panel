@@ -84,7 +84,11 @@ function PopupComponent(props, globalRef) {
     }
   };
 
-  const { top, left } = position || getCenterPosition(width, height);
+  const { top, left } = position || getCenterPosition(
+    width,
+    height,
+    resizable ? { minWidth, minHeight } : null
+  );
 
   const style = {};
 
@@ -305,8 +309,9 @@ function Footer(props) {
  *
  * @param {number} [width]
  * @param {number} [height]
+ * @param {{ minWidth: number, minHeight: number }} [constraints]
  */
-function getCenterPosition(width, height) {
+function getCenterPosition(width, height, constraints) {
   if (!width || !height) {
     return {};
   }
@@ -314,10 +319,20 @@ function getCenterPosition(width, height) {
   const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
   const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
+  // account for size constraints applied to resizable popups
+  if (constraints) {
+    width = constrainDimension(width, constraints.minWidth, viewportWidth * 0.9);
+    height = constrainDimension(height, constraints.minHeight, viewportHeight * 0.9);
+  }
+
   return {
     left: Math.max(0, (viewportWidth - width) / 2),
     top: Math.max(0, (viewportHeight - height) / 2)
   };
+}
+
+function constrainDimension(value, min, max) {
+  return Math.max(Math.min(value, max), Math.min(min, max));
 }
 
 function isTab(event) {

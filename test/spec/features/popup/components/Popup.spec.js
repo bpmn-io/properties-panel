@@ -202,6 +202,25 @@ describe('<Popup>', function() {
   });
 
 
+  it('should center using constrained dimensions', function() {
+
+    // when
+    render(
+      <Popup width={ 100 } height={ 100 } minWidth={ 500 } minHeight={ 250 } resizable />,
+      { container }
+    );
+
+    const popup = domQuery('.bio-properties-panel-popup', container);
+    const bounds = popup.getBoundingClientRect();
+
+    // then
+    expect(bounds.left).to.be.closeTo((window.innerWidth - bounds.width) / 2, 1);
+    expect(bounds.top).to.be.closeTo((window.innerHeight - bounds.height) / 2, 1);
+    expect(bounds.right).to.be.at.most(window.innerWidth);
+    expect(bounds.bottom).to.be.at.most(window.innerHeight);
+  });
+
+
   it('should render children', function() {
 
     // when
