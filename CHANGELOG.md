@@ -6,7 +6,9 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FEAT`: make popup resizable
+## 3.59.0
+
+* `FEAT`: make popup resizable ([#568](https://github.com/bpmn-io/properties-panel/pull/568))
 
 ## 3.58.1
 
