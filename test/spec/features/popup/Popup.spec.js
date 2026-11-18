@@ -6,12 +6,14 @@ import {
 } from 'sinon';
 
 import { act } from '@testing-library/preact';
+import { render, cleanup } from '@testing-library/preact/pure';
 
 import MochaTestContainer from 'mocha-test-container-support';
 
 import { query as domQuery } from 'min-dom';
 
 import FeelPopupModule from '../../../../src/features/popup';
+import PropertiesPanel from '../../../../src/PropertiesPanel';
 
 import {
   Popup,
@@ -28,12 +30,12 @@ import {
 
 describe('Popup', function() {
 
-  let container;
+  let container, panelContainer, panel, layoutConfig, layoutChanged;
 
   beforeEach(function() {
     container = MochaTestContainer.get(this);
 
-    return bootstrapDiagram({
+    bootstrapDiagram({
       modules: [ FeelPopupModule ],
       propertiesPanel: {
         feelPopupContainer: container,
@@ -49,11 +51,32 @@ describe('Popup', function() {
         }
       }
     })();
+
+    layoutConfig = {};
+    layoutChanged = sinonSpy();
+    panelContainer = document.createElement('div');
+    container.appendChild(panelContainer);
+    panel = renderPanel();
   });
 
   afterEach(function() {
+    act(() => getDiagramJS().get('eventBus').fire('propertiesPanel.closePopup'));
+    cleanup();
     container.innerHTML = '';
   });
+
+  function renderPanel() {
+    return render(
+      <PropertiesPanel
+        element={ {} }
+        groups={ [] }
+        eventBus={ getDiagramJS().get('eventBus') }
+        layoutConfig={ layoutConfig }
+        layoutChanged={ layoutChanged }
+      />,
+      { container: panelContainer }
+    );
+  }
 
 
   it('should fire <propertiesPanelPopup.open> on <propertiesPanel.openPopup>', inject(function(eventBus) {
@@ -349,6 +372,227 @@ describe('Popup', function() {
   });
 
 
+  describe('popup layout', function() {
+
+    const layout = {
+      size: { width: 450, height: 300 },
+      position: { top: 25, left: 35 }
+    };
+
+    it('should restore size and position from configuration', async function() {
+
+      // given
+      layoutConfig = { popups: { text: layout } };
+      renderPanel();
+
+      // when
+      await openPopup({ entryId: 'foo', type: 'text' });
+
+      // then
+      const popup = domQuery('.bio-properties-panel-popup', container);
+      expect(popup.style.width).to.equal('450px');
+      expect(popup.style.height).to.equal('300px');
+      expect(popup.style.top).to.equal('25px');
+      expect(popup.style.left).to.equal('35px');
+    });
+
+
+    [ 'feel', 'feelers', 'text' ].forEach(type => {
+
+      it(`should save ${type} size and position on close`, inject(async function() {
+
+        // given
+        await openPopup({ entryId: 'foo', type });
+        const popup = domQuery('.bio-properties-panel-popup', container);
+        Object.assign(popup.style, {
+          width: '450px', height: '300px', top: '25px', left: '35px'
+        });
+        layoutChanged.resetHistory();
+
+        // when
+        await closePopup();
+
+        // then
+        expect(layoutChanged).to.have.been.calledOnceWith({ popups: { [type]: layout } });
+      }));
+
+
+      it(`should restore ${type} size and position`, inject(async function() {
+
+        // given
+        layoutConfig = { popups: { [type]: layout } };
+        renderPanel();
+
+        // when
+        await openPopup({ entryId: 'foo', type });
+
+        // then
+        const popup = domQuery('.bio-properties-panel-popup', container);
+        expect(popup.style.width).to.equal('450px');
+        expect(popup.style.height).to.equal('300px');
+        expect(popup.style.top).to.equal('25px');
+        expect(popup.style.left).to.equal('35px');
+      }));
+
+    });
+
+
+    it('should remember size and position through layout state', inject(async function() {
+
+      // given
+      await openPopup({ entryId: 'foo', type: 'text' });
+      Object.assign(domQuery('.bio-properties-panel-popup', container).style, {
+        width: '450px', height: '300px', top: '25px', left: '35px'
+      });
+      await closePopup();
+
+      // when
+      await openPopup({ entryId: 'bar', type: 'text' });
+
+      // then
+      const popup = domQuery('.bio-properties-panel-popup', container);
+      expect(popup.style.width).to.equal('450px');
+      expect(popup.style.height).to.equal('300px');
+      expect(popup.style.top).to.equal('25px');
+      expect(popup.style.left).to.equal('35px');
+    }));
+
+
+    it('should save size and position before immediate panel unmount', inject(async function(eventBus) {
+
+      // given
+      await openPopup({ entryId: 'foo', type: 'text', ...layout.size, position: layout.position });
+      layoutChanged.resetHistory();
+
+      // when
+      act(() => {
+        eventBus.fire('propertiesPanel.detach');
+        panel.unmount();
+      });
+
+      // then
+      expect(layoutChanged).to.have.been.calledOnceWith({ popups: { text: layout } });
+    }));
+
+
+    it('should retain group layout and other popup sizes when switching types', inject(async function() {
+
+      // given
+      layoutConfig = { groups: { foo: { open: true } } };
+      renderPanel();
+      await openPopup({ entryId: 'foo', type: 'feel', ...layout.size, position: layout.position });
+      layoutChanged.resetHistory();
+
+      // when
+      await openPopup({ entryId: 'bar', type: 'text', width: 500, height: 250 });
+      await closePopup();
+
+      // then
+      const savedLayout = layoutChanged.lastCall.args[0];
+      expect(savedLayout.groups).to.eql({ foo: { open: true } });
+      expect(savedLayout.popups.feel).to.eql(layout);
+      expect(savedLayout.popups.text.size).to.eql({ width: 500, height: 250 });
+    }));
+
+
+    it('should save into the latest layout after an external update', inject(async function() {
+
+      // given
+      await openPopup({ entryId: 'foo', type: 'text', ...layout.size, position: layout.position });
+      layoutConfig = { groups: { foo: { open: true } } };
+      renderPanel();
+      layoutChanged.resetHistory();
+
+      // when
+      await closePopup();
+
+      // then
+      expect(layoutChanged).to.have.been.calledOnceWith({
+        groups: { foo: { open: true } },
+        popups: { text: layout }
+      });
+    }));
+
+
+    it('should keep popup types independent', inject(async function() {
+
+      // given
+      layoutConfig = { popups: { feel: layout } };
+      renderPanel();
+
+      // when
+      await openPopup({ entryId: 'foo', type: 'text' });
+
+      // then
+      const popup = domQuery('.bio-properties-panel-popup', container);
+      expect(popup.style.width).to.equal('700px');
+      expect(popup.style.height).to.equal('400px');
+    }));
+
+
+    it('should respect explicit size and position when opening', inject(async function() {
+
+      // given
+      layoutConfig = { popups: { text: layout } };
+      renderPanel();
+
+      // when
+      await openPopup({
+        entryId: 'foo', type: 'text',
+        width: 500, height: 350, position: { top: 40, left: 50 }
+      });
+
+      // then
+      const popup = domQuery('.bio-properties-panel-popup', container);
+      expect(popup.style.width).to.equal('500px');
+      expect(popup.style.height).to.equal('350px');
+      expect(popup.style.top).to.equal('40px');
+      expect(popup.style.left).to.equal('50px');
+    }));
+
+
+    it('should forward size and position to a custom provider', inject(async function(eventBus, feelPopup) {
+
+      // given
+      function CustomPopup({ width = 500, height = 350, position, onClose }) {
+        return <Popup width={ width } height={ height } position={ position } onClose={ onClose } />;
+      }
+      feelPopup.registerProvider('custom', CustomPopup);
+      layoutConfig = { popups: { custom: layout } };
+      renderPanel();
+
+      // when
+      await openPopup({ entryId: 'foo', type: 'custom' });
+
+      // then
+      const popup = domQuery('.bio-properties-panel-popup', container);
+      expect(popup.style.width).to.equal('450px');
+      expect(popup.style.height).to.equal('300px');
+      expect(popup.style.top).to.equal('25px');
+      expect(popup.style.left).to.equal('35px');
+    }));
+
+
+    [ 'propertiesPanel.detach', 'diagram.destroy' ].forEach(event => {
+
+      it(`should save size and position on ${event}`, inject(async function(eventBus) {
+
+        // given
+        await openPopup({ entryId: 'foo', type: 'text', ...layout.size, position: layout.position });
+        layoutChanged.resetHistory();
+
+        // when
+        act(() => eventBus.fire(event));
+
+        // then
+        expect(layoutChanged).to.have.been.calledOnceWith({ popups: { text: layout } });
+        expect(domQuery('.bio-properties-panel-popup', container)).not.to.exist;
+      }));
+
+    });
+  });
+
+
   describe('providers', function() {
 
     it('should render a registered custom provider', inject(function(eventBus, feelPopup) {
@@ -367,6 +611,8 @@ describe('Popup', function() {
           type: 'custom',
           value: 'hello world'
         });
+
+
       });
 
       // then

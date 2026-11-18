@@ -11,6 +11,9 @@ import { Popup } from './Popup';
  * @property {string} title
  * @property {string} value
  * @property {HTMLElement} [sourceElement]
+ * @property {number} [width]
+ * @property {number} [height]
+ * @property {{top: number, left: number}} [position]
  */
 
 export const TEXT_POPUP_WIDTH = 700;
@@ -31,7 +34,10 @@ export function TextPopup(props) {
     onClose,
     title,
     value,
-    sourceElement
+    sourceElement,
+    width = TEXT_POPUP_WIDTH,
+    height = TEXT_POPUP_HEIGHT,
+    position
   } = props;
 
   const editorRef = useRef();
@@ -58,8 +64,9 @@ export function TextPopup(props) {
       delayInitialFocus={ false }
       onClose={ onClose }
       onPostDeactivate={ handleSetReturnFocus }
-      height={ TEXT_POPUP_HEIGHT }
-      width={ TEXT_POPUP_WIDTH }
+      height={ height }
+      width={ width }
+      position={ position }
       resizable
       ref={ popupRef }
     >

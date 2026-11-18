@@ -97,6 +97,23 @@ describe('<Popup>', function() {
   });
 
 
+  it('should keep a restored popup inside the viewport', function() {
+
+    // given
+    const position = { top: window.innerHeight + 100, left: window.innerWidth + 100 };
+
+    // when
+    render(<Popup width={ 450 } height={ 300 } position={ position } resizable />, { container });
+
+    // then
+    const bounds = domQuery('.bio-properties-panel-popup', container).getBoundingClientRect();
+    expect(bounds.top).to.be.at.least(0);
+    expect(bounds.left).to.be.at.least(0);
+    expect(bounds.bottom).to.be.at.most(window.innerHeight);
+    expect(bounds.right).to.be.at.most(window.innerWidth);
+  });
+
+
   it('should render height', function() {
 
     // given

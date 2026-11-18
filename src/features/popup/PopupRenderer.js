@@ -1,8 +1,11 @@
-import { render } from 'preact';
+import { cloneElement, render } from 'preact';
+import { flushSync } from 'preact/compat';
 import { query as domQuery } from 'min-dom';
 import { isString } from 'min-dash';
 
-import { EventContext } from '../../context';
+import { EventContext, LayoutContext } from '../../context';
+
+import { useEvent, useLayoutState, useStaticCallback } from '../../hooks';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
@@ -26,6 +29,8 @@ export class PopupRenderer {
   _renderPopup(context) {
     let { container, config } = context;
 
+    const layoutContext = this._eventBus.fire('propertiesPanel.getLayoutContext');
+
     container = this._container = getContainer(container) || document.body;
 
     const element = this._element = createElement();
@@ -35,10 +40,15 @@ export class PopupRenderer {
     this._emit('feelPopup.open');
 
     const Component = config.component;
+    const content = <Component { ...config } eventBus={ this._eventBus } />;
 
     render(
       <EventContext.Provider value={ { eventBus: this._eventBus } }>
-        <Component { ...config } eventBus={ this._eventBus } />
+        { layoutContext ? (
+          <LayoutContext.Provider value={ layoutContext }>
+            <PopupLayout type={ config.type }>{ content }</PopupLayout>
+          </LayoutContext.Provider>
+        ) : content }
       </EventContext.Provider>,
       element
     );
@@ -59,7 +69,7 @@ export class PopupRenderer {
 
     render(null, this._element);
 
-    this._container.removeChild(this._element);
+    this._element.remove();
 
     this._container = null;
     this._element = null;
@@ -73,6 +83,37 @@ export class PopupRenderer {
 }
 
 PopupRenderer.$inject = [ 'eventBus' ];
+
+/**
+ * Restore and save popup size and position through the panel's layout context.
+ */
+function PopupLayout({ type = 'text', children }) {
+  const [ popupLayout, setPopupLayout ] = useLayoutState([ 'popups', type ], {});
+
+  const saveSizeAndPosition = useStaticCallback(({ domNode }) => {
+    const element = domQuery('.bio-properties-panel-popup', domNode);
+
+    if (!element?.isConnected) {
+      return;
+    }
+
+    const { width, height, top, left } = element.getBoundingClientRect();
+
+    // Flush the shared layout before a following detach can unmount the panel.
+    flushSync(() => setPopupLayout({
+      size: { width, height },
+      position: { top, left }
+    }));
+  });
+
+  useEvent('feelPopup.close', saveSizeAndPosition);
+
+  return cloneElement(children, {
+    ...popupLayout.size,
+    position: popupLayout.position,
+    ...children.props
+  });
+}
 
 // helpers /////////////////
 
