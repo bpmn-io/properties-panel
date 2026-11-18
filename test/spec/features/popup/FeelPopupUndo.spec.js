@@ -92,6 +92,80 @@ describe('FEEL popup undo/redo', function() {
         return document.querySelector('.bio-properties-panel-feel-popup .cm-content');
       }
 
+      async function openPopupAtEnd() {
+        render(<Host />, { container });
+
+        await act(() => container.querySelector('.bio-properties-panel-open-feel-popup').click());
+
+        expect(popupEditor()).to.exist;
+
+        const editor = popupEditor();
+        editor.focus();
+
+        const selection = document.getSelection();
+        selection.selectAllChildren(editor.querySelector('.cm-line'));
+        selection.collapseToEnd();
+
+        return editor;
+      }
+
+
+      it('should commit the latest draft without closing or moving focus', async function() {
+
+        // given
+        const popup = getDiagramJS().get('feelPopup');
+        const editor = await openPopupAtEnd();
+
+        await act(() => { document.execCommand('insertText', false, 'bar'); });
+
+        // when
+        await act(() => popup.commit());
+
+        // then
+        expect(commits).to.eql([ '=foobar' ]);
+        expect(popup.isOpen()).to.be.true;
+        expect(popupEditor()).to.equal(editor);
+        expect(document.activeElement).to.equal(editor);
+      });
+
+
+      it('should not commit the same draft twice on repeated commit or close', async function() {
+
+        // given
+        const popup = getDiagramJS().get('feelPopup');
+
+        await openPopupAtEnd();
+        await act(() => { document.execCommand('insertText', false, 'bar'); });
+        await act(() => popup.commit());
+
+        // when
+        await act(() => {
+          popup.commit();
+          popup.close();
+        });
+
+        // then
+        expect(commits).to.eql([ '=foobar' ]);
+      });
+
+
+      it('should commit further edits on close after an explicit commit', async function() {
+
+        // given
+        const popup = getDiagramJS().get('feelPopup');
+
+        await openPopupAtEnd();
+        await act(() => { document.execCommand('insertText', false, 'bar'); });
+        await act(() => popup.commit());
+        await act(() => { document.execCommand('insertText', false, 'baz'); });
+
+        // when
+        await act(() => popup.close());
+
+        // then
+        expect(commits).to.eql([ '=foobar', '=foobarbaz' ]);
+      });
+
 
       it('should not commit undone popup changes', async function() {
 
@@ -195,24 +269,6 @@ describe('FEEL popup undo/redo', function() {
             cancelable: true
           }));
         }
-
-        async function openPopupAtEnd() {
-          render(<Host />, { container });
-
-          await act(() => container.querySelector('.bio-properties-panel-open-feel-popup').click());
-
-          expect(popupEditor()).to.exist;
-
-          const editor = popupEditor();
-          editor.focus();
-
-          const selection = document.getSelection();
-          selection.selectAllChildren(editor.querySelector('.cm-line'));
-          selection.collapseToEnd();
-
-          return editor;
-        }
-
 
         it('should undo and redo via keyboard, commit restored value once on close', async function() {
 
