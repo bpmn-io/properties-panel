@@ -225,7 +225,6 @@ function FeelTextfield(props) {
     }
   });
 
-  // changes made in the popup are applied once, when it closes
   const applyPopupDraft = useStaticCallback((draft) => {
     const newValue = feelActive ? '=' + draft : draft;
 
@@ -255,10 +254,20 @@ function FeelTextfield(props) {
     });
 
     if (isOpen) {
-      eventBus.once('propertiesPanelPopup.close', () => {
+      const commitDraft = () => {
         if (draft !== undefined) {
-          applyPopupDraft(draft);
+          const value = draft;
+          draft = undefined;
+
+          applyPopupDraft(value);
         }
+      };
+
+      eventBus.on('propertiesPanelPopup.commit', commitDraft);
+
+      eventBus.once('propertiesPanelPopup.close', () => {
+        eventBus.off('propertiesPanelPopup.commit', commitDraft);
+        commitDraft();
 
         setIsPopupOpen(false);
       });
