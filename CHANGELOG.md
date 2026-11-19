@@ -6,6 +6,8 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: preserve the popup's original FEEL mode when applying edits after toggling the underlying field
+
 ## 3.60.0
 
 * `FEAT`: allow committing FEEL popup edits without closing ([#569](https://github.com/bpmn-io/properties-panel/pull/569))

@@ -61,7 +61,7 @@ describe('FEEL popup undo/redo', function() {
         await act(() => { clock.tick(debounceMs + 200); });
       }
 
-      function Host() {
+      function Host({ feel = 'required' }) {
         const [ value, setValue ] = useState(model);
         const element = useMemo(() => ({}), []);
         const debounce = useMemo(() => debounceMs ? fn => minDebounce(fn, debounceMs) : fn => fn, []);
@@ -72,7 +72,7 @@ describe('FEEL popup undo/redo', function() {
               element={ element }
               id="foo"
               label="Foo"
-              feel="required"
+              feel={ feel }
               debounce={ debounce }
               getValue={ () => value }
               setValue={ v => {
@@ -92,8 +92,8 @@ describe('FEEL popup undo/redo', function() {
         return document.querySelector('.bio-properties-panel-feel-popup .cm-content');
       }
 
-      async function openPopupAtEnd() {
-        render(<Host />, { container });
+      async function openPopupAtEnd(feel = 'required') {
+        render(<Host feel={ feel } />, { container });
 
         await act(() => container.querySelector('.bio-properties-panel-open-feel-popup').click());
 
@@ -108,6 +108,35 @@ describe('FEEL popup undo/redo', function() {
 
         return editor;
       }
+
+      [ 'commit', 'close' ].forEach(action => {
+
+        it(`should restore FEEL mode on ${ action } after toggling the field to a static value`, async function() {
+
+          // given
+          const popup = getDiagramJS().get('feelPopup');
+          const editor = await openPopupAtEnd('optional');
+
+          await act(() => container.querySelector('.bio-properties-panel-feel-icon').click());
+
+          editor.focus();
+
+          const selection = document.getSelection();
+          selection.selectAllChildren(editor.querySelector('.cm-line'));
+          selection.collapseToEnd();
+
+          await act(() => { document.execCommand('insertText', false, 'bar'); });
+
+          // when
+          await act(() => popup[action]());
+
+          // then
+          expect(model).to.eql('=foobar');
+          expect(mainEditorText()).to.eql('foobar');
+          expect(container.querySelector('.bio-properties-panel-feel-entry.feel-active')).to.exist;
+        });
+
+      });
 
 
       it('should commit the latest draft without closing or moving focus', async function() {

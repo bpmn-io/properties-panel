@@ -225,9 +225,7 @@ function FeelTextfield(props) {
     }
   });
 
-  const applyPopupDraft = useStaticCallback((draft) => {
-    const newValue = feelActive ? '=' + draft : draft;
-
+  const applyPopupDraft = useStaticCallback((newValue) => {
     if (newValue !== localValue) {
       setAndCommitValue(newValue);
     }
@@ -242,7 +240,7 @@ function FeelTextfield(props) {
       hostLanguage,
       label,
       onInput: (newValue) => {
-        draft = newValue;
+        draft = feelActive ? '=' + newValue : newValue;
       },
       singleLine,
       sourceElement: editorRef.current,
