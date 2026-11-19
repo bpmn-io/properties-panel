@@ -20,6 +20,9 @@ import { Popup } from './Popup';
  * @property {boolean} [singleLine]
  * @property {HTMLElement} [sourceElement]
  * @property {HTMLElement|string} [tooltipContainer]
+ * @property {number} [width]
+ * @property {number} [height]
+ * @property {{top: number, left: number}} [position]
  */
 
 export const FEEL_POPUP_WIDTH = 700;
@@ -44,6 +47,9 @@ export function FeelPopup(props) {
     sourceElement,
     tooltipContainer,
     feelLanguageContext,
+    width = FEEL_POPUP_WIDTH,
+    height = FEEL_POPUP_HEIGHT,
+    position,
   } = props;
 
   const editorRef = useRef();
@@ -91,8 +97,9 @@ export function FeelPopup(props) {
       delayInitialFocus={ false }
       allowFocusMove={ (event) => !isSnippetNavigation(event) }
       onPostDeactivate={ handleSetReturnFocus }
-      height={ FEEL_POPUP_HEIGHT }
-      width={ FEEL_POPUP_WIDTH }
+      height={ height }
+      width={ width }
+      position={ position }
       resizable
       ref={ popupRef }
     >

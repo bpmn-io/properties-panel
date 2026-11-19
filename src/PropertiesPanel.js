@@ -29,7 +29,7 @@ import {
   TooltipContext
 } from './context';
 
-import { useEvent } from './hooks';
+import { useEvent, useStaticCallback } from './hooks';
 
 import { toDiagnostic, toErrorDiagnostic } from './components/util/diagnostics';
 
@@ -153,7 +153,7 @@ export default function PropertiesPanel(props) {
     setLayout(newLayout);
   }, [ layoutConfig ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof layoutChanged === 'function') {
       layoutChanged(layout);
     }
@@ -177,6 +177,10 @@ export default function PropertiesPanel(props) {
     getLayoutForKey,
     setLayoutForKey
   };
+
+  const getLayoutContext = useStaticCallback(() => layoutContext);
+
+  useEvent('propertiesPanel.getLayoutContext', getLayoutContext, eventBus);
 
   // set-up description context
   const description = useMemo(() => createDescriptionContext(descriptionConfig), [ descriptionConfig ]);

@@ -1,6 +1,6 @@
 import { forwardRef } from 'preact/compat';
 
-import { useContext, useEffect, useRef } from 'preact/hooks';
+import { useContext, useEffect, useLayoutEffect, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
@@ -109,6 +109,18 @@ function PopupComponent(props, globalRef) {
   if (height) {
     style.height = height + 'px';
   }
+
+  useLayoutEffect(() => {
+    if (!position || !popupRef.current) {
+      return;
+    }
+
+    const popup = popupRef.current;
+    const { width, height } = popup.getBoundingClientRect();
+
+    popup.style.top = Math.max(0, Math.min(position.top, window.innerHeight - height)) + 'px';
+    popup.style.left = Math.max(0, Math.min(position.left, window.innerWidth - width)) + 'px';
+  }, [ position, width, height, popupRef ]);
 
   useEffect(() => {
     if (popupRef.current) {

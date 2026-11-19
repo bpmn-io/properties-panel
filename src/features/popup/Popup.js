@@ -42,7 +42,8 @@ export class Popup {
 
     eventBus.on([
       'propertiesPanel.closePopup',
-      'propertiesPanel.detach'
+      'propertiesPanel.detach',
+      'diagram.destroy'
     ], () => {
       this.close();
     });
@@ -150,6 +151,7 @@ export class Popup {
       container: this._config.feelPopupContainer,
       config: {
         ...context,
+        type,
         component,
         links: this._config.getFeelPopupLinks?.(type) || [],
         onClose: () => {
