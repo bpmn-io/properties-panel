@@ -116,6 +116,15 @@ export class Popup {
   }
 
   /**
+   * Apply pending FEEL changes without closing the popup.
+   */
+  commit() {
+    if (this._isOpen) {
+      this._eventBus.fire('propertiesPanelPopup.commit');
+    }
+  }
+
+  /**
    * Close the popup.
    */
   close() {
