@@ -20,6 +20,8 @@ import {
   useStaticCallback
 } from '../../hooks';
 
+import { useDisabled, useReadOnly, useValidate } from '../../hooks/useReadOnly';
+
 import Tooltip from './Tooltip';
 
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
@@ -58,11 +60,12 @@ function JsonEditor(props) {
     debounce,
     value = '',
     onInput: commitValue,
-    disabled,
     placeholder,
     tooltip,
     element
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const containerRef = useRef(null);
   const viewRef = useRef(null);
@@ -94,7 +97,8 @@ function JsonEditor(props) {
           ]),
           EditorState.tabSize.of(2),
           EditorView.lineWrapping,
-          EditorState.readOnly.of(!!disabled),
+          EditorState.readOnly.of(disabled),
+          EditorView.editable.of(!disabled),
           ...(placeholder ? [ cmPlaceholder(placeholder) ] : []),
           EditorView.updateListener.of(update => {
             const isExternal = update.transactions.some(
@@ -127,7 +131,7 @@ function JsonEditor(props) {
     return () => {
       view.destroy();
     };
-  }, []);
+  }, [ disabled ]);
 
   // Sync external value changes into the editor
   useEffect(() => {
@@ -170,7 +174,7 @@ function JsonEditor(props) {
  * @param {string} props.id
  * @param {string} [props.description]
  * @param {string} props.label
- * @param {Function} props.debounce
+ * @param {Function} [props.debounce]
  * @param {Function} props.getValue
  * @param {Function} props.setValue
  * @param {boolean} [props.disabled]
@@ -191,15 +195,18 @@ export default function JsonEditorEntry(props) {
     disabled,
     placeholder,
     tooltip,
-    validate,
+    validate: validateProp,
     translate = translateFallback
   } = props;
 
+  const validate = useValidate(validateProp);
+
   const diagnostics = useDiagnostics(id);
+  const readOnly = useReadOnly();
 
   let value = getValue(element);
   const [ localDiagnostic, setLocalDiagnostic ] = useState(
-    () => computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate)
+    () => computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate, readOnly)
   );
   const [ editorValue, setEditorValue ] = useState(value);
 
@@ -209,7 +216,7 @@ export default function JsonEditorEntry(props) {
     }
 
     setEditorValue(value);
-    setLocalDiagnostic(computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate));
+    setLocalDiagnostic(computeDiagnostic(isFunction(validate) ? validate(value) : null, value, translate, readOnly));
   }, [ value, validate ]);
 
   const onInput = useStaticCallback((newValue) => {
@@ -221,7 +228,7 @@ export default function JsonEditorEntry(props) {
       const newValidationError = isFunction(validate) ? validate(newValue) : null;
 
       setValue(newValue, newValidationError);
-      setLocalDiagnostic(computeDiagnostic(newValidationError, newValue, translate));
+      setLocalDiagnostic(computeDiagnostic(newValidationError, newValue, translate, readOnly));
     }
   });
 
@@ -260,7 +267,13 @@ export function isEdited(node) {
 
 // helpers /////////////////
 
-function computeDiagnostic(custom, value, translate) {
+function computeDiagnostic(custom, value, translate, readOnly) {
+
+  // nothing is validated in read-only mode
+  if (readOnly) {
+    return null;
+  }
+
   const builtIn = validateJson(value, translate);
 
   // rank both local checks, so a custom warning cannot mask a built-in JSON syntax error

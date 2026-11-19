@@ -17,6 +17,8 @@ import {
 
 import { useListDiagnostic } from '../hooks/useDiagnostics';
 
+import { useReadOnly } from '../hooks/useReadOnly';
+
 import ListItem from './ListItem';
 
 import {
@@ -58,6 +60,8 @@ export default function ListGroup(props) {
       console.warn('the property \'shouldSort\' is no longer supported');
     }
   }, [ props.shouldSort ]);
+
+  const readOnly = useReadOnly();
 
   const groupRef = useRef(null);
 
@@ -127,7 +131,7 @@ export default function ListGroup(props) {
       </div>
       <div class="bio-properties-panel-group-header-buttons">
         {
-          add
+          add && !readOnly
             ? (
               <button
                 type="button"

@@ -4,13 +4,16 @@ import {
   useState
 } from 'preact/hooks';
 
+import { useDisabled } from '../../hooks/useReadOnly';
+
+import noDebounce from '../util/noDebounce';
 import translateFallback from '../util/translateFallback';
 
 { /* Required to break up imports, see https://github.com/babel/babel/issues/15156 */ }
 
 /**
  * @param {Object} props
- * @param {Function} props.debounce
+ * @param {Function} [props.debounce]
  * @param {Boolean} [props.disabled]
  * @param {Object} props.element
  * @param {Function} props.getValue
@@ -22,8 +25,7 @@ import translateFallback from '../util/translateFallback';
  */
 export default function Simple(props) {
   const {
-    debounce,
-    disabled,
+    debounce = noDebounce,
     element,
     getValue,
     id,
@@ -32,6 +34,8 @@ export default function Simple(props) {
     setValue,
     translate = translateFallback
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const value = getValue(element);
 

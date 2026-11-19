@@ -16,6 +16,8 @@ import {
   useStickyIntersectionObserver
 } from '../../hooks';
 
+import { useReadOnly } from '../../hooks/useReadOnly';
+
 import translateFallback from '../util/translateFallback';
 
 import classnames from 'classnames';
@@ -59,6 +61,8 @@ export default function List(props) {
     translate = translateFallback,
     ...restProps
   } = props;
+
+  const readOnly = useReadOnly();
 
   const entryRef = useRef(null);
   const [ open, setOpen ] = useState(!!shouldOpen);
@@ -117,20 +121,24 @@ export default function List(props) {
         <div
           class="bio-properties-panel-list-entry-header-buttons"
         >
-          <button
-            type="button"
-            title={ translate('Create new list item') }
-            onClick={ addItem }
-            class="bio-properties-panel-add-entry"
-          >
-            <CreateIcon />
-            {
-              !hasItems ? (
-                <span class="bio-properties-panel-add-entry-label">{ translate('Create') }</span>
-              )
-                : null
-            }
-          </button>
+          {
+            !readOnly && (
+              <button
+                type="button"
+                title={ translate('Create new list item') }
+                onClick={ addItem }
+                class="bio-properties-panel-add-entry"
+              >
+                <CreateIcon />
+                {
+                  !hasItems ? (
+                    <span class="bio-properties-panel-add-entry-label">{ translate('Create') }</span>
+                  )
+                    : null
+                }
+              </button>
+            )
+          }
           {
             hasItems && (
               <div
@@ -188,6 +196,8 @@ function ItemsList(props) {
     ...restProps
   } = props;
 
+  const readOnly = useReadOnly();
+
   const getKey = useKeyFactory();
 
   const newItem = newItems[0];
@@ -234,7 +244,7 @@ function ItemsList(props) {
             item={ item }
             open={ item === newItem } />
           {
-            onRemove && (
+            onRemove && !readOnly && (
               <button
                 type="button"
                 title={ translate('Delete item') }

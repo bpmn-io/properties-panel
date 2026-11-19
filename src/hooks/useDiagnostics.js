@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'preact/hooks';
 
-import { DiagnosticsContext, ErrorsContext } from '../context';
+import { DiagnosticsContext, ErrorsContext, ReadOnlyContext } from '../context';
 
 import {
   getGroupDiagnostic,
@@ -24,6 +24,11 @@ const NO_DIAGNOSTICS = [];
 export function useDiagnostics(id) {
   const { diagnostics } = useContext(DiagnosticsContext);
   const { errors } = useContext(ErrorsContext);
+  const readOnly = useContext(ReadOnlyContext);
+
+  if (readOnly) {
+    return NO_DIAGNOSTICS;
+  }
 
   const entryDiagnostics = diagnostics[ id ];
 
@@ -59,9 +64,14 @@ export function useDisplayedDiagnostic(id) {
 export function useAllDiagnostics() {
   const { diagnostics } = useContext(DiagnosticsContext);
   const { errors } = useContext(ErrorsContext);
+  const readOnly = useContext(ReadOnlyContext);
 
   return useMemo(() => {
-    const allDiagnostics = { ...diagnostics };
+    const allDiagnostics = readOnly ? {} : { ...diagnostics };
+
+    if (readOnly) {
+      return allDiagnostics;
+    }
 
     for (const id in errors) {
       if (allDiagnostics[ id ] && allDiagnostics[ id ].length) {
@@ -76,7 +86,7 @@ export function useAllDiagnostics() {
     }
 
     return allDiagnostics;
-  }, [ diagnostics, errors ]);
+  }, [ diagnostics, errors, readOnly ]);
 }
 
 /**

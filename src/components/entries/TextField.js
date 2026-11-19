@@ -18,6 +18,7 @@ import {
   useShowEntryEvent,
   useStaticCallback
 } from '../../hooks';
+import { useDisabled, useValidate } from '../../hooks/useReadOnly';
 import { isCmdWithChar } from '../util/keyboardUtils';
 import { getDiagnosticClass, getMostSevere } from '../util/diagnostics';
 
@@ -27,7 +28,6 @@ function Textfield(props) {
 
   const {
     debounce,
-    disabled = false,
     id,
     label,
     onInput: commitValue,
@@ -38,6 +38,8 @@ function Textfield(props) {
     value = '',
     tooltip
   } = props;
+
+  const disabled = useDisabled(props.disabled);
 
   const [ localValue, setLocalValue ] = useState(value || '');
 
@@ -148,7 +150,7 @@ function Textfield(props) {
  * @param {Object} props.element
  * @param {String} props.id
  * @param {String} props.description
- * @param {Boolean} props.debounce
+ * @param {Boolean} [props.debounce]
  * @param {Boolean} props.disabled
  * @param {String} props.label
  * @param {Function} props.getValue
@@ -168,13 +170,15 @@ export default function TextfieldEntry(props) {
     label,
     getValue,
     setValue,
-    validate,
+    validate: validateProp,
     onFocus,
     onBlur,
     onPaste,
     placeholder,
     tooltip
   } = props;
+
+  const validate = useValidate(validateProp);
 
   const diagnostics = useDiagnostics(id);
   const [ localDiagnostic, setLocalDiagnostic ] = useState(null);
