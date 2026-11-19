@@ -6,7 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FEAT`: remember popup size and position per type through properties panel layout
+## 3.60.0
+
+* `FEAT`: allow committing FEEL popup edits without closing ([#569](https://github.com/bpmn-io/properties-panel/pull/569))
+* `FEAT`: remember popup size and position per properties panel layout ([#570](https://github.com/bpmn-io/properties-panel/pull/570))
 
 ## 3.59.0
 
