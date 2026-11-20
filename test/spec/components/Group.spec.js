@@ -70,6 +70,37 @@ describe('<Group>', function() {
   });
 
 
+  describe('without IntersectionObserver', function() {
+
+    let originalDescriptor;
+
+    beforeEach(function() {
+      originalDescriptor = Object.getOwnPropertyDescriptor(window, 'IntersectionObserver');
+
+      // simulate environment without IntersectionObserver, e.g. jsdom
+      delete window.IntersectionObserver;
+    });
+
+    afterEach(function() {
+      Object.defineProperty(window, 'IntersectionObserver', originalDescriptor);
+    });
+
+
+    it('should render', function() {
+
+      // assume
+      expect(typeof IntersectionObserver).to.eql('undefined');
+
+      // when
+      const result = createGroup({ container });
+
+      // then
+      expect(domQuery('.bio-properties-panel-group', result.container)).to.exist;
+    });
+
+  });
+
+
   describe('open', function() {
 
     it('should toggle open', async function() {
