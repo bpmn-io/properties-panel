@@ -6,6 +6,10 @@ All notable changes to [`@bpmn-io/properties-panel`](https://github.com/bpmn-io/
 
 ___Note:__ Yet to be released changes appear here._
 
+## 3.60.2
+
+* `FIX`: do not crash when IntersectionObserver is unavailable ([#572](https://github.com/bpmn-io/properties-panel/pull/572))
+
 ## 3.60.1
 
 * `FIX`: preserve the popup's original FEEL mode when committing drafts ([#571](https://github.com/bpmn-io/properties-panel/pull/571))
