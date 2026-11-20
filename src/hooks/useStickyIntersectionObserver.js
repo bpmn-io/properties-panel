@@ -54,7 +54,12 @@ export function useStickyIntersectionObserver(ref, scrollContainerSelector, setS
   useEvent('propertiesPanel.detach', updateScrollContainer);
 
   useEffect(() => {
-    const Observer = IntersectionObserver;
+
+    // guard with `typeof` as referencing an undefined global throws,
+    // e.g. in jsdom
+    const Observer = typeof IntersectionObserver !== 'undefined'
+      ? IntersectionObserver
+      : null;
 
     // return early if IntersectionObserver is not available
     if (!Observer) {

@@ -301,6 +301,45 @@ describe('hooks/userStickyIntersectionObserver', function() {
       expect(error).not.to.exist;
     }
   });
+
+
+  describe('without IntersectionObserver', function() {
+
+    let originalDescriptor;
+
+    beforeEach(function() {
+      originalDescriptor = Object.getOwnPropertyDescriptor(window, 'IntersectionObserver');
+
+      // simulate environment without IntersectionObserver, e.g. jsdom
+      delete window.IntersectionObserver;
+    });
+
+    afterEach(function() {
+      Object.defineProperty(window, 'IntersectionObserver', originalDescriptor);
+    });
+
+
+    it('should NOT crash', async function() {
+
+      // given
+      const scrollContainer = createScrollContainer(container);
+      const domObject = createObserved(scrollContainer);
+
+      const ref = { current: domObject };
+
+      // when
+      const { result } = await renderHook(() => {
+        useStickyIntersectionObserver(ref, SCROLL_CONTAINER_SELECTOR, () => {});
+
+        return domObject;
+      });
+
+      // then
+      expect(result.current).to.equal(domObject);
+    });
+
+  });
+
 });
 
 
